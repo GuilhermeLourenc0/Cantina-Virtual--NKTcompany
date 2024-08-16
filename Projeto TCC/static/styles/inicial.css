@@ -1,0 +1,87 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.cbc-cima{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color:rgba(207,34,38,255);
+}
+
+.cbc-cima .perfil{
+    height: 50px;
+    width: 50px;
+    border-radius: 100px;
+}
+
+.logo{
+    height: 70px;
+}
+
+.menu{
+    height: 40px;
+}
+
+.cbc-baixo{
+    background-color: rgb(156, 0, 0);
+    display: none;
+    justify-content: space-around;
+    
+}
+
+.container-produtos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-produtos h2{
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.produtos{
+    display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 3 colunas de tamanho igual */
+  gap: 16px; /* Espaço entre os itens */
+}
+
+.card-produtos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.card-produtos img{
+height: 130px;
+width: 130px;
+margin-bottom: 5px;
+}
+
+.footer{
+    background-color: rgba(207,34,38,255);
+    height: 80px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.status{
+    color: rgb(255, 255, 255);
+}
+
+.status-cor{
+    color: rgb(21, 255, 0);
+}
+
+.footer button{
+    background-color: rgb(17, 177, 2);
+    border-radius: 10px;
+    color: white;
+    border: none;
+    padding: 10px;
+}
