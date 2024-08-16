@@ -1,0 +1,45 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+h2{
+    margin-top: 70px;
+}
+
+.container-principal{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+form{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+form input{
+    width: 360px;
+    border: none;
+    border-bottom: 1px solid black;
+    margin-top: 50px;
+}
+
+.checkbox{
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+    margin-right: 204px;
+    margin-bottom: 40px;
+}
+
+.container-principal button{
+    padding: 15px;
+    background-color: #FFD707;
+    width: 110px;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 30px;
+}

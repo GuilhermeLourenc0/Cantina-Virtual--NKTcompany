@@ -1,0 +1,158 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.cbc-cima{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color:rgba(207,34,38,255);
+}
+
+.cbc-cima .perfil{
+    height: 50px;
+    width: 50px;
+    border-radius: 100px;
+}
+
+.cbc-cima .perfil:active{
+    filter: grayscale(70%);
+
+}
+
+.logo{
+    height: 70px;
+}
+
+.menu{
+    height: 40px;
+}
+
+.cbc-baixo{
+    background-color: rgb(156, 0, 0);
+    display: none;
+    justify-content: space-around;
+}
+
+main img{
+    height: 260px;
+}
+
+.descricao{
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+margin-top: 10px;
+}
+
+.nome-produto{
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.preco-produto{
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+
+main button{
+    position: absolute;
+    z-index: 1000;
+    right: 91%;
+    top: 11%;
+    background-color: transparent;
+    color: red;
+    padding: 8px;
+    border-radius: 120px;
+    border: none;
+    font-size: 25px;
+}
+
+.footer{
+    margin-top: 154px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.rating {
+    display: flex;
+    direction: rtl; /* Inverte a ordem dos elementos para facilitar a seleção da estrela */
+    font-size: 2em; /* Tamanho das estrelas */
+    color: #ccc; /* Cor das estrelas não selecionadas */
+    position: absolute;
+    right: 64%;
+}
+
+.rating input {
+    display: none; /* Oculta os checkboxes */
+}
+
+.rating label {
+    cursor: pointer;
+    color: #ccc; /* Cor das estrelas não selecionadas */
+    transition: color 0.2s ease;
+}
+
+.rating input:checked ~ label {
+    color: #f5c518; /* Cor das estrelas selecionadas */
+}
+
+.rating input:checked ~ label ~ label {
+    color: #ccc; /* Mantém as estrelas à esquerda como não selecionadas */
+}
+
+.rating label:hover,
+.rating label:hover ~ label {
+    color: #f5c518; /* Cor das estrelas quando passa o mouse sobre elas */
+}
+
+
+
+
+.footer{
+    background-color: rgba(207,34,38,255);
+    height: 80px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.status{
+    color: rgb(255, 255, 255);
+}
+
+.status-cor{
+    color: rgb(21, 255, 0);
+}
+
+.footer button{
+    background-color: rgb(17, 177, 2);
+    border-radius: 10px;
+    color: white;
+    border: none;
+    padding: 10px;
+}
+
+.footer button:active{
+    filter: grayscale(20%);
+}
