@@ -11,15 +11,17 @@
     <section class="container-principal">
         <h2>Cadastre-Se</h2>
         <div class="formulario">
-
+            {% for registro in lista_carro %}
             <form action="">
                 <input id="nome" name="nome" placeholder="*Nome Completo" type="text">
                 <input id="tel" name="tel" placeholder="*Telefone" type="text">
                 <input id="email" name="email" placeholder="*E-mail"  type="text">
-                <input id="curso" name="curso" placeholder="*Curso"  type="text">
                 <input id="senha" name="senha" placeholder="*Senha"  type="text">
+                <select id="curso" name="curso">
+                    <option value=""></option>
+                </select>
             </form>
-
+            {% endfor %}
         </div>
         <div class="checkbox">
             <input type="checkbox">
