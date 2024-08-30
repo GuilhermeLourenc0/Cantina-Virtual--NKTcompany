@@ -18,18 +18,17 @@ def principal():
 @app.route("/cadastro", methods = ["GET", "POST"])
 def cadastro():
     if request.method == 'GET':
-        return render_template("cadastro.html")
+        return render_template("cadastrar.html")
     else:
         nome = request.form["nome"]
-        cpf = request.form["cpf"]
         telefone = request.form["telefone"]
-        endereco = request.form["endereco"]
         email = request.form["email"]
         senha = request.form["senha"]
+        curso = request.form["curso"]
 
         usuario = Usuario()
 
-        if usuario.cadastrar(nome, telefone, cpf, endereco, email,senha):
+        if usuario.cadastrar(nome, telefone, email, senha, curso):
             return redirect("/")
         else:
             return redirect("/cadastro")

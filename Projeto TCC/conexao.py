@@ -7,7 +7,7 @@ class Conexao:
             user="root",
             password="root",
             host="localhost",
-            database="cantina"
+            database="bd_cantinadalu"
         )
         
         return mydb
