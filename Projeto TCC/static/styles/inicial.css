@@ -55,6 +55,7 @@
 }
 
 .produtos a:hover{
+
     transform: scale(1.1);
     text-decoration: none; /* Remove o sublinhado */
     color: inherit; /* Herda a cor do elemento pai */
@@ -69,6 +70,8 @@
 }
 
 .produtos a{
+
+    transition: transform 0.6s ease;
     text-decoration: none; /* Remove o sublinhado */
     color: inherit; /* Herda a cor do elemento pai */
     font-weight: normal; /* Remove qualquer negrito */
