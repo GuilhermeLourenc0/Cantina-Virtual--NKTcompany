@@ -3,17 +3,24 @@ CREATE DATABASE bd_cantinadalu;
 USE bd_cantinadalu;
 
 -- Ajustando a tabela tb_cliente
-CREATE TABLE tb_cliente (
- id_cliente INT AUTO_INCREMENT,
- nome_comp VARCHAR(100),
- telefone VARCHAR(15),
- email VARCHAR(100),
- curso VARCHAR(50),
- senha VARCHAR(50),
- tipo VARCHAR(20), 
- PRIMARY KEY (id_cliente)
+CREATE TABLE tb_curso (
+    id_curso INT AUTO_INCREMENT,
+    curso VARCHAR(50),
+    PRIMARY KEY (id_curso)
 );
 
+-- Tabela de Clientes
+CREATE TABLE tb_cliente (
+    id_cliente INT AUTO_INCREMENT,
+    nome_comp VARCHAR(100),
+    telefone VARCHAR(15),
+    email VARCHAR(100),
+    id_curso INT,  -- Nova coluna para referência ao curso
+    senha VARCHAR(50),
+    tipo VARCHAR(20), 
+    PRIMARY KEY (id_cliente),
+    FOREIGN KEY (id_curso) REFERENCES tb_curso(id_curso)
+);
 -- Ajustando a tabela tb_produto
 CREATE TABLE tb_produto (
  cod_produto INT AUTO_INCREMENT,

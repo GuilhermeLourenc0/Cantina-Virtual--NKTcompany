@@ -5,16 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cantina Digital</title>
-    <link rel="stylesheet" href="/Projeto TCC/static/styles/login.css">
+    <link rel="stylesheet" href="../static/styles/login.css">
 </head>
 <body>
     <section class="container-principal">
         <h2>Entrar</h2>
         <div class="formulario">
 
-            <form action="">
-                <input placeholder="*E-mail"  type="text">
-                <input placeholder="*Senha"  type="text">
+            <form action="" method="post">
+                <input name="email" id="email" placeholder="*E-mail"  type="text">
+                <input name="senha" id="senha" placeholder="*Senha"  type="password">
+                <button type="submit">Entrar</button>
             </form>
 
         </div>
@@ -22,7 +23,7 @@
            <a href=""> <span>Esqueceu sua senha</span> </a>
         </div>
 
-        <button>Entrar</button>
+        
 
         <a href="">Ainda não tenho conta</a>
         

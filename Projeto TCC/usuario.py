@@ -13,44 +13,68 @@ class Usuario:
         self.categoria = None
         self.descricao = None
         self.curso = None
+        self.tipo = None
         self.logado = False
 
-    def cadastrar(self, nome, telefone, curso, email, senha):
-        senha = sha256(senha.encode()).hexdigest()
+
+    def cadastrar(self, nome, telefone, email, senha, curso, tipo):
+        senha = sha256(senha.encode()).hexdigest()  # Criptografando a senha
         try:
-            mydb = Conexao.conectar()
-
-
+            mydb = Conexao.conectar()  # Conectando ao banco de dados
             mycursor = mydb.cursor()
 
+            # Especificando as colunas da tabela tb_cliente e usando placeholders (%s)
+            sql = "INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo) VALUES (%s, %s, %s, %s, %s, %s)"
             
-            sql = f"INSERT INTO tb_cliente VALUES('{nome}', {telefone}, '{curso}', '{email}', '{senha}')"
-            
-            mycursor.execute(sql)
-            
+            # Executando a query com os valores fornecidos
+            mycursor.execute(sql, (nome, telefone, email, curso, senha, tipo))
+
+            # Atribuindo valores aos atributos do objeto
             self.tel = telefone
             self.nome = nome
             self.senha = senha
             self.curso = curso
             self.email = email
+            self.tipo = tipo
             self.logado = True
 
+            mydb.commit()  # Confirmando as alterações no banco de dados
 
-            mydb.commit()
-            mydb.close()
+
+            mydb.close()  # Fechando a conexão
             return True
-        except:
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}")  # Exibindo a mensagem de erro
             return False
+
+    def exibir_cursos(self):
+            mydb = Conexao.conectar()  # Conectando ao banco de dados
+            mycursor = mydb.cursor()
+
+            sql = f"SELECT * from tb_curso"
+            mycursor.execute(sql)
+        
+            resultado = mycursor.fetchall()
+       
+            lista_cursos = []
+
+            for cursos in resultado:
+                lista_cursos.append({
+                    'id_curso': cursos[0],
+                    'curso': cursos[1]
+            })
+
+            mydb.commit()  # Confirmando as alterações no banco de dados
+            mydb.close()  # Fechando a conexão
+            return lista_cursos
         
     def logar(self, email, senha):
-                # criptografa a senha
-                senha = sha256(senha.encode()).hexdigest()
-
+                senha = sha256(senha.encode()).hexdigest()  # Criptografando a senha
                 mydb = Conexao.conectar()
 
                 mycursor = mydb.cursor()
 
-                sql = f"SELECT telefone, nome_cliente, senha, cpf FROM tb_cliente WHERE email='{email}' AND senha='{senha}'"
+                sql = f"SELECT * FROM tb_cliente WHERE email='{email}' AND senha='{senha}'"
                 
                 mycursor.execute(sql)
             
@@ -58,12 +82,13 @@ class Usuario:
                 print(resultado)
                 if not resultado == None:
                     self.logado = True
-                    self.cpf = resultado[3]
                     self.nome = resultado[1]
-                    self.tel = resultado[0]
-                    self.senha = resultado[2]
+                    self.tel = resultado[2]
+                    self.senha = resultado[5]
+                    self.email = resultado[3]
                 else:
                     self.logado = False
+
     def inserir_produto(self, imagem, nomeP, preco, categoria, descricao):
         # try:
             mydb = Conexao.conectar()

@@ -18,40 +18,42 @@ def principal():
 @app.route("/cadastro", methods = ["GET", "POST"])
 def cadastro():
     if request.method == 'GET':
-        return render_template("cadastrar.html")
+        usuario = Usuario()
+        cursos = usuario.exibir_cursos()
+        return render_template("cadastrar.html", cursos = cursos)
     else:
         nome = request.form["nome"]
-        telefone = request.form["telefone"]
+        telefone = request.form["tel"]
         email = request.form["email"]
         senha = request.form["senha"]
         curso = request.form["curso"]
+        tipo = request.form["tipo"]
 
         usuario = Usuario()
-
-        if usuario.cadastrar(nome, telefone, email, senha, curso):
+        if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
             return redirect("/")
         else:
             return redirect("/cadastro")
      
            
-# @app.route('/logar', methods = ['GET','POST'])
-# def logar():
-#     if request.method =='GET':
-#         return render_template('login.html')
-#     else:
-#         senha = request.form['senha']
-#         email = request.form['email']
-#         usuario = Usuario()
-#         usuario.logar(email, senha)
-#         if  usuario.logado == True:
-#             session['usuario_logado'] = {"nome": usuario.nome,
-#                                     "email": usuario.email,
-#                                     "cpf": usuario.cpf}
-#             return redirect("/")
+@app.route('/logar', methods = ['GET','POST'])
+def logar():
+    if request.method =='GET':
+        return render_template('login.html')
+    else:
+        senha = request.form['senha']
+        email = request.form['email']
+        usuario = Usuario()
+        usuario.logar(email, senha)
+        if  usuario.logado == True:
+            session['usuario_logado'] = {"nome": usuario.nome,
+                                    "email": usuario.email,
+                                    "tel": usuario.tel}
+            return redirect("/")
             
-#         else:
-#             session.clear()
-#             return redirect("/logar")
+        else:
+            session.clear()
+            return redirect("/logar")
     
 # @app.route("/inserir_produtos", methods=['GET','POST'])
 # def inserir_produtos():
