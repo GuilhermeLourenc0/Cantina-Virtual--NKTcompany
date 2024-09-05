@@ -10,71 +10,77 @@ app.secret_key = 'sua_chave_secreta'
 
 @app.route("/")
 def principal():
-    return render_template("index.html")
+
+    sistema = Sistema()
+    lista_produtos = sistema.exibir_produtos()
+    return   render_template("index.html", lista_produtos = lista_produtos)
+
     
 
 # Define cadastro route 
 @app.route("/cadastro", methods = ["GET", "POST"])
 def cadastro():
     if request.method == 'GET':
-        return render_template("cadastrar.html")
+        usuario = Usuario()
+        cursos = usuario.exibir_cursos()
+        return render_template("cadastrar.html", cursos = cursos)
     else:
         nome = request.form["nome"]
-        telefone = request.form["telefone"]
+        telefone = request.form["tel"]
         email = request.form["email"]
         senha = request.form["senha"]
         curso = request.form["curso"]
+        tipo = request.form["tipo"]
 
         usuario = Usuario()
-
-        if usuario.cadastrar(nome, telefone, email, senha, curso):
+        if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
             return redirect("/")
         else:
             return redirect("/cadastro")
      
            
-# @app.route('/logar', methods = ['GET','POST'])
-# def logar():
-#     if request.method =='GET':
-#         return render_template('login.html')
-#     else:
-#         senha = request.form['senha']
-#         email = request.form['email']
-#         usuario = Usuario()
-#         usuario.logar(email, senha)
-#         if  usuario.logado == True:
-#             session['usuario_logado'] = {"nome": usuario.nome,
-#                                     "email": usuario.email,
-#                                     "cpf": usuario.cpf}
-#             return redirect("/")
+@app.route('/logar', methods = ['GET','POST'])
+def logar():
+    if request.method =='GET':
+        return render_template('login.html')
+    else:
+        senha = request.form['senha']
+        email = request.form['email']
+        usuario = Usuario()
+        usuario.logar(email, senha)
+        if  usuario.logado == True:
+            session['usuario_logado'] = {"nome": usuario.nome,
+                                    "email": usuario.email,
+                                    "tel": usuario.tel}
+            return redirect("/")
             
-#         else:
-#             session.clear()
-#             return redirect("/logar")
+        else:
+            session.clear()
+            return redirect("/logar")
     
-# @app.route("/inserir_produtos", methods=['GET','POST'])
-# def inserir_produtos():
-#     if request.method == 'GET':
-#         return render_template("venda.html")
-#     else:
-#         imagem_url = request.form["img"]
-#         nome_produto = request.form["nome"]
-#         preco_produto = request.form["preco"]
-#         categoria = request.form["categoria"]
-#         descricao = request.form["descricao"]
+@app.route("/inserir_produtos", methods=['GET','POST'])
+def inserir_produtos():
+    if request.method == 'GET':
+        return render_template("cad-produto.html")
+    else:
+        imagem_url = request.form["img"]
+        nome_produto = request.form["nome"]
+        preco_produto = request.form["preco"]
+        # categoria = request.form["categoria"]
+        descricao = request.form["descricao"]
 
-#         usuario = Usuario()
+        usuario = Usuario()
 
-#         if usuario.inserir_produto(imagem_url, nome_produto, preco_produto, categoria, descricao):
-#             return redirect("/")
-#         else: 
-#             return "ERRO AO INSERIR PRODUTO"
+        if usuario.inserir_produto(nome_produto, preco_produto, imagem_url, descricao):
+            return redirect("/inserir_produtos")
+        else: 
+            return "ERRO AO INSERIR PRODUTO"
         
-# @app.route("/produtos")
-# def compras():
-#    sistema = Sistema()
-#    lista_categoria = sistema.exibir_produtos()
-#    return   render_template("produtos.html", lista_categoria = lista_categoria)
+@app.route("/produtos")
+def compras():
+   sistema = Sistema()
+   lista_produtos = sistema.exibir_produtos()
+   return   render_template("produto.html", lista_produtos = lista_produtos)
 
 # @app.route("/categoria/<categoria>")
 # def catgoria(categoria):
