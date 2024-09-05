@@ -43,3 +43,7 @@ form input{
     border: none;
     margin-bottom: 30px;
 }
+
+form input:focus{
+    outline: none;
+}

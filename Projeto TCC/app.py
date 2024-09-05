@@ -5,7 +5,6 @@ from sistema import Sistema
 
 
 
-
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'
 
