@@ -71,44 +71,16 @@
 
                 <div class="produtos">
 
+                    {% for registro in lista_produtos %}
                     <a href="">
                     <div class="card-produtos">
 
-                        <img src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="">
-                        <span>Coxinha</span>
-                        <span>R$7,00</span>
+                        <img src="{{ registro.imagem_produto }}" alt="">
+                        <span>{{ registro.nome_produto }}</span>
+                        <span>{{ registro.preco }}</span>
 
                     </div></a>
-                    
-
-                    <a href="">
-                        <div class="card-produtos">
-    
-                            <img src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="">
-                            <span>Coxinha</span>
-                            <span>R$7,00</span>
-    
-                        </div></a>
-
-                    <a href="">
-                        <div class="card-produtos">
-    
-                            <img src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="">
-                            <span>Coxinha</span>
-                            <span>R$7,00</span>
-    
-                        </div></a>
-
-                    <a href="">
-                        <div class="card-produtos">
-        
-                            <img src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="">
-                            <span>Coxinha</span>
-                            <span>R$7,00</span>
-        
-                        </div></a>
-
-
+                    {% endfor %} 
                 </div>
 
             </div>
