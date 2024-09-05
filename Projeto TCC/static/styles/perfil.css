@@ -116,15 +116,16 @@ form input:focus{
 }
 
 .overlay-image {
-    width: 80%;
+    width: 50%;
     /* Ajuste o tamanho da imagem sobreposta */
     height: auto;
 }
 
 .profile-container:hover .profile-image {
-    filter: blur(3px) grayscale(30%);
+    filter: blur(2px) grayscale(20%);
 }
 
 .profile-container:hover .overlay {
     opacity: 1;
+    
 }
