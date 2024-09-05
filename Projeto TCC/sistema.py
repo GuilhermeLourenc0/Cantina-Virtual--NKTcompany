@@ -37,21 +37,21 @@ class Sistema:
         mydb =  Conexao.conectar()
         mycursor = mydb.cursor()
 
-        sql = f"SELECT * from tb_produtos"
+        sql = f"SELECT * from tb_produto"
         mycursor.execute(sql)
         
         resultado = mycursor.fetchall()
        
         lista_categorias = []
 
-        for categoria in resultado:
+        for produto in resultado:
             lista_categorias.append({
-                'nome_produto': categoria[1],
-                'preco': categoria[2],
-                'imagem_produto': categoria[3],
-                'categoria': categoria[4],
-                'descricao': categoria[5],
-                'id_produto': categoria[0] 
+                'nome_produto': produto[1],
+                'preco': produto[2],
+                'imagem_produto': produto[3],
+                # 'categoria': categoria[4],
+                'descricao': produto[4],
+                'id_produto': produto[0] 
             })
         mydb.close()
         if lista_categorias:
