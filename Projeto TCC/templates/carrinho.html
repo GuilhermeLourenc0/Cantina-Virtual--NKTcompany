@@ -11,7 +11,7 @@
 
     <main>
         <section class="cont-carrinho">
-            {% for registro in lista_carro %}
+            {% for registro in lista_carrinho %}
             <form action="/excluir_produto" method="post" class="carrinho">
            
                 <div class="carrinho-item">
@@ -21,7 +21,7 @@
                     <p>{{ registro.nome_produto }}</p>
                     <p>{{ registro.preco }}</p>
                 </div>
-                <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}">CARRO</button>
+                <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}">Excluir</button>
             </form>
             {% endfor %}
         </section>

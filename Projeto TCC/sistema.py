@@ -65,7 +65,7 @@ class Sistema:
         mycursor = mydb.cursor()
 
         sql = f"INSERT INTO tb_carrinho (id_cliente, cod_produto) VALUES ('{id_cliente}', '{cod_produto}')"
-        
+
         mycursor.execute(sql)
         mydb.commit()
         mydb.close()
@@ -108,7 +108,7 @@ class Sistema:
             """
 
         mycursor.execute(sql)
-        resultado1 = mycursor.fetchone()
+        resultado1 = mycursor.fetchall()
        
         lista_carrinho = []
 
@@ -173,13 +173,20 @@ class Sistema:
     #     mydb.close()
     #     return lista_comentario
     
-    # def excluir_produto(self, btn_excluir):
-    #     mydb =  Conexao.conectar()
-    #     mycursor = mydb.cursor()
+    def excluir_produto(self, btn_excluir):
+        mydb =  Conexao.conectar()
+        mycursor = mydb.cursor()
 
-    #     sql = f"DELETE FROM tb_carrinho WHERE id_carrinho = '{btn_excluir}'"
+        sql = f"DELETE FROM tb_carrinho WHERE id_carrinho = '{btn_excluir}'"
 
-    #     mycursor.execute(sql)
-    #     mydb.commit()
-    #     mydb.close()
-        
+        mycursor.execute(sql)
+        mydb.commit()
+        mydb.close()
+
+    def enviar_pedido(self, cod_produtos, id_cliente):
+        mydb =  Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        sql = f"INSERT'"
+
+        mycursor.execute(sql)

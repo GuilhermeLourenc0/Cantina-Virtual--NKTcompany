@@ -85,14 +85,6 @@ def compras():
    lista_produtos = sistema.exibir_produtos()
    return   render_template("produto.html", lista_produtos = lista_produtos)
 
-# @app.route("/categoria/<categoria>")
-# def catgoria(categoria):
-
-#     sistema = Sistema()
-#     lista_filtro = sistema.filtro(categoria)
-    
-#     return render_template("produtos-categoria.html",  lista_filtro = lista_filtro)
-
 
 @app.route("/produto_unico", methods=['GET', 'POST'])
 def comprar():
@@ -113,6 +105,15 @@ def carrinho():
         if request.method == 'POST':
             id_produto = session.get('id')['id_produto']
             id_cliente = session.get('usuario_logado')['id_cliente']
+
+
+            if 'IDs' not in session:
+                session['IDs'] = {"IDs_produtos": []}  # Inicializa com uma lista vazia
+
+            # Adiciona o novo ID do produto à lista na sessão
+            session['IDs']['IDs_produtos'].append(id_produto)
+
+
             sistema = Sistema()
             sistema.inserir_produto_carrinho(id_produto, id_cliente)
             
@@ -132,36 +133,12 @@ def exibir_carrinho():
         lista_carrinho = sistema.exibir_carrinho(id_clientes)
         return render_template("carrinho.html", lista_carrinho = lista_carrinho)
 
-# @app.route("/inserir_comentario", methods=['GET', 'POST'])
-# def comentario():
-#     if request.method == 'POST':
-#         comentario = request.form['comentario']
-#         nome_cliente = session.get('usuario_logado')['nome']
-#         sistema = Sistema()
-#         sistema.inserir_comentario(comentario, nome_cliente)
-        
-#         # Após inserir o comentário, redirecione para a rota que exibe os comentários
-#         return redirect("/exibir_comentario")
-    
-#     # Se por algum motivo o método for GET (não deveria ocorrer), redirecione também
-#     return redirect("/exibir_comentario")
+@app.route("/excluir_produto", methods= ['GET', 'POST'])
+def excluir_produto():
+    sistema = Sistema()
+    btn_excluir = request.form["btn-excluir"]
 
-# @app.route("/exibir_comentario", methods=['GET'])
-# def exibir_comentario():
-#      if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('cpf') is None:
-#         return redirect('/logar')
-#      else:
-#         sistema = Sistema()
-#         nome_cliente = session.get('usuario_logado')['nome']
-#         lista_comentario = sistema.exibir_comentario(nome_cliente)
-#         return render_template("comentario.html", lista_comentario=lista_comentario)
-
-# @app.route("/excluir_produto", methods= ['GET', 'POST'])
-# def excluir_produto():
-#     sistema = Sistema()
-#     btn_excluir = request.form["btn-excluir"]
-
-#     sistema.excluir_produto(btn_excluir)
-#     return redirect("/exibir_carrinho")
+    sistema.excluir_produto(btn_excluir)
+    return redirect("/exibir_carrinho")
 
 app.run(debug=True)
