@@ -141,4 +141,19 @@ def excluir_produto():
     sistema.excluir_produto(btn_excluir)
     return redirect("/exibir_carrinho")
 
+@app.route("/enviar_carrinho", methods=['POST'])
+def enviar_carrinho():
+    if request.method == 'POST':
+        id_produto = session.get('id')['id_produto']
+        id_cliente = session.get('usuario_logado')['id_cliente']
+
+    if id_produto and id_cliente:
+        sistema = Sistema()
+        sistema.enviar_carrinho(id_produto, id_cliente)
+        
+        # Redireciona para a rota que exibe os pedidos
+        return redirect("/exibir_pedidos")
+
+
+
 app.run(debug=True)

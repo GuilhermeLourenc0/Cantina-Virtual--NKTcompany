@@ -183,10 +183,49 @@ class Sistema:
         mydb.commit()
         mydb.close()
 
-    def enviar_pedido(self, cod_produtos, id_cliente):
+
+
+
+    def enviar_carrinho(self, id_carrinho, id_cliente):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        sql = f"INSERT INTO tb_pedidos (id_cliente, cod_produto) VALUES ('{id_cliente}', '{cod_produto}')"
+
+        mycursor.execute(sql)
+
+        sql_remover = f"DELETE FROM tb_carrinho WHERE '{id_cliente} AND '{cod_produto}'"
+
+        mycursor.execute(sql_remover)
+        mydb.commit()
+        mydb.close()
+        return True
+
+
+
+
+    def exibir_pedidos(self, id_cliente):
         mydb =  Conexao.conectar()
         mycursor = mydb.cursor()
 
-        sql = f"INSERT'"
+        sql = f"""
+            SELECT p.cod_produto, p.nome_produto, p.preco, p.url_img, p.id_categoria, p.descricao, pe.id_pedido
+            FROM tb_pedidos AS pe
+            JOIN tb_produto AS p ON pe.cod_produto = p.cod_produto
+            WHERE pe.id_cliente = '{id_cliente}'
+        """
 
         mycursor.execute(sql)
+        resultado = mycursor.fetchall()
+    
+        lista_pedidos = []
+
+        for resultado in resultado:
+            lista_pedidos.append({
+                'nome_produto': resultado[1],
+                'preco': resultado[2],
+                'imagem_produto': resultado[3],
+                'id_pedido': resultado[6]
+        })
+        mydb.close()
+        return lista_pedidos
