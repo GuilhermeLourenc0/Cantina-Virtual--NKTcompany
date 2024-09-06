@@ -34,22 +34,24 @@
 
         <div class="produto-card">
 
-            <img src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="Imagem">
+            <img class="img-produto" src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="Imagem">
 
             <div class="direita-card">
 
                 <div class="cima">
                     <span>Coxinha de Catupiry</span> 
-                    <button class="btn-lixo"><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
+                    <button><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
                 </div>
 
                 <div class="baixo">
 
-                    <button onclick="diminuir()">-</button>
+                    <button class="menos-btn" onclick="diminuir()">-</button>
                     <input type="number" id="numero" value="1">
-                    <button onclick="aumentar()">+</button>
+                    <button class="mais-btn" onclick="aumentar()">+</button>
             
                     <script src="script.js"></script>
+
+                    <span>R$ 7,50</span>
 
                 </div>
 
@@ -57,14 +59,109 @@
 
         </div>
 
-        <div>
-            <div class="">
-                <span>Total:</span>
-                <span>R$69,00</span>
+
+        <div class="produto-card">
+
+            <img class="img-produto" src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="Imagem">
+
+            <div class="direita-card">
+
+                <div class="cima">
+                    <span>Coxinha de Catupiry</span> 
+                    <button><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
+                </div>
+
+                <div class="baixo">
+
+                    <button class="menos-btn" onclick="diminuir()">-</button>
+                    <input type="number" id="numero" value="1">
+                    <button class="mais-btn" onclick="aumentar()">+</button>
+            
+                    <script src="script.js"></script>
+
+                    <span>R$ 7,50</span>
+
+                </div>
+
+            </div>
+
+            
+            
+            
+
+        </div>
+
+        <div class="produto-card">
+
+            <img class="img-produto" src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="Imagem">
+
+            <div class="direita-card">
+
+                <div class="cima">
+                    <span>Coxinha de Catupiry</span> 
+                    <button><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
+                </div>
+
+                <div class="baixo">
+
+                    <button class="menos-btn" onclick="diminuir()">-</button>
+                    <input type="number" id="numero" value="1">
+                    <button class="mais-btn" onclick="aumentar()">+</button>
+            
+                    <script src="script.js"></script>
+
+                    <span>R$ 7,50</span>
+
+                </div>
+
+            </div>
+
+            
+            
+            
+
+        </div>
+
+        <div class="produto-card">
+
+            <img class="img-produto" src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="Imagem">
+
+            <div class="direita-card">
+
+                <div class="cima">
+                    <span>Coxinha de Catupiry</span> 
+                    <button><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
+                </div>
+
+                <div class="baixo">
+
+                    <button class="menos-btn" onclick="diminuir()">-</button>
+                    <input type="number" id="numero" value="1">
+                    <button class="mais-btn" onclick="aumentar()">+</button>
+            
+                    <script src="script.js"></script>
+
+                    <span>R$ 7,50</span>
+
+                </div>
+
+            </div>
+
+            
+            
+            
+
+        </div>
+
+
+        <div class="finalizacao">
+            <div class="preco">
+                <span class="span1">Total:</span>
+                <span class="span2">R$69,00</span>
             </div>
             
-            <button>Finalizar Compra</button>
-            <button>Continuar Comprando</button>
+            <button class="finalizacompra">Finalizar Compra</button>
+            <a href="">Continuar Comprando</a> 
         </div>
         
         
@@ -73,12 +170,20 @@
     <script>
        function aumentar() {
   const numeroInput = document.getElementById('numero');
+  
   numeroInput.value++;
 }
 
 function diminuir() {
   const numeroInput = document.getElementById('numero');
+  
   numeroInput.value--;
+
+  if (numeroInput.value < '1'){
+    alert("Número mínimo de pedido 1")
+    numeroInput.value = '1'
+  }
+  
 }
     </script>
 
