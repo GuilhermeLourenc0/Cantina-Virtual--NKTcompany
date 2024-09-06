@@ -61,22 +61,24 @@ def logar():
 @app.route("/inserir_produtos", methods=['GET','POST'])
 def inserir_produtos():
     if request.method == 'GET':
-        return render_template("cad-produto.html")
+        usuario = Usuario()
+        categorias = usuario.exibir_categorias()
+        return render_template("cad-produto.html", categorias = categorias)
     else:
         imagem_url = request.form["img"]
         nome_produto = request.form["nome"]
         preco_produto = request.form["preco"]
-        # categoria = request.form["categoria"]
+        categoria = request.form["categoria"]
         descricao = request.form["descricao"]
 
         usuario = Usuario()
 
-        if usuario.inserir_produto(nome_produto, preco_produto, imagem_url, descricao):
+        if usuario.inserir_produto(nome_produto, preco_produto, imagem_url, descricao, categoria):
             return redirect("/inserir_produtos")
         else: 
             return "ERRO AO INSERIR PRODUTO"
         
-@app.route("/produtos")
+@app.route("/exibir_produtos")
 def compras():
    sistema = Sistema()
    lista_produtos = sistema.exibir_produtos()
@@ -91,33 +93,33 @@ def compras():
 #     return render_template("produtos-categoria.html",  lista_filtro = lista_filtro)
 
 
-# @app.route("/compra", methods=['GET', 'POST'])
-# def comprar():
-#     if request.method == 'POST':
-#         sistema=Sistema()
-#         btn_produto = request.form.get('btn-produto')
+@app.route("/produto_unico", methods=['GET', 'POST'])
+def comprar():
+    if request.method == 'POST':
+        sistema=Sistema()
+        btn_produto = request.form.get('btn-produto')
 
-#         session['id'] = {"id_produto": btn_produto}
-#         lista_carrinho = sistema.exibir_produto(btn_produto)
-#         return render_template("produto-unico.html", lista_carro = lista_carrinho)
+        session['id'] = {"id_produto": btn_produto}
+        lista_prounico = sistema.exibir_produto(btn_produto)
+        return render_template("produto.html", lista_prounico = lista_prounico)
     
 
-# @app.route("/inserir_carrinho", methods=['POST'])
-# def carrinho():
-#     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('cpf') is None:
-#         return redirect('/logar')
-#     else:
-#         if request.method == 'POST':
-#             id_produto = session.get('id')['id_produto']
-#             cpf_cliente = session.get('usuario_logado')['cpf']
-#             sistema = Sistema()
-#             sistema.inserir_produto_carrinho(id_produto, cpf_cliente)
+@app.route("/inserir_carrinho", methods=['POST'])
+def carrinho():
+    # if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('cpf') is None:
+    #     return redirect('/logar')
+    # else:
+        if request.method == 'POST':
+            id_produto = session.get('id')['id_produto']
+            tel_cliente = session.get('usuario_logado')['tel']
+            sistema = Sistema()
+            sistema.inserir_produto_carrinho(id_produto, tel_cliente)
             
-#             # Após inserir o comentário, redirecione para a rota que exibe os comentários
-#             return redirect("/exibir_carrinho")
+            # Após inserir o comentário, redirecione para a rota que exibe os comentários
+            return redirect("/exibir_carrinho")
 
-#         # Se por algum motivo o método for GET (não deveria ocorrer), redirecione também
-#         return redirect("/exibir_carrinho")
+        # Se por algum motivo o método for GET (não deveria ocorrer), redirecione também
+        return redirect("/exibir_carrinho")
     
 # @app.route("/exibir_carrinho", methods=['GET', 'POST'])
 # def exibir_carrinho():

@@ -32,13 +32,17 @@
 
     <main>
 
-        <img src="https://www.comidaereceitas.com.br/wp-content/uploads/2016/05/Coxinha-de-carne-seca-freepik.jpg" alt="">
-        <button></button>
+        {% for registro in lista_prounico %}
+        <img src="{{ registro.imagem_produto }}" alt="">
         <section class="descricao">
-            <span class="nome-produto">Coxinha de Frango</span>
-            <span class="descricao-produto">Coxinha de massa de coxinha recheada com frango de galinha</span>
-            <span class="preco-produto">R$7,00</span>
+            <span class="nome-produto">{{ registro.nome_produto }}</span>
+            <span class="descricao-produto">{{ registro.descricao }}</span>
+            <span class="preco-produto">{{ registro.preco }}</span>
         </section>
+        <form action="" method="post">
+            <button type="submit" value="{{ registro.cod_produto }}">Adicionar</button>
+        </form>
+        {% endfor %} 
 
 
         <div class="rating">

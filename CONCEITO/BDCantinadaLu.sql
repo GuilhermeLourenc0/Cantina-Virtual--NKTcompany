@@ -2,13 +2,6 @@ CREATE DATABASE bd_cantinadalu;
 
 USE bd_cantinadalu;
 
--- Tabela de Cursos
-CREATE TABLE tb_curso (
-    id_curso INT AUTO_INCREMENT,
-    curso VARCHAR(50),
-    PRIMARY KEY (id_curso)
-);
-
 -- Tabela de Clientes
 -- Tabela de Cursos
 CREATE TABLE tb_curso (
@@ -19,15 +12,6 @@ CREATE TABLE tb_curso (
 
 -- Tabela de Clientes
 CREATE TABLE tb_cliente (
-    id_cliente INT AUTO_INCREMENT,
-    nome_comp VARCHAR(100),
-    telefone VARCHAR(15),
-    email VARCHAR(100),
-    id_curso INT,  -- Nova coluna para referência ao curso
-    senha VARCHAR(50),
-    tipo VARCHAR(20), 
-    PRIMARY KEY (id_cliente),
-    FOREIGN KEY (id_curso) REFERENCES tb_curso(id_curso)
     id_cliente INT AUTO_INCREMENT,
     nome_comp VARCHAR(100),
     telefone VARCHAR(15),
@@ -46,6 +30,7 @@ CREATE TABLE tb_produto (
  preco DECIMAL(10,2),
  url_img VARCHAR(255),
  descricao TEXT,
+ id_categoria INT,
  PRIMARY KEY (cod_produto)
 );
 
@@ -70,15 +55,30 @@ CREATE TABLE tb_carrinho (
 
 -- Ajustando a tabela tb_categoria
 CREATE TABLE tb_categoria (
- id_categoria INT AUTO_INCREMENT, 
- cod_produto INT NOT NULL,  -- Mudança de VARCHAR para INT
- nome VARCHAR(50), 
- PRIMARY KEY (id_categoria, cod_produto),
- FOREIGN KEY (cod_produto) REFERENCES tb_produto (cod_produto)
+    id_categoria INT AUTO_INCREMENT, 
+    nome VARCHAR(50), 
+    PRIMARY KEY (id_categoria)
+);
+
+INSERT INTO tb_categoria (nome) VALUES 
+('Salgados Assados'),
+('Salgados Fritos'),
+('Bebidas'),
+('Doces'),
+('Lanches'),
+('Gelados');
+
+CREATE TABLE tb_pedidos (
+    id_pedido INT AUTO_INCREMENT,
+    id_cliente INT NOT NULL,
+    data_pedido DATE,
+    status VARCHAR(50),
+    PRIMARY KEY (id_pedido),
+    FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
 );
 
 
---Inserindo os cursos e turmas no Banco de Dados
+ -- Inserindo os cursos e turmas no Banco de Dados
 INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 ('Comandos Elétricos - COMANDOS-2A24'),
 ('ELETRICISTA DE REDE DE DISTRIBUIÇÃO DE ENERGIA ELÉTRICA - 153/2024-ERDEE'),
