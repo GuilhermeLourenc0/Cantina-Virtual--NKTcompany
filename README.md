@@ -3,6 +3,7 @@ A Cantina Inteligente da LU
 A Cantina Inteligente da LU é um sistema online projetado para facilitar a vida de todos que frequentam a cantina do SENAI. O objetivo é proporcionar uma experiência mais rápida, prática e personalizada para os clientes, além de melhorar a gestão e o atendimento por parte da equipe da cantina.
 
 📖 Descrição Geral
+
 O sistema permite que alunos, funcionários e visitantes do SENAI façam seus pedidos online, acompanhem o status em tempo real e explorem o cardápio de forma intuitiva e acessível.
 
 Principais Funcionalidades:
