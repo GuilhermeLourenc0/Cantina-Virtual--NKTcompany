@@ -106,9 +106,9 @@ def comprar():
 
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
-    # if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('cpf') is None:
-    #     return redirect('/logar')
-    # else:
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('cpf') is None:
+        return redirect('/logar')
+    else:
         if request.method == 'POST':
             id_produto = session.get('id')['id_produto']
             tel_cliente = session.get('usuario_logado')['tel']
