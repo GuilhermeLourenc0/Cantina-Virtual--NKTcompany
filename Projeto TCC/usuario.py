@@ -103,6 +103,7 @@ class Usuario:
                 print(resultado)
                 if not resultado == None:
                     self.logado = True
+                    self.id_cliente = resultado[0]
                     self.nome = resultado[1]
                     self.tel = resultado[2]
                     self.senha = resultado[5]

@@ -39,7 +39,7 @@
             <span class="descricao-produto">{{ registro.descricao }}</span>
             <span class="preco-produto">{{ registro.preco }}</span>
         </section>
-        <form action="" method="post">
+        <form action="/inserir_carrinho" method="post">
             <button type="submit" value="{{ registro.cod_produto }}">Adicionar</button>
         </form>
         {% endfor %} 

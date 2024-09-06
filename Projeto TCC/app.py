@@ -51,7 +51,8 @@ def logar():
         if  usuario.logado == True:
             session['usuario_logado'] = {"nome": usuario.nome,
                                     "email": usuario.email,
-                                    "tel": usuario.tel}
+                                    "tel": usuario.tel,
+                                    "id_cliente": usuario.id_cliente}
             return redirect("/")
             
         else:
@@ -106,14 +107,14 @@ def comprar():
 
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
-    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('cpf') is None:
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')
     else:
         if request.method == 'POST':
             id_produto = session.get('id')['id_produto']
-            tel_cliente = session.get('usuario_logado')['tel']
+            id_cliente = session.get('usuario_logado')['id_cliente']
             sistema = Sistema()
-            sistema.inserir_produto_carrinho(id_produto, tel_cliente)
+            sistema.inserir_produto_carrinho(id_produto, id_cliente)
             
             # Após inserir o comentário, redirecione para a rota que exibe os comentários
             return redirect("/exibir_carrinho")
@@ -123,13 +124,13 @@ def carrinho():
     
 @app.route("/exibir_carrinho", methods=['GET', 'POST'])
 def exibir_carrinho():
-     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('cpf') is None:
+     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')
      else:
         sistema = Sistema()
-        cpf = session.get('usuario_logado')['cpf']
-        lista_carrinho = sistema.exibir_carrinho(cpf)
-        return render_template("carrinho.html", lista_carro=lista_carrinho)
+        id_clientes = session.get('usuario_logado')['id_cliente']
+        lista_carrinho = sistema.exibir_carrinho(id_clientes)
+        return render_template("carrinho.html", lista_carrinho = lista_carrinho)
 
 # @app.route("/inserir_comentario", methods=['GET', 'POST'])
 # def comentario():

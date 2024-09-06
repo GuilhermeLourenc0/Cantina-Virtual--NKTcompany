@@ -3,7 +3,7 @@ from conexao import Conexao
 
 class Sistema:
     def __init__(self):
-        self.cpf = None
+        self.tel = None
         self.id_produto = None
 
     # def filtro(self, filtro):
@@ -60,16 +60,16 @@ class Sistema:
             return []
     
    
-    # def inserir_produto_carrinho(self, id_produto, cpf):
-    #     mydb = Conexao.conectar()
-    #     mycursor = mydb.cursor()
+    def inserir_produto_carrinho(self, cod_produto, id_cliente):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
 
-    #     sql = f"INSERT INTO tb_carrinho (cpf_cliente, id_produto) VALUES ('{cpf}', '{id_produto}')"
+        sql = f"INSERT INTO tb_carrinho (id_cliente, cod_produto) VALUES ('{id_cliente}', '{cod_produto}')"
         
-    #     mycursor.execute(sql)
-    #     mydb.commit()
-    #     mydb.close()
-    #     return True
+        mycursor.execute(sql)
+        mydb.commit()
+        mydb.close()
+        return True
     
     def exibir_produto(self, id):
         mydb =  Conexao.conectar()
@@ -96,19 +96,19 @@ class Sistema:
         mydb.close()
         return lista
     
-    def exibir_carrinho(self, cpf):
+    def exibir_carrinho(self, id_cliente):
         mydb =  Conexao.conectar()
         mycursor = mydb.cursor()
 
         sql = f"""
-                SELECT p.cod_produto, p.nome_produto, p.preco, p.url_imagem, p.id_categoria, p.descricao, c.id_carrinho
+                SELECT p.cod_produto, p.nome_produto, p.preco, p.url_img, p.id_categoria, p.descricao, c.id_carrinho
                 FROM tb_carrinho AS c
-                JOIN tb_produto AS p ON c.id_produto = p.id_produto
-                WHERE c.cpf_cliente = '{cpf}';
+                JOIN tb_produto AS p ON c.cod_produto = p.cod_produto
+                WHERE c.id_cliente = '{id_cliente}';
             """
 
         mycursor.execute(sql)
-        resultado1 = mycursor.fetchall()
+        resultado1 = mycursor.fetchone()
        
         lista_carrinho = []
 
