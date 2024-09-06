@@ -117,11 +117,12 @@
 }
 
 .bar1, .bar2, .bar3 {
-    width: 35px;
+    width: 40px;                                         
     height: 5px;
-    background-color: #fbff00;
+    background-color: rgba(255, 215, 7, 1);
     margin: 6px 0;
-    transition: 0.4s;
+    transition: 0.6s;
+  
 }
 
 .change .bar1 {
@@ -135,7 +136,6 @@
 .change .bar3 {
     transform: rotate(45deg) translate(-7px, -7px);
 }
-
 
 .sidenav {
     height: 100%;
@@ -166,7 +166,7 @@
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     right: 0;
     background-color: #111;
@@ -174,7 +174,6 @@
     transition: 0.5s;
     padding-top: 60px;
   }
-  
   .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
