@@ -292,4 +292,4 @@ INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 ('Soldador ao Arco Elétrico e Oxigás - SOLDA-S-2C24'),
 ('Torneiro Mecânico - TORNO-2A24');
 
-select * from tb_cliente
+
