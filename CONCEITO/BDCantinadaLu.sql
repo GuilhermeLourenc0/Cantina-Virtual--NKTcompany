@@ -2,13 +2,6 @@ CREATE DATABASE bd_cantinadalu;
 
 USE bd_cantinadalu;
 
--- Tabela de Cursos
-CREATE TABLE tb_curso (
-    id_curso INT AUTO_INCREMENT,
-    curso VARCHAR(50),
-    PRIMARY KEY (id_curso)
-);
-
 -- Tabela de Clientes
 -- Tabela de Cursos
 CREATE TABLE tb_curso (
@@ -19,15 +12,6 @@ CREATE TABLE tb_curso (
 
 -- Tabela de Clientes
 CREATE TABLE tb_cliente (
-    id_cliente INT AUTO_INCREMENT,
-    nome_comp VARCHAR(100),
-    telefone VARCHAR(15),
-    email VARCHAR(100),
-    id_curso INT,  -- Nova coluna para referência ao curso
-    senha VARCHAR(50),
-    tipo VARCHAR(20), 
-    PRIMARY KEY (id_cliente),
-    FOREIGN KEY (id_curso) REFERENCES tb_curso(id_curso)
     id_cliente INT AUTO_INCREMENT,
     nome_comp VARCHAR(100),
     telefone VARCHAR(15),

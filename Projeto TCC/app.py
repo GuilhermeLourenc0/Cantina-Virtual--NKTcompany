@@ -119,15 +119,15 @@ def compras():
 #         # Se por algum motivo o método for GET (não deveria ocorrer), redirecione também
 #         return redirect("/exibir_carrinho")
     
-# @app.route("/exibir_carrinho", methods=['GET', 'POST'])
-# def exibir_carrinho():
-#      if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('cpf') is None:
-#         return redirect('/logar')
-#      else:
-#         sistema = Sistema()
-#         cpf = session.get('usuario_logado')['cpf']
-#         lista_carrinho = sistema.exibir_carrinho(cpf)
-#         return render_template("carrinho.html", lista_carro=lista_carrinho)
+@app.route("/exibir_carrinho", methods=['GET', 'POST'])
+def exibir_carrinho():
+     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('cpf') is None:
+        return redirect('/logar')
+     else:
+        sistema = Sistema()
+        cpf = session.get('usuario_logado')['cpf']
+        lista_carrinho = sistema.exibir_carrinho(cpf)
+        return render_template("carrinho.html", lista_carro=lista_carrinho)
 
 # @app.route("/inserir_comentario", methods=['GET', 'POST'])
 # def comentario():
