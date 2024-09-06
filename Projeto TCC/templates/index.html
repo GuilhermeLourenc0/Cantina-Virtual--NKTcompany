@@ -72,13 +72,13 @@
                 <div class="produtos">
 
                     {% for registro in lista_produtos %}
-                    <a href="">
+                    <form action="/produto_unico" method="post">
                     <div class="card-produtos">
 
                         <img src="{{ registro.imagem_produto }}" alt="">
                         <span>{{ registro.nome_produto }}</span>
                         <span>{{ registro.preco }}</span>
-
+                        <button name="btn-produto" type="submit" value="{{ registro.id_produto }}">VER MAIS</button>
                     </div></a>
                     {% endfor %} 
                 </div>

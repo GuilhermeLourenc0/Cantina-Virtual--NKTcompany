@@ -30,6 +30,7 @@ CREATE TABLE tb_produto (
  preco DECIMAL(10,2),
  url_img VARCHAR(255),
  descricao TEXT,
+ id_categoria INT,
  PRIMARY KEY (cod_produto)
 );
 
@@ -54,15 +55,30 @@ CREATE TABLE tb_carrinho (
 
 -- Ajustando a tabela tb_categoria
 CREATE TABLE tb_categoria (
- id_categoria INT AUTO_INCREMENT, 
- cod_produto INT NOT NULL,  -- Mudança de VARCHAR para INT
- nome VARCHAR(50), 
- PRIMARY KEY (id_categoria, cod_produto),
- FOREIGN KEY (cod_produto) REFERENCES tb_produto (cod_produto)
+    id_categoria INT AUTO_INCREMENT, 
+    nome VARCHAR(50), 
+    PRIMARY KEY (id_categoria)
+);
+
+INSERT INTO tb_categoria (nome) VALUES 
+('Salgados Assados'),
+('Salgados Fritos'),
+('Bebidas'),
+('Doces'),
+('Lanches'),
+('Gelados');
+
+CREATE TABLE tb_pedidos (
+    id_pedido INT AUTO_INCREMENT,
+    id_cliente INT NOT NULL,
+    data_pedido DATE,
+    status VARCHAR(50),
+    PRIMARY KEY (id_pedido),
+    FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
 );
 
 
---Inserindo os cursos e turmas no Banco de Dados
+ -- Inserindo os cursos e turmas no Banco de Dados
 INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 ('Comandos Elétricos - COMANDOS-2A24'),
 ('ELETRICISTA DE REDE DE DISTRIBUIÇÃO DE ENERGIA ELÉTRICA - 153/2024-ERDEE'),
@@ -276,4 +292,4 @@ INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 ('Soldador ao Arco Elétrico e Oxigás - SOLDA-S-2C24'),
 ('Torneiro Mecânico - TORNO-2A24');
 
-select * from tb_cliente
+

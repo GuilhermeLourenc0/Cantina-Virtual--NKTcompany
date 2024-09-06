@@ -6,30 +6,30 @@ class Sistema:
         self.cpf = None
         self.id_produto = None
 
-    def filtro(self, filtro):
-        mydb =  Conexao.conectar()
-        mycursor = mydb.cursor()
+    # def filtro(self, filtro):
+    #     mydb =  Conexao.conectar()
+    #     mycursor = mydb.cursor()
 
-        sql = f"SELECT * from tb_produtos where categoria = '{filtro}'"
+    #     sql = f"SELECT * from tb_produtos where categoria = '{filtro}'"
 
-        mycursor.execute(sql)
-        resultado = mycursor.fetchall()
+    #     mycursor.execute(sql)
+    #     resultado = mycursor.fetchall()
        
-        lista_filtro = []
+    #     lista_filtro = []
 
-        for filtro in resultado:
-            lista_filtro.append({
-                'nome_produto': filtro[1],
-                'preco': filtro[2],
-                'imagem_produto': filtro[3],
-                'descricao': filtro[5],
-                'id_produto': filtro[0]       
-        })
-        mydb.close()
-        if lista_filtro:
-            return lista_filtro
-        else:
-            return []
+    #     for filtro in resultado:
+    #         lista_filtro.append({
+    #             'nome_produto': filtro[1],
+    #             'preco': filtro[2],
+    #             'imagem_produto': filtro[3],
+    #             'descricao': filtro[5],
+    #             'id_produto': filtro[0]       
+    #     })
+    #     mydb.close()
+    #     if lista_filtro:
+    #         return lista_filtro
+    #     else:
+    #         return []
         
     
 
@@ -42,40 +42,40 @@ class Sistema:
         
         resultado = mycursor.fetchall()
        
-        lista_categorias = []
+        lista_produtos = []
 
         for produto in resultado:
-            lista_categorias.append({
+            lista_produtos.append({
                 'nome_produto': produto[1],
                 'preco': produto[2],
                 'imagem_produto': produto[3],
-                # 'categoria': categoria[4],
+                'categoria': produto[5],
                 'descricao': produto[4],
                 'id_produto': produto[0] 
             })
         mydb.close()
-        if lista_categorias:
-            return lista_categorias 
+        if lista_produtos:
+            return lista_produtos 
         else:
             return []
     
    
-    def inserir_produto_carrinho(self, id_produto, cpf):
-        mydb = Conexao.conectar()
-        mycursor = mydb.cursor()
+    # def inserir_produto_carrinho(self, id_produto, cpf):
+    #     mydb = Conexao.conectar()
+    #     mycursor = mydb.cursor()
 
-        sql = f"INSERT INTO tb_carrinho (cpf_cliente, id_produto) VALUES ('{cpf}', '{id_produto}')"
+    #     sql = f"INSERT INTO tb_carrinho (cpf_cliente, id_produto) VALUES ('{cpf}', '{id_produto}')"
         
-        mycursor.execute(sql)
-        mydb.commit()
-        mydb.close()
-        return True
+    #     mycursor.execute(sql)
+    #     mydb.commit()
+    #     mydb.close()
+    #     return True
     
     def exibir_produto(self, id):
         mydb =  Conexao.conectar()
         mycursor = mydb.cursor()
 
-        sql = f"SELECT * from tb_produtos where id_produto = '{id}'"
+        sql = f"SELECT * from tb_produto where cod_produto = '{id}'"
 
         mycursor.execute(sql)
         resultado = mycursor.fetchone()
@@ -84,8 +84,8 @@ class Sistema:
             'nome_produto': resultado[1],
             'preco': resultado[2],
             'imagem_produto': resultado[3],
-            'descricao': resultado[5],
-            'id_produto': resultado[0]            
+            'descricao': resultado[4],
+            'cod_produto': resultado[0]            
         }
 
         lista = []
@@ -101,9 +101,9 @@ class Sistema:
         mycursor = mydb.cursor()
 
         sql = f"""
-                SELECT p.id_produto, p.nome_produto, p.preco, p.imagem_produto, p.categoria, p.descricao, c.id_carrinho
+                SELECT p.cod_produto, p.nome_produto, p.preco, p.url_imagem, p.id_categoria, p.descricao, c.id_carrinho
                 FROM tb_carrinho AS c
-                JOIN tb_produtos AS p ON c.id_produto = p.id_produto
+                JOIN tb_produto AS p ON c.id_produto = p.id_produto
                 WHERE c.cpf_cliente = '{cpf}';
             """
 
@@ -122,64 +122,64 @@ class Sistema:
         mydb.close()
         return lista_carrinho
 
-    def exibir_produto1(self, id):
-            mydb =  Conexao.conectar()
-            mycursor = mydb.cursor()
+    # def exibir_produto1(self, id):
+    #         mydb =  Conexao.conectar()
+    #         mycursor = mydb.cursor()
 
-            sql = f"SELECT * FROM tb_produtos INNER JOIN tb_produtos WHERE id_produto = '{id}'"
+    #         sql = f"SELECT * FROM tb_produtos INNER JOIN tb_produtos WHERE id_produto = '{id}'"
 
-            mycursor.execute(sql)
-            resultado = mycursor.fetchall()
+    #         mycursor.execute(sql)
+    #         resultado = mycursor.fetchall()
         
-            lista_produto1 = []
+    #         lista_produto1 = []
 
-            for id_produto in resultado:
-                lista_produto1.append({
-                    'nome_produto': id_produto[1],
-                    'preco': id_produto[2],
-                    'imagem_produto': id_produto[3],
-                    'descricao': id_produto[5]            
-            })
+    #         for id_produto in resultado:
+    #             lista_produto1.append({
+    #                 'nome_produto': id_produto[1],
+    #                 'preco': id_produto[2],
+    #                 'imagem_produto': id_produto[3],
+    #                 'descricao': id_produto[5]            
+    #         })
 
-            mydb.close()
+    #         mydb.close()
 
-    def inserir_comentario(self, comentario, nome_cliente):
-        mydb = Conexao.conectar()
-        mycursor = mydb.cursor()
+    # def inserir_comentario(self, comentario, nome_cliente):
+    #     mydb = Conexao.conectar()
+    #     mycursor = mydb.cursor()
 
-        sql = f"INSERT INTO tb_comentario (comentario_usuario, nome_usuario) VALUES ('{comentario}', '{nome_cliente}')"
+    #     sql = f"INSERT INTO tb_comentario (comentario_usuario, nome_usuario) VALUES ('{comentario}', '{nome_cliente}')"
 
         
-        mycursor.execute(sql)
-        mydb.commit()
-        mydb.close()
-        return True
+    #     mycursor.execute(sql)
+    #     mydb.commit()
+    #     mydb.close()
+    #     return True
     
-    def exibir_comentario(self, nome_cliente):
-        mydb = Conexao.conectar()
-        mycursor = mydb.cursor()
+    # def exibir_comentario(self, nome_cliente):
+    #     mydb = Conexao.conectar()
+    #     mycursor = mydb.cursor()
         
-        sql = f"SELECT comentario_usuario FROM tb_comentario WHERE nome_usuario = '{nome_cliente}'"
-        mycursor.execute(sql)
-        resultado = mycursor.fetchall()
+    #     sql = f"SELECT comentario_usuario FROM tb_comentario WHERE nome_usuario = '{nome_cliente}'"
+    #     mycursor.execute(sql)
+    #     resultado = mycursor.fetchall()
         
-        lista_comentario = []
+    #     lista_comentario = []
 
-        for comentario in resultado:
-            lista_comentario.append({
-                'comentario': comentario[0]  # Assumindo que o comentário está na primeira coluna (índice 0)
-            })
+    #     for comentario in resultado:
+    #         lista_comentario.append({
+    #             'comentario': comentario[0]  # Assumindo que o comentário está na primeira coluna (índice 0)
+    #         })
 
-        mydb.close()
-        return lista_comentario
+    #     mydb.close()
+    #     return lista_comentario
     
-    def excluir_produto(self, btn_excluir):
-        mydb =  Conexao.conectar()
-        mycursor = mydb.cursor()
+    # def excluir_produto(self, btn_excluir):
+    #     mydb =  Conexao.conectar()
+    #     mycursor = mydb.cursor()
 
-        sql = f"DELETE FROM tb_carrinho WHERE id_carrinho = '{btn_excluir}'"
+    #     sql = f"DELETE FROM tb_carrinho WHERE id_carrinho = '{btn_excluir}'"
 
-        mycursor.execute(sql)
-        mydb.commit()
-        mydb.close()
+    #     mycursor.execute(sql)
+    #     mydb.commit()
+    #     mydb.close()
         

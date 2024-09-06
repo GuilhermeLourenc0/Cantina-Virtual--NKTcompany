@@ -67,6 +67,27 @@ class Usuario:
             mydb.commit()  # Confirmando as alterações no banco de dados
             mydb.close()  # Fechando a conexão
             return lista_cursos
+    
+    def exibir_categorias(self):
+        mydb = Conexao.conectar()  # Conectando ao banco de dados
+        mycursor = mydb.cursor()
+
+        sql = f"SELECT * from tb_categoria"
+        mycursor.execute(sql)
+    
+        resultado = mycursor.fetchall()
+    
+        lista_categorias = []
+
+        for categorias in resultado:
+            lista_categorias.append({
+                'id_categoria': categorias[0],
+                'nome': categorias[1]
+        })
+
+        mydb.commit()  # Confirmando as alterações no banco de dados
+        mydb.close()  # Fechando a conexão
+        return lista_categorias
         
     def logar(self, email, senha):
                 senha = sha256(senha.encode()).hexdigest()  # Criptografando a senha
@@ -89,19 +110,19 @@ class Usuario:
                 else:
                     self.logado = False
 
-    def inserir_produto(self, nomeP, preco, imagem, descricao):
+    def inserir_produto(self, nomeP, preco, imagem, descricao, categoria):
         # try:
             mydb = Conexao.conectar()
             mycursor = mydb.cursor()
 
-            sql = f"INSERT INTO tb_produto (nome_produto, preco, url_img, descricao) VALUES('{nomeP}', {preco}, '{imagem}', '{descricao}')"
+            sql = f"INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) VALUES('{nomeP}', {preco}, '{imagem}', '{descricao}', {categoria})"
 
             mycursor.execute(sql)
 
             self.imagem = imagem
             self.preco = preco
             self.nomeP = nomeP
-            # self.categoria = categoria
+            self.categoria = categoria
             self.descricao = descricao
             self.logado = True
 
