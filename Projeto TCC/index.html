@@ -23,8 +23,20 @@
 
             <img class="logo" src="/Projeto TCC/static/img/logo.png" alt="">
 
-            <img class="menu" src="https://cdn.icon-icons.com/icons2/1710/PNG/512/menubuttonofthreelinesoutline_112563.png" alt="">
-
+            <div class="menu-container" onclick="toggleMenu(this)">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
+            
+            <div id="mySidenav" class="sidenav">
+                <a href="#">Coisas</a>
+                <a href="#">Coisas</a>
+                <a href="#">Hmm coisas</a>
+                <a href="#">Profissionalismo gente</a>
+            </div>
+              </div>
+            
         </div>
 
         <div class="cbc-baixo">
@@ -112,8 +124,28 @@
                 </div>
 
             </div>
-
+             <span>onclick="openNav()">&#9776;</span>
         </section>
+
+
+        <!-------------------------------------- SESSÃO DE ANIMAÇÃO DO MENU ------------------------------------------------------------>
+
+
+        <script>
+            function toggleMenu(x) {
+                // Alternar animação das barras
+                x.classList.toggle("change");
+        
+                // Abrir ou fechar o menu lateral
+                const menu = document.getElementById("mySidenav");
+                if (menu.style.width === "250px") {
+                    menu.style.width = "0";
+                } else {
+                    menu.style.width = "250px";
+                }
+            }
+        </script>
+        
 
     </main>
 
