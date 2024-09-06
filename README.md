@@ -9,17 +9,21 @@ Cadastro de Usuários: Criação de contas para acessar o histórico de pedidos 
 Cardápio Online: Exibição completa das opções disponíveis, incluindo personalização dos pratos.
 Carrinho de Compras: Adicione itens ao carrinho e finalize sua compra de maneira simples.
 Notificações: Alerta sobre o status do pedido e promoções em tempo real.
+
 🎯 Público-Alvo
 Clientes: Alunos, funcionários e visitantes do SENAI que buscam praticidade na hora de fazer seus pedidos.
 Cantina: Equipe responsável pela preparação e entrega dos pedidos, com ferramentas para gerenciar vendas e oferecer um atendimento personalizado.
+
 🚀 Benefícios do Sistema
 Mais Praticidade: Permite realizar pedidos sem filas.
 Mais Opções: Cardápio completo com a possibilidade de personalização.
 Gestão Eficiente: A cantina pode gerenciar os pedidos de forma organizada e tomar decisões com base em relatórios de vendas.
+
 💻 Tecnologias Utilizadas
 Python: Backend e lógica do sistema.
 JavaScript: Funcionalidades dinâmicas da interface do usuário.
 HTML & CSS: Estrutura e estilo das páginas web.
+
 🛠️ Como Funciona
 O sistema funciona inteiramente através de um site acessível tanto para clientes quanto para a equipe da cantina. Ele possui uma interface intuitiva, facilitando o uso por qualquer pessoa, independentemente de suas habilidades tecnológicas.
 
