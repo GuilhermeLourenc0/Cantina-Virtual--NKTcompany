@@ -132,18 +132,14 @@
 
 
         <script>
-            function toggleMenu(x) {
-                // Alternar animação das barras
-                x.classList.toggle("change");
-        
-                // Abrir ou fechar o menu lateral
-                const menu = document.getElementById("mySidenav");
-                if (menu.style.width === "400px") {
-                    menu.style.width = "0";
-                } else {
-                    menu.style.width = "400px";
-                }
-            }
+           function toggleMenu(x) {
+
+    x.classList.toggle("change");
+
+    // Abrir e fechar o menu lateral
+    const menu = document.getElementById("mySidenav");
+    menu.classList.toggle("open"); 
+}
         </script>
         
 
