@@ -4,7 +4,7 @@
     <main>
 
         {% for registro in lista_prounico %}
-        <img src="{{ registro.imagem_produto }}" alt="">
+        <figure><img src="{{ registro.imagem_produto }}" alt="img_produto"></figure>
         <section class="descricao">
             <span class="nome-produto">{{ registro.nome_produto }}</span>
             <span class="descricao-produto">{{ registro.descricao }}</span>
@@ -16,22 +16,20 @@
         {% endfor %} 
 
 
-        <div class="rating">
-            <input type="checkbox" id="star5" name="rating" value="5">
-            <label for="star5" title="5 estrelas">&#9733;</label>
-    
-            <input type="checkbox" id="star4" name="rating" value="4">
-            <label for="star4" title="4 estrelas">&#9733;</label>
-    
-            <input type="checkbox" id="star3" name="rating" value="3">
-            <label for="star3" title="3 estrelas">&#9733;</label>
-    
-            <input type="checkbox" id="star2" name="rating" value="2">
-            <label for="star2" title="2 estrelas">&#9733;</label>
-    
-            <input type="checkbox" id="star1" name="rating" value="1">
-            <label for="star1" title="1 estrela">&#9733;</label>
-        </div>
+        <section class="nota_star">
+            <div class="rating">
+                <input type="checkbox" id="star5" name="rating" value="5">
+                <label for="star5" title="5 estrelas">&#9733;</label>
+                <input type="checkbox" id="star4" name="rating" value="4">
+                <label for="star4" title="4 estrelas">&#9733;</label>
+                <input type="checkbox" id="star3" name="rating" value="3">
+                <label for="star3" title="3 estrelas">&#9733;</label>
+                <input type="checkbox" id="star2" name="rating" value="2">
+                <label for="star2" title="2 estrelas">&#9733;</label>
+                <input type="checkbox" id="star1" name="rating" value="1">
+                <label for="star1" title="1 estrela">&#9733;</label>
+            </div>
+        </section>
 
     </main>
 

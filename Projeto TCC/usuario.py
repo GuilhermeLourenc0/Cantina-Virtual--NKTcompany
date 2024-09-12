@@ -132,3 +132,5 @@ class Usuario:
             return True
         # except:
         #     return False
+    
+    # def trocar_senha(self, email):

@@ -4,6 +4,11 @@
     padding: 0;
 }
 
+html{
+
+    overflow: scroll;
+}
+
 .cbc-cima{
     display: flex;
     justify-content: space-around;
@@ -50,6 +55,7 @@
 
 .produtos{
     display: grid;
+    height: 50px;
     grid-template-columns: repeat(2, 1fr); /* 3 colunas de tamanho igual */
     gap: 16px; /* Espaço entre os itens */
 }
@@ -115,6 +121,8 @@
 .footer button:active{
     filter: grayscale(20%);
 }
+
+
 
 /* ======================================================================================================================= */
 

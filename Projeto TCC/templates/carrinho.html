@@ -19,10 +19,10 @@
             {% endfor %}
         </section>
 
-        <form action="" method="post">
-        <button type="submit" class="button1">
-            Comprar
-        </button>
+        {% for registro in lista_carrinho %}
+        <form action="/enviar_carrinho" method="post">
+            <button value="{{ registro.id_carrinho }}" name="id_carrinho" class="button1" value="{{ registro.id_produto }}">Enviar</button>
         </form>
+        {% endfor %}
     </main>
     {% endblock %}

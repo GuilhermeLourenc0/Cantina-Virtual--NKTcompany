@@ -121,57 +121,6 @@ class Sistema:
         })
         mydb.close()
         return lista_carrinho
-
-    # def exibir_produto1(self, id):
-    #         mydb =  Conexao.conectar()
-    #         mycursor = mydb.cursor()
-
-    #         sql = f"SELECT * FROM tb_produtos INNER JOIN tb_produtos WHERE id_produto = '{id}'"
-
-    #         mycursor.execute(sql)
-    #         resultado = mycursor.fetchall()
-        
-    #         lista_produto1 = []
-
-    #         for id_produto in resultado:
-    #             lista_produto1.append({
-    #                 'nome_produto': id_produto[1],
-    #                 'preco': id_produto[2],
-    #                 'imagem_produto': id_produto[3],
-    #                 'descricao': id_produto[5]            
-    #         })
-
-    #         mydb.close()
-
-    # def inserir_comentario(self, comentario, nome_cliente):
-    #     mydb = Conexao.conectar()
-    #     mycursor = mydb.cursor()
-
-    #     sql = f"INSERT INTO tb_comentario (comentario_usuario, nome_usuario) VALUES ('{comentario}', '{nome_cliente}')"
-
-        
-    #     mycursor.execute(sql)
-    #     mydb.commit()
-    #     mydb.close()
-    #     return True
-    
-    # def exibir_comentario(self, nome_cliente):
-    #     mydb = Conexao.conectar()
-    #     mycursor = mydb.cursor()
-        
-    #     sql = f"SELECT comentario_usuario FROM tb_comentario WHERE nome_usuario = '{nome_cliente}'"
-    #     mycursor.execute(sql)
-    #     resultado = mycursor.fetchall()
-        
-    #     lista_comentario = []
-
-    #     for comentario in resultado:
-    #         lista_comentario.append({
-    #             'comentario': comentario[0]  # Assumindo que o comentário está na primeira coluna (índice 0)
-    #         })
-
-    #     mydb.close()
-    #     return lista_comentario
     
     def excluir_produto(self, btn_excluir):
         mydb =  Conexao.conectar()
@@ -190,11 +139,11 @@ class Sistema:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        sql = f"INSERT INTO tb_pedidos (id_cliente, cod_produto) VALUES ('{id_cliente}', '{cod_produto}')"
+        sql = f"INSERT INTO tb_pedidos (id_cliente, cod_produto) VALUES ('{id_cliente}', '{id_carrinho}')"
 
         mycursor.execute(sql)
 
-        sql_remover = f"DELETE FROM tb_carrinho WHERE '{id_cliente} AND '{cod_produto}'"
+        sql_remover = f"DELETE FROM tb_carrinho WHERE '{id_cliente} AND '{id_carrinho}'"
 
         mycursor.execute(sql_remover)
         mydb.commit()

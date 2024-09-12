@@ -144,16 +144,18 @@ def excluir_produto():
 @app.route("/enviar_carrinho", methods=['POST'])
 def enviar_carrinho():
     if request.method == 'POST':
-        id_produto = session.get('id')['id_produto']
+        id_carrinho = request.form["id_carrinho"]
         id_cliente = session.get('usuario_logado')['id_cliente']
 
-    if id_produto and id_cliente:
+    if id_carrinho and id_cliente:
         sistema = Sistema()
-        sistema.enviar_carrinho(id_produto, id_cliente)
+        sistema.enviar_carrinho(id_carrinho, id_cliente)
         
         # Redireciona para a rota que exibe os pedidos
         return redirect("/exibir_pedidos")
 
+# @app.route("/nova_senha", methods=["POST"])
+# def nova_senha():
 
 
 app.run(debug=True)

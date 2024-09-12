@@ -1,5 +1,6 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
+<link rel="stylesheet" href="../static/styles/principal.css">
 
     <main>
 
@@ -45,6 +46,7 @@
                         <span>{{ registro.preco }}</span>
                         <button name="btn-produto" type="submit" value="{{ registro.id_produto }}">VER MAIS</button>
                     </div></a>
+                    </form>
                     {% endfor %} 
                 </div>
         
