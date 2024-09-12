@@ -1,0 +1,21 @@
+{% extends "modelo.html" %}
+{% block conteudo %}
+<link rel="stylesheet" href="../static/styles/pedidos.css">
+
+<main>
+    <section class="cont-pedidos">
+        <h1>Pedidos</h1>
+        {% for registro in lista_pedidos %}
+        <div class="card-pedidos">
+            <h2>Nome do Cliente: {{ registro.nome_cliente }}</h2>
+            <p>Telefone do Cliente: {{ registro.telefone }}</p>
+            <!-- pedidos de um só cliente -->
+            <h3>Produtos Pedidos</h3>
+            <p>{{ registro.nome_produto }}</p>
+        {% endfor %}
+        </div>
+        
+    </section>
+</main>
+
+{% endblock %}

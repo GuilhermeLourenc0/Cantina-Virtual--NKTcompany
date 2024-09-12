@@ -135,18 +135,13 @@ class Sistema:
 
 
 
-    def enviar_carrinho(self, id_carrinho, id_cliente):
+    def enviar_carrinho(self, id_cliente):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
         sql = f"INSERT INTO tb_pedidos (id_cliente, data_pedido, status) VALUES ('{id_cliente}', CURDATE(), 'Pendente')"
 
         mycursor.execute(sql)
-        mydb.commit()
-
-        sql_remover = f"DELETE FROM tb_carrinho WHERE '{id_cliente} AND '{id_carrinho}'"
-
-        mycursor.execute(sql_remover)
         mydb.commit()
         mydb.close()
         return True
@@ -159,10 +154,12 @@ class Sistema:
         mycursor = mydb.cursor()
 
         sql = f"""
-            SELECT p.cod_produto, p.nome_produto, p.preco, p.url_img, p.id_categoria, p.descricao, pe.id_pedido
-            FROM tb_pedidos AS pe
-            JOIN tb_produto AS p ON pe.cod_produto = p.cod_produto
-            WHERE pe.id_cliente = '{id_cliente}'
+            SELECT p.id_pedido, cl.nome_comp, cl.telefone, pr.nome_produto, pr.preco, p.data_pedido, p.status
+            FROM tb_pedidos p
+            JOIN tb_cliente cl ON p.id_cliente = cl.id_cliente
+            JOIN tb_carrinho c ON cl.id_cliente = c.id_cliente
+            JOIN tb_produto pr ON c.cod_produto = pr.cod_produto
+            group by cl.id_cliente
         """
 
         mycursor.execute(sql)
@@ -172,10 +169,18 @@ class Sistema:
 
         for resultado in resultado:
             lista_pedidos.append({
-                'nome_produto': resultado[1],
-                'preco': resultado[2],
-                'imagem_produto': resultado[3],
-                'id_pedido': resultado[6]
-        })
+                'id_pedido': resultado[0],
+                'nome_cliente': resultado[1],
+                'telefone': resultado[2],
+                'nome_produto': resultado[3],
+                'preco': resultado[4],
+                'data_pedido': resultado[5],
+                'status': resultado[6]
+                })
+            
+        # sql_remover = f"DELETE FROM tb_carrinho WHERE '{id_cliente}'"
+
+        # mycursor.execute(sql_remover)
+        # mydb.commit()
         mydb.close()
         return lista_pedidos

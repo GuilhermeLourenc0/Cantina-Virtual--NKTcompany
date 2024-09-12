@@ -1,63 +1,7 @@
-<<<<<<< HEAD
 {% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/carrinho.css">
-
-    <main>
-        <section class="cont-carrinho">
-            {% for registro in lista_carrinho %}
-            <form action="/excluir_produto" method="post" class="carrinho">
-           
-                <div class="carrinho-item">
-                    <div class="img"><img src="{{ registro.imagem_produto }}" alt="top"></div>
-                </div>
-                <div class="texto">
-                    <p>{{ registro.nome_produto }}</p>
-                    <p>{{ registro.preco }}</p>
-                </div>
-                <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}">Excluir</button>
-            </form>
-            {% endfor %}
-        </section>
-
-        {% for registro in lista_carrinho %}
-        <form action="/enviar_carrinho" method="post">
-            <button value="{{ registro.id_carrinho }}" name="id_carrinho" class="button1" value="{{ registro.id_produto }}">Enviar</button>
-        </form>
-        {% endfor %}
-    </main>
-    {% endblock %}
-=======
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantina Digital</title>
-    <link rel="stylesheet" href="/Projeto TCC/static/styles/carrinho.css">
-    <link rel="stylesheet" href="/Projeto TCC/static/styles/fontes.css">
-</head>
-
 <body>
-    <header class="container-header">
-
-        <div class="cbc-cima">
-
-            <a href=""><img class="perfil"
-                    src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg"
-                    alt=""></a>
-
-            <img class="logo" src="/Projeto TCC/static/img/logo.png" alt="">
-
-            <img class="menu"
-                src="https://cdn.icon-icons.com/icons2/1710/PNG/512/menubuttonofthreelinesoutline_112563.png" alt="">
-
-        </div>
-
-    </header>
-
     <main>
 
 
@@ -68,18 +12,18 @@
                 <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
             </div>
 
-
-            <div class="produto-card">
+            {% for registro in lista_carrinho %}
+            <form action="/excluir_produto" method="post" class="produto-card">
 
                 <img class="img-produto"
-                    src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp"
-                    alt="Imagem">
+                    src="{{ registro.imagem_produto }}"
+                    alt="Imagem Produto">
 
                 <div class="direita-card">
 
                     <div class="cima">
-                        <span>Coxinha de Catupiry</span>
-                        <button><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
+                        <span>{{ registro.nome_produto }}</span>
+                        <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}"><img src="../static/img/lixo.png" alt=""></button>
                     </div>
 
                     <div class="baixo">
@@ -90,14 +34,14 @@
 
                         <script src="script.js"></script>
 
-                        <span>R$ 7,50</span>
+                        <span>{{ registro.preco }}</span>
 
                     </div>
 
                 </div>
 
-            </div>
-
+            </form>
+            {% endfor %}
 
 
 
@@ -107,8 +51,11 @@
                     <span class="span2">R$69,00</span>
                 </div>
 
-                <button class="finalizacompra">Finalizar Compra</button>
-                <a href="">Continuar Comprando</a>
+
+                <form action="/enviar_carrinho" method="post">
+                    <button name="id_carrinho" class="button1">Enviar</button>
+                </form> 
+                <a href="/">Continuar Comprando</a>
             </div>
 
             <span class="span3">.</span>
@@ -139,5 +86,4 @@
 
 </body>
 
-</html>
->>>>>>> 25d986cd85d797c911ad84c3aaf47a2a5c5ea2f8
+{% endblock %}
