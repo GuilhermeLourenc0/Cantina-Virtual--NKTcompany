@@ -17,25 +17,26 @@
                 <input id="tel" name="tel" placeholder="*Telefone" type="text">
                 <input id="email" name="email" placeholder="*E-mail"  type="text">
                 <input id="senha" name="senha" placeholder="*Senha"  type="text">
+                <div class="select">
+
                 <select id="curso" name="curso">
+                    <option value="#">Selecione o seu curso</option>
                     {% for registro in cursos %}
                     <option value="{{ registro.id_curso }}">{{ registro.curso }}</option>
                     {% endfor %}
                 </select>
 
                 <button type="submit">Registrar</button>
+                
+                <h4>Já está registrado? <a href="/logar" class="login-btn">Faça o login</a></h2>
+
+                </div>
+
             </form>
 
         </div>
-        <div class="checkbox">
-            <input type="checkbox">
-            <span>Aceitar Termos de uso</span> 
-        </div>
 
-
-
-
-        <a href="">Já estou Registrado</a>
+        
         
     </section>
     

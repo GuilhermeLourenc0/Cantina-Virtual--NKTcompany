@@ -47,3 +47,23 @@ form input{
 form input:focus{
     outline: none;
 }
+
+.select{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.select select{
+    width: 22.5rem;
+    height: 3rem;
+    border-radius: 1rem;
+}
+
+.login-btn{
+    text-decoration: none;
+    color: rgb(156, 0, 0);
+}
