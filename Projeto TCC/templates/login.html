@@ -1,10 +1,12 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/login.css">
+
 <body>
-    <section class="container-principal">
-        <h2>Entrar</h2>
-        <div class="formulario">
+    <main>
+        <section class="container-principal">
+            <h2>Entrar</h2>
+            <div class="formulario">
 
             <form action="" method="post">
                 <input name="email" id="email" placeholder="*E-mail"  type="text">
@@ -13,9 +15,8 @@
             </form>
 
         </div>
-        <div class="checkbox">
-           <a href=""> <span>Esqueceu sua senha</span> </a>
-        </div>
+        
+        <a href=""> <span>Esqueceu sua senha</span> </a>
 
         
 
@@ -24,3 +25,25 @@
     </section>
     
     {% endblock %}
+
+                <form action="">
+                    <input placeholder="*E-mail" type="text">
+                    <input placeholder="*Senha" type="text">
+                </form>
+
+            </div>
+            <div class="checkbox">
+                <a href=""> <span>Esqueceu sua senha</span> </a>
+            </div>
+
+            <button>Entrar</button>
+
+            <a href="">Ainda não tenho conta</a>
+
+        </section>
+    </main>
+
+
+</body>
+
+</html>

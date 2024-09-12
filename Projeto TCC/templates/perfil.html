@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,50 +8,105 @@
     <title>Cantina Digital</title>
     <link rel="stylesheet" href="/Projeto TCC/static/styles/perfil.css">
 </head>
+
 <body>
-    <div class="cbc-cima">
+    <header class="container-header">
 
-        <a href="/Projeto TCC/templates/perfil.html"><img class="perfil" src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg" alt=""></a>
+        <div class="cbc-cima">
 
-        <a href="/Projeto TCC/index.html"><img class="logo" src="/Projeto TCC/static/img/logo.png" alt=""></a>
+            <a href=""><img class="perfil"
+                    src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg"
+                    alt=""></a>
 
-        <img class="menu" src="https://cdn.icon-icons.com/icons2/1710/PNG/512/menubuttonofthreelinesoutline_112563.png" alt="">
+            <img class="logo" src="/Projeto TCC/static/img/logo.png" alt="">
 
-    </div>
+            <img class="menu"
+                src="https://cdn.icon-icons.com/icons2/1710/PNG/512/menubuttonofthreelinesoutline_112563.png" alt="">
 
-    <div class="cbc-baixo">
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
-    </div>
+        </div>
 
-    <section class="container-principal">
+    </header>
 
-        <h2>Perfil</h2>
+    <main>
 
-        <div class="profile-container">
-            <div class="profile-image"></div>
-            <div class="overlay">
-                <img src="/Projeto TCC/static/img/btn-editar.png" alt="Imagem Sobreposta" class="overlay-image">
+
+        <section class="container-principal">
+
+            <h2>Perfil</h2>
+
+            <div class="profile-container">
+                <div class="profile-image"></div>
+                <div class="overlay">
+                    <input type="file" id="file-upload" accept="image/png, image/jpeg"><img
+                        src="/Projeto TCC/static/img/btn-editar.png" alt="Imagem Sobreposta" class="overlay-image">
+                </div>
             </div>
-        </div>
 
 
-        
-        <div class="formulario">
 
-            <form action="">
-                <input placeholder="*Nome"  type="text">
-                <input placeholder="*Senha"  type="text">
-                <input placeholder="*Confirmar Senha"  type="text">
-            </form>
+            <div class="formulario">
 
-        </div>
+                <form action="">
+                    <input placeholder="*Nome" type="text">
 
-        <button>Confirmar Mudanças</button>
-        
-    </section>
-    
+                    <input type="password" id="password" placeholder="*Senha">
+
+                    <button type="button" class="toggle-button" onclick="togglePassword1()">
+                        <img id="toggle-icon" src="/Projeto TCC/static/img/fecheido-removebg.png" alt="Mostrar Senha"
+                            width="20" height="20">
+                    </button>
+
+                    <input placeholder="*Confirmar Senha" id="passwordConfirmar" type="text">
+                    <button type="button" class="toggle-button2" onclick="togglePassword2()">
+                        <img id="toggle-icon2" src="/Projeto TCC/static/img/fecheido-removebg.png" alt="Mostrar Senha"
+                            width="20" height="20">
+                    </button>
+                </form>
+
+            </div>
+
+            <button class="btn-confirmar">Confirmar Mudanças</button>
+
+
+        </section>
+
+    </main>
+
+    <script>
+        function togglePassword1() {
+            event.preventDefault();
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggle-icon');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = '/Projeto TCC/static/img/abrido-removebg.png'; // Caminho para o ícone de ocultar
+                toggleIcon.alt = 'Ocultar Senha';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = '/Projeto TCC/static/img/fecheido-removebg.png'; // Caminho para o ícone de mostrar
+                toggleIcon.alt = 'Mostrar Senha';
+            }
+        }
+
+
+        function togglePassword2() {
+            event.preventDefault();
+            const passwordField = document.getElementById('passwordConfirmar');
+            const toggleIcon = document.getElementById('toggle-icon2');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = '/Projeto TCC/static/img/abrido-removebg.png'; // Caminho para o ícone de ocultar
+                toggleIcon.alt = 'Ocultar Senha';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = '/Projeto TCC/static/img/fecheido-removebg.png'; // Caminho para o ícone de mostrar
+                toggleIcon.alt = 'Mostrar Senha';
+            }
+        }
+    </script>
+
 </body>
+
 </html>

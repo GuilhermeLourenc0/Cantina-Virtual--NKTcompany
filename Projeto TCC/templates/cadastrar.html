@@ -2,8 +2,14 @@
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/cadastro.css">
 <body>
+    <main>
     <section class="container-principal">
+
+    <div class="titulo">
+
         <h2>Cadastre-Se</h2>
+    </div>
+      
         <div class="formulario">
             
             <form action="" method="post">
@@ -13,26 +19,26 @@
                 <label for=""><input id="tel" name="tel" placeholder="*Telefone" type="text"></label>
                 <input id="email" name="email" placeholder="*E-mail"  type="text">
                 <input id="senha" name="senha" placeholder="*Senha"  type="text">
+                <div class="select">
+
                 <select id="curso" name="curso">
+                    <option value="#">Selecione o seu curso</option>
                     {% for registro in cursos %}
                     <option value="{{ registro.id_curso }}">{{ registro.curso }}</option>
                     {% endfor %}
                 </select>
 
                 <button type="submit">Registrar</button>
+
+                <p>Já está registrado? <a href="/logar" class="login-btn">Faça o login</a></p>
+
+                </div>
+
             </form>
 
-        </div>
-        <div class="checkbox">
-            <input type="checkbox">
-            <span>Aceitar Termos de uso</span> 
-        </div>
-
-
-
-
-        <a href="/logar">Já estou Registrado</a>
-        
+        </div> 
     </section>
-    
+    </main>
     {% endblock %}
+
+    
