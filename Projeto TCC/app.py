@@ -30,7 +30,7 @@ def cadastro():
         email = request.form["email"]
         senha = request.form["senha"]
         curso = request.form["curso"]
-        tipo = request.form["tipo"]
+        tipo = "cliente"
 
         usuario = Usuario()
         if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
