@@ -139,9 +139,10 @@ class Sistema:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        sql = f"INSERT INTO tb_pedidos (id_cliente, cod_produto) VALUES ('{id_cliente}', '{id_carrinho}')"
+        sql = f"INSERT INTO tb_pedidos (id_cliente, data_pedido, status) VALUES ('{id_cliente}', CURDATE(), 'Pendente')"
 
         mycursor.execute(sql)
+        mydb.commit()
 
         sql_remover = f"DELETE FROM tb_carrinho WHERE '{id_cliente} AND '{id_carrinho}'"
 
