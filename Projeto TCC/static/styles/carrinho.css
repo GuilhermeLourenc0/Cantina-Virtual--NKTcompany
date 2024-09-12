@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 html{
 
     overflow-x: hidden;
@@ -444,3 +445,184 @@ footer{
   .button1:active {
     scale: 1;
   }
+=======
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.cbc-cima {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgba(207, 34, 38, 255);
+}
+
+.cbc-cima .perfil {
+    height: 50px;
+    width: 50px;
+    border-radius: 100px;
+}
+
+.cbc-cima .perfil:active {
+    filter: grayscale(70%);
+
+}
+
+.logo {
+    height: 70px;
+}
+
+.menu {
+    height: 40px;
+}
+
+.cbc-baixo {
+    background-color: rgb(156, 0, 0);
+    display: none;
+    justify-content: space-around;
+
+}
+
+.container-principal {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-x {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+
+.btn-sair {
+    border: none;
+    font-size: 20px;
+    font-weight: bolder;
+    margin-left: 20px;
+    background: none;
+}
+
+.subtitle {
+    margin-left: 20px;
+}
+
+.produto-card {
+    display: flex;
+    margin-top: 20px;
+    border-bottom:1px solid rgb(180, 180, 180) ;
+}
+
+.img-produto{
+   margin-left: 20px; 
+}
+
+.produto-card img {
+    height: 110px;
+    width: 100px;
+    border-radius: 5px;
+}
+
+.baixo button {
+    padding: 10px;
+    font-size: 18px;
+}
+
+.cima img{
+    height: 15px;
+    width: 15px;
+    display: flex;
+}
+
+.cima{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.btn-lixo{
+    border: none;
+    background: none;
+    height: 10px;
+}
+
+.baixo button{
+    border: none;
+    background: none;
+    font-size: 25px;
+}
+
+.baixo input{
+    width: 35px;
+    border: none;
+    border-bottom: 1px solid black;
+    text-align: center;
+    pointer-events: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    
+}
+
+.baixo input:focus{
+    outline: none;
+}
+
+.cima button{
+    margin-left: 90px;
+    border: none;
+    background: none;
+    margin-top: 1.3px;
+}
+
+.baixo span{
+    margin-left: 100px;
+}
+
+.finalizacao { 
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    align-items: center;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.finalizacao button{
+    width: 370px;
+    margin-bottom: 15px;
+    height: 40px;
+}
+
+.finalizacompra{
+    color: white;
+    background-color: black;
+}
+
+.finalizacao a{
+    color: black;
+}
+
+.preco{
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.span3{
+    margin-bottom: 120px
+}
+>>>>>>> 25d986cd85d797c911ad84c3aaf47a2a5c5ea2f8

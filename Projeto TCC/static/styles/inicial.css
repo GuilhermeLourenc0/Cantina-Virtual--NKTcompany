@@ -90,6 +90,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+<<<<<<< HEAD
     position: fixed;
     left: 0;
     bottom: 0;
@@ -101,13 +102,15 @@
 
 .status-cor{
     color: rgb(21, 255, 0);
+=======
+    
+>>>>>>> 25d986cd85d797c911ad84c3aaf47a2a5c5ea2f8
 }
 
 .footer button{
 
     background-color: rgb(17, 177, 2);
     border-radius: 10px;
-    color: white;
     border: none;
     padding: 10px;
 }
