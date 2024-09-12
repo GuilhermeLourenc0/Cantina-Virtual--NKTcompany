@@ -1,8 +1,7 @@
-<<<<<<< HEAD
 {% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/carrinho.css">
-
+<body>
     <main>
         <section class="cont-carrinho">
             {% for registro in lista_carrinho %}
@@ -25,78 +24,45 @@
             Comprar
         </button>
         </form>
-    </main>
     {% endblock %}
-=======
-<!DOCTYPE html>
-<html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantina Digital</title>
-    <link rel="stylesheet" href="/Projeto TCC/static/styles/carrinho.css">
-    <link rel="stylesheet" href="/Projeto TCC/static/styles/fontes.css">
-</head>
 
-<body>
-    <header class="container-header">
 
-        <div class="cbc-cima">
+    <section class="container-principal">
 
-            <a href=""><img class="perfil"
-                    src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg"
-                    alt=""></a>
-
-            <img class="logo" src="/Projeto TCC/static/img/logo.png" alt="">
-
-            <img class="menu"
-                src="https://cdn.icon-icons.com/icons2/1710/PNG/512/menubuttonofthreelinesoutline_112563.png" alt="">
-
+        <div class="btn-x">
+            <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
         </div>
 
-    </header>
 
-    <main>
+        <div class="produto-card">
 
+            <img class="img-produto"
+                src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp"
+                alt="Imagem">
 
+            <div class="direita-card">
 
-        <section class="container-principal">
+                <div class="cima">
+                    <span>Coxinha de Catupiry</span>
+                    <button><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
+                </div>
 
-            <div class="btn-x">
-                <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
-            </div>
+                <div class="baixo">
 
+                    <button class="menos-btn" onclick="diminuir()">-</button>
+                    <input type="number" id="numero" value="1">
+                    <button class="mais-btn" onclick="aumentar()">+</button>
 
-            <div class="produto-card">
+                    <script src="script.js"></script>
 
-                <img class="img-produto"
-                    src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp"
-                    alt="Imagem">
-
-                <div class="direita-card">
-
-                    <div class="cima">
-                        <span>Coxinha de Catupiry</span>
-                        <button><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
-                    </div>
-
-                    <div class="baixo">
-
-                        <button class="menos-btn" onclick="diminuir()">-</button>
-                        <input type="number" id="numero" value="1">
-                        <button class="mais-btn" onclick="aumentar()">+</button>
-
-                        <script src="script.js"></script>
-
-                        <span>R$ 7,50</span>
-
-                    </div>
+                    <span>R$ 7,50</span>
 
                 </div>
 
             </div>
+
+        </div>
 
 
 
@@ -140,4 +106,4 @@
 </body>
 
 </html>
->>>>>>> 25d986cd85d797c911ad84c3aaf47a2a5c5ea2f8
+
