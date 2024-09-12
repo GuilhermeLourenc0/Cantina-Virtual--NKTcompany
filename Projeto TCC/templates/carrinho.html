@@ -7,81 +7,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cantina Digital</title>
     <link rel="stylesheet" href="/Projeto TCC/static/styles/carrinho.css">
+    <link rel="stylesheet" href="/Projeto TCC/static/styles/fontes.css">
 </head>
 
 <body>
-    <div class="cbc-cima">
+    <header class="container-header">
 
-        <a href="/Projeto TCC/templates/perfil.html"><img class="perfil"
-                src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg"
-                alt=""></a>
+        <div class="cbc-cima">
 
-        <a href="/Projeto TCC/index.html"><img class="logo" src="/Projeto TCC/static/img/logo.png" alt=""></a>
+            <a href=""><img class="perfil"
+                    src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg"
+                    alt=""></a>
 
-        <img class="menu" src="https://cdn.icon-icons.com/icons2/1710/PNG/512/menubuttonofthreelinesoutline_112563.png"
-            alt="">
+            <img class="logo" src="/Projeto TCC/static/img/logo.png" alt="">
 
-    </div>
+            <img class="menu"
+                src="https://cdn.icon-icons.com/icons2/1710/PNG/512/menubuttonofthreelinesoutline_112563.png" alt="">
 
-    <div class="cbc-baixo">
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
-    </div>
-
-    <section class="container-principal">
-
-        <div class="btn-x">
-            <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
         </div>
 
+    </header>
 
-        <div class="produto-card">
+    <main>
 
-            <img class="img-produto"
-                src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp"
-                alt="Imagem">
 
-            <div class="direita-card">
 
-                <div class="cima">
-                    <span>Coxinha de Catupiry</span>
-                    <button><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
-                </div>
+        <section class="container-principal">
 
-                <div class="baixo">
+            <div class="btn-x">
+                <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
+            </div>
 
-                    <button class="menos-btn" onclick="diminuir()">-</button>
-                    <input type="number" id="numero" value="1">
-                    <button class="mais-btn" onclick="aumentar()">+</button>
 
-                    <script src="script.js"></script>
+            <div class="produto-card">
 
-                    <span>R$ 7,50</span>
+                <img class="img-produto"
+                    src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp"
+                    alt="Imagem">
+
+                <div class="direita-card">
+
+                    <div class="cima">
+                        <span>Coxinha de Catupiry</span>
+                        <button><img src="/Projeto TCC/static/img/lixo.png" alt=""></button>
+                    </div>
+
+                    <div class="baixo">
+
+                        <button class="menos-btn" onclick="diminuir()">-</button>
+                        <input type="number" id="numero" value="1">
+                        <button class="mais-btn" onclick="aumentar()">+</button>
+
+                        <script src="script.js"></script>
+
+                        <span>R$ 7,50</span>
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
 
 
-        
 
-        <div class="finalizacao">
-            <div class="preco">
-                <span class="span1">Total:</span>
-                <span class="span2">R$69,00</span>
+            <div class="finalizacao">
+                <div class="preco">
+                    <span class="span1">Total:</span>
+                    <span class="span2">R$69,00</span>
+                </div>
+
+                <button class="finalizacompra">Finalizar Compra</button>
+                <a href="">Continuar Comprando</a>
             </div>
 
-            <button class="finalizacompra">Finalizar Compra</button>
-            <a href="">Continuar Comprando</a>
-        </div>
+            <span class="span3">.</span>
 
-        <span class="span3">.</span>
+        </section>
 
-    </section>
+    </main>
 
     <script>
         function aumentar() {
