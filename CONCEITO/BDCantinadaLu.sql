@@ -303,8 +303,3 @@ INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 ('Operador de Máquinas e Implementos Agrícolas - 24/2024-T'),
 ('Soldador ao Arco Elétrico e Oxigás - SOLDA-S-2C24'),
 ('Torneiro Mecânico - TORNO-2A24');
-
-SELECT * FROM tb_carrinho
-
-SELECT * FROM tb_carrinho WHERE id_cliente = 1;
-
