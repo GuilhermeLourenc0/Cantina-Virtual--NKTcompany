@@ -172,8 +172,13 @@ def exibir_pedidos():
         lista_pedidos = sistema.exibir_pedidos()
         return render_template("recebePedido.html", lista_pedidos = lista_pedidos)
      
+@app.route("/perfil", methods=['GET', 'POST'])
+def perfil():
+    return render_template("perfil.html")
 
-# @app.route("/nova_senha", methods=["POST"])
+
+
+# @app.route("/nova_senha", methods=['POST', 'GET'])
 # def nova_senha():
 
 

@@ -59,18 +59,6 @@ class Sistema:
         else:
             return []
     
-   
-    def inserir_produto_carrinho(self, cod_produto, id_cliente):
-        mydb = Conexao.conectar()
-        mycursor = mydb.cursor()
-
-        sql = f"INSERT INTO tb_carrinho (id_cliente, cod_produto) VALUES ('{id_cliente}', '{cod_produto}')"
-
-        mycursor.execute(sql)
-        mydb.commit()
-        mydb.close()
-        return True
-    
     def exibir_produto(self, id):
         mydb =  Conexao.conectar()
         mycursor = mydb.cursor()
@@ -95,6 +83,41 @@ class Sistema:
         mydb.commit()
         mydb.close()
         return lista
+
+    def inserir_produto_carrinho(self, cod_produto, id_cliente):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # Verifica se o produto já está no carrinho do cliente
+        sql_verificar = f"""
+            SELECT quantidade FROM tb_carrinho
+            WHERE id_cliente = '{id_cliente}' AND cod_produto = '{cod_produto}'
+        """
+        mycursor.execute(sql_verificar)
+        resultado = mycursor.fetchone()
+
+        if resultado:
+            # Se o produto já estiver no carrinho, aumenta a quantidade
+            nova_quantidade = resultado[0] + 1
+            sql_update = f"""
+                UPDATE tb_carrinho
+                SET quantidade = '{nova_quantidade}'
+                WHERE id_cliente = '{id_cliente}' AND cod_produto = '{cod_produto}'
+            """
+            mycursor.execute(sql_update)
+        else:
+            # Se o produto não estiver no carrinho, insere um novo item
+            sql_inserir = f"""
+                INSERT INTO tb_carrinho (id_cliente, cod_produto, quantidade)
+                VALUES ('{id_cliente}', '{cod_produto}', 1)
+            """
+            mycursor.execute(sql_inserir)
+
+        mydb.commit()
+        mydb.close()
+        return True
+        
+
     
     def exibir_carrinho(self, id_cliente):
         mydb =  Conexao.conectar()
@@ -187,6 +210,7 @@ class Sistema:
 
         pedidos = {}
 
+        # Itera sobre os resultados da consulta
         for resultado in resultados:
             id_pedido = resultado[0]
             id_cliente = resultado[1]
@@ -198,6 +222,7 @@ class Sistema:
             data_pedido = resultado[7]
             status_pedido = resultado[8]
 
+            # Adiciona o cliente se não estiver no dicionário
             if id_cliente not in pedidos:
                 pedidos[id_cliente] = {
                     'nome_cliente': nome_cliente,
@@ -205,18 +230,24 @@ class Sistema:
                     'pedidos': {}
                 }
 
+            # Adiciona o pedido se não estiver no dicionário
             if id_pedido not in pedidos[id_cliente]['pedidos']:
                 pedidos[id_cliente]['pedidos'][id_pedido] = {
                     'data_pedido': data_pedido,
                     'status': status_pedido,
-                    'produtos': []
+                    'produtos': [],
+                    'total_preco': 0  # Inicializa o total de preço para o pedido
                 }
 
+            # Adiciona o produto ao pedido
             pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
                 'nome_produto': nome_produto,
                 'preco': preco_produto,
                 'quantidade': quantidade_produto
             })
+
+            # Atualiza o total de preço do pedido
+            pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_produto * quantidade_produto
 
         mydb.close()
         return pedidos

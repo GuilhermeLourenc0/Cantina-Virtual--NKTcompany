@@ -31,8 +31,11 @@
                     </ul>
                 </div>
                 <div class="order-status">
-                    <span>Status: <span class="status-value {{ pedido.status|lower }}">{{ pedido.status }}</span></span>
-                    <span class="order-price">RS: 0</span>
+                    <button value="preparando">Preparando</button>
+                    <button value="feito">Feito</button>
+                    <button value="entregue">Entregue</button>
+                    <!-- Exibe o preço total do pedido -->
+                    <span class="order-price">RS: {{ pedido.total_preco }}</span>
                 </div>
                 <div class="btn-cancelar">
                     <button>Cancelar</button>
@@ -42,12 +45,7 @@
         </div>
         {% endfor %} <!-- Fechamento do loop pelos clientes -->
     
-            
-
         </section>
     </main>
-
-
-
-</body>
+    </body>
 {% endblock %}
