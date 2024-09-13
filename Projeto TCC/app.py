@@ -170,7 +170,7 @@ def exibir_pedidos():
      else:
         sistema = Sistema()
         lista_pedidos = sistema.exibir_pedidos()
-        return render_template("pedidos.html", lista_pedidos = lista_pedidos)
+        return render_template("recebePedido.html", lista_pedidos = lista_pedidos)
      
 
 # @app.route("/nova_senha", methods=["POST"])
