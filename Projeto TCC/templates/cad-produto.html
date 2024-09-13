@@ -4,28 +4,26 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 </style>
 <link rel="stylesheet" href="../static/styles/cad-produto.css">
-
 <body>
+    <main>
     <form action="" method="post">
-        <h2>Adicionar produto</h2>
+        <h2>Adicionar Produto</h2>
 
-            <input name="nome" type="text" id="nome" placeholder="*Cadastrar produto"></label>
-            <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.10" placeholder="*Preço" />
-            
-            <h4>Categoria:</h4>
-            <select id="categoria" name="categoria">
-                {% for registro in categorias %}
-                <option value="{{ registro.id_categoria }}">{{ registro.nome }}</option>
-                {% endfor %}
-            </select>
+        <input name="nome" type="text" id="nome" placeholder="*Nome do produto" required>
+        <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.10" placeholder="*Preço" required>
+        
+        <h4>Categoria:</h4>
+        <select id="categoria" name="categoria" required>
+            {% for registro in categorias %}
+            <option value="{{ registro.id_categoria }}">{{ registro.nome }}</option>
+            {% endfor %}
+        </select>
 
-            <input name="img" type="url" id="img" placeholder="*URL da imagem"></label>
-            <input name="descricao" type="text" id="descricao" placeholder="*Descrição do produto"></label>
-            <br>
-            <button type="submit" id="Cadastrar">Adicionar</button>
-        </form>
-    </div>
-</div>
-
+        <input name="img" type="file" id="img" accept="image/*" class="input-image" required>
+        <textarea name="descricao" id="descricao" placeholder="*Descrição do produto" class="input-descricao" required></textarea>
+        
+        <button type="submit" class="btn-Cadastrar">Adicionar</button>
+    </form>
+</main>
 </body>
 {% endblock %}
