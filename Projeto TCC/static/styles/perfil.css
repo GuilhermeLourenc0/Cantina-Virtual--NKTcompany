@@ -138,10 +138,6 @@ form input:focus{
     opacity: 0;
     cursor: pointer;
 }
-.overlay::before {
-    content: '';
-}
-
 
 
 .toggle-button {
