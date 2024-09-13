@@ -57,12 +57,22 @@ html{
     gap: 16px; /* Espaço entre os itens */
 }
 
-.produtos a:hover{
+.produtos button{
+    background-color: transparent;
+    width: 10rem;
+    border: none;
+    transition: transform 0.6s ease;
+}
 
+.produtos button:hover{
     transform: scale(1.1);
     text-decoration: none; /* Remove o sublinhado */
     color: inherit; /* Herda a cor do elemento pai */
     font-weight: normal; /* Remove qualquer negrito */
+}
+
+.produtos button:focus {
+    outline: none;
 }
 
 .card-produtos{
@@ -72,13 +82,7 @@ html{
     margin-bottom: 25px;
 }
 
-.produtos a{
 
-    transition: transform 0.6s ease;
-    text-decoration: none; /* Remove o sublinhado */
-    color: inherit; /* Herda a cor do elemento pai */
-    font-weight: normal; /* Remove qualquer negrito */
-}
 
 .card-produtos img{
     height: 130px;
