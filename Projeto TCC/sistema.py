@@ -120,7 +120,7 @@ class Sistema:
 
     
     def exibir_carrinho(self, id_cliente):
-        mydb =  Conexao.conectar()
+        mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
         sql = f"""
@@ -132,19 +132,34 @@ class Sistema:
 
         mycursor.execute(sql)
         resultado1 = mycursor.fetchall()
-       
+    
         lista_carrinho = []
+        total_preco = 0  # Inicializa o total de preço
 
         for resultado in resultado1:
+            preco_produto = resultado[2]
+            quantidade_produto = 1  # Assumindo uma quantidade padrão de 1 para cada produto no carrinho
+
             lista_carrinho.append({
                 'nome_produto': resultado[1],
-                'preco': resultado[2],
+                'preco': preco_produto,
                 'imagem_produto': resultado[3],
                 'id_carrinho': resultado[6]
-        })
+            })
+
+            total_preco += preco_produto * quantidade_produto  # Atualiza o total de preço
+
         mydb.close()
-        return lista_carrinho
-    
+
+        # Formata o total de preço como uma string com duas casas decimais
+        total_preco_formatado = "{:.2f}".format(total_preco)
+
+        return {
+            'produtos': lista_carrinho,
+            'total_preco': total_preco_formatado
+        }
+
+        
     
     def excluir_produto(self, btn_excluir):
         mydb =  Conexao.conectar()
