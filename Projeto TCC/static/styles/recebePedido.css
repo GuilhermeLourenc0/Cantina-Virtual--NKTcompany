@@ -4,12 +4,7 @@
     padding: 0;
 }
 
-.cbc-cima{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color:rgba(207,34,38,255);
-}
+
 
 .cbc-cima .perfil{
     height: 50px;

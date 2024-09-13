@@ -59,18 +59,6 @@ class Sistema:
         else:
             return []
     
-   
-    def inserir_produto_carrinho(self, cod_produto, id_cliente):
-        mydb = Conexao.conectar()
-        mycursor = mydb.cursor()
-
-        sql = f"INSERT INTO tb_carrinho (id_cliente, cod_produto) VALUES ('{id_cliente}', '{cod_produto}')"
-
-        mycursor.execute(sql)
-        mydb.commit()
-        mydb.close()
-        return True
-    
     def exibir_produto(self, id):
         mydb =  Conexao.conectar()
         mycursor = mydb.cursor()
@@ -95,6 +83,41 @@ class Sistema:
         mydb.commit()
         mydb.close()
         return lista
+
+    def inserir_produto_carrinho(self, cod_produto, id_cliente):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # Verifica se o produto já está no carrinho do cliente
+        sql_verificar = f"""
+            SELECT quantidade FROM tb_carrinho
+            WHERE id_cliente = '{id_cliente}' AND cod_produto = '{cod_produto}'
+        """
+        mycursor.execute(sql_verificar)
+        resultado = mycursor.fetchone()
+
+        if resultado:
+            # Se o produto já estiver no carrinho, aumenta a quantidade
+            nova_quantidade = resultado[0] + 1
+            sql_update = f"""
+                UPDATE tb_carrinho
+                SET quantidade = '{nova_quantidade}'
+                WHERE id_cliente = '{id_cliente}' AND cod_produto = '{cod_produto}'
+            """
+            mycursor.execute(sql_update)
+        else:
+            # Se o produto não estiver no carrinho, insere um novo item
+            sql_inserir = f"""
+                INSERT INTO tb_carrinho (id_cliente, cod_produto, quantidade)
+                VALUES ('{id_cliente}', '{cod_produto}', 1)
+            """
+            mycursor.execute(sql_inserir)
+
+        mydb.commit()
+        mydb.close()
+        return True
+        
+
     
     def exibir_carrinho(self, id_cliente):
         mydb =  Conexao.conectar()
@@ -122,6 +145,7 @@ class Sistema:
         mydb.close()
         return lista_carrinho
     
+    
     def excluir_produto(self, btn_excluir):
         mydb =  Conexao.conectar()
         mycursor = mydb.cursor()
@@ -139,9 +163,28 @@ class Sistema:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        sql = f"INSERT INTO tb_pedidos (id_cliente, data_pedido, status) VALUES ('{id_cliente}', CURDATE(), 'Pendente')"
+        # 1. Inserir o pedido na tabela `tb_pedidos`
+        sql_pedido = f"INSERT INTO tb_pedidos (id_cliente, data_pedido, status) VALUES (%s, CURDATE(), 'Pendente')"
+        mycursor.execute(sql_pedido, (id_cliente,))
+        id_pedido = mycursor.lastrowid  # Pega o ID do pedido recém-criado
 
-        mycursor.execute(sql)
+        # 2. Buscar os itens no carrinho do cliente
+        sql_carrinho = f"SELECT cod_produto, quantidade FROM tb_carrinho WHERE id_cliente = %s"
+        mycursor.execute(sql_carrinho, (id_cliente,))
+        itens_carrinho = mycursor.fetchall()
+
+        # 3. Inserir os produtos na tabela `tb_produtos_pedidos`
+        for item in itens_carrinho:
+            cod_produto = item[0]
+            quantidade = item[1]
+            sql_produtos_pedido = f"INSERT INTO tb_produtos_pedidos (id_pedido, cod_produto, quantidade) VALUES (%s, %s, %s)"
+            mycursor.execute(sql_produtos_pedido, (id_pedido, cod_produto, quantidade))
+
+        # 4. Remover os itens do carrinho após finalizar o pedido
+        sql_limpar_carrinho = f"DELETE FROM tb_carrinho WHERE id_cliente = %s"
+        mycursor.execute(sql_limpar_carrinho, (id_cliente,))
+
+        # Confirmar as alterações
         mydb.commit()
         mydb.close()
         return True
@@ -149,38 +192,62 @@ class Sistema:
 
 
 
-    def exibir_pedidos(self, id_cliente):
-        mydb =  Conexao.conectar()
+    def exibir_pedidos(self):
+        mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        sql = f"""
-            SELECT p.id_pedido, cl.nome_comp, cl.telefone, pr.nome_produto, pr.preco, p.data_pedido, p.status
+        sql = """
+            SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, pr.nome_produto, pr.preco, pp.quantidade, p.data_pedido, p.status
             FROM tb_pedidos p
             JOIN tb_cliente cl ON p.id_cliente = cl.id_cliente
-            JOIN tb_carrinho c ON cl.id_cliente = c.id_cliente
-            JOIN tb_produto pr ON c.cod_produto = pr.cod_produto
-            group by cl.id_cliente
+            JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
+            JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
+            ORDER BY cl.id_cliente, p.id_pedido, pr.nome_produto
         """
 
         mycursor.execute(sql)
-        resultado = mycursor.fetchall()
-    
-        lista_pedidos = []
+        resultados = mycursor.fetchall()
 
-        for resultado in resultado:
-            lista_pedidos.append({
-                'id_pedido': resultado[0],
-                'nome_cliente': resultado[1],
-                'telefone': resultado[2],
-                'nome_produto': resultado[3],
-                'preco': resultado[4],
-                'data_pedido': resultado[5],
-                'status': resultado[6]
-                })
-            
-        # sql_remover = f"DELETE FROM tb_carrinho WHERE '{id_cliente}'"
+        pedidos = {}
 
-        # mycursor.execute(sql_remover)
-        # mydb.commit()
+        # Itera sobre os resultados da consulta
+        for resultado in resultados:
+            id_pedido = resultado[0]
+            id_cliente = resultado[1]
+            nome_cliente = resultado[2]
+            telefone_cliente = resultado[3]
+            nome_produto = resultado[4]
+            preco_produto = resultado[5]
+            quantidade_produto = resultado[6]
+            data_pedido = resultado[7]
+            status_pedido = resultado[8]
+
+            # Adiciona o cliente se não estiver no dicionário
+            if id_cliente not in pedidos:
+                pedidos[id_cliente] = {
+                    'nome_cliente': nome_cliente,
+                    'telefone': telefone_cliente,
+                    'pedidos': {}
+                }
+
+            # Adiciona o pedido se não estiver no dicionário
+            if id_pedido not in pedidos[id_cliente]['pedidos']:
+                pedidos[id_cliente]['pedidos'][id_pedido] = {
+                    'data_pedido': data_pedido,
+                    'status': status_pedido,
+                    'produtos': [],
+                    'total_preco': 0  # Inicializa o total de preço para o pedido
+                }
+
+            # Adiciona o produto ao pedido
+            pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
+                'nome_produto': nome_produto,
+                'preco': preco_produto,
+                'quantidade': quantidade_produto
+            })
+
+            # Atualiza o total de preço do pedido
+            pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_produto * quantidade_produto
+
         mydb.close()
-        return lista_pedidos
+        return pedidos

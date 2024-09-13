@@ -58,6 +58,15 @@ def logar():
         else:
             session.clear()
             return redirect("/logar")
+        
+@app.route('/logout')
+def logout():
+    if request.method == 'GET':
+        id_cliente = session.get('usuario_logado')['id_cliente']
+        usuario = Usuario()
+        usuario.logout(id_cliente)
+        session.clear()
+        return redirect("/")
     
 @app.route("/inserir_produtos", methods=['GET','POST'])
 def inserir_produtos():
@@ -151,7 +160,7 @@ def enviar_carrinho():
         sistema.enviar_carrinho(id_cliente)
         
         # Redireciona para a rota que exibe os pedidos
-        return redirect("/exibir_pedidos")
+        return redirect("/")
 
 
 @app.route("/exibir_pedidos", methods=['GET', 'POST'])
@@ -160,10 +169,16 @@ def exibir_pedidos():
         return redirect('/logar')
      else:
         sistema = Sistema()
-        id_clientes = session.get('usuario_logado')['id_cliente']
-        lista_pedidos = sistema.exibir_pedidos(id_clientes)
-        return render_template("pedidos.html", lista_pedidos = lista_pedidos)
-# @app.route("/nova_senha", methods=["POST"])
+        lista_pedidos = sistema.exibir_pedidos()
+        return render_template("recebePedido.html", lista_pedidos = lista_pedidos)
+     
+@app.route("/perfil", methods=['GET', 'POST'])
+def perfil():
+    return render_template("perfil.html")
+
+
+
+# @app.route("/nova_senha", methods=['POST', 'GET'])
 # def nova_senha():
 
 

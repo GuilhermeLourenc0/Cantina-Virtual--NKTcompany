@@ -1,6 +1,7 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/produto.css">
+<<<<<<< HEAD
 
 <body>
     <main>
@@ -8,6 +9,14 @@
     <img src="{{ registro.imagem_produto }}" alt="">
 
 
+=======
+
+
+<body>
+<main>
+    {% for registro in lista_prounico %}
+    <img src="{{ registro.imagem_produto }}" alt="">
+>>>>>>> c993032c67c42543093fde09e55fa154e61af082
     <section class="descricao">
         <span class="nome-produto">{{ registro.nome_produto }}</span>
         <span class="descricao-produto">{{ registro.descricao }}</span>
@@ -35,5 +44,8 @@
     </section>
     {% endfor %}
 </main>
+<<<<<<< HEAD
 
+=======
+>>>>>>> c993032c67c42543093fde09e55fa154e61af082
 {% endblock %}
