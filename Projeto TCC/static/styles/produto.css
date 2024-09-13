@@ -14,14 +14,13 @@ main {
     background-color: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-
 }
 
 main form{
-    margin-top: 27rem;
     display: flex;
     justify-content: end;
 }
+
 img {
     max-width: 100%;
     border-radius: 8px;
@@ -31,6 +30,9 @@ img {
 /* Seção de descrição do produto */
 .descricao {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .nome-produto {
@@ -119,9 +121,4 @@ form button:hover {
     }
 
     
-    main form{
-        margin-top: 27rem;
-        display: flex;
-        justify-content: end;
-    }
 }

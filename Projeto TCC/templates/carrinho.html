@@ -3,33 +3,6 @@
 <link rel="stylesheet" href="../static/styles/carrinho.css">
 <body>
     <main>
-<<<<<<< HEAD
-=======
-        <section class="cont-carrinho">
-            {% for registro in lista_carrinho %}
-            <form action="/excluir_produto" method="post" class="carrinho">
-           
-                <div class="carrinho-item">
-                    <div class="img"><img src="{{ registro.imagem_produto }}" alt="top"></div>
-                </div>
-                <div class="texto">
-                    <p>{{ registro.nome_produto }}</p>
-                    <p>{{ registro.preco }}</p>
-                </div>
-                <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}">Excluir</button>
-            </form>
-            {% endfor %}
-        </section>
-
-        <form action="" method="post">
-        <button type="submit" class="button1">
-            Comprar
-        </button>
-        </form>
-    {% endblock %}
-
-
-
     <section class="container-principal">
 
         <div class="btn-x">
@@ -38,11 +11,6 @@
 
 
         <div class="produto-card">
->>>>>>> e4490d2d66260d29e79bf72fe4473bdd73188970
-
-            <img class="img-produto"
-                src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp"
-                alt="Imagem">
 
             <div class="direita-card">
 
@@ -53,7 +21,6 @@
 
                 <div class="baixo">
 
-<<<<<<< HEAD
             {% for registro in lista_carrinho %}
             <form action="/excluir_produto" method="post" class="produto-card">
 
@@ -84,7 +51,7 @@
 
             </form>
             {% endfor %}
-=======
+
                     <button class="menos-btn" onclick="diminuir()">-</button>
                     <input type="number" id="numero" value="1">
                     <button class="mais-btn" onclick="aumentar()">+</button>
@@ -98,8 +65,6 @@
             </div>
 
         </div>
-
->>>>>>> e4490d2d66260d29e79bf72fe4473bdd73188970
 
 
 
@@ -144,9 +109,4 @@
 
 </body>
 
-<<<<<<< HEAD
 {% endblock %}
-=======
-</html>
-
->>>>>>> e4490d2d66260d29e79bf72fe4473bdd73188970
