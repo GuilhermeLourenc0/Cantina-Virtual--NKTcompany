@@ -209,3 +209,8 @@ html{
     font-size: 36px;
     margin-left: 50px;
   }
+
+  hr{
+
+    background-color: rgb(255, 255, 255);
+  }
