@@ -38,19 +38,11 @@ form input:focus, select:focus {
     outline: none;
 }
 
-::placeholder {
-    color: #888;
-    opacity: 1;
+.input-descricao, .input-image {
+  height: 100px;
+  resize: none;
 }
 
-.input-descricao {
-    height: 100px;
-    resize: none;
-}
-
-.input-image{
-  border: none;
-}
 .btn-Cadastrar {
     background-color: #FFD707;
     color: black;
