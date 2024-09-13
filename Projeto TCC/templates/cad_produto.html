@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cantina Digital</title>
 
-    <link rel="stylesheet" href="/Projeto TCC/static/styles/inicial.css">
-    <link rel="stylesheet" href="/Projeto TCC/static/styles/cad-produto.css">
+    <link rel="stylesheet" href="../static/styles/inicial.css">
+    <link rel="stylesheet" href="../static/styles/cad-produto.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
         </style>
@@ -19,9 +22,7 @@
 
         <div class="cbc-cima">
 
-            <img class="logo" src="/Projeto TCC/static/img/logo.png" alt="">
-
-            <img class="menu" src="https://cdn.icon-icons.com/icons2/1710/PNG/512/menubuttonofthreelinesoutline_112563.png" alt="">
+            <img class="logo" src="../static/img/logo.png" alt="">
 
         </div>
 
@@ -34,26 +35,23 @@
 
     </header>
   
-    <form>
+    <form action="" method="post">
         <h2>Adicionar produto</h2>
-            <input type="text" id="nome-produto" placeholder="*Cadastrar produto"></label>
-        
-            <input type="number" id="preco-produto" min="0.00" max="1000.00" step="0.10" placeholder="*Preço" />
+
+            <input name="nome" type="text" id="nome" placeholder="*Cadastrar produto"></label>
+            <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.10" placeholder="*Preço" />
             
-            <br>
-            <select id="cat-produto">
-            <option value="opcao" selected>*Categoria</option>
-            <option value="Frito">Frito</option>
-            <option value="Bebida">Bebida</option>
-            <option value="Assado">Assado</option>
+            <h4>Categoria:</h4>
+            <select id="categoria" name="categoria">
+                {% for registro in categorias %}
+                <option value="{{ registro.id_categoria }}">{{ registro.nome }}</option>
+                {% endfor %}
             </select>
-                    
 
-            <input type="url" id="url-produto" placeholder="*URL da imagem"></label>
-
-            <input type="text" id="desc-produto" placeholder="*Descrição do produto"></label>
+            <input name="img" type="url" id="img" placeholder="*URL da imagem"></label>
+            <input name="descricao" type="text" id="descricao" placeholder="*Descrição do produto"></label>
             <br>
-            <button class="btn-Cadastrar" role="button">Adicionar</button>
+            <button type="submit" id="Cadastrar">Adicionar</button>
         </form>
     </div>
 </div>
