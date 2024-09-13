@@ -69,6 +69,7 @@ form input {
     border: none;
     border-bottom: 1px solid black;
     margin-bottom: 50px;
+    padding-right: 40px;
 }
 
 form input:focus {
@@ -144,20 +145,19 @@ form input:focus {
     cursor: pointer;
 }
 
-.toggle-button {
+.toggle-button, .toggle-button2 {
     position: absolute;
-    right: 50px;
-    margin-top: 15%;
+    right: 22px; /* Ajusta para o canto direito */
+    top: 50.5%;
     transform: translateY(-50%);
     border: none;
-    background-color: white;
+    background-color: transparent;
+    z-index: 10; /* Garante que fique sobre o input */
+    cursor: pointer;
+    padding: 0;
 }
 
 .toggle-button2 {
-    position: absolute;
-    right: 50px;
-    margin-top: 32%;
-    transform: translateY(-50%);
-    border: none;
-    background-color: white;
+    top: calc(100% - 150px); /* Ajusta a posição da segunda senha */
+
 }
