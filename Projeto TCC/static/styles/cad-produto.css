@@ -1,34 +1,143 @@
 
 *{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+  font-family: Inter,sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
-
-.inter-uniquifier {
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: weight;
-  font-style: normal;
-}
 
 ::placeholder {
-    color: black;
-    opacity: 1; 
-  }
+  color: black;
+  opacity: 1; 
+}
 
 form{
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    color: black;
-    align-items: center;
+  
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  color: black;
+  align-items: center;
 }
 form input{
-    width: 360px;
-    border: none;
-    border-bottom: 1px solid black;
-    margin-top: 50px;
+  width: 360px;
+  border: none;
+  border-bottom: 1px solid black;
+  margin-top: 50px;
+  text-align: left;
+  
 }
+form input :active{
+color: rgb(0, 217, 255);
+}
+
+
+
+#Cadastrar{
+
+align-items: center;
+background-color: rgba(255, 215, 7, 0.7);
+border: 2px solid #000;
+box-sizing: border-box;
+color: #000;
+cursor: pointer;
+display: inline-flex;
+fill: #000;
+font-size: 16px;
+font-weight: 600;
+height: 48px;
+justify-content: center;
+letter-spacing: -.8px;
+line-height: 24px;
+min-width: 140px;
+outline: 0;
+padding: 0 17px;
+text-align: center;
+text-decoration: none;
+transition: all .3s;
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+}
+
+#Cadastrar:focus {
+color: #171e29;
+}
+
+#Cadastrar:hover {
+border-color: #06f;
+color: #06f;
+fill: #06f;
+}
+
+#Cadastrar:active {
+border-color: #06f;
+color: #06f;
+fill: #06f;
+height: 40px;
+letter-spacing: -.8px;
+line-height: 24px;
+min-width: 132px;
+
+
+}
+
+
+select {
+position: relative;
+
+
+float: left;
+min-width: 200px;
+margin: 50px 33%;
+}
+
+
+select::-ms-expand {
+display: none;
+}
+
+select:after {
+content: '<>';
+font: 17px "Consolas", monospace;
+color: #333;
+-webkit-transform: rotate(90deg);
+-moz-transform: rotate(90deg);
+-ms-transform: rotate(90deg);
+transform: rotate(90deg);
+right: 11px;
+
+
+top: 18px;
+padding: 0 0 2px;
+border-bottom: 1px solid #999;
+
+
+position: absolute;
+pointer-events: none;
+}
+
+select{
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+
+display: block;
+width: 100%;
+max-width: 320px;
+height: 50px;
+float: right;
+margin: 5px 0px;
+padding: 0px 24px;
+font-size: 16px;
+line-height: 1.75;
+color: #333;
+background-color: #ffffff;
+background-image: none;
+border: 1px solid #cccccc;
+-ms-word-break: normal;
+word-break: normal;
+}
+
