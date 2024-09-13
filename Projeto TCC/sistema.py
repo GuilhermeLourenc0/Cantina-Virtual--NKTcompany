@@ -122,6 +122,7 @@ class Sistema:
         mydb.close()
         return lista_carrinho
     
+    
     def excluir_produto(self, btn_excluir):
         mydb =  Conexao.conectar()
         mycursor = mydb.cursor()
@@ -139,9 +140,28 @@ class Sistema:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        sql = f"INSERT INTO tb_pedidos (id_cliente, data_pedido, status) VALUES ('{id_cliente}', CURDATE(), 'Pendente')"
+        # 1. Inserir o pedido na tabela `tb_pedidos`
+        sql_pedido = f"INSERT INTO tb_pedidos (id_cliente, data_pedido, status) VALUES (%s, CURDATE(), 'Pendente')"
+        mycursor.execute(sql_pedido, (id_cliente,))
+        id_pedido = mycursor.lastrowid  # Pega o ID do pedido recém-criado
 
-        mycursor.execute(sql)
+        # 2. Buscar os itens no carrinho do cliente
+        sql_carrinho = f"SELECT cod_produto, quantidade FROM tb_carrinho WHERE id_cliente = %s"
+        mycursor.execute(sql_carrinho, (id_cliente,))
+        itens_carrinho = mycursor.fetchall()
+
+        # 3. Inserir os produtos na tabela `tb_produtos_pedidos`
+        for item in itens_carrinho:
+            cod_produto = item[0]
+            quantidade = item[1]
+            sql_produtos_pedido = f"INSERT INTO tb_produtos_pedidos (id_pedido, cod_produto, quantidade) VALUES (%s, %s, %s)"
+            mycursor.execute(sql_produtos_pedido, (id_pedido, cod_produto, quantidade))
+
+        # 4. Remover os itens do carrinho após finalizar o pedido
+        sql_limpar_carrinho = f"DELETE FROM tb_carrinho WHERE id_cliente = %s"
+        mycursor.execute(sql_limpar_carrinho, (id_cliente,))
+
+        # Confirmar as alterações
         mydb.commit()
         mydb.close()
         return True
@@ -154,12 +174,11 @@ class Sistema:
         mycursor = mydb.cursor()
 
         sql = """
-            SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, pr.nome_produto, pr.preco, c.quantidade, p.data_pedido, p.status
+            SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, pr.nome_produto, pr.preco, pp.quantidade, p.data_pedido, p.status
             FROM tb_pedidos p
             JOIN tb_cliente cl ON p.id_cliente = cl.id_cliente
-            JOIN tb_carrinho c ON cl.id_cliente = c.id_cliente
-            JOIN tb_produto pr ON c.cod_produto = pr.cod_produto
-            WHERE p.id_pedido IS NOT NULL
+            JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
+            JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
             ORDER BY cl.id_cliente, p.id_pedido, pr.nome_produto
         """
 

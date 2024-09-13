@@ -77,6 +77,18 @@ CREATE TABLE tb_pedidos (
     FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
 );
 
+ALTER TABLE tb_carrinho
+ADD COLUMN quantidade INT NOT NULL DEFAULT 1;
+
+CREATE TABLE tb_produtos_pedidos (
+    id_produto_pedido INT AUTO_INCREMENT,
+    id_pedido INT NOT NULL,
+    cod_produto INT NOT NULL,
+    quantidade INT NOT NULL,
+    PRIMARY KEY (id_produto_pedido),
+    FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido),
+    FOREIGN KEY (cod_produto) REFERENCES tb_produto(cod_produto)
+);
 
  -- Inserindo os cursos e turmas no Banco de Dados
 INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),

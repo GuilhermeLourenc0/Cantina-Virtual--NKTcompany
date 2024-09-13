@@ -1,0 +1,26 @@
+
+@media(min-width: 1000px){
+    .card-pedidos{
+
+
+        justify-content: center;
+        align-items: center;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 150px;
+
+}}
+
+@media(min-width: 1300px){
+
+    .card-pedidos{
+
+
+        justify-content: center;
+        align-items: center;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+
+        gap: 150px;
+}}

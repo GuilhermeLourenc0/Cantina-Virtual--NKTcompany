@@ -120,10 +120,6 @@ class Usuario:
         mycursor.execute(sql_remover_carrinho)
         mydb.commit()
 
-        sql_remover_pedidos = f"DELETE FROM tb_pedidos WHERE '{id_cliente}'"
-        mycursor.execute(sql_remover_pedidos)
-        mydb.commit()
-
     def inserir_produto(self, nomeP, preco, imagem, descricao, categoria):
         # try:
             mydb = Conexao.conectar()

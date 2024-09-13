@@ -1,17 +1,22 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
     <link rel="stylesheet" href="../static/styles/recebePedido.css">
+    <link rel="stylesheet" href="../static/styles/media/media-recebePedido.css">
     <body>
     <main>
         <section class="container-cards">
 
-            {% for cliente in lista_pedidos.values() %}
-            {% for pedido in cliente.pedidos.values() %}
+        {% for id_cliente, cliente in lista_pedidos.items() %}
+        <div class="card-pedidos">
+            <!-- Loop pelos pedidos do cliente -->
+            {% for id_pedido, pedido in cliente.pedidos.items() %}
             <div class="order-card">
+                <h2>Cliente: {{ cliente.nome_cliente }}</h2>
                 <div class="order-header">
-                    <span class="order-number">#{{ pedido.id_pedido }}</span>
+                    
+                    <span class="order-number">#{{ id_pedido }}</span>
                     <span class="order-time">{{ pedido.data_pedido.strftime("%H:%M") }}</span>
-                    <span class="order-client">Cliente: {{ pedido.data_pedido.strftime("%d/%m") }}</span>
+                    <span class="order-date">{{ pedido.data_pedido.strftime("%d/%m/%y") }}</span>
                 </div>
                 <div class="order-details">
                     <ul>
@@ -19,38 +24,30 @@
                         <li>{{ produto.nome_produto }}</li>
                         {% endfor %}
                     </ul>
-                    <ul class="order-time">
+                    <ul class="order-quantity">
                         {% for produto in pedido.produtos %}
                         <li>{{ produto.quantidade }}</li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div class="order-status">
-                    <span>Status: <span class="status-value {{ pedido.status | lower }}">{{ pedido.status }}</span></span>
-                    <span class="order-price">R$ 0</span>
+                    <span>Status: <span class="status-value {{ pedido.status|lower }}">{{ pedido.status }}</span></span>
+                    <span class="order-price">RS: 0</span>
                 </div>
                 <div class="btn-cancelar">
                     <button>Cancelar</button>
                 </div>
             </div>
-            {% endfor %}
-            {% endfor %}
+            {% endfor %} <!-- Fechamento do loop pelos pedidos -->
+        </div>
+        {% endfor %} <!-- Fechamento do loop pelos clientes -->
     
             
-                <div class="order-status">
-                    <span>Status: <span class="status-value">Nulo</span></span>
-    
-                    <span class="order-price">RS:69,90</span>
-                </div>
-                <div class="btn-cancelar">
-                    <button>Cancelar</button>
-                </div>
-            </div>
-    
+
         </section>
     </main>
 
-    <!-- k -->
+
 
 </body>
 {% endblock %}
