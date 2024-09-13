@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom File Input</title>
+    <style>
+
+
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .file-input-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+    <div class="file-input-wrapper">
+        <input type="file" id="file-upload" class="file-input" accept="image/png, image/jpeg">
+        <label for="file-upload" class="file-input-label">Escolha um arquivo</label>
+    </div>
+    <div class="file-name" id="file-name"></div>
+
+
+
+
+
+
+
+
+
+    <script>
+        document.getElementById('file-upload').addEventListener('change', function() {
+            var fileName = this.files.length > 0 ? this.files[0].name : 'Nenhum arquivo escolhido';
+            document.getElementById('file-name').textContent = fileName;
+        });
+    </script>
+</body>
+</html>

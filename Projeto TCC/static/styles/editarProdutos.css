@@ -46,7 +46,6 @@
 
 
 table {
-    width: 100%;
     border-collapse: collapse;
     background-color: #fff;
     border-radius: 8px;
@@ -62,7 +61,7 @@ th, td {
 }
 
 th {
-    background-color: #4CAF50;
+    background-color: #e4c200;
     color: #fff;
     font-weight: bold;
 }
@@ -106,6 +105,3 @@ button img {
     height: 16px;
 }
 
-.overlay::before {
-    content: '';
-}
