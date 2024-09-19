@@ -18,6 +18,21 @@ html{
     background-color:rgba(207,34,38,255);
 }
 
+.figure{
+
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.figure a{
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .cbc-cima .perfil{
     height: 50px;
     width: 50px;
@@ -127,6 +142,7 @@ html{
 /* ======================================================================================================================= */
 
 .menu-container {
+    
     display: inline-block;
     cursor: pointer;
     z-index: 10;
@@ -151,6 +167,8 @@ html{
 .change .bar3 {
     transform: rotate(45deg) translate(-7px, -7px);
 }
+
+
 
   .sidenav {
     height: 100%;
