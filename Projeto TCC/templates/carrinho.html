@@ -1,94 +1,133 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/carrinho.css">
+
 <body>
     <main>
-    <section class="container-principal">
 
-        <div class="btn-x">
-            <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
-        </div>
+        {% for registro in lista_carrinho.produtos %}
+        <form action="/excluir_produto" class="produto-card" method="post">
+            <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Produto">
+
+            <section class="container-principal">
+
+                <div class="btn-x">
+                    <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
+                </div>
 
 
-        <div class="produto-card">
+                <div class="produto-card">
 
-            {% for registro in lista_carrinho %}
-            <form action="/excluir_produto" method="post" class="produto-card">
 
-                <img class="img-produto"
-                    src="{{ registro.imagem_produto }}"
-                    alt="Imagem Produto">
+                    <div class="direita-card">
+                        <div class="cima">
+                            <span>{{ registro.nome_produto }}</span>
+                            <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button"
+                                value="{{ registro.id_produto }}">
+                                <img src="../static/img/lixo.png" alt="">
+                            </button>
+                        </div>
 
-                <div class="direita-card">
+                        <div class="baixo">
+                            <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
+                            <input type="number" id="quantidade-{{ registro.id_carrinho }}"
+                                value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
+                            <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
 
-                    <div class="cima">
-                        <span>{{ registro.nome_produto }}</span>
-                        <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}"><img src="../static/img/lixo.png" alt=""></button>
-                    </div>
 
-                    <div class="baixo">
+                            <span class="preco-item">{{ registro.preco }}</span>
 
-                        <button class="menos-btn" onclick="diminuir()">-</button>
-                        <input type="number" id="numero" value="1">
-                        <button class="mais-btn" onclick="aumentar()">+</button>
 
-                        <script src="script.js"></script>
-
-                        <span>{{ registro.preco }}</span>
+                        </div>
 
                     </div>
 
                 </div>
+        </form>
+        {% endfor %}
 
+        <div class="finalizacao">
+            <div class="preco">
+                <span class="span1">Total:</span>
+                <span id="total-preco" class="span2">R$ {{ lista_carrinho.total_preco }}</span>
+            </div>
+
+            <form action="/enviar_carrinho" method="post">
+                <button name="id_carrinho" class="button1">Enviar</button>
             </form>
-            {% endfor %}
-
-
-                </div>
-
-            </div>
-
+            <a href="/">Continuar Comprando</a>
         </div>
 
-            <div class="finalizacao">
-                <div class="preco">
-                    <span class="span1">Total:</span>
-                    <span class="span2">R$69,00</span>
-                </div>
-
-
-                <form action="/enviar_carrinho" method="post">
-                    <button name="id_carrinho" class="button1">Enviar</button>
-                </form> 
-                <a href="/">Continuar Comprando</a>
-            </div>
-
-            <span class="span3">.</span>
-
-        </section>
-
+        <span class="span3">.</span>
     </main>
 
     <script>
-        function aumentar() {
-            const numeroInput = document.getElementById('numero');
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.mais-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const idCarrinho = this.getAttribute('data-id');
+                    const quantidadeInput = document.getElementById(`quantidade-${idCarrinho}`);
+                    let quantidade = parseInt(quantidadeInput.value, 10);
+                    quantidade++;
+                    quantidadeInput.value = quantidade;
+                    atualizarQuantidade(idCarrinho, quantidade);
+                });
+            });
 
-            numeroInput.value++;
-        }
+            document.querySelectorAll('.menos-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const idCarrinho = this.getAttribute('data-id');
+                    const quantidadeInput = document.getElementById(`quantidade-${idCarrinho}`);
+                    let quantidade = parseInt(quantidadeInput.value, 10);
+                    if (quantidade > 1) {
+                        quantidade--;
+                        quantidadeInput.value = quantidade;
+                        atualizarQuantidade(idCarrinho, quantidade);
+                    } else {
+                        alert("Número mínimo de pedido é 1");
+                    }
+                });
+            });
 
-        function diminuir() {
-            const numeroInput = document.getElementById('numero');
-
-            numeroInput.value--;
-
-            if (numeroInput.value < '1') {
-                alert("Número mínimo de pedido 1")
-                numeroInput.value = '1'
+            function atualizarQuantidade(idCarrinho, quantidade) {
+                fetch('/atualizar_quantidade', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id_carrinho: idCarrinho, quantidade: quantidade })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            atualizarPrecoTotal(); // Atualiza o preço total após a quantidade ser atualizada com sucesso
+                        } else {
+                            alert('Erro ao atualizar quantidade');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Erro ao atualizar quantidade');
+                    });
             }
 
-        }
+            function atualizarPrecoTotal() {
+                fetch('/atualizar_preco_total', {
+                    method: 'GET'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('total-preco').innerText = `R$ ${data.total_preco}`;
+                        } else {
+                            console.error('Erro ao obter o total atualizado');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
+            }
+        });
     </script>
-
 </body>
-
 {% endblock %}
