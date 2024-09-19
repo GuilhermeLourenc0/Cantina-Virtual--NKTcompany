@@ -1,30 +1,48 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/carrinho.css">
+
 <body>
     <main>
+
         {% for registro in lista_carrinho.produtos %}
         <form action="/excluir_produto" class="produto-card" method="post">
-            <img class="img-produto"
-                src="{{ registro.imagem_produto }}"
-                alt="Imagem Produto">
+            <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Produto">
 
-            <div class="direita-card">
-                <div class="cima">
-                    <span>{{ registro.nome_produto }}</span>
-                    <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}">
-                        <img src="../static/img/lixo.png" alt="">
-                    </button>
+            <section class="container-principal">
+
+                <div class="btn-x">
+                    <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
                 </div>
 
-                <div class="baixo">
-                    <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
-                    <input type="number" id="quantidade-{{ registro.id_carrinho }}" value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
-                    <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
 
-                    <span class="preco-item">{{ registro.preco }}</span>
+                <div class="produto-card">
+
+
+                    <div class="direita-card">
+                        <div class="cima">
+                            <span>{{ registro.nome_produto }}</span>
+                            <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button"
+                                value="{{ registro.id_produto }}">
+                                <img src="../static/img/lixo.png" alt="">
+                            </button>
+                        </div>
+
+                        <div class="baixo">
+                            <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
+                            <input type="number" id="quantidade-{{ registro.id_carrinho }}"
+                                value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
+                            <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
+
+
+                            <span class="preco-item">{{ registro.preco }}</span>
+
+
+                        </div>
+
+                    </div>
+
                 </div>
-            </div>
         </form>
         {% endfor %}
 
@@ -36,7 +54,7 @@
 
             <form action="/enviar_carrinho" method="post">
                 <button name="id_carrinho" class="button1">Enviar</button>
-            </form> 
+            </form>
             <a href="/">Continuar Comprando</a>
         </div>
 
@@ -44,9 +62,9 @@
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.mais-btn').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const idCarrinho = this.getAttribute('data-id');
                     const quantidadeInput = document.getElementById(`quantidade-${idCarrinho}`);
                     let quantidade = parseInt(quantidadeInput.value, 10);
@@ -57,7 +75,7 @@
             });
 
             document.querySelectorAll('.menos-btn').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const idCarrinho = this.getAttribute('data-id');
                     const quantidadeInput = document.getElementById(`quantidade-${idCarrinho}`);
                     let quantidade = parseInt(quantidadeInput.value, 10);
@@ -79,35 +97,35 @@
                     },
                     body: JSON.stringify({ id_carrinho: idCarrinho, quantidade: quantidade })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        atualizarPrecoTotal(); // Atualiza o preço total após a quantidade ser atualizada com sucesso
-                    } else {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            atualizarPrecoTotal(); // Atualiza o preço total após a quantidade ser atualizada com sucesso
+                        } else {
+                            alert('Erro ao atualizar quantidade');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
                         alert('Erro ao atualizar quantidade');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao atualizar quantidade');
-                });
+                    });
             }
 
             function atualizarPrecoTotal() {
                 fetch('/atualizar_preco_total', {
                     method: 'GET'
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('total-preco').innerText = `R$ ${data.total_preco}`;
-                    } else {
-                        console.error('Erro ao obter o total atualizado');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('total-preco').innerText = `R$ ${data.total_preco}`;
+                        } else {
+                            console.error('Erro ao obter o total atualizado');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
             }
         });
     </script>

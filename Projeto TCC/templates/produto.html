@@ -2,17 +2,18 @@
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/produto.css">
 
-
 <body>
 <main>
     {% for registro in lista_prounico %}
     <img src="{{ registro.imagem_produto }}" alt="">
+
     <section class="descricao">
         <span class="nome-produto">{{ registro.nome_produto }}</span>
         <span class="descricao-produto">{{ registro.descricao }}</span>
         <span class="preco-produto">R$ {{ registro.preco }}</span>
         
         <!-- Mover as estrelas de avaliação para cá -->
+
         <div class="rating">
             <input value="5" name="rating" id="star5" type="radio">
             <label for="star5"></label>
@@ -31,8 +32,6 @@
         </form>
 
     </section>
-
-    
     {% endfor %}
 </main>
 {% endblock %}

@@ -145,7 +145,12 @@ form input:focus {
     cursor: pointer;
 }
 
+<<<<<<< HEAD
+
+.toggle-button {
+=======
 .toggle-button, .toggle-button2 {
+>>>>>>> c993032c67c42543093fde09e55fa154e61af082
     position: absolute;
     right: 22px; /* Ajusta para o canto direito */
     top: 50.5%;
