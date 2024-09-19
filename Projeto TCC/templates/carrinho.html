@@ -1,28 +1,94 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/carrinho.css">
-
+<body>
     <main>
-        <section class="cont-carrinho">
+    <section class="container-principal">
+
+        <div class="btn-x">
+            <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
+        </div>
+
+
+        <div class="produto-card">
+
             {% for registro in lista_carrinho %}
-            <form action="/excluir_produto" method="post" class="carrinho">
-           
-                <div class="carrinho-item">
-                    <div class="img"><img src="{{ registro.imagem_produto }}" alt="top"></div>
+            <form action="/excluir_produto" method="post" class="produto-card">
+
+                <img class="img-produto"
+                    src="{{ registro.imagem_produto }}"
+                    alt="Imagem Produto">
+
+                <div class="direita-card">
+
+                    <div class="cima">
+                        <span>{{ registro.nome_produto }}</span>
+                        <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}"><img src="../static/img/lixo.png" alt=""></button>
+                    </div>
+
+                    <div class="baixo">
+
+                        <button class="menos-btn" onclick="diminuir()">-</button>
+                        <input type="number" id="numero" value="1">
+                        <button class="mais-btn" onclick="aumentar()">+</button>
+
+                        <script src="script.js"></script>
+
+                        <span>{{ registro.preco }}</span>
+
+                    </div>
+
                 </div>
-                <div class="texto">
-                    <p>{{ registro.nome_produto }}</p>
-                    <p>{{ registro.preco }}</p>
-                </div>
-                <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}">Excluir</button>
+
             </form>
             {% endfor %}
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+            <div class="finalizacao">
+                <div class="preco">
+                    <span class="span1">Total:</span>
+                    <span class="span2">R$69,00</span>
+                </div>
+
+
+                <form action="/enviar_carrinho" method="post">
+                    <button name="id_carrinho" class="button1">Enviar</button>
+                </form> 
+                <a href="/">Continuar Comprando</a>
+            </div>
+
+            <span class="span3">.</span>
+
         </section>
 
-        <form action="" method="post">
-        <button type="submit" class="button1">
-            Comprar
-        </button>
-        </form>
     </main>
-    {% endblock %}
+
+    <script>
+        function aumentar() {
+            const numeroInput = document.getElementById('numero');
+
+            numeroInput.value++;
+        }
+
+        function diminuir() {
+            const numeroInput = document.getElementById('numero');
+
+            numeroInput.value--;
+
+            if (numeroInput.value < '1') {
+                alert("Número mínimo de pedido 1")
+                numeroInput.value = '1'
+            }
+
+        }
+    </script>
+
+</body>
+
+{% endblock %}

@@ -1,158 +1,126 @@
-*{
-    box-sizing: border-box;
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+
 }
 
-.cbc-cima{
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    
+}
+
+main form{
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color:rgba(207,34,38,255);
+    justify-content: end;
 }
 
-.cbc-cima .perfil{
-    height: 50px;
-    width: 50px;
-    border-radius: 100px;
+img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 20px;
 }
 
-.cbc-cima .perfil:active{
-    filter: grayscale(70%);
-
-}
-
-.logo{
-    height: 70px;
-}
-
-.menu{
-    height: 40px;
-}
-
-.cbc-baixo{
-    background-color: rgb(156, 0, 0);
-    display: none;
-    justify-content: space-around;
-}
-
-main img{
-    height: 260px;
-}
-
-.descricao{
+/* Seção de descrição do produto */
+.descricao {
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    margin-left: 10px;
-margin-top: 10px;
+    justify-content: space-around;
 }
 
-.nome-produto{
+.nome-produto {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.descricao-produto {
+    display: block;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.preco-produto {
+    display: block;
     font-size: 20px;
-    font-weight: bolder;
-}
-
-.preco-produto{
-    margin-top: 10px;
+    color: #000000;
+    margin-bottom: 10px;  /* Espaçamento entre preço e estrelas */
     font-weight: bold;
 }
 
-
-main button{
-    position: absolute;
-    z-index: 1000;
-    right: 91%;
-    top: 11%;
-    background-color: transparent;
-    color: red;
-    padding: 8px;
-    border-radius: 120px;
-    border: none;
-    font-size: 25px;
-}
-
-.footer{
-    margin-top: 154px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Seção de avaliação por estrelas */
 .rating {
-    display: flex;
-    direction: rtl; /* Inverte a ordem dos elementos para facilitar a seleção da estrela */
-    font-size: 2em; /* Tamanho das estrelas */
-    color: #ccc; /* Cor das estrelas não selecionadas */
-    position: absolute;
-    right: 64%;
+  display: inline-block;
 }
 
 .rating input {
-    display: none; /* Oculta os checkboxes */
+  display: none;
 }
 
 .rating label {
-    cursor: pointer;
-    color: #ccc; /* Cor das estrelas não selecionadas */
-    transition: color 0.2s ease;
+  float: right;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.3s;
 }
 
-.rating input:checked ~ label {
-    color: #f5c518; /* Cor das estrelas selecionadas */
+.rating label:before {
+  content: '\2605';
+  font-size: 30px;
 }
 
-.rating input:checked ~ label ~ label {
-    color: #ccc; /* Mantém as estrelas à esquerda como não selecionadas */
-}
-
+.rating input:checked ~ label,
 .rating label:hover,
 .rating label:hover ~ label {
-    color: #f5c518; /* Cor das estrelas quando passa o mouse sobre elas */
+  color: #ffbb00;
+  transition: color 0.3s;
 }
 
-
-
-
-.footer{
-    background-color: rgba(207,34,38,255);
-    height: 80px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.status{
-    color: rgb(255, 255, 255);
-}
-
-.status-cor{
-    color: rgb(21, 255, 0);
-}
-
-.footer button{
-    background-color: rgb(17, 177, 2);
-    border-radius: 10px;
-    color: white;
+/* Botão de adicionar ao carrinho */
+form button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff0000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
     border: none;
-    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.footer button:active{
-    filter: grayscale(20%);
+form button:hover {
+    background-color: #ff5a5a;
+}
+
+/* Layout responsivo */
+@media screen and (min-width: 768px) {
+    main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .descricao, .form-rating {
+        margin-top: 0;
+    }
+
+    
 }
