@@ -4,6 +4,14 @@
     padding: 0;
 }
 
+figure{
+
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 html{
 
     overflow-y: scroll;
