@@ -1,0 +1,177 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.cbc-cima .perfil{
+    height: 50px;
+    width: 50px;
+    border-radius: 100px;
+}
+
+.cbc-cima .perfil:active{
+    filter: grayscale(70%);
+
+}
+
+.logo{
+    height: 70px;
+}
+
+.menu{
+    height: 40px;
+}
+
+.cbc-baixo{
+    background-color: rgb(156, 0, 0);
+    display: none;
+    justify-content: space-around;
+    
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.order-filter {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.order-filter label {
+    margin-right: 10px;
+    font-size: 1.1em;
+}
+
+.order-filter select {
+    padding: 5px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.order-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 450px;
+    min-width: 300px;
+    margin: 35px 0px 5px 0px;
+    transition: transform 0.3s;
+}
+
+.order-card:hover {
+    transform: translateY(-5px);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.order-number {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.order-date {
+    color: #888;
+    font-style: italic;
+}
+
+.order-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.order-details span {
+    font-size: 1.1em;
+    color: #666;
+}
+
+.order-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.status-value {
+    font-weight: bold;
+}
+
+.status-value.finalizado {
+    color: #4CAF50;;
+}
+
+.status-value.pendente {
+    color: orange;
+}
+
+.status-value.cancelado {
+    color: red;
+}
+
+.order-price {
+    color: #333;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.container-cards{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.order-details ul {
+    list-style-type: none; /* Remove os marcadores de lista */
+    margin: 0; /* Remove a margem padrão */
+    padding: 0; /* Remove o preenchimento padrão */
+}
+
+.order-details li {
+    margin: 0; /* Remove a margem dos itens */
+    padding: 0; /* Remove o preenchimento dos itens */
+}
+
+.btn-cancelar{
+    display: flex;
+    justify-content: center;
+}
+
+.btn-cancelar button{
+    margin-top: 20px;
+    background-color: red;
+    color: white;
+    font-weight: bolder;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-cancelar button:hover{
+    background-color: rgb(235, 0, 0);
+}
+
+.btn-cancelar button:active{
+    background-color: rgb(225, 0, 0);
+}
+/* k */

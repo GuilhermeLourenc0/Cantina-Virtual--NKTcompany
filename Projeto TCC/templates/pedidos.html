@@ -1,0 +1,33 @@
+{% extends "modelo.html" %}
+{% block conteudo %}
+<link rel="stylesheet" href="../static/styles/pedidos.css">
+
+<main>
+    <h1>Pedidos</h1>
+    <section class="cont-pedidos">
+        {% for id_cliente, cliente in lista_pedidos.items() %}
+        <div class="card-pedidos">
+            <h2>Nome do Cliente: {{ cliente.nome_cliente }}</h2>
+            <p>Telefone do Cliente: {{ cliente.telefone }}</p>
+
+            <!-- Loop pelos pedidos do cliente -->
+            {% for id_pedido, pedido in cliente.pedidos.items() %}
+            <div class="pedido">
+                <h3>Pedido ID: {{ id_pedido }}</h3>
+                <p>Data: {{ pedido.data_pedido }}</p>
+                <p>Status: {{ pedido.status }}</p>
+
+                <!-- Loop pelos produtos do pedido -->
+                <h4>Produtos</h4>
+                <ul>
+                    {% for produto in pedido.produtos %}
+                    <li>{{ produto.nome_produto }} - Preço: {{ produto.preco }} - Quantidade: {{ produto.quantidade }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
