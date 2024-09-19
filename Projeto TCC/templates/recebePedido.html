@@ -31,13 +31,13 @@
                     </ul>
                 </div>
                 <div class="order-status">
-                    <button value="preparando">Preparando</button>
-                    <button value="feito">Feito</button>
-                    <button value="entregue">Entregue</button>
                     <!-- Exibe o preço total do pedido -->
                     <span class="order-price">RS: {{ pedido.total_preco }}</span>
                 </div>
                 <div class="btn-cancelar">
+                    <button id="button1" value="preparando">Preparando</button>
+                    <button id="button2" value="feito">Pronto</button>
+                    <button id="button3" value="entregue">Entregue</button>
                     <button>Cancelar</button>
                 </div>
             </div>
