@@ -13,7 +13,7 @@ form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1rem;
 }
 
 h2{
@@ -21,7 +21,8 @@ h2{
     margin-bottom: 20px;
     color: #333;
     text-align: center;
-  
+}
+
 *{
   font-family: Inter,sans-serif;
   box-sizing: border-box;
@@ -46,8 +47,9 @@ form input:focus, select:focus {
     outline: none;
 }
 
-.input-descricao, .input-image {
-  height: 100px;
+.input-descricao{
+  height: 10rem;
+  width: 22.5rem;
   resize: none;
 }
 
@@ -55,6 +57,7 @@ form input:focus, select:focus {
     background-color: #FFD707;
     color: black;
     font-weight: 600;
+    padding: 0.8rem;
     border: none;
     border-radius: 8px;
     height: 45px;
@@ -98,6 +101,7 @@ form{
   color: black;
   align-items: center;
 }
+
 form input{
   width: 360px;
   border: none;
@@ -106,6 +110,7 @@ form input{
   text-align: left;
   
 }
+
 form input :active{
 color: rgb(0, 217, 255);
 }
@@ -157,10 +162,7 @@ height: 40px;
 letter-spacing: -.8px;
 line-height: 24px;
 min-width: 132px;
-
-
 }
-
 
 select {
 position: relative;
@@ -185,13 +187,9 @@ color: #333;
 -ms-transform: rotate(90deg);
 transform: rotate(90deg);
 right: 11px;
-
-
 top: 18px;
 padding: 0 0 2px;
 border-bottom: 1px solid #999;
-
-
 position: absolute;
 pointer-events: none;
 }
@@ -200,7 +198,6 @@ select{
 -webkit-appearance: none;
 -moz-appearance: none;
 appearance: none;
-
 display: block;
 width: 100%;
 max-width: 320px;
