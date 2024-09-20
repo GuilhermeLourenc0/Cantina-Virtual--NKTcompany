@@ -144,27 +144,140 @@ def comprar():
 
 
 
-# Rota para inserir produtos no carrinho
-@app.route("/inserir_carrinho", methods=['POST'])
-def carrinho():
+@app.route("/excluir_produto_adm", methods=['GET', 'POST'])
+def excluir_produto_adm():
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    btn_excluir = request.form.get("btn-excluir")  # Obtém o ID do produto a ser excluído
+    sistema.excluir_produto_adm(btn_excluir)  # Remove o produto
+    return redirect("/adm")  # Redireciona para a página do carrinho
+
+
+
+# Rota para exibir o perfil do usuário
+@app.route("/perfil", methods=['GET', 'POST'])
+def perfil():
+    return render_template("perfil.html")  # Renderiza a página do perfil do usuário
+
+
+
+
+# ========== Pedidos ==========
+# Rota para exibir pedidos (para administradores)
+@app.route("/exibir_pedidos", methods=['GET'])
+def exibir_pedidos():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+        return redirect('/logar')  # Redireciona para a página de login
     else:
-        if request.method == 'POST':
-            id_produto = session.get('id')['id_produto']  # Obtém o ID do produto da sessão
-            id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        lista_pedidos = sistema.exibir_pedidos()  # Obtém a lista de pedidos
+        return render_template('recebePedido.html', lista_pedidos=lista_pedidos)  # Passa a variável para o template
 
-            if 'IDs' not in session:
-                session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
 
-            session['IDs']['IDs_produtos'].append(id_produto)  # Adiciona o ID do produto à lista na sessão
 
-            sistema = Sistema()  # Cria uma instância da classe Sistema
-            sistema.inserir_produto_carrinho(id_produto, id_cliente)  # Adiciona o produto ao carrinho do cliente
-            return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
 
-        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
+# Rota para obter os pedidos em JSON
+@app.route("/obter_pedidos", methods=['GET'])
+def obter_pedidos():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
+    else:
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        lista_pedidos = sistema.exibir_pedidos()  # Obtém a lista de pedidos
+        return jsonify(lista_pedidos)  # Retorna a lista de pedidos em formato JSON
 
+
+
+
+
+# Rota para enviar o carrinho como um pedido
+@app.route("/enviar_carrinho", methods=['POST'])
+def enviar_carrinho():
+    if 'usuario_logado' in session:
+        id_cliente = session['usuario_logado']['id_cliente']
+        sistema = Sistema()
+        sistema.enviar_carrinho(id_cliente)
+        return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
+    return jsonify(success=False, message="Erro ao enviar o carrinho.")
+
+
+
+
+
+
+
+
+# ========== Carrinho ==========
+    
+# Rota para atualizar o preço total do carrinho via AJAX
+@app.route("/atualizar_preco_total", methods=['GET'])
+def atualizar_preco_total():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'success': False, 'message': 'Usuário não autenticado'})
+
+    id_cliente = session.get('usuario_logado')['id_cliente']
+
+    try:
+        sistema = Sistema()
+        lista_carrinho = sistema.exibir_carrinho(id_cliente)
+        return jsonify({'success': True, 'total_preco': lista_carrinho['total_preco']})
+
+    except Exception as e:
+        print(f"Erro ao atualizar preço total: {e}")
+        return jsonify({'success': False, 'message': 'Erro ao atualizar preço total'})
+    
+
+
+
+# Rota para atualizar a quantidade de um produto no carrinho via AJAX
+@app.route("/atualizar_quantidade", methods=['POST'])
+def atualizar_quantidade():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'success': False, 'message': 'Usuário não autenticado'})
+
+    id_cliente = session.get('usuario_logado')['id_cliente']
+
+    try:
+        data = request.get_json()
+        id_carrinho = data.get('id_carrinho')
+        quantidade = data.get('quantidade')
+
+        if not id_carrinho or not quantidade:
+            return jsonify({'success': False, 'message': 'Dados incompletos'})
+
+        sistema = Sistema()
+        sistema.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
+
+        return jsonify({'success': True})
+
+    except Exception as e:
+        print(f"Erro ao atualizar quantidade: {e}")
+        return jsonify({'success': False, 'message': 'Erro ao atualizar quantidade'})
+        
+
+
+
+# Rota para excluir um produto
+@app.route("/excluir_produto_carrinho", methods=['POST'])
+def excluir_produto_carrinho():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'success': False, 'message': 'Usuário não autenticado'})
+
+    try:
+        data = request.get_json()  # Obtém os dados JSON da requisição
+        id_carrinho = data.get('id_carrinho')  # Obtém o ID do carrinho
+
+        if not id_carrinho:
+            return jsonify({'success': False, 'message': 'ID do carrinho não encontrado'})
+
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        sistema.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
+
+        return jsonify({'success': True})  # Retorna sucesso se a exclusão for bem-sucedida
+
+    except Exception as e:
+        print(f"Erro ao excluir produto: {e}")  # Registra o erro no console
+        return jsonify({'success': False, 'message': 'Erro ao excluir produto'})
+    
 
 
 
@@ -189,121 +302,33 @@ def exibir_carrinho():
 
         lista_carrinho = sistema.exibir_carrinho(id_cliente)  # Obtém a lista de produtos no carrinho
         return render_template("carrinho.html", lista_carrinho=lista_carrinho)  # Renderiza a página do carrinho com a lista de produtos
+    
 
 
 
-
-
-# Rota para excluir um produto
-@app.route("/excluir_produto_carrinho", methods=['GET', 'POST'])
-def excluir_produto_carrinho():
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    btn_excluir = request.form["btn-excluir"]  # Obtém o ID do produto a ser excluído
-    sistema.excluir_produto(btn_excluir)  # Remove o produto
-    return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
-
-
-
-@app.route("/excluir_produto_adm", methods=['GET', 'POST'])
-def excluir_produto_adm():
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    btn_excluir = request.form.get("btn-excluir")  # Obtém o ID do produto a ser excluído
-    sistema.excluir_produto_adm(btn_excluir)  # Remove o produto
-    return redirect("/adm")  # Redireciona para a página do carrinho
-
-
-
-# Rota para enviar o carrinho como um pedido
-@app.route("/enviar_carrinho", methods=['POST'])
-def enviar_carrinho():
-    if request.method == 'POST':
-        id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
-        if id_cliente:
-            sistema = Sistema()  # Cria uma instância da classe Sistema
-            sistema.enviar_carrinho(id_cliente)  # Envia o carrinho como um pedido
-            return redirect("/")  # Redireciona para a página inicial
-
-
-
-
-
-# Rota para exibir pedidos (para administradores)
-@app.route("/exibir_pedidos", methods=['GET', 'POST'])
-def exibir_pedidos():
+# Rota para inserir produtos no carrinho
+@app.route("/inserir_carrinho", methods=['POST'])
+def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     else:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
-        lista_pedidos = sistema.exibir_pedidos()  # Obtém a lista de pedidos
-        return render_template("recebePedido.html", lista_pedidos=lista_pedidos)  # Renderiza a página com a lista de pedidos
+        if request.method == 'POST':
+            id_produto = session.get('id')['id_produto']  # Obtém o ID do produto da sessão
+            id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
+
+            if 'IDs' not in session:
+                session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
+
+            session['IDs']['IDs_produtos'].append(id_produto)  # Adiciona o ID do produto à lista na sessão
+
+            sistema = Sistema()  # Cria uma instância da classe Sistema
+            sistema.inserir_produto_carrinho(id_produto, id_cliente)  # Adiciona o produto ao carrinho do cliente
+            return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
+
+        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
 
 
-
-
-
-# Rota para exibir o perfil do usuário
-@app.route("/perfil", methods=['GET', 'POST'])
-def perfil():
-    return render_template("perfil.html")  # Renderiza a página do perfil do usuário
-
-
-
-
-
-# Rota para atualizar a quantidade de um produto no carrinho via AJAX
-@app.route("/atualizar_quantidade", methods=['POST'])
-def atualizar_quantidade():
-    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return jsonify({'success': False, 'message': 'Usuário não autenticado'})  # Retorna erro se o usuário não estiver autenticado
-
-    id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente
-
-    if not id_cliente:
-        return jsonify({'success': False, 'message': 'ID do cliente não encontrado'})  # Retorna erro se o ID do cliente não for encontrado
-
-    try:
-        data = request.get_json()  # Obtém os dados JSON da requisição
-        id_carrinho = data.get('id_carrinho')  # Obtém o ID do carrinho
-        quantidade = data.get('quantidade')  # Obtém a quantidade
-
-        if not id_carrinho or not quantidade:
-            return jsonify({'success': False, 'message': 'Dados incompletos'})  # Retorna erro se os dados estiverem incompletos
-
-        sistema = Sistema()  # Cria uma instância da classe Sistema
-        sistema.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)  # Atualiza a quantidade do produto no carrinho
-
-        return jsonify({'success': True})  # Retorna sucesso se a atualização for bem-sucedida
-
-    except Exception as e:
-        print(f"Erro ao atualizar quantidade: {e}")  # Registra o erro no console
-        return jsonify({'success': False, 'message': 'Erro ao atualizar quantidade'})  # Retorna erro se houver exceção
-
-
-
-
-
-# Rota para atualizar o preço total do carrinho via AJAX
-@app.route("/atualizar_preco_total", methods=['GET'])
-def atualizar_preco_total():
-    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return jsonify({'success': False, 'message': 'Usuário não autenticado'})  # Retorna erro se o usuário não estiver autenticado
-
-    id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente
-
-    if not id_cliente:
-        return jsonify({'success': False, 'message': 'ID do cliente não encontrado'})  # Retorna erro se o ID do cliente não for encontrado
-
-    try:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
-        lista_carrinho = sistema.exibir_carrinho(id_cliente)  # Obtém a lista de produtos no carrinho
-        return jsonify({'success': True, 'total_preco': lista_carrinho['total_preco']})  # Retorna sucesso com o preço total
-
-    except Exception as e:
-        print(f"Erro ao atualizar preço total: {e}")  # Registra o erro no console
-        return jsonify({'success': False, 'message': 'Erro ao atualizar preço total'})  # Retorna erro se houver exceção
-
-# Código comentado que pode ser usado para mudança de senha (não implementado)
-# @app.route("/nova_senha", methods=['POST', 'GET'])
-# def nova_senha():
 
 app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração
+
+

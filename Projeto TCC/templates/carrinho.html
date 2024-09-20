@@ -6,7 +6,7 @@
     <main>
 
         {% for registro in lista_carrinho.produtos %}
-        <form action="/excluir_produto_carrinho" class="produto-card" method="post">
+        <div class="produto-card">
             <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Produto">
 
             <section class="container-principal">
@@ -15,35 +15,25 @@
                     <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
                 </div>
 
-
                 <div class="produto-card">
-
-
                     <div class="direita-card">
                         <div class="cima">
                             <span>{{ registro.nome_produto }}</span>
-                            <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button"
-                                value="{{ registro.id_produto }}">
-                                <img src="../static/img/lixo.png" alt="">
+                            <button class="button btn-excluir" data-id="{{ registro.id_carrinho }}">
+                                <img src="../static/img/lixo.png" alt="Excluir Produto">
                             </button>
                         </div>
 
                         <div class="baixo">
                             <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
-                            <input type="number" id="quantidade-{{ registro.id_carrinho }}"
-                                value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
+                            <input type="number" id="quantidade-{{ registro.id_carrinho }}" value="{{ registro.quantidade }}" min="1">
                             <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
-
-
-                            <span class="preco-item">{{ registro.preco }}</span>
-
-
+                            <span class="preco-item">R$ {{ registro.preco }}</span>
                         </div>
-
                     </div>
-
                 </div>
-        </form>
+            </section>
+        </div>
         {% endfor %}
 
         <div class="finalizacao">
@@ -52,17 +42,16 @@
                 <span id="total-preco" class="span2">R$ {{ lista_carrinho.total_preco }}</span>
             </div>
 
-            <form action="/enviar_carrinho" method="post">
-                <button name="id_carrinho" class="button1">Enviar</button>
-            </form>
-            <a href="/">Continuar Comprando</a>
+            <!-- Botão para enviar o carrinho -->
+            <button class="button1" onclick="enviarCarrinho()">Enviar Carrinho</button>
+            <a href="/" class="button1">Continuar Comprando</a>
         </div>
 
-        <span class="span3">.</span>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Função para atualizar a quantidade de produtos
             document.querySelectorAll('.mais-btn').forEach(button => {
                 button.addEventListener('click', function () {
                     const idCarrinho = this.getAttribute('data-id');
@@ -89,6 +78,7 @@
                 });
             });
 
+            // Função AJAX para atualizar a quantidade de produtos no backend
             function atualizarQuantidade(idCarrinho, quantidade) {
                 fetch('/atualizar_quantidade', {
                     method: 'POST',
@@ -97,37 +87,82 @@
                     },
                     body: JSON.stringify({ id_carrinho: idCarrinho, quantidade: quantidade })
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            atualizarPrecoTotal(); // Atualiza o preço total após a quantidade ser atualizada com sucesso
-                        } else {
-                            alert('Erro ao atualizar quantidade');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro:', error);
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        atualizarPrecoTotal(); // Atualiza o preço total
+                    } else {
                         alert('Erro ao atualizar quantidade');
-                    });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
             }
 
+            // Função para excluir produtos do carrinho
+            document.querySelectorAll('.btn-excluir').forEach(button => {
+                button.addEventListener('click', function () {
+                    const idCarrinho = this.getAttribute('data-id');
+                    excluirProduto(idCarrinho);
+                });
+            });
+
+            // Função AJAX para excluir produto do carrinho
+            function excluirProduto(idCarrinho) {
+                fetch('/excluir_produto_carrinho', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id_carrinho: idCarrinho })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Atualiza a página após exclusão bem-sucedida
+                    } else {
+                        alert('Erro ao excluir produto');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+            }
+
+            // Função AJAX para atualizar o preço total do carrinho
             function atualizarPrecoTotal() {
                 fetch('/atualizar_preco_total', {
                     method: 'GET'
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            document.getElementById('total-preco').innerText = `R$ ${data.total_preco}`;
-                        } else {
-                            console.error('Erro ao obter o total atualizado');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro:', error);
-                    });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('total-preco').innerText = `R$ ${data.total_preco}`;
+                    } else {
+                        alert('Erro ao atualizar o preço total');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
             }
         });
+
+        // Função para enviar o carrinho via AJAX
+        function enviarCarrinho() {
+            fetch('/enviar_carrinho', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        window.location.href = '/'; // Redireciona para a página inicial
+                    } else {
+                        alert('Erro ao enviar o carrinho');
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar o carrinho:', error));
+        }
     </script>
 </body>
 {% endblock %}
