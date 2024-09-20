@@ -260,3 +260,8 @@ class Sistema:
 
         mydb.commit()
         mydb.close()
+
+
+    def perfil():
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
