@@ -16,6 +16,11 @@ def principal():
     return render_template("index.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
 
 
+@app.route("/adm")
+def principal_adm():
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
+    return render_template("index-adm.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
 
 
 # Rota para cadastro de novos usuários
@@ -56,11 +61,24 @@ def logar():
         usuario.logar(email, senha)  # Tenta fazer o login
         if usuario.logado:
             # Se o login for bem-sucedido, armazena os dados do usuário na sessão
-            session['usuario_logado'] = {"nome": usuario.nome, "email": usuario.email, "tel": usuario.tel, "id_cliente": usuario.id_cliente}
-            return redirect("/")  # Redireciona para a página inicial
+            session['usuario_logado'] = {
+                "nome": usuario.nome, 
+                "email": usuario.email, 
+                "tel": usuario.tel, 
+                "id_cliente": usuario.id_cliente, 
+                "tipo": usuario.tipo
+            }
+            tipo = session.get('usuario_logado')['tipo']
+            
+            if tipo != 'cliente':
+                return redirect("/adm")  # Redireciona para a página inicial do adm
+            else:
+                return redirect("/")  # Redireciona para a página inicial
+
         else:
             session.clear()  # Limpa a sessão em caso de falha no login
             return redirect("/logar")  # Redireciona para a página de login
+
 
 
 
@@ -177,14 +195,21 @@ def exibir_carrinho():
 
 
 # Rota para excluir um produto
-@app.route("/excluir_produto", methods=['GET', 'POST'])
-def excluir_produto():
+@app.route("/excluir_produto_carrinho", methods=['GET', 'POST'])
+def excluir_produto_carrinho():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     btn_excluir = request.form["btn-excluir"]  # Obtém o ID do produto a ser excluído
     sistema.excluir_produto(btn_excluir)  # Remove o produto
     return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
 
 
+
+@app.route("/excluir_produto_adm", methods=['GET', 'POST'])
+def excluir_produto_adm():
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    btn_excluir = request.form.get("btn-excluir")  # Obtém o ID do produto a ser excluído
+    sistema.excluir_produto_adm(btn_excluir)  # Remove o produto
+    return redirect("/adm")  # Redireciona para a página do carrinho
 
 
 

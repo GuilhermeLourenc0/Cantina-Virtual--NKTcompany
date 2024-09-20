@@ -1,0 +1,45 @@
+{% extends "modelo-adm.html" %}
+{% block conteudo %}
+<link rel="stylesheet" href="../static/styles/inicial.css">
+
+<body>
+
+  <main>
+
+    <section class="container-produtos">
+
+      <h2>Nossos Produtos</h2>
+
+      <div class="grid-produto">
+
+        <div class="produtos">
+          {% for registro in lista_produtos %}
+          <form action="/produto_unico" method="post">
+
+            <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
+              <div class="card-produtos">
+
+                <img src="{{ registro.imagem_produto }}" alt="">
+                <span>{{ registro.nome_produto }}</span>
+                <span>R${{ registro.preco }}</span>
+
+              </div>
+            </button>
+          </form>
+
+          <form action="/excluir_produto_adm" method="post" class="excluir">
+            <button name="btn-excluir" class="button" value="{{ registro.id_produto }}">
+            <img src="../static/img/lixo.png" alt="">
+            </button>
+          </form>
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  {% endblock %}

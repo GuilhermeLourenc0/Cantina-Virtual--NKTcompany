@@ -17,6 +17,12 @@ html{
     overflow-y: scroll;
 }
 
+.btn-lixo{
+    border: none;
+    background: none;
+    height: 10px;
+}
+
 .cbc-cima{
     width: 100%;
     padding: 0 20px 0 20px;
@@ -41,6 +47,11 @@ html{
     height: 70px;
 }
 
+.excluir img{
+    height: 15px;
+    width: 15px;
+    display: flex;
+}
 
 .cbc-baixo{
     background-color: rgb(156, 0, 0);

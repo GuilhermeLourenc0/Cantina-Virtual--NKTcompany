@@ -6,7 +6,7 @@
     <main>
 
         {% for registro in lista_carrinho.produtos %}
-        <form action="/excluir_produto" class="produto-card" method="post">
+        <form action="/excluir_produto_carrinho" class="produto-card" method="post">
             <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Produto">
 
             <section class="container-principal">

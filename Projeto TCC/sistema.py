@@ -129,12 +129,23 @@ class Sistema:
         }
 
     # Método para excluir um produto do carrinho
-    def excluir_produto(self, btn_excluir):
+    def excluir_produto_carrinho(self, btn_excluir):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
         # Consulta SQL para remover um produto do carrinho
         sql = "DELETE FROM tb_carrinho WHERE id_carrinho = %s"
+        mycursor.execute(sql, (btn_excluir,))
+
+        mydb.commit()
+        mydb.close()
+
+    def excluir_produto_adm(self, btn_excluir):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # Consulta SQL para remover um produto do carrinho
+        sql = "DELETE FROM tb_produto WHERE cod_produto = %s"
         mycursor.execute(sql, (btn_excluir,))
 
         mydb.commit()

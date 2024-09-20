@@ -147,6 +147,7 @@ class Usuario:
             self.nome = resultado[1]
             self.tel = resultado[2]
             self.senha = resultado[5]
+            self.tipo = resultado[6]
             self.email = resultado[3]
         else:
             self.logado = False
