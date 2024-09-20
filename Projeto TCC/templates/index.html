@@ -6,7 +6,7 @@
 
   <main>
 
-    <section class="carrossel">
+    <!-- <section class="carrossel">
       <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
@@ -34,7 +34,7 @@
           <span class="sr-only">Próximo</span>
         </a>
       </div>
-    </section>
+    </section> -->
 
 
     <section class="container-produtos">
@@ -49,11 +49,13 @@
 
             <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
               <div class="card-produtos">
-
-                <img src="{{ registro.imagem_produto }}" alt="">
-                <span>{{ registro.nome_produto }}</span>
-                <span>R${{ registro.preco }}</span>
-
+                <div class="right-lado">
+                  <span class="produto-nome">{{ registro.nome_produto }}</span>
+                  <span class="produto-preco">R${{ registro.preco }}</span>
+                </div>
+                <div class="left-lado">
+                  <img src="{{ registro.imagem_produto }}" alt="{{ registro.nome_produto }}">
+                </div>
               </div>
             </button>
           </form>

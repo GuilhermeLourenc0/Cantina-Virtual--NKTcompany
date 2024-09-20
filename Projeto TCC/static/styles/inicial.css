@@ -49,55 +49,88 @@ html{
     
 }
 
-.container-produtos{
+h2 {
+    color: #333;
+    font-size: 1.8rem; /* Tamanho ajustado para mobile */
+    text-align: left;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    font-weight: 60rem;
+}
+
+.container-produtos {
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+}
+.grid-produto{
+    padding: 1rem;
+    width: 100%;
+}
+.produtos {
+    display: flex;
+    flex-direction: column; /* Exibição em coluna */
+    gap: 16px; /* Espaço entre os produtos */
+    width: 100%;
 }
 
-.container-produtos h2{
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
-
-.produtos{
-    display: grid;
-    height: 50px;
-    grid-template-columns: repeat(2, 1fr); /* 3 colunas de tamanho igual */
-    gap: 16px; /* Espaço entre os itens */
-}
-
-.produtos button{
+.produtos button {
     background-color: transparent;
-    width: 10rem;
     border: none;
-    transition: transform 0.6s ease;
+    width: 100%; /* O botão ocupa toda a largura da tela */
+    display: flex;
+    align-items: stretch; /* Centraliza verticalmente */
+    padding: 10px;
+    border-radius: 12px; /* Bordas arredondadas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: #333 1px solid;
 }
 
-.produtos button:hover{
-    transform: scale(1.1);
-    text-decoration: none; /* Remove o sublinhado */
-    color: inherit; /* Herda a cor do elemento pai */
-    font-weight: normal; /* Remove qualquer negrito */
+.produtos button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.produtos button:focus {
-    outline: none;
+.card-produtos {
+    display: flex;
+    align-items: center; /* Alinha imagem e texto verticalmente */
+    justify-content: space-between;
+    width: 100%;
 }
 
-.card-produtos{
+.card-produtos img {
+    height: 100px; /* Tamanho da imagem */
+    width: 100px; /* Tamanho da imagem */
+    border-radius: 12px; /* Bordas arredondadas */
+    margin-right: 15px; /* Espaço entre imagem e texto */
+    object-fit: cover;
+}
+
+.card-produtos .info {
+    display: flex;
+    flex-direction: column; /* Nome e preço em coluna */
+    
+}
+
+.right-lado{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-bottom: 25px;
+    justify-content: end;
+    text-align: left;
+}
+.produto-nome {
+    font-size: 1rem; /* Ajustado para mobile */
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 6px;
 }
 
-
-
-.card-produtos img{
-    height: 130px;
-    width: 140px;
-    margin-bottom: 5px;
+.produto-preco {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ff5757;
 }
 
 .footer{
