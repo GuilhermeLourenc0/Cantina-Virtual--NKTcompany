@@ -244,3 +244,28 @@ h2 {
 
     background-color: rgb(255, 255, 255);
   }
+
+/* ============================================ */
+/* Kelvyn */
+
+.categoria{
+
+    padding: 0.5rem;
+    display: flex;
+    justify-items: center;
+    justify-content: space-between;
+    align-items: center;
+    width: 150%;
+
+    text-align: center;
+    height: 3rem;
+    overflow-x: scroll;
+}
+
+.categoria p{
+
+    margin-bottom: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
