@@ -3,35 +3,39 @@
 <link rel="stylesheet" href="../static/styles/produto.css">
 
 <body>
-<main>
-    {% for registro in lista_prounico %}
-    <img src="{{ registro.imagem_produto }}" alt="">
+    <main>
+        {% for registro in lista_prounico %}
+        <img class="ft-item" src="{{ registro.imagem_produto }}" alt="">
 
-    <section class="descricao">
-        <span class="nome-produto">{{ registro.nome_produto }}</span>
-        <span class="descricao-produto">{{ registro.descricao }}</span>
-        <span class="preco-produto">R$ {{ registro.preco }}</span>
-        
-        <!-- Mover as estrelas de avaliação para cá -->
+        <section class="descricao">
+            <span class="nome-produto">{{ registro.nome_produto }}</span>
+            <span class="descricao-produto">{{ registro.descricao }}</span>
+            <span class="preco-produto">R$ {{ registro.preco }}</span>
 
-        <div class="rating">
-            <input value="5" name="rating" id="star5" type="radio">
-            <label for="star5"></label>
-            <input value="4" name="rating" id="star4" type="radio">
-            <label for="star4"></label>
-            <input value="3" name="rating" id="star3" type="radio">
-            <label for="star3"></label>
-            <input value="2" name="rating" id="star2" type="radio">
-            <label for="star2"></label>
-            <input value="1" name="rating" id="star1" type="radio">
-            <label for="star1"></label>
-        </div>
+            <!-- Mover as estrelas de avaliação para cá -->
 
-        <form action="/inserir_carrinho" method="post">
-            <button type="submit" value="{{ registro.cod_produto }}">Adicionar a sacola</button>
-        </form>
+            <!-- <div class="rating">
+                <input value="5" name="rating" id="star5" type="radio">
+                <label for="star5"></label>
+                <input value="4" name="rating" id="star4" type="radio">
+                <label for="star4"></label>
+                <input value="3" name="rating" id="star3" type="radio">
+                <label for="star3"></label>
+                <input value="2" name="rating" id="star2" type="radio">
+                <label for="star2"></label>
+                <input value="1" name="rating" id="star1" type="radio">
+                <label for="star1"></label>
+            </div> -->
 
-    </section>
-    {% endfor %}
-</main>
-{% endblock %}
+            <div class="sair">
+                <a href="#" onclick="window.history.back(); return false;">Voltar</a>
+
+                <form action="/inserir_carrinho" method="post">
+                    <button type="submit" value="{{ registro.cod_produto }}">Adicionar a sacola</button>
+                </form>
+            </div>
+
+        </section>
+        {% endfor %}
+    </main>
+    {% endblock %}

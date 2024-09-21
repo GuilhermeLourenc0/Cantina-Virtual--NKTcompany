@@ -9,23 +9,22 @@ body {
 }
 
 main {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
+    max-width: 1200px; 
     background-color: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    
+    height: 89.5vh;
 }
 
 main form{
-    display: flex;
-    justify-content: end;
+    
 }
 
-img {
+.descricao{
+    padding: 20px;
+}
+
+.ft-item {
     max-width: 100%;
-    border-radius: 8px;
     margin-bottom: 20px;
 }
 
@@ -90,10 +89,10 @@ img {
 /* Botão de adicionar ao carrinho */
 form button {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 10px 30px;
     background-color: #ff0000;
     color: #fff;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     border: none;
     border-radius: 5px;
@@ -101,8 +100,9 @@ form button {
     transition: background-color 0.3s ease;
 }
 
-form button:hover {
-    background-color: #ff5a5a;
+form button:active {
+    background-color: #bb0606;
+    border: none;
 }
 
 /* Layout responsivo */
@@ -123,4 +123,26 @@ form button:hover {
     }
 
     
+}
+
+.sair{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   position: absolute;
+   bottom: 0;
+   width: 90vw;
+}
+
+.sair a{
+    border: 1px solid black;
+    font-weight: 200;
+    text-decoration: none;
+    color: #000000;
+    padding: 10px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
