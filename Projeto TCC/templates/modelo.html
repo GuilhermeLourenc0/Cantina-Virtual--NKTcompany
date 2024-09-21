@@ -42,13 +42,18 @@
                 <a href="/perfil">Perfil</a>
                 <hr>
                 <a href="/logout">Sair</a>
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                </label>
+                <div class="dark-mode">
+                    <label class="switch" for="chk">
+                        <input type="checkbox" id="chk">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
             
         </nav>
+        <div class="gambiarra">
+            <span>desculpa kk</span>
+        </div>
     </header>
 
     <!-- o conteúdo do site será inserido abaixo -->
@@ -62,12 +67,29 @@
     
             // Abrir ou fechar o menu lateral
             const menu = document.getElementById("mySidenav");
+            const test = document.getElementById("profile-container")
             if (menu.style.width === "100%") {
                 menu.style.width = "0";
+                setTimeout(function() {
+                    test.style.display = "flex";
+                }, 90);
             } else {
                 menu.style.width = "100%";
+                setTimeout(function() {
+                    test.style.display = "none";
+                }, 140);
             }
         }
+
+        const chk = document.getElementById('chk')
+        const inputs = document.querySelectorAll('input')
+        chk.addEventListener('change', () => {
+            document.body.classList.toggle('dark')
+            document.getElementById('form').classList.toggle('dark1')
+            inputs.forEach(input => {
+                input.classList.toggle('dark2') // Adiciona ou remove a classe 'dark1' em cada input
+            })
+        })
     </script>
     
 

@@ -4,6 +4,8 @@
     padding: 0;
 }
 
+
+
 figure{
 
     margin: 0 !important;
@@ -40,6 +42,10 @@ html{
     background-color:rgba(207,34,38,255);
     position: fixed;
     z-index: 1;
+}
+
+.gambiarra{
+    height: 70px;
 }
 
 .cbc-cima .perfil{
@@ -226,12 +232,12 @@ h2 {
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 2;
+    z-index: 3;
     top: 0;
     right: 0;
     background-color: rgb(209, 31, 31);
     overflow-x: hidden;
-    transition: 0.5s;
+    transition: 0.4s;
     padding-top: 60px;
   }
   .sidenav a {
@@ -250,6 +256,7 @@ h2 {
   
   .sidenav .closebtn {
     position: absolute;
+    z-index: 8;
     top: 0;
     right: 25px;
     font-size: 36px;
@@ -368,5 +375,12 @@ h2 {
   .carousel-item img{
     height: 600px;
     margin-bottom: 20px;
-    margin-top: 70px;
+  }
+
+  .dark-mode{
+    height: 290px;
+    width: 380px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
   }

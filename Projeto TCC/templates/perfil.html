@@ -9,7 +9,7 @@
 
             <h2>Perfil</h2>
 
-            <div class="profile-container">
+            <div class="profile-container" id="profile-container">
                 <div class="profile-image"></div>
                 <div class="overlay">
                     <input type="file" id="file-upload" accept="image/png, image/jpeg"><img
@@ -21,7 +21,7 @@
 
             <div class="formulario">
 
-                <form action="">
+                <form action="" id="form">
                     <input placeholder="*Nome" type="text">
 
                     <input type="password" id="password" placeholder="*Senha">
@@ -53,11 +53,11 @@
 
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
-                toggleIcon.src = '/Projeto TCC/static/img/abrido-removebg.png'; // Caminho para o ícone de ocultar
+                toggleIcon.src = './static/img/abrido-removebg.png'; // Caminho para o ícone de ocultar
                 toggleIcon.alt = 'Ocultar Senha';
             } else {
                 passwordField.type = 'password';
-                toggleIcon.src = '/Projeto TCC/static/img/fecheido-removebg.png'; // Caminho para o ícone de mostrar
+                toggleIcon.src = './static/img/fecheido-removebg.png'; // Caminho para o ícone de mostrar
                 toggleIcon.alt = 'Mostrar Senha';
             }
         }
@@ -70,11 +70,11 @@
 
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
-                toggleIcon.src = '/Projeto TCC/static/img/abrido-removebg.png'; // Caminho para o ícone de ocultar
+                toggleIcon.src = './static/img/abrido-removebg.png'; // Caminho para o ícone de ocultar
                 toggleIcon.alt = 'Ocultar Senha';
             } else {
                 passwordField.type = 'password';
-                toggleIcon.src = '/Projeto TCC/static/img/fecheido-removebg.png'; // Caminho para o ícone de mostrar
+                toggleIcon.src = './static/img/fecheido-removebg.png'; // Caminho para o ícone de mostrar
                 toggleIcon.alt = 'Mostrar Senha';
             }
         }

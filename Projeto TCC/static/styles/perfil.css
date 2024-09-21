@@ -4,35 +4,14 @@
     padding: 0;
 }
 
-.cbc-cima {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: rgba(207, 34, 38, 255);
+body{
+    background-color: white;
+    color: black;
 }
 
-.cbc-cima .perfil {
-    height: 50px;
-    width: 50px;
-    border-radius: 100px;
-}
-
-.cbc-cima .perfil:active {
-    filter: grayscale(70%);
-}
-
-.logo {
-    height: 70px;
-}
-
-.menu {
-    height: 40px;
-}
-
-.cbc-baixo {
-    background-color: rgb(156, 0, 0);
-    display: none;
-    justify-content: space-around;
+body.dark {
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
 }
 
 h2 {
@@ -49,13 +28,15 @@ h2 {
     align-items: center;
     flex-direction: column;
 }
-
+.formulario{
+    z-index: 0;
+}
 form {
     margin-top: 30px;
     display: flex;
     flex-direction: column;
     position: relative;
-    /* superior | direita | inferior | esquerda */
+    z-index: -2;
     padding: 150px 20px 20px 20px;
     border: 1px solid rgb(0 0 0);
     /* border-radius: 15px; */
@@ -68,8 +49,19 @@ form input {
     width: 100%;
     border: none;
     border-bottom: 1px solid black;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     padding-right: 40px;
+    background-color: transparent;
+}
+
+input.dark2{
+    border-bottom: 1px solid rgb(255, 255, 255);
+    color: white;
+}
+
+form.dark1 {
+    border: 1px solid rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
 }
 
 form input:focus {
@@ -82,7 +74,8 @@ form input:focus {
     width: 150px;
     border-radius: 6px;
     border: none;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
+    margin-top: -10px;
     color: white;
     font-weight: 700;
     font-style: italic;
@@ -91,7 +84,7 @@ form input:focus {
 
 /* Estilo da imagem de perfil e sobreposição */
 .profile-container {
-    z-index: 999;
+    z-index: 1;
     position: relative;
     height: 150px;
     width: 150px;
@@ -101,6 +94,7 @@ form input:focus {
 }
 
 .profile-image {
+    z-index: 2;
     width: 100%;
     height: 100%;
     background-image: url('https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg');
@@ -110,6 +104,7 @@ form input:focus {
 }
 
 .overlay {
+    z-index: 2;
     position: absolute;
     top: 0;
     left: 0;
@@ -148,17 +143,16 @@ form input:focus {
 .toggle-button, .toggle-button2 {
     position: absolute;
     right: 22px; /* Ajusta para o canto direito */
-    top: 50.5%;
+    top: 50%;
     transform: translateY(-50%);
     border: none;
     background-color: transparent;
-    z-index: 10; /* Garante que fique sobre o input */
     cursor: pointer;
     padding: 0;
 }
 
 .toggle-button2 {
-    top: calc(100% - 150px); /* Ajusta a posição da segunda senha */
+    top: calc(100% - 151px); /* Ajusta a posição da segunda senha */
 
 }
 
