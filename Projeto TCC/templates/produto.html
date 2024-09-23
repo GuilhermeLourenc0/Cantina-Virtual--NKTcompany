@@ -12,6 +12,23 @@
             <span class="descricao-produto">{{ registro.descricao }}</span>
             <span class="preco-produto">R$ {{ registro.preco }}</span>
 
+            <div class="observacao">
+                <div class="cima">
+                    <div class="esq">
+                        <img src="./static/img/obs.png" alt="">
+                        <span>Alguma observação?</span> 
+                    </div>
+                    <div class="dir">
+                        <p><span id="contador">0</span>/140</p>
+                    </div>
+                    
+                    
+                </div>
+                <div class="baixo">
+                    <input type="text" id="meuInput" placeholder="Ex: Tirar o feijão" maxlength="140">   
+                </div>
+            </div>
+
             <!-- Mover as estrelas de avaliação para cá -->
 
             <!-- <div class="rating">
@@ -35,7 +52,20 @@
                 </form>
             </div>
 
+            
+
         </section>
+
+        <div class="gambiarra"></div>
+
+        <script>
+            const input = document.getElementById('meuInput');
+            const contador = document.getElementById('contador');
+        
+            input.addEventListener('input', () => {
+                contador.textContent = input.value.length; // Atualiza o número de caracteres digitados
+            });
+        </script>
         {% endfor %}
     </main>
     {% endblock %}

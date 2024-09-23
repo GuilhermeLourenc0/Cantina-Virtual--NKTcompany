@@ -1,7 +1,7 @@
 /* Estilos gerais */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -10,7 +10,7 @@ body {
 
 main {
     max-width: 1200px; 
-    background-color: #fff;
+    background-color: #ffffff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     height: 89.5vh;
 }
@@ -24,8 +24,9 @@ main form{
 }
 
 .ft-item {
-    max-width: 100%;
+    width: 100%;
     margin-bottom: 20px;
+    max-height: 350px;
 }
 
 /* Seção de descrição do produto */
@@ -34,6 +35,7 @@ main form{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    background-color: rgb(255, 255, 255);
 }
 
 .nome-produto {
@@ -129,9 +131,10 @@ form button:active {
    display: flex;
    align-items: center;
    justify-content: space-between;
-   position: absolute;
+   position: fixed;
    bottom: 0;
    width: 90vw;
+   background-color: white;
 }
 
 .sair a{
@@ -145,4 +148,25 @@ form button:active {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.gambiarra{
+    width: 100%;
+    height: 30px;
+    background-color: white;
+}
+
+.cima{
+    display: flex;
+    justify-content: space-between;
+}
+
+.observacao img{
+    height: 25px;
+}
+
+.observacao input{
+    width: 90vw;
+    border: 1px solid rgb(212, 212, 212);
+    padding: 10px;
 }

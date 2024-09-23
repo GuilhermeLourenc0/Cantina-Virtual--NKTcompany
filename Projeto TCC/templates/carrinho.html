@@ -6,41 +6,46 @@
     <main>
 
         {% for registro in lista_carrinho.produtos %}
-        <form action="/excluir_produto_carrinho" class="produto-card" method="post">
-            <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Produto">
+        <form action="/excluir_produto_carrinho" class="form-exclui-carrinho" method="post">
+
 
             <section class="container-principal">
 
-                <div class="btn-x">
-                    <button class="btn-sair">X</button> <span class="subtitle">Carrinho de Compras</span>
-                </div>
-
-
                 <div class="produto-card">
 
+                    <div class="imgdiv">
+                        <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Produto">
 
-                    <div class="direita-card">
-                        <div class="cima">
-                            <span>{{ registro.nome_produto }}</span>
-                            <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button"
-                                value="{{ registro.id_produto }}">
-                                <img src="../static/img/lixo.png" alt="">
-                            </button>
+                        <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button"
+                            value="{{ registro.id_produto }}">
+                            <img src="../static/img/lixo.png" alt="">
+                        </button>
+
+                        <div class="direita-card">
+                            <div class="cima">
+                                <span>{{ registro.nome_produto }}</span>
+
+                                <div class="qnt-btn">
+                                    <button class="menos-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">-</button>
+                                    <input type="number" id="quantidade-{{ registro.id_carrinho }}"
+                                        value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
+                                    <button class="mais-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">+</button>
+                                </div>
+
+                            </div>
+
+                            <div class="baixo">
+                                <span class="desc-baixo">Marmita de 500g acompanha Arroz, feijão, Batata frit...</span>
+                                <span class="preco-item">R$ {{ registro.preco }}</span>
+
+                                <span class="obs-item">OBS: Sem feijão, pfv</span>
+                            </div>
+
                         </div>
-
-                        <div class="baixo">
-                            <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
-                            <input type="number" id="quantidade-{{ registro.id_carrinho }}"
-                                value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
-                            <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
-
-
-                            <span class="preco-item">{{ registro.preco }}</span>
-
-
-                        </div>
-
                     </div>
+
 
                 </div>
         </form>
