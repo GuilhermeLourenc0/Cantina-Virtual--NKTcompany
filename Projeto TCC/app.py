@@ -249,6 +249,25 @@ def enviar_carrinho():
 
 
 
+# ========== Histórico de Pedidos ==========
+@app.route("/exibir_historico", methods=['GET'])
+def exibir_historico():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    else:
+        id_cliente = session['usuario_logado']['id_cliente']
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        lista_historico = sistema.exibir_historico(id_cliente)  # Obtém a lista de pedidos
+        return render_template('historico.html', lista_historico=lista_historico)  # Passa a variável para o template
+
+
+
+
+
+
+
+
+
 
 # ========== Carrinho ==========
     

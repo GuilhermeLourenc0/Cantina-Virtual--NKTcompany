@@ -310,3 +310,68 @@ class Sistema:
     def perfil():
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
+
+
+
+
+    # Método para exibir todos os pedidos de um cliente específico com detalhes dos produtos
+    def exibir_historico(self, id_cliente):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # Consulta SQL para obter todos os pedidos do cliente específico com detalhes dos produtos
+        sql = """
+            SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, 
+                pr.nome_produto, pr.preco, pp.quantidade, 
+                p.data_pedido, p.status
+            FROM tb_pedidos p
+            JOIN tb_cliente cl ON p.id_cliente = cl.id_cliente
+            JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
+            JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
+            WHERE cl.id_cliente = %s  -- Filtra pelos pedidos do cliente específico
+            ORDER BY p.data_pedido DESC, pr.nome_produto
+        """
+        mycursor.execute(sql, (id_cliente,))
+        resultados = mycursor.fetchall()
+
+        pedidos = {}
+
+        # Itera sobre os resultados e organiza as informações de pedidos
+        for resultado in resultados:
+            id_pedido = resultado[0]
+            nome_cliente = resultado[2]
+            telefone_cliente = resultado[3]
+            nome_produto = resultado[4]
+            preco_produto = resultado[5]
+            quantidade_produto = resultado[6]
+            data_pedido = resultado[7]
+            status_pedido = resultado[8]
+
+            # Adiciona o cliente se não estiver no dicionário
+            if id_cliente not in pedidos:
+                pedidos[id_cliente] = {
+                    'nome_cliente': nome_cliente,
+                    'telefone': telefone_cliente,
+                    'pedidos': {}
+                }
+
+            # Adiciona o pedido se não estiver no dicionário
+            if id_pedido not in pedidos[id_cliente]['pedidos']:
+                pedidos[id_cliente]['pedidos'][id_pedido] = {
+                    'data_pedido': data_pedido,
+                    'status': status_pedido,
+                    'produtos': [],
+                    'total_preco': 0  # Inicializa o total do pedido
+                }
+
+            # Adiciona o produto ao pedido e calcula o total
+            total_produto = preco_produto * quantidade_produto
+            pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
+                'nome_produto': nome_produto,
+                'preco': preco_produto,
+                'quantidade': quantidade_produto
+            })
+            pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += total_produto  # Atualiza o total do pedido
+
+        mydb.close()
+        return pedidos

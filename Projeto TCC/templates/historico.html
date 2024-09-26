@@ -1,0 +1,34 @@
+{% extends "modelo.html" %}
+{% block conteudo %}
+    <link rel="stylesheet" href="../static/styles/historico.css">
+
+    <section class="container-cards">
+        <h2>Histórico de Pedidos</h2>
+        <!-- Loop pelos pedidos do cliente -->
+        {% for id_cliente, dados_cliente in lista_historico.items() %}
+            <div class="card-pedidos">
+                <h3>Cliente: {{ dados_cliente.nome_cliente }}</h3>
+                {% for id_pedido, dados_pedido in dados_cliente.pedidos.items() %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-number">#{{ id_pedido }}</span>
+                            <span class="order-time">{{ dados_pedido.data_pedido.strftime("%H:%M") }}</span>
+                            <span class="order-date">{{ dados_pedido.data_pedido.strftime("%d/%m/%y") }}</span>
+                        </div>
+                        <div class="order-details">
+                            <ul>
+                                {% for produto in dados_pedido.produtos %}
+                                    <li>{{ produto.quantidade }}x {{ produto.nome_produto }} - R$ {{ produto.preco }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="order-status">
+                            <span class="order-price">R$ {{ dados_pedido.total_preco }}</span>
+                            <span class="order-status-text">{{ dados_pedido.status }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}
