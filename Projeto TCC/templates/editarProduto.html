@@ -15,24 +15,25 @@
                 </tr>
             </thead>
             <tbody>
+                {% for registro in lista_prounico %}
                 <tr>
-                    <td>Coxinha <button>✏️</button></td>
-                    <td>6,50 <button>✏️</button></td>
-                    <td>Little coxa de fanho com catupiru <button><img src="/Projeto TCC/static/img/excluir produto.png"alt=""></button></td>
-                    <td><input type="file" id="file-upload" accept="image/png, image/jpeg"></td>
+                    <td>
+                        {{ registro.nome_produto }}
+                        <form method="POST" action="/editar_produto">
+                            <input type="hidden" name="btn-produto" value="{{ registro.cod_produto }}">
+                            <button type="submit">✏️</button>
+                        </form>
+                    </td>
+                    <td>R$ {{ registro.preco }}</td>
+                    <td>{{ registro.descricao }}</td>
+                    <td>
+                        <img src="{{ registro.imagem_produto }}" alt="Imagem do produto {{ registro.nome_produto }}" style="width: 100px; height: auto;">
+                    </td>
+                    <td>
+                        <input type="file" id="file-upload" accept="image/png, image/jpeg">
+                    </td>
                 </tr>
-                <tr>
-                    <td>Aguá <button>✏️</button></td>
-                    <td>4,00 <button>✏️</button></td>
-                    <td>Tradicional agua cristalina <button><img src="/Projeto TCC/static/img/excluir produto.png"alt=""></button></button></td>
-                    <td><input type="file" id="file-upload" accept="image/png, image/jpeg"></td>
-                </tr>
-                <tr>
-                    <td>Energetico <button>✏️</button></td>
-                    <td>10,00 <button>✏️</button></td>
-                    <td>Pra te deixar acordado a noite toda <button><img src="/Projeto TCC/static/img/excluir produto.png"alt=""></button></td>
-                    <td><input type="file" id="file-upload" accept="image/png, image/jpeg"></td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </main>

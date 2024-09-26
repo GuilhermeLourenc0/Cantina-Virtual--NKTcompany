@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, jsonify
+from flask import Flask, render_template, request, redirect, session, jsonify, flash
 from usuario import Usuario
 from sistema import Sistema
 
@@ -140,13 +140,30 @@ def compras():
 
 # Rota para exibir detalhes de um produto único
 @app.route("/produto_unico", methods=['GET', 'POST'])
-def comprar():
+def exibir_produto_unico():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+    
     if request.method == 'POST':
-        sistema = Sistema()  # Cria uma instância da classe Sistema
         btn_produto = request.form.get('btn-produto')  # Obtém o ID do produto selecionado
-        session['id'] = {"id_produto": btn_produto}  # Armazena o ID do produto na sessão
-        lista_prounico = sistema.exibir_produto(btn_produto)  # Obtém os detalhes do produto
-        return render_template("produto.html", lista_prounico=lista_prounico)  # Exibe os detalhes do produto
+        session['id'] = {'id_produto': btn_produto}  # Armazena o ID na sessão
+        
+    # Recupera o ID do produto da sessão
+    id_produto = session['id'].get('id_produto')
+    
+    if id_produto is None:
+        flash('ID do produto não encontrado.', 'error')
+        return redirect('/')  # Redireciona se o ID não estiver na sessão
+
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    lista_prounico = sistema.exibir_produto(id_produto)
+    
+    if lista_prounico is None:
+        flash('Produto não encontrado.', 'error')
+        return redirect('/')  # Ou outra página que faça sentido
+
+    # Renderiza o template com os detalhes do produto
+    return render_template("produto.html", lista_prounico=lista_prounico)
 
 
 
@@ -374,12 +391,30 @@ def carrinho():
 def editar_produto():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
-    else:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
+    
+    if request.method == 'POST':
         btn_produto = request.form.get('btn-produto')  # Obtém o ID do produto selecionado
-        session['id'] = {"id_produto": btn_produto}  # Armazena o ID do produto na sessão
-        lista_prounico = sistema.exibir_produto(btn_produto)  # Obtém os detalhes do produto
-        return render_template("produto.html", lista_prounico=lista_prounico)  # Exibe os detalhes do produto
+        session['id'] = {'id_produto': btn_produto}  # Armazena o ID na sessão
+        
+    # Recupera o ID do produto da sessão
+    id_produto = session['id'].get('id_produto')
+    
+    if id_produto is None:
+        flash('ID do produto não encontrado.', 'error')
+        return redirect('/')  # Redireciona se o ID não estiver na sessão
+
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    lista_prounico = sistema.exibir_produto(id_produto)
+    
+    if lista_prounico is None:
+        flash('Produto não encontrado.', 'error')
+        return redirect('/')  # Ou outra página que faça sentido
+
+    # Renderiza o template com os detalhes do produto
+    return render_template("editarProduto.html", lista_prounico=lista_prounico)
+
+
+
 
 
 app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração
