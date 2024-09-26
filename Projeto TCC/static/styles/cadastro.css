@@ -10,7 +10,7 @@
     display: flex;
     margin-left: 26px;
     margin-right: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 h2{
@@ -36,7 +36,7 @@ form input{
     border-radius: 5px;
     border: 2px solid rgb(238, 238, 238);
     background-color: rgb(245, 245, 245);
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 input::placeholder {
@@ -53,11 +53,11 @@ input::placeholder {
 
 .container-principal button{
     padding: 15px;
-    background-color: #201e36;
+    background-color: rgb(161, 23, 23);
     width: 23.7rem;
     border-radius: 6px;
     border: none;
-    margin-bottom: 30px;
+    
     margin-top: 10px;
     color: white;
 }
@@ -97,6 +97,18 @@ form input:focus{
     color: rgb(156, 0, 0);
 }
 
+.login-btn{
+    text-decoration: none;
+    color: rgb(156, 0, 0);
+    text-decoration: none; 
+}
+
+.login-btn:hover{
+    text-decoration: none;
+    color: rgb(156, 0, 0);
+    text-decoration: none; 
+}
+
 .cbc-cima{
     display: none   ;
 }
@@ -121,4 +133,11 @@ form input:focus{
     border-radius: 6px;
     margin-top: 10px;
     margin-left: 26px;
+}
+
+option{
+    background-color: rgb(245, 245, 245);
+    color: #000;     
+    font-size: 8px; /* Tamanho da fonte das opções */
+      
 }
