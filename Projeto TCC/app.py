@@ -15,6 +15,12 @@ def principal():
     lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
     return render_template("index.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
 
+@app.route("/produtos_json", methods=['GET'])
+def produtos():
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
+    return jsonify(lista_produtos)  # Retorna os produtos em formato JSON
+
 
 @app.route("/adm")
 def principal_adm():
