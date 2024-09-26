@@ -90,6 +90,11 @@ CREATE TABLE tb_produtos_pedidos (
     FOREIGN KEY (cod_produto) REFERENCES tb_produto(cod_produto)
 );
 
+ALTER TABLE tb_produto ADD COLUMN habilitado TINYINT(1) DEFAULT 1;
+
+ALTER TABLE tb_produto ADD COLUMN imagem_binaria LONGBLOB;
+
+
  -- Inserindo os cursos e turmas no Banco de Dados
 INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 ('Comandos Elétricos - COMANDOS-2A24'),
