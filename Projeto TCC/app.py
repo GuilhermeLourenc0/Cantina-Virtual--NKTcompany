@@ -66,7 +66,8 @@ def logar():
                 "email": usuario.email, 
                 "tel": usuario.tel, 
                 "id_cliente": usuario.id_cliente, 
-                "tipo": usuario.tipo
+                "tipo": usuario.tipo,
+                "senha": usuario.senha
             }
             tipo = session.get('usuario_logado')['tipo']
             
@@ -327,6 +328,20 @@ def carrinho():
 
         return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
 
+
+
+# # Rota para alterar a senha
+# @app.route("trocar_senha", methods=['POST'])
+# def trocar_senha():
+#     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+#         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+#     else:
+#         if request.method == 'POST':
+#             sistema = Sistema()
+
+#             id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
+#             senha_cliente = session.get('usuario_logado')['senha']  # Obtém a senha do cliente da sessão
+#             sistema.trocar_senha(id_cliente, senha_cliente)
 
 
 app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração
