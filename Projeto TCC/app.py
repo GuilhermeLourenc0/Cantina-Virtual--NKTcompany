@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, jsonify, flash
+from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response
 from usuario import Usuario
 from sistema import Sistema
 
@@ -432,6 +432,33 @@ def editar_produto():
     # Renderiza o template com os detalhes do produto
     return render_template("editarProduto.html", lista_prounico=lista_prounico)
 
+
+@app.route("/atualizar_produto", methods=['POST'])
+def atualizar_produto():
+    if 'usuario_logado' not in session:
+        return redirect('/logar')
+
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    id_produto = request.form.get('id_produto')
+    nome = request.form.get('nome')
+    preco = request.form.get('preco')
+    descricao = request.form.get('descricao')
+    imagem = request.files.get('imagem')  # Para o upload de imagem
+
+    # lógica para atualizar o produto no banco de dados
+    sistema.atualizar_produto(id_produto, nome, preco, descricao, imagem)
+
+    flash('Produto atualizado com sucesso!', 'success')
+    return redirect('/')  # Ou para uma página de detalhes do produto
+
+@app.route('/imagem_produto/<int:cod_produto>')
+def imagem_produto(cod_produto):
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    imagem = sistema.obter_imagem_produto(cod_produto)
+
+    if imagem:
+        return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
+    return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
 
 
 

@@ -5,33 +5,43 @@
 <body>
 
     <main>
+        <h1>Atualizar Produtos</h1>
         <table>
             <thead>
                 <tr>
                     <th>Produto</th>
                     <th>Preço</th>
                     <th>Descrição</th>
-                    <th>Imagem</th>
+                    <th>Imagem Atual</th>
+                    <th>Nova Imagem</th>
+                    <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
                 {% for registro in lista_prounico %}
                 <tr>
                     <td>
-                        {{ registro.nome_produto }}
-                        <form method="POST" action="/editar_produto">
-                            <input type="hidden" name="btn-produto" value="{{ registro.cod_produto }}">
-                            <button type="submit">✏️</button>
-                        </form>
-                    </td>
-                    <td>R$ {{ registro.preco }}</td>
-                    <td>{{ registro.descricao }}</td>
-                    <td>
-                        <img src="{{ registro.imagem_produto }}" alt="Imagem do produto {{ registro.nome_produto }}" style="width: 100px; height: auto;">
+                        <form method="POST" action="/atualizar_produto" enctype="multipart/form-data">
+                            <input type="hidden" name="id_produto" value="{{ registro.cod_produto }}">
+                            
+                            <input type="text" name="nome" value="{{ registro.nome_produto }}" required>
                     </td>
                     <td>
-                        <input type="file" id="file-upload" accept="image/png, image/jpeg">
+                        <input type="text" name="preco" value="{{ registro.preco }}" required>
                     </td>
+                    <td>
+                        <textarea name="descricao" required>{{ registro.descricao }}</textarea>
+                    </td>
+                    <td>
+                        <img src="{{ url_for('imagem_produto', cod_produto=registro.cod_produto) }}" alt="Imagem do produto {{ registro.nome_produto }}" style="width: 100px; height: auto;">
+                    </td>
+                    <td>
+                        <input type="file" name="imagem" accept="image/png, image/jpeg">
+                    </td>
+                    <td>
+                        <button type="submit">Atualizar Produto</button>
+                    </td>
+                    </form>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -39,6 +49,4 @@
     </main>
 
 </body>
-
-</html>
 {% endblock %}

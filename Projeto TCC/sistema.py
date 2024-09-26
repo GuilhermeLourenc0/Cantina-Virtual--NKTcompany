@@ -375,3 +375,50 @@ class Sistema:
 
         mydb.close()
         return pedidos
+
+
+    def atualizar_produto(self, id_produto, nome, preco, descricao, file=None):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # Monta a consulta SQL para atualizar o produto
+        sql = """
+            UPDATE tb_produto
+            SET nome_produto = %s, preco = %s, descricao = %s
+        """
+        valores = (nome, preco, descricao)
+
+        # Se um arquivo foi enviado
+        if file:
+            # Lê os dados da imagem como binário
+            dados_imagem = file.read()
+            sql += ", imagem_binaria = %s, url_img = %s"  # Atualiza a coluna da imagem
+            valores += (dados_imagem, f"/imagem_produto/{id_produto}")  # Adiciona a URL da imagem aos valores
+
+        sql += " WHERE cod_produto = %s"  # Condição para o ID do produto
+        valores += (id_produto,)  # Adiciona o ID do produto aos valores
+
+        # Executa a consulta
+        mycursor.execute(sql, valores)
+
+        mydb.commit()
+        mydb.close()
+
+
+
+    def obter_imagem_produto(self, cod_produto):
+            mydb = Conexao.conectar()
+            mycursor = mydb.cursor()
+
+            # Consulta SQL para obter a imagem do produto
+            sql = "SELECT imagem_binaria FROM tb_produto WHERE cod_produto = %s"
+            mycursor.execute(sql, (cod_produto,))
+            resultado = mycursor.fetchone()
+
+            mydb.close()
+
+            if resultado:
+                return resultado[0]  # Retorna a imagem binária
+            return None  # Retorna None se não encontrar
+
+
