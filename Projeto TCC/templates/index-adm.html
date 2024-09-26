@@ -22,28 +22,28 @@
 
       <div class="grid-produto">
 
-        <div class="produtos">
+        <div class="produtos" id="produtos-lista">
           {% for registro in lista_produtos %}
-          <form action="/produto_unico" method="post">
+          <div class="produto-item">
+            <form action="/produto_unico" method="post">
+              <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
+                <div class="card-produtos">
+                  <img src="{{ registro.imagem_produto }}" alt="">
+                  <span>{{ registro.nome_produto }}</span>
+                  <span>R${{ registro.preco }}</span>
+                </div>
+              </button>
+            </form>
 
-            <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
-              <div class="card-produtos">
-
-                <img src="{{ registro.imagem_produto }}" alt="">
-                <span>{{ registro.nome_produto }}</span>
-                <span>R${{ registro.preco }}</span>
-
-              </div>
+            <button class="btn-desabilitar" data-id="{{ registro.id_produto }}">
+              Desabilitar
             </button>
-          </form>
-
-          <form action="/excluir_produto_adm" method="post" class="excluir">
-            <button name="btn-excluir" class="button" value="{{ registro.id_produto }}">
-            <img src="../static/img/lixo.png" alt="">
+            
+            <button class="btn-habilitar" data-id="{{ registro.id_produto }}">
+              Habilitar
             </button>
-          </form>
+          </div>
           {% endfor %}
-
         </div>
 
       </div>
@@ -52,4 +52,95 @@
 
   </main>
 
-  {% endblock %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+$(document).ready(function() {
+  // Carregar produtos inicialmente
+  carregarProdutos();
+
+  // Função para carregar produtos
+  function carregarProdutos() {
+    $.ajax({
+      url: '/produtos',  // Assumindo que você tenha uma rota que retorna a lista de produtos
+      method: 'GET',
+      success: function(data) {
+        const produtosLista = $('#produtos-lista');
+        produtosLista.empty();  // Limpa a lista existente
+        data.forEach(function(produto) {
+          produtosLista.append(`
+            <div class="produto-item">
+              <form action="/produto_unico" method="post">
+                <button value="${produto.id_produto}" name="btn-produto" type="submit">
+                  <div class="card-produtos">
+                    <img src="${produto.imagem_produto}" alt="">
+                    <span>${produto.nome_produto}</span>
+                    <span>R$${produto.preco}</span>
+                  </div>
+                </button>
+              </form>
+              <button class="btn-desabilitar" data-id="${produto.id_produto}">
+                Desabilitar
+              </button>
+              <button class="btn-habilitar" data-id="${produto.id_produto}">
+                Habilitar
+              </button>
+            </div>
+          `);
+        });
+      },
+      error: function(xhr) {
+        console.error('Erro ao carregar produtos:', xhr.responseText);
+      }
+    });
+  }
+
+  // Função para desabilitar produtos
+  $(document).on('click', '.btn-desabilitar', function(e) {
+    e.preventDefault();
+    const idProduto = $(this).data('id');
+    
+    $.ajax({
+      url: '/desabilitar_produto_adm',
+      method: 'POST',
+      data: { btn_desabilitar: idProduto },
+      success: function(response) {
+        // Verifica se a resposta é sucesso
+        if (response.status === 'success') {
+          carregarProdutos(); // Recarrega a lista de produtos
+        } else {
+          console.error('Erro ao desabilitar produto:', response.message); // Log detalhado
+        }
+      },
+      error: function(xhr) {
+        console.error('Erro ao desabilitar produto:', xhr.responseText);
+      }
+    });
+  });
+
+  // Função para habilitar produtos
+  $(document).on('click', '.btn-habilitar', function(e) {
+    e.preventDefault();
+    const idProduto = $(this).data('id');
+    
+    $.ajax({
+      url: '/habilitar_produto_adm',
+      method: 'POST',
+      data: { btn_habilitar: idProduto },
+      success: function(response) {
+        // Verifica se a resposta é sucesso
+        if (response.status === 'success') {
+          carregarProdutos(); // Recarrega a lista de produtos
+        } else {
+          console.error('Erro ao habilitar produto:', response.message); // Log detalhado
+        }
+      },
+      error: function(xhr) {
+        console.error('Erro ao habilitar produto:', xhr.responseText);
+      }
+    });
+  });
+});
+
+  </script>
+
+{% endblock %}

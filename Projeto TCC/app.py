@@ -19,7 +19,7 @@ def principal():
 @app.route("/adm")
 def principal_adm():
     sistema = Sistema()  # Cria uma instância da classe Sistema
-    lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
+    lista_produtos = sistema.exibir_produtos_adm()  # Obtém a lista de produtos
     return render_template("index-adm.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
 
 
@@ -145,12 +145,32 @@ def comprar():
 
 
 
-@app.route("/excluir_produto_adm", methods=['GET', 'POST'])
-def excluir_produto_adm():
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    btn_excluir = request.form.get("btn-excluir")  # Obtém o ID do produto a ser excluído
-    sistema.excluir_produto_adm(btn_excluir)  # Remove o produto
-    return redirect("/adm")  # Redireciona para a página do carrinho
+
+# Habilitar e desabilitar o produto (adm)
+@app.route("/desabilitar_produto_adm", methods=['POST'])
+def desabilitar_produto_adm():
+    try:
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        btn_desabilitar = request.form.get("btn_desabilitar")  # Obtém o ID do produto
+        sistema.desabilitar_produto_adm(btn_desabilitar)  # Desabilita o produto
+        return jsonify({'status': 'success'})  # Retorna uma resposta de sucesso
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
+
+@app.route("/habilitar_produto_adm", methods=['POST'])
+def habilitar_produto_adm():
+    try:
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        btn_habilitar = request.form.get("btn_habilitar")  # Obtém o ID do produto
+        sistema.habilitar_produto_adm(btn_habilitar)  # Habilita o produto
+        return jsonify({'status': 'success'})  # Retorna uma resposta de sucesso
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
+
+
+
+
+
 
 
 

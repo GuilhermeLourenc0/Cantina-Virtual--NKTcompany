@@ -6,8 +6,8 @@ class Sistema:
         self.tel = None
         self.id_produto = None
 
-    # Método para exibir todos os produtos disponíveis
-    def exibir_produtos(self):
+
+    def exibir_produtos_adm(self):
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()   # Cria um cursor para executar queries
 
@@ -30,6 +30,31 @@ class Sistema:
             })
         mydb.close()  # Fecha a conexão com o banco de dados
         return lista_produtos if lista_produtos else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+
+    def exibir_produtos(self):
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()   # Cria um cursor para executar queries
+
+        # Consulta SQL para selecionar apenas produtos habilitados (assumindo coluna 'habilitado')
+        sql = "SELECT * FROM tb_produto WHERE habilitado = 1"
+        mycursor.execute(sql)      # Executa a consulta
+        resultado = mycursor.fetchall()  # Obtém todos os resultados
+
+        lista_produtos = []
+
+        # Itera sobre os resultados e adiciona cada produto à lista
+        for produto in resultado:
+            lista_produtos.append({
+                'nome_produto': produto[1],
+                'preco': produto[2],
+                'imagem_produto': produto[3],
+                'categoria': produto[5],
+                'descricao': produto[4],
+                'id_produto': produto[0]
+            })
+        mydb.close()  # Fecha a conexão com o banco de dados
+        return lista_produtos if lista_produtos else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+
 
     # Método para exibir um único produto com base no ID
     def exibir_produto(self, id):
@@ -147,16 +172,35 @@ class Sistema:
 
 
 
-    def excluir_produto_adm(self, btn_excluir):
+    # Modifique a função para desabilitar produto
+    def desabilitar_produto_adm(self, produto_id):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Consulta SQL para remover um produto do carrinho
-        sql = "DELETE FROM tb_produto WHERE cod_produto = %s"
-        mycursor.execute(sql, (btn_excluir,))
+        # Atualizar o status do produto para desabilitado (0)
+        sql = "UPDATE tb_produto SET habilitado = 0 WHERE cod_produto = %s"
+        mycursor.execute(sql, (produto_id,))
 
         mydb.commit()
         mydb.close()
+
+        return {"message": "Produto desabilitado com sucesso!"}  # Retorna um dicionário
+
+
+    # Modifique a função para habilitar produto
+    def habilitar_produto_adm(self, produto_id):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # Atualizar o status do produto para habilitado (1)
+        sql = "UPDATE tb_produto SET habilitado = 1 WHERE cod_produto = %s"
+        mycursor.execute(sql, (produto_id,))
+
+        mydb.commit()
+        mydb.close()
+
+        return {"message": "Produto habilitado com sucesso!"}  # Retorna um dicionário
+
 
     # Método para enviar o conteúdo do carrinho como um pedido
     def enviar_carrinho(self, id_cliente):
