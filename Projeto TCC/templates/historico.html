@@ -1,0 +1,38 @@
+{% extends "modelo.html" %}
+{% block conteudo %}
+    <link rel="stylesheet" href="/Projeto TCC/static/styles/historico.css">
+
+    <section class="container-cards">
+
+        <div class="card-pedidos">
+            <!-- Loop pelos pedidos do cliente -->
+            <div class="order-card">
+                <h2>Cliente: {{ cliente.nome_cliente }}</h2>
+                <div class="order-header">
+                    
+                    <span class="order-number">#{{ id_pedido }}</span>
+                    <span class="order-time">{{ pedido.data_pedido.strftime("%H:%M") }}</span>
+                    <span class="order-date">{{ pedido.data_pedido.strftime("%d/%m/%y") }}</span>
+                </div>
+                <div class="order-details">
+                    <ul>
+                        {% for produto in pedido.produtos %}
+                        <li>{{ produto.nome_produto }}</li>
+                        {% endfor %}
+                    </ul>
+                    <ul class="order-quantity">
+                        {% for produto in pedido.produtos %}
+                        <li>{{ produto.quantidade }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="order-status">
+                    <span class="order-price">RS: {{ pedido.total_preco }}</span>
+                </div>
+
+            </div>
+        </div>
+
+    
+        </section>
+{% endblock %}
