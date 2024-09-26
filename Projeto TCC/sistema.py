@@ -128,17 +128,24 @@ class Sistema:
             'total_preco': total_preco_formatado
         }
 
+
+
+
     # Método para excluir um produto do carrinho
-    def excluir_produto_carrinho(self, btn_excluir):
+    def remover_produto_carrinho(self, id_carrinho):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Consulta SQL para remover um produto do carrinho
+        # Consulta SQL para remover o produto do carrinho
         sql = "DELETE FROM tb_carrinho WHERE id_carrinho = %s"
-        mycursor.execute(sql, (btn_excluir,))
+        mycursor.execute(sql, (id_carrinho,))
 
         mydb.commit()
         mydb.close()
+
+
+
+
 
     def excluir_produto_adm(self, btn_excluir):
         mydb = Conexao.conectar()
@@ -253,3 +260,8 @@ class Sistema:
 
         mydb.commit()
         mydb.close()
+
+
+    def perfil():
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
