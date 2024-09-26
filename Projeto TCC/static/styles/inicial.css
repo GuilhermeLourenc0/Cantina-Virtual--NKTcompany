@@ -121,6 +121,10 @@ h2 {
     transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
+.produtos button:focus {
+    outline: none;
+}
+
 .produtos button:hover {
     transform: scale(1.02);
 }
