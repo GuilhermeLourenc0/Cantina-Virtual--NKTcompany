@@ -25,7 +25,7 @@
         <div class="produtos" id="produtos-lista">
           {% for registro in lista_produtos %}
           <div class="produto-item">
-            <form action="/produto_unico" method="post">
+            <form action="/editar_produto" method="post">
               <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
                 <div class="card-produtos">
                   <img src="{{ registro.imagem_produto }}" alt="">
@@ -35,13 +35,21 @@
               </button>
             </form>
 
+            {% if registro.habilitado %}
             <button class="btn-desabilitar" data-id="{{ registro.id_produto }}">
               Desabilitar
             </button>
-            
+            <button class="btn-habilitar" data-id="{{ registro.id_produto }}" style="display:none;">
+              Habilitar
+            </button>
+            {% else %}
             <button class="btn-habilitar" data-id="{{ registro.id_produto }}">
               Habilitar
             </button>
+            <button class="btn-desabilitar" data-id="{{ registro.id_produto }}" style="display:none;">
+              Desabilitar
+            </button>
+            {% endif %}
           </div>
           {% endfor %}
         </div>
@@ -55,45 +63,6 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
 $(document).ready(function() {
-  // Carregar produtos inicialmente
-  carregarProdutos();
-
-  // Função para carregar produtos
-  function carregarProdutos() {
-    $.ajax({
-      url: '/produtos',  // Assumindo que você tenha uma rota que retorna a lista de produtos
-      method: 'GET',
-      success: function(data) {
-        const produtosLista = $('#produtos-lista');
-        produtosLista.empty();  // Limpa a lista existente
-        data.forEach(function(produto) {
-          produtosLista.append(`
-            <div class="produto-item">
-              <form action="/produto_unico" method="post">
-                <button value="${produto.id_produto}" name="btn-produto" type="submit">
-                  <div class="card-produtos">
-                    <img src="${produto.imagem_produto}" alt="">
-                    <span>${produto.nome_produto}</span>
-                    <span>R$${produto.preco}</span>
-                  </div>
-                </button>
-              </form>
-              <button class="btn-desabilitar" data-id="${produto.id_produto}">
-                Desabilitar
-              </button>
-              <button class="btn-habilitar" data-id="${produto.id_produto}">
-                Habilitar
-              </button>
-            </div>
-          `);
-        });
-      },
-      error: function(xhr) {
-        console.error('Erro ao carregar produtos:', xhr.responseText);
-      }
-    });
-  }
-
   // Função para desabilitar produtos
   $(document).on('click', '.btn-desabilitar', function(e) {
     e.preventDefault();
@@ -104,11 +73,10 @@ $(document).ready(function() {
       method: 'POST',
       data: { btn_desabilitar: idProduto },
       success: function(response) {
-        // Verifica se a resposta é sucesso
         if (response.status === 'success') {
-          carregarProdutos(); // Recarrega a lista de produtos
-        } else {
-          console.error('Erro ao desabilitar produto:', response.message); // Log detalhado
+          // Esconde o botão de desabilitar e mostra o de habilitar
+          $(`.btn-desabilitar[data-id="${idProduto}"]`).hide();
+          $(`.btn-habilitar[data-id="${idProduto}"]`).show();
         }
       },
       error: function(xhr) {
@@ -127,11 +95,10 @@ $(document).ready(function() {
       method: 'POST',
       data: { btn_habilitar: idProduto },
       success: function(response) {
-        // Verifica se a resposta é sucesso
         if (response.status === 'success') {
-          carregarProdutos(); // Recarrega a lista de produtos
-        } else {
-          console.error('Erro ao habilitar produto:', response.message); // Log detalhado
+          // Esconde o botão de habilitar e mostra o de desabilitar
+          $(`.btn-habilitar[data-id="${idProduto}"]`).hide();
+          $(`.btn-desabilitar[data-id="${idProduto}"]`).show();
         }
       },
       error: function(xhr) {

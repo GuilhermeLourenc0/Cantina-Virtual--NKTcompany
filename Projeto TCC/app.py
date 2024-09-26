@@ -370,6 +370,18 @@ def carrinho():
 #             sistema.trocar_senha(id_cliente, senha_cliente)
 
 
+@app.route("/editar_produto", methods=['POST', 'GET'])
+def editar_produto():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+    else:
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        btn_produto = request.form.get('btn-produto')  # Obtém o ID do produto selecionado
+        session['id'] = {"id_produto": btn_produto}  # Armazena o ID do produto na sessão
+        lista_prounico = sistema.exibir_produto(btn_produto)  # Obtém os detalhes do produto
+        return render_template("produto.html", lista_prounico=lista_prounico)  # Exibe os detalhes do produto
+
+
 app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração
 
 

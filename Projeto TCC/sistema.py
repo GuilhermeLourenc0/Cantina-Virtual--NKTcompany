@@ -26,7 +26,8 @@ class Sistema:
                 'imagem_produto': produto[3],
                 'categoria': produto[5],
                 'descricao': produto[4],
-                'id_produto': produto[0] 
+                'id_produto': produto[0],
+                'habilitado': produto[6]  # Certifique-se de que este índice corresponde ao campo 'habilitado'
             })
         mydb.close()  # Fecha a conexão com o banco de dados
         return lista_produtos if lista_produtos else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
