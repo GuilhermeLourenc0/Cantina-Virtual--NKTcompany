@@ -1,29 +1,32 @@
 from flask import Flask, render_template, request, redirect, session
 from usuario import Usuario
 from sistema import Sistema
-
-
-
+import random
+from twilio.rest import Client
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'
 
+# Suas credenciais Twilio
+account_sid = 'AC475dc4dd74f017977d282babb6ed02fe'
+auth_token = '54f807df630fa436c0b2820b5482939f'
+
+# Crie um client
+client = Client(account_sid, auth_token)
+
 @app.route("/")
 def principal():
-
     sistema = Sistema()
     lista_produtos = sistema.exibir_produtos()
-    return   render_template("index.html", lista_produtos = lista_produtos)
+    return render_template("index.html", lista_produtos=lista_produtos)
 
-    
-
-# Define cadastro route 
-@app.route("/cadastro", methods = ["GET", "POST"])
+# Define a rota de cadastro
+@app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
     if request.method == 'GET':
         usuario = Usuario()
         cursos = usuario.exibir_cursos()
-        return render_template("cadastrar.html", cursos = cursos)
+        return render_template("cadastrar.html", cursos=cursos)
     else:
         nome = request.form["nome"]
         telefone = request.form["tel"]
@@ -34,9 +37,42 @@ def cadastro():
 
         usuario = Usuario()
         if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
-            return redirect("/")
+            # Gerar um código de verificação aleatório com 4 dígitos, incluindo zeros à esquerda
+            verification_code = str(random.randint(90, 9999)).zfill(4)
+
+            # Enviar o código de verificação via SMS
+            message = client.messages.create(
+                to=telefone,
+                from_="+13195190041",
+                body=f'Seu código é: {verification_code}'
+            )
+            print(message.sid)
+
+            # Armazenar o telefone e o código de verificação na sessão
+            session['telefone_verificacao'] = telefone
+            session['verification_code'] = verification_code
+
+            # Redireciona para a tela de verificação
+            return redirect("/verificacao")
         else:
             return redirect("/cadastro")
+
+
+
+# Rota para a tela de verificação
+@app.route("/verificacao", methods=["GET", "POST"])
+def verificacao():
+    if request.method == 'GET':
+        return render_template("verificacao.html")  # Renderiza a página onde o usuário insere o código
+    else:
+        codigo_inserido = request.form["codigo"]
+        verification_code = session.get('verification_code')
+
+        if codigo_inserido == verification_code:
+            return redirect("/")  # Redireciona para a página principal após a verificação
+        else:
+            return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
+
      
            
 @app.route('/logar', methods = ['GET','POST'])
