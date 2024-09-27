@@ -149,10 +149,6 @@ def logar():
             session.clear()  # Limpa a sessão em caso de falha no login
             return redirect("/logar")  # Redireciona para a página de login
 
-
-
-
-
 # Rota para logout de usuários
 @app.route('/logout')
 def logout():
