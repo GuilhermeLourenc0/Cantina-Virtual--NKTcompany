@@ -6,7 +6,8 @@
     <main>
 
         {% for registro in lista_carrinho.produtos %}
-        <form action="/excluir_produto_carrinho" class="form-exclui-carrinho" method="post">
+        <div class="form-exclui-carrinho">
+
 
             <section class="container-principal">
 
@@ -15,7 +16,7 @@
                     <div class="imgdiv">
                         <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Produto">
 
-                        <button value="{{ registro.id_carrinho }}" name="btn-excluir" class="button" value="{{ registro.id_produto }}">
+                        <button class="button btn-excluir" data-id="{{ registro.id_carrinho }}">
                             <img src="../static/img/lixo.png" alt="Excluir Produto">
                         </button>
 
@@ -24,9 +25,12 @@
                                 <span>{{ registro.nome_produto }}</span>
 
                                 <div class="qnt-btn">
-                                    <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
-                                    <input type="number" id="quantidade-{{ registro.id_carrinho }}" value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
-                                    <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
+                                    <button class="menos-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">-</button>
+                                    <input type="number" id="quantidade-{{ registro.id_carrinho }}"
+                                        value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
+                                    <button class="mais-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">+</button>
                                 </div>
 
                             </div>
@@ -40,9 +44,10 @@
 
                         </div>
                     </div>
+
+
                 </div>
-            </section>
-        </form>
+            </div>
         {% endfor %}
 
         <div class="finalizacao">
@@ -52,9 +57,9 @@
             </div>
 
             <form action="/enviar_carrinho" method="post">
-                <button name="id_carrinho" class="button1">Enviar</button>
+                <button onclick="enviarCarrinho()" class="button1">Enviar</button>
             </form>
-            <a href="/" class="button1">Continuar Comprando</a>
+            <a href="/">Continuar Comprando</a>
         </div>
 
         <span class="span3">.</span>
@@ -62,7 +67,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Função para aumentar a quantidade de produtos
+            // Função para atualizar a quantidade de produtos
             document.querySelectorAll('.mais-btn').forEach(button => {
                 button.addEventListener('click', function () {
                     const idCarrinho = this.getAttribute('data-id');
@@ -74,7 +79,6 @@
                 });
             });
 
-            // Função para diminuir a quantidade de produtos
             document.querySelectorAll('.menos-btn').forEach(button => {
                 button.addEventListener('click', function () {
                     const idCarrinho = this.getAttribute('data-id');
@@ -112,7 +116,7 @@
                 });
             }
 
-            // Função AJAX para excluir produtos do carrinho
+            // Função para excluir produtos do carrinho
             document.querySelectorAll('.btn-excluir').forEach(button => {
                 button.addEventListener('click', function () {
                     const idCarrinho = this.getAttribute('data-id');
@@ -160,7 +164,21 @@
                 });
             }
         });
+
+        // Função para enviar o carrinho via AJAX
+        function enviarCarrinho() {
+            fetch('/enviar_carrinho', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        window.location.href = '/'; // Redireciona para a página inicial
+                    } else {
+                        alert('Erro ao enviar o carrinho');
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar o carrinho:', error));
+        }
     </script>
 </body>
 {% endblock %}
-    
