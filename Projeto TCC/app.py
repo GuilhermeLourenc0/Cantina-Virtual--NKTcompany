@@ -1,11 +1,19 @@
 from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response
 from usuario import Usuario
 from sistema import Sistema
+import random
+from twilio.rest import Client
+
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'  # Chave secreta para gerenciamento de sessões
 
 
+account_sid = 'AC475dc4dd74f017977d282babb6ed02fe'
+auth_token = '54f807df630fa436c0b2820b5482939f'
+
+# Crie um client
+client = Client(account_sid, auth_token)
 
 
 # Rota para a página inicial
@@ -29,28 +37,83 @@ def principal_adm():
     return render_template("index-adm.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
 
 
-# Rota para cadastro de novos usuários
+# # Rota para cadastro de novos usuários
+# @app.route("/cadastro", methods=["GET", "POST"])
+# def cadastro():
+#     if request.method == 'GET':
+#         usuario = Usuario()  # Cria uma instância da classe Usuario
+#         cursos = usuario.exibir_cursos()  # Obtém a lista de cursos disponíveis
+#         return render_template("cadastrar.html", cursos=cursos)  # Exibe o formulário de cadastro
+#     else:
+#         # Coleta os dados do formulário de cadastro
+#         nome = request.form["nome"]
+#         telefone = request.form["tel"]
+#         email = request.form["email"]
+#         senha = request.form["senha"]
+#         curso = request.form["curso"]
+#         tipo = "cliente"  # Tipo de usuário definido como cliente
+
+#         usuario = Usuario()  # Cria uma instância da classe Usuario
+#         if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
+#             return redirect("/")  # Redireciona para a página inicial se o cadastro for bem-sucedido
+#         else:
+#             return redirect("/cadastro")  # Redireciona para a página de cadastro em caso de erro
+
+
+
+# Define a rota de cadastro
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
     if request.method == 'GET':
-        usuario = Usuario()  # Cria uma instância da classe Usuario
-        cursos = usuario.exibir_cursos()  # Obtém a lista de cursos disponíveis
-        return render_template("cadastrar.html", cursos=cursos)  # Exibe o formulário de cadastro
+        usuario = Usuario()
+        cursos = usuario.exibir_cursos()
+        return render_template("cadastrar.html", cursos=cursos)
     else:
-        # Coleta os dados do formulário de cadastro
         nome = request.form["nome"]
         telefone = request.form["tel"]
         email = request.form["email"]
         senha = request.form["senha"]
         curso = request.form["curso"]
-        tipo = "cliente"  # Tipo de usuário definido como cliente
+        tipo = "cliente"
 
-        usuario = Usuario()  # Cria uma instância da classe Usuario
+        usuario = Usuario()
         if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
-            return redirect("/")  # Redireciona para a página inicial se o cadastro for bem-sucedido
-        else:
-            return redirect("/cadastro")  # Redireciona para a página de cadastro em caso de erro
+            # Gerar um código de verificação aleatório com 4 dígitos, incluindo zeros à esquerda
+            verification_code = str(random.randint(90, 9999)).zfill(4)
 
+            # Enviar o código de verificação via SMS
+            message = client.messages.create(
+                to=telefone,
+                from_="+13195190041",
+                body=f'Seu código é: {verification_code}'
+            )
+            print(message.sid)
+
+            # Armazenar o telefone e o código de verificação na sessão
+            session['telefone_verificacao'] = telefone
+            session['verification_code'] = verification_code
+
+            # Redireciona para a tela de verificação
+            return redirect("/verificacao")
+        else:
+            return redirect("/cadastro")
+
+
+
+
+# Rota para a tela de verificação
+@app.route("/verificacao", methods=["GET", "POST"])
+def verificacao():
+    if request.method == 'GET':
+        return render_template("verificacao.html")  # Renderiza a página onde o usuário insere o código
+    else:
+        codigo_inserido = request.form["codigo"]
+        verification_code = session.get('verification_code')
+
+        if codigo_inserido == verification_code:
+            return redirect("/")  # Redireciona para a página principal após a verificação
+        else:
+            return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
 
 
 
