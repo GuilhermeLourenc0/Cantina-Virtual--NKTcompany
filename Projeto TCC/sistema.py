@@ -410,7 +410,7 @@ class Sistema:
             mydb = Conexao.conectar()
             mycursor = mydb.cursor()
 
-            # Consulta SQL para obter a imagem do produto
+            # Consulta SQL paa robter a imagem do produto
             sql = "SELECT imagem_binaria FROM tb_produto WHERE cod_produto = %s"
             mycursor.execute(sql, (cod_produto,))
             resultado = mycursor.fetchone()
@@ -422,3 +422,11 @@ class Sistema:
             return None  # Retorna None se não encontrar
 
 
+    def perfil_senha(self, id_cliente):
+            mydb = Conexao.conectar()
+            mycursor = mydb.cursor()
+
+            # Consulta SQL paa robter a imagem do produto
+            sql = "SELECT senha FROM tb_cliente WHERE id_cliente = %s"
+            mycursor.execute(sql, (id_cliente,))
+            resultado = mycursor.fetchone()
