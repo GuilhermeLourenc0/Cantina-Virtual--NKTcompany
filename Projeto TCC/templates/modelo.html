@@ -19,7 +19,9 @@
         <nav class="cbc-cima">
 
             <figure>
-                <a href="/perfil"><img class="perfil" src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg" alt=""></a>
+                <div class="perfil-icon">
+                    <a href="/perfil"><img class="perfil" src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg" alt=""></a>
+                </div>
             </figure>
 
             <figure>
@@ -37,12 +39,23 @@
                 <hr>
                 <a href="/exibir_carrinho">Carrinho</a>
                 <hr>
-                <a href="/historico_pedidos">Historico</a>
+                <a href="/perfil">Perfil</a>
+                <hr>
+                <a href="/exibir_historico">Histórico</a>
                 <hr>
                 <a href="/logout">Sair</a>
+                <div class="dark-mode">
+                    <label class="switch" for="chk">
+                        <input type="checkbox" id="chk">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
             
         </nav>
+        <div class="gambiarra">
+            <span></span>
+        </div>
     </header>
 
     <!-- o conteúdo do site será inserido abaixo -->
@@ -56,34 +69,27 @@
     
             // Abrir ou fechar o menu lateral
             const menu = document.getElementById("mySidenav");
+            const test = document.getElementById("profile-container")
             if (menu.style.width === "100%") {
                 menu.style.width = "0";
             } else {
                 menu.style.width = "100%";
             }
         }
+
+        const chk = document.getElementById('chk')
+        const inputs = document.querySelectorAll('input')
+        chk.addEventListener('change', () => {
+            document.body.classList.toggle('dark')
+            document.getElementById('form').classList.toggle('dark1')
+            inputs.forEach(input => {
+                input.classList.toggle('dark2') // Adiciona ou remove a classe 'dark1' em cada input
+            })
+        })
     </script>
     
 
 </main>
-
-<footer>
-
-    <!-- <section class="footer">
-
-        <div class="footer-esquerda">
-            <span class="status">Status:</span>
-            <span class="status-cor">Finalizado</span>
-        </div>
-
-        <div class="footer-direita">
-            <a href="/exibir_carrinho">Ver Sacola</a>
-        </div>
-
-    </section>
-     -->
-    
-</footer>
 
 </body>
 </html>

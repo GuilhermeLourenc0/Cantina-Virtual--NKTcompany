@@ -1,69 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Produtos</title>
-    <link rel="stylesheet" href="/Projeto TCC/static/styles/editarProdutos.css">
-</head>
+{% extends "modelo.html" %}
+{% block conteudo %}
+<link rel="stylesheet" href="../static/styles/editarProdutos.css">
 
 <body>
-    <header class="container-header">
-
-        <div class="cbc-cima">
-
-            <a href=""><img class="perfil" src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg" alt=""></a>
-
-            <img class="logo" src="/Projeto TCC/static/img/logo.png" alt="">
-
-            <img class="menu" src="https://cdn.icon-icons.com/icons2/1710/PNG/512/menubuttonofthreelinesoutline_112563.png" alt="">
-
-        </div>
-
-        <div class="cbc-baixo">
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-        </div>
-
-    </header>
 
     <main>
+        <h1>Atualizar Produtos</h1>
         <table>
             <thead>
                 <tr>
                     <th>Produto</th>
                     <th>Preço</th>
                     <th>Descrição</th>
-                    <th>Imagem</th>
+                    <th>Imagem Atual</th>
+                    <th>Nova Imagem</th>
+                    <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
+                {% for registro in lista_prounico %}
                 <tr>
-                    <td>Coxinha <button>✏️</button></td>
-                    <td>6,50 <button>✏️</button></td>
-                    <td>Little coxa de fanho com catupiru <button><img src="/Projeto TCC/static/img/excluir produto.png"alt=""></button></td>
-                    <td><input type="file" id="file-upload" accept="image/png, image/jpeg"></td>
+                    <td>
+                        <form method="POST" action="/atualizar_produto" enctype="multipart/form-data">
+                            <input type="hidden" name="id_produto" value="{{ registro.cod_produto }}">
+                            
+                            <input type="text" name="nome" value="{{ registro.nome_produto }}" required>
+                    </td>
+                    <td>
+                        <input type="text" name="preco" value="{{ registro.preco }}" required>
+                    </td>
+                    <td>
+                        <textarea name="descricao" required>{{ registro.descricao }}</textarea>
+                    </td>
+                    <td>
+                        <img src="{{ url_for('imagem_produto', cod_produto=registro.cod_produto) }}" alt="Imagem do produto {{ registro.nome_produto }}" style="width: 100px; height: auto;">
+                    </td>
+                    <td>
+                        <input type="file" name="imagem" accept="image/png, image/jpeg">
+                    </td>
+                    <td>
+                        <button type="submit">Atualizar Produto</button>
+                    </td>
+                    </form>
                 </tr>
-                <tr>
-                    <td>Aguá <button>✏️</button></td>
-                    <td>4,00 <button>✏️</button></td>
-                    <td>Tradicional agua cristalina <button><img src="/Projeto TCC/static/img/excluir produto.png"alt=""></button></button></td>
-                    <td><input type="file" id="file-upload" accept="image/png, image/jpeg"></td>
-                </tr>
-                <tr>
-                    <td>Energetico <button>✏️</button></td>
-                    <td>10,00 <button>✏️</button></td>
-                    <td>Pra te deixar acordado a noite toda <button><img src="/Projeto TCC/static/img/excluir produto.png"alt=""></button></td>
-                    <td><input type="file" id="file-upload" accept="image/png, image/jpeg"></td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </main>
 
 </body>
-
-</html>
+{% endblock %}

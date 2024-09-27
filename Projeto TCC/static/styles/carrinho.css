@@ -4,66 +4,24 @@
     padding: 0;
 }
 
-.cbc-cima {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: rgba(207, 34, 38, 255);
-}
-
-.cbc-cima .perfil {
-    height: 50px;
-    width: 50px;
-    border-radius: 100px;
-}
-
-.cbc-cima .perfil:active {
-    filter: grayscale(70%);
-
-}
-
-.logo {
-    height: 70px;
-}
-
-.menu {
-    height: 40px;
-}
-
-.cbc-baixo {
-    background-color: rgb(156, 0, 0);
-    display: none;
-    justify-content: space-around;
-
-}
-
 .container-principal {
     display: flex;
     flex-direction: column;
-}
-
-.btn-x {
-    display: flex;
-    height: 50px;
-    align-items: center;
-    border-bottom: 1px solid black;
-}
-
-.btn-sair {
-    border: none;
-    font-size: 20px;
-    font-weight: bolder;
-    margin-left: 20px;
-    background: none;
 }
 
 .subtitle {
     margin-left: 20px;
 }
 
+.imgdiv{
+    display: flex;
+    
+}
+
 .produto-card {
     display: flex;
-    margin-top: 20px;
+    height: 150px;
+    align-items: center;  
     border-bottom:1px solid rgb(180, 180, 180) ;
 }
 
@@ -77,14 +35,25 @@
     border-radius: 5px;
 }
 
-.baixo button {
-    padding: 10px;
-    font-size: 18px;
+.button {
+    border: none;
+    background: none;
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    margin-left: 10px;
+    margin-top: -10px;
+    border-radius: 15px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
-.cima img{
-    height: 15px;
-    width: 15px;
+.button img{
+    height: 20px;
+    width: 20px;
     display: flex;
 }
 
@@ -101,18 +70,12 @@
     height: 10px;
 }
 
-.baixo button{
-    border: none;
-    background: none;
-    font-size: 25px;
-}
-
-.baixo input{
+.cima input{
     width: 35px;
     border: none;
-    border-bottom: 1px solid black;
     text-align: center;
     pointer-events: none;
+    background-color: #f8f8f8;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -122,19 +85,22 @@ input[type="number"]::-webkit-inner-spin-button {
     
 }
 
-.baixo input:focus{
+.cima input:focus{
     outline: none;
 }
 
 .cima button{
-    margin-left: 90px;
     border: none;
     background: none;
-    margin-top: 1.3px;
+}
+
+.baixo{
+    display: flex;
+    flex-direction: column;
 }
 
 .baixo span{
-    margin-left: 100px;
+    margin-left: 8px;
 }
 
 .finalizacao { 
@@ -174,6 +140,34 @@ input[type="number"]::-webkit-inner-spin-button {
     margin-bottom: 15px;
 }
 
+.preco-item{
+    margin-top: 37px;
+    color: rgb(0, 110, 0);
+}
+
 .span3{
     margin-bottom: 120px
+}
+
+.desc-baixo{
+    font-size: 10px;
+}
+
+.qnt-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.qnt-btn button{
+    color: red;
+}
+
+.obs-item{
+    font-size: 8px;
 }

@@ -22,28 +22,36 @@
 
       <div class="grid-produto">
 
-        <div class="produtos">
+        <div class="produtos" id="produtos-lista">
           {% for registro in lista_produtos %}
-          <form action="/produto_unico" method="post">
+          <div class="produto-item">
+            <form action="/editar_produto" method="post">
+              <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
+                <div class="card-produtos">
+                  <img src="{{ registro.imagem_produto }}" alt="">
+                  <span>{{ registro.nome_produto }}</span>
+                  <span>R${{ registro.preco }}</span>
+                </div>
+              </button>
+            </form>
 
-            <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
-              <div class="card-produtos">
-
-                <img src="{{ registro.imagem_produto }}" alt="">
-                <span>{{ registro.nome_produto }}</span>
-                <span>R${{ registro.preco }}</span>
-
-              </div>
+            {% if registro.habilitado %}
+            <button class="btn-desabilitar" data-id="{{ registro.id_produto }}">
+              Desabilitar
             </button>
-          </form>
-
-          <form action="/excluir_produto_adm" method="post" class="excluir">
-            <button name="btn-excluir" class="button" value="{{ registro.id_produto }}">
-            <img src="../static/img/lixo.png" alt="">
+            <button class="btn-habilitar" data-id="{{ registro.id_produto }}" style="display:none;">
+              Habilitar
             </button>
-          </form>
+            {% else %}
+            <button class="btn-habilitar" data-id="{{ registro.id_produto }}">
+              Habilitar
+            </button>
+            <button class="btn-desabilitar" data-id="{{ registro.id_produto }}" style="display:none;">
+              Desabilitar
+            </button>
+            {% endif %}
+          </div>
           {% endfor %}
-
         </div>
 
       </div>
@@ -52,4 +60,54 @@
 
   </main>
 
-  {% endblock %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+$(document).ready(function() {
+  // Função para desabilitar produtos
+  $(document).on('click', '.btn-desabilitar', function(e) {
+    e.preventDefault();
+    const idProduto = $(this).data('id');
+    
+    $.ajax({
+      url: '/desabilitar_produto_adm',
+      method: 'POST',
+      data: { btn_desabilitar: idProduto },
+      success: function(response) {
+        if (response.status === 'success') {
+          // Esconde o botão de desabilitar e mostra o de habilitar
+          $(`.btn-desabilitar[data-id="${idProduto}"]`).hide();
+          $(`.btn-habilitar[data-id="${idProduto}"]`).show();
+        }
+      },
+      error: function(xhr) {
+        console.error('Erro ao desabilitar produto:', xhr.responseText);
+      }
+    });
+  });
+
+  // Função para habilitar produtos
+  $(document).on('click', '.btn-habilitar', function(e) {
+    e.preventDefault();
+    const idProduto = $(this).data('id');
+    
+    $.ajax({
+      url: '/habilitar_produto_adm',
+      method: 'POST',
+      data: { btn_habilitar: idProduto },
+      success: function(response) {
+        if (response.status === 'success') {
+          // Esconde o botão de habilitar e mostra o de desabilitar
+          $(`.btn-habilitar[data-id="${idProduto}"]`).hide();
+          $(`.btn-desabilitar[data-id="${idProduto}"]`).show();
+        }
+      },
+      error: function(xhr) {
+        console.error('Erro ao habilitar produto:', xhr.responseText);
+      }
+    });
+  });
+});
+
+  </script>
+
+{% endblock %}
