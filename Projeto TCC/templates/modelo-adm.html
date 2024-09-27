@@ -25,7 +25,7 @@
             </figure>
 
             <figure>
-                <a href="/adm"><img class="logo" src="../static/img/logo.png" alt=""></a>
+                <a href="/inicialadm"><img class="logo" src="../static/img/logo.png" alt=""></a>
             </figure>
 
             <div class="menu-container" onclick="toggleMenu(this)">
@@ -38,6 +38,8 @@
                 <a href="/exibir_pedidos">Pedidos</a>
                 <hr>
                 <a href="/inserir_produtos">Inserir Produtos</a>
+                <hr>
+                <a href="/adm">Editar Produtos</a>
                 <div class="dark-mode">
                     <label class="switch" for="chk">
                         <input type="checkbox" id="chk">
@@ -45,10 +47,9 @@
                     </label>
                 </div>
             </div>
-            
         </nav>
         <div class="gambiarra">
-            <span></span>
+            <span>desculpa kk</span>
         </div>
     </header>
 
@@ -70,7 +71,7 @@
                 menu.style.width = "100%";
             }
         }
-
+    
         const chk = document.getElementById('chk')
         const inputs = document.querySelectorAll('input')
         chk.addEventListener('change', () => {

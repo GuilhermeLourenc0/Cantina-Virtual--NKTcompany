@@ -30,6 +30,11 @@ def produtos():
     return jsonify(lista_produtos)  # Retorna os produtos em formato JSON
 
 
+@app.route("/inicialadm")
+def inicialadm():
+    return render_template("inicialAdm.html") 
+
+
 @app.route("/adm")
 def principal_adm():
     sistema = Sistema()  # Cria uma instância da classe Sistema

@@ -4,43 +4,33 @@
 
 <body>
     <main>
+        <div class="btn-voltar">
+            <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
+        </div>
+
+        <div class="titulo">
+            <h2>Olá! Logue agora para Começar</h2>
+        </div>
         <section class="container-principal">
-            <h2>Entrar</h2>
+            
             <div class="formulario">
 
             <form action="" method="post">
                 <input name="email" id="email" placeholder="*E-mail"  type="text">
                 <input name="senha" id="senha" placeholder="*Senha"  type="password">
+                <a href=""><span>Esqueceu sua senha</span></a>
                 <button type="submit">Entrar</button>
             </form>
 
         </div>
-        
-        <a href=""> <span>Esqueceu sua senha</span> </a>
 
-        
-
-        <a href="/cadastro">Ainda não tenho conta</a>
+        <span class="semConta">Ainda não tem conta?<a href="/cadastro"> Crie Aqui!</a></span>
         
     </section>
     
     {% endblock %}
 
-                <form action="">
-                    <input placeholder="*E-mail" type="text">
-                    <input placeholder="*Senha" type="text">
-                </form>
-
-            </div>
-            <div class="checkbox">
-                <a href=""> <span>Esqueceu sua senha</span> </a>
-            </div>
-
-            <button>Entrar</button>
-
-            <a href="">Ainda não tenho conta</a>
-
-        </section>
+                
     </main>
 
 
