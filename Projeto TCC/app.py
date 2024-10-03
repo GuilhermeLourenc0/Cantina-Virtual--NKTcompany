@@ -97,7 +97,17 @@ def cadastro():
             # Armazenar o telefone e o código de verificação na sessão
             session['telefone_verificacao'] = telefone
             session['verification_code'] = verification_code
-
+            usuario.logar(email, senha)
+            if usuario.logado:
+                # Se o login for bem-sucedido, armazena os dados do usuário na sessão
+                session['usuario_logado'] = {
+                    "nome": usuario.nome, 
+                    "email": usuario.email, 
+                    "tel": usuario.tel, 
+                    "id_cliente": usuario.id_cliente, 
+                    "tipo": usuario.tipo,
+                    "senha": usuario.senha
+                }
             # Redireciona para a tela de verificação
             return redirect("/verificacao")
         else:
