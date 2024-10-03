@@ -205,3 +205,54 @@ class Usuario:
         mydb.commit()  # Confirma as alterações no banco de dados
         mydb.close()  # Fecha a conexão
         return True
+
+
+
+    def verificar_usuario(self, email, telefone):
+        """
+        Verifica se um usuário com o email e telefone fornecidos existe no sistema.
+
+        Parâmetros:
+        - email: endereço de email do usuário.
+        - telefone: número de telefone do usuário.
+
+        Retorno:
+        - Retorna True se o usuário existir; caso contrário, retorna False.
+        """
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()
+
+        # Query SQL para verificar se o email e telefone existem na tabela tb_cliente
+        sql = "SELECT * FROM tb_cliente WHERE email = %s AND telefone = %s"
+        mycursor.execute(sql, (email, telefone))
+        
+        resultado = mycursor.fetchone()  # Busca um único registro
+        
+        mydb.close()  # Fecha a conexão
+
+        return resultado is not None  # Retorna True se o usuário existir, False caso contrário
+
+    def atualizar_senha(self, email, nova_senha):
+        """
+        Atualiza a senha de um usuário no sistema. A nova senha é criptografada antes de ser armazenada.
+        
+        Parâmetros:
+        - email: endereço de email do usuário.
+        - nova_senha: nova senha que será criptografada e atualizada no banco de dados.
+        
+        Retorno:
+        - Retorna True se a atualização da senha for realizada com sucesso; caso contrário, retorna False.
+        """
+        nova_senha = sha256(nova_senha.encode()).hexdigest()  # Criptografa a nova senha usando o algoritmo sha256
+
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()
+
+        # Query SQL para atualizar a senha na tabela tb_cliente
+        sql = "UPDATE tb_cliente SET senha = %s WHERE email = %s"
+        mycursor.execute(sql, (nova_senha, email))
+
+        mydb.commit()  # Confirma as alterações
+        mydb.close()  # Fecha a conexão
+        
+        return mycursor.rowcount > 0  # Retorna True se a senha foi atualizada, False caso contrário

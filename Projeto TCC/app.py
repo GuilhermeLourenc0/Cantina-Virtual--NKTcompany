@@ -526,19 +526,6 @@ def carrinho():
 
 
 
-# # Rota para alterar a senha
-# @app.route("trocar_senha", methods=['POST'])
-# def trocar_senha():
-#     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-#         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
-#     else:
-#         if request.method == 'POST':
-#             sistema = Sistema()
-
-#             id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
-#             senha_cliente = session.get('usuario_logado')['senha']  # Obtém a senha do cliente da sessão
-#             sistema.trocar_senha(id_cliente, senha_cliente)
-
 
 @app.route("/editar_produto", methods=['POST', 'GET'])
 def editar_produto():
@@ -595,6 +582,85 @@ def imagem_produto(cod_produto):
     return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
 
 
+
+
+
+# Rota para solicitar troca de senha
+@app.route("/trocar_senha", methods=['GET', 'POST'])
+def trocar_senha():
+    if request.method == 'GET':
+        return render_template("trocar-senha.html")  # Renderiza a página para troca de senha
+    else:
+        email = request.form['email']
+        telefone = request.form['telefone']
+        
+        # Verifique se o usuário existe (você deve implementar isso na classe Usuario)
+        usuario = Usuario()
+        if usuario.verificar_usuario(email, telefone):  # Supondo que exista uma função para verificar o usuário
+            # Gerar um código de verificação aleatório com 4 dígitos, incluindo zeros à esquerda
+            verification_code = str(random.randint(1000, 9999)).zfill(4)
+
+            # Enviar o código de verificação via SMS
+            message = client.messages.create(
+                to=telefone,
+                from_="+13195190041",
+                body=f'Seu código para troca de senha é: {verification_code}'
+            )
+            print(message.sid)
+
+            # Armazenar o telefone e o código de verificação na sessão
+            session['telefone_verificacao'] = telefone
+            session['verification_code'] = verification_code
+            session['email_usuario'] = email  # Armazena o email do usuário na sessão
+            
+            return redirect("/verificacao_troca_senha")  # Redireciona para a tela de verificação
+        else:
+            flash("Usuário não encontrado. Verifique as informações.", "error")
+            return redirect("/trocar_senha")
+
+
+
+
+
+
+
+# Rota para verificação do código de troca de senha
+@app.route("/verificacao_troca_senha", methods=['GET', 'POST'])
+def verificacao_troca_senha():
+    if request.method == 'GET':
+        return render_template("verificacao-troca-senha.html")  # Renderiza a página onde o usuário insere o código
+    else:
+        codigo_inserido = request.form["codigo"]
+        verification_code = session.get('verification_code')
+
+        if codigo_inserido == verification_code:
+            return redirect("/nova_senha")  # Redireciona para a página para criar uma nova senha
+        else:
+            return render_template("verificacao-troca-senha.html", erro="Código incorreto. Tente novamente.")
+
+
+
+
+
+
+# Rota para definir uma nova senha
+@app.route("/nova_senha", methods=['GET', 'POST'])
+def nova_senha():
+    if request.method == 'GET':
+        return render_template("nova-senha.html")  # Renderiza a página para inserir nova senha
+    else:
+        nova_senha = request.form['nova_senha']
+        email_usuario = session.get('email_usuario')
+
+        # Atualiza a senha do usuário (você deve implementar isso na classe Usuario)
+        usuario = Usuario()
+        if usuario.atualizar_senha(email_usuario, nova_senha):  # Implementar essa função na classe Usuario
+            flash("Senha atualizada com sucesso!", "success")
+            session.clear()  # Limpa a sessão após a troca de senha
+            return redirect("/logar")  # Redireciona para a página de login
+        else:
+            flash("Erro ao atualizar a senha. Tente novamente.", "error")
+            return redirect("/nova-senha")
 
 
 app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração
