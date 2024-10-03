@@ -274,7 +274,10 @@ def habilitar_produto_adm():
 # Rota para exibir o perfil do usuário
 @app.route("/perfil", methods=['GET', 'POST'])
 def perfil():
-    return render_template("perfil.html")  # Renderiza a página do perfil do usuário
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    else:
+        return render_template("perfil.html")  # Renderiza a página do perfil do usuário
 
 
 
