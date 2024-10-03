@@ -141,3 +141,39 @@ option{
     font-size: 8px; /* Tamanho da fonte das opções */
       
 }
+
+.form-group {
+    width: 23.7rem; /* Certifica-se de que o grupo de entrada tenha a mesma largura que os outros campos */
+    position: relative; /* Necessário para posicionamento absoluto */
+}
+
+.input-group {
+    display: flex;
+    align-items: center; /* Alinha verticalmente o prefixo e o campo de entrada */
+}
+
+.prefix {
+    background-color: rgb(245, 245, 245); /* A mesma cor de fundo do input */
+    padding: 10px; /* Espaço ao redor do prefixo */
+    border: 2px solid rgb(238, 238, 238); /* A mesma borda dos inputs */
+    border-radius: 5px 0 0 5px; /* Bordas arredondadas */
+    margin-right: -2px; /* Ajusta o espaçamento entre o prefixo e o campo de entrada */
+    display: flex; /* Garante que o conteúdo do prefixo fique centralizado */
+    align-items: center; /* Alinha verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
+}
+
+input[type="text"] {
+    padding: 10px; /* Ajusta o padding do input para alinhar com o prefixo */
+    border-radius: 0 5px 5px 0; /* Bordas arredondadas */
+    flex: 1; /* O campo de entrada ocupa o espaço restante */
+}
+
+/* Se necessário, você pode ajustar a altura do campo de entrada */
+input[type="text"], .prefix {
+    height: 40px; /* Define uma altura padrão para o prefixo e o input */
+}
+
+input::placeholder {
+    color: #7e7d7d; /* Cor do placeholder, mantenha o mesmo estilo que já está usando */
+}
