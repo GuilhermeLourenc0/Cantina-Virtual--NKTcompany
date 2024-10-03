@@ -306,6 +306,51 @@ def obter_pedidos():
 
 
 
+# Rota para atualizar o status do pedido
+@app.route("/atualizar_status_pedido", methods=['POST'])
+def atualizar_status_pedido():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
+
+    # Obtém o ID do pedido e o novo status enviados pelo AJAX
+    id_pedido = request.form.get('id_pedido')
+    novo_status = request.form.get('status')
+
+    # Verifica se o ID do pedido e o status são válidos
+    if id_pedido and novo_status:
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        sucesso = sistema.atualizar_status_pedido(id_pedido, novo_status)  # Atualiza o status do pedido no sistema
+        
+        if sucesso:
+            return jsonify({'status': 'sucesso'})
+        else:
+            return jsonify({'status': 'erro', 'mensagem': 'Não foi possível atualizar o status.'})
+    return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
+
+
+# Rota para cancelar um pedido
+@app.route("/cancelar_pedido", methods=['POST'])
+def cancelar_pedido():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
+
+    id_pedido = request.form.get('id_pedido')
+
+    # Verifica se o ID do pedido é válido
+    if id_pedido:
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        sucesso = sistema.cancelar_pedido(id_pedido)  # Função para cancelar o pedido no sistema
+        
+        if sucesso:
+            return jsonify({'status': 'sucesso'})
+        else:
+            return jsonify({'status': 'erro', 'mensagem': 'Não foi possível cancelar o pedido.'})
+    return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
+
+
+
+
+
 
 # Rota para enviar o carrinho como um pedido
 @app.route("/enviar_carrinho", methods=['POST'])
@@ -324,15 +369,30 @@ def enviar_carrinho():
 
 
 # ========== Histórico de Pedidos ==========
-@app.route("/exibir_historico", methods=['GET'])
-def exibir_historico():
+@app.route("/historico", methods=['GET'])
+def historico():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
+    else:
+        return render_template('historico.html')  # Carrega o template da página de histórico
+
+
+
+
+
+
+@app.route("/exibir_historico_ajax", methods=['GET'])
+def exibir_historico_ajax():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'redirect': '/logar'})  # Redireciona para a página de login via JSON
     else:
         id_cliente = session['usuario_logado']['id_cliente']
         sistema = Sistema()  # Cria uma instância da classe Sistema
         lista_historico = sistema.exibir_historico(id_cliente)  # Obtém a lista de pedidos
-        return render_template('historico.html', lista_historico=lista_historico)  # Passa a variável para o template
+
+        return jsonify(lista_historico)  # Retorna os pedidos como JSON
+
+
 
 
 

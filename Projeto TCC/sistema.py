@@ -430,3 +430,40 @@ class Sistema:
             sql = "SELECT senha FROM tb_cliente WHERE id_cliente = %s"
             mycursor.execute(sql, (id_cliente,))
             resultado = mycursor.fetchone()
+
+
+    def atualizar_status_pedido(self, id_pedido, novo_status):
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()
+
+        try:
+            # Atualiza o status do pedido
+            sql = "UPDATE tb_pedidos SET status = %s WHERE id_pedido = %s"
+            mycursor.execute(sql, (novo_status, id_pedido))
+
+            mydb.commit()  # Confirma a alteração
+            return {"message": "Status atualizado com sucesso!"}  # Retorna mensagem de sucesso
+        except Exception as e:
+            mydb.rollback()  # Reverte a transação em caso de erro
+            return {"error": f"Erro ao atualizar o status: {str(e)}"}
+        finally:
+            mydb.close()  # Fecha a conexão com o banco de dados
+
+
+
+    def cancelar_pedido(self, id_pedido):
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()
+
+        try:
+            # Atualiza o status do pedido para 'Cancelado'
+            sql = "UPDATE tb_pedidos SET status = 'Cancelado' WHERE id_pedido = %s"
+            mycursor.execute(sql, (id_pedido,))
+
+            mydb.commit()  # Confirma a alteração
+            return {"message": "Pedido cancelado com sucesso!"}  # Retorna mensagem de sucesso
+        except Exception as e:
+            mydb.rollback()  # Reverte a transação em caso de erro
+            return {"error": f"Erro ao cancelar o pedido: {str(e)}"}
+        finally:
+            mydb.close()  # Fecha a conexão com o banco de dados

@@ -46,7 +46,7 @@
                             cardPedidos += `</ul>
                                     </div>
                                     <div class="order-status">
-                                        <span class="order-price">RS: ${pedido.total_preco}</span>
+                                        <span class="order-price">R$ ${pedido.total_preco}</span>
                                     </div>
                                     <div class="btn-cancelar">
                                         <button class="status-btn" data-pedido="${id_pedido}" value="preparando">Preparando</button>
@@ -68,6 +68,58 @@
 
         // Carrega os pedidos quando a página é carregada
         window.onload = carregarPedidos;
+
+        // Função para lidar com cliques nos botões de status e cancelar
+        document.addEventListener('click', function (e) {
+            // Para os botões de status
+            if (e.target.classList.contains('status-btn')) {
+                const idPedido = e.target.getAttribute('data-pedido');
+                const novoStatus = e.target.value;
+
+                // Envia uma solicitação POST via AJAX para atualizar o status do pedido
+                fetch('/atualizar_status_pedido', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `id_pedido=${idPedido}&status=${novoStatus}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'sucesso') {
+                        alert('Status atualizado com sucesso!');
+                        carregarPedidos();  // Atualiza a lista de pedidos na página
+                    } else {
+                        alert('Erro ao atualizar o status: ' + data.mensagem);
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar a solicitação:', error));
+            }
+
+            // Para o botão de cancelar pedido
+            if (e.target.classList.contains('cancel-btn')) {
+                const idPedido = e.target.getAttribute('data-pedido');
+
+                // Envia uma solicitação POST via AJAX para cancelar o pedido
+                fetch('/cancelar_pedido', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `id_pedido=${idPedido}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'sucesso') {
+                        alert('Pedido cancelado com sucesso!');
+                        carregarPedidos();  // Atualiza a lista de pedidos na página
+                    } else {
+                        alert('Erro ao cancelar o pedido: ' + data.mensagem);
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar a solicitação:', error));
+            }
+        });
     </script>
 
     </body>

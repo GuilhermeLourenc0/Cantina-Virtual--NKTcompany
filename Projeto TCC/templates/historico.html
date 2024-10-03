@@ -4,31 +4,83 @@
 
     <section class="container-cards">
         <h2>Histórico de Pedidos</h2>
-        <!-- Loop pelos pedidos do cliente -->
-        {% for id_cliente, dados_cliente in lista_historico.items() %}
-            <div class="card-pedidos">
-                <h3>Cliente: {{ dados_cliente.nome_cliente }}</h3>
-                {% for id_pedido, dados_pedido in dados_cliente.pedidos.items() %}
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-number">#{{ id_pedido }}</span>
-                            <span class="order-time">{{ dados_pedido.data_pedido.strftime("%H:%M") }}</span>
-                            <span class="order-date">{{ dados_pedido.data_pedido.strftime("%d/%m/%y") }}</span>
-                        </div>
-                        <div class="order-details">
-                            <ul>
-                                {% for produto in dados_pedido.produtos %}
-                                    <li>{{ produto.quantidade }}x {{ produto.nome_produto }} - R$ {{ produto.preco }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="order-status">
-                            <span class="order-price">R$ {{ dados_pedido.total_preco }}</span>
-                            <span class="order-status-text">{{ dados_pedido.status }}</span>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endfor %}
+        <div id="order-list">
+            <!-- O conteúdo dos pedidos será carregado aqui via AJAX -->
+        </div>
     </section>
+
+    <script>
+        function fetchOrders() {
+            fetch('/exibir_historico_ajax')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;  // Redireciona para login, se necessário
+                    } else {
+                        renderOrders(data);
+                    }
+                })
+                .catch(error => console.error('Erro ao carregar pedidos:', error));
+        }
+
+        function renderOrders(lista_historico) {
+            const orderList = document.getElementById('order-list');
+            orderList.innerHTML = '';  // Limpa o conteúdo atual
+
+            for (const [id_cliente, dados_cliente] of Object.entries(lista_historico)) {
+                const clientDiv = document.createElement('div');
+                clientDiv.classList.add('card-pedidos');
+
+                const clientName = document.createElement('h3');
+                clientName.textContent = `Cliente: ${dados_cliente.nome_cliente}`;
+                clientDiv.appendChild(clientName);
+
+                for (const [id_pedido, dados_pedido] of Object.entries(dados_cliente.pedidos)) {
+                    const orderCard = document.createElement('div');
+                    orderCard.classList.add('order-card');
+
+                    // Cabeçalho do pedido
+                    const orderHeader = document.createElement('div');
+                    orderHeader.classList.add('order-header');
+                    orderHeader.innerHTML = `
+                        <span class="order-number">#${id_pedido}</span>
+                        <span class="order-time">${new Date(dados_pedido.data_pedido).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
+                        <span class="order-date">${new Date(dados_pedido.data_pedido).toLocaleDateString('pt-BR')}</span>
+                    `;
+                    orderCard.appendChild(orderHeader);
+
+                    // Detalhes dos produtos
+                    const orderDetails = document.createElement('div');
+                    orderDetails.classList.add('order-details');
+                    const productList = document.createElement('ul');
+                    dados_pedido.produtos.forEach(produto => {
+                        const productItem = document.createElement('li');
+                        productItem.textContent = `${produto.quantidade}x ${produto.nome_produto} - R$ ${produto.preco}`;
+                        productList.appendChild(productItem);
+                    });
+                    orderDetails.appendChild(productList);
+                    orderCard.appendChild(orderDetails);
+
+                    // Status e total do pedido
+                    const orderStatus = document.createElement('div');
+                    orderStatus.classList.add('order-status');
+                    orderStatus.innerHTML = `
+                        <span class="order-price">R$ ${dados_pedido.total_preco}</span>
+                        <span class="order-status-text">${dados_pedido.status}</span>
+                    `;
+                    orderCard.appendChild(orderStatus);
+
+                    clientDiv.appendChild(orderCard);
+                }
+
+                orderList.appendChild(clientDiv);
+            }
+        }
+
+        // Chama a função para carregar os pedidos quando a página carrega
+        document.addEventListener('DOMContentLoaded', fetchOrders);
+
+        // Atualiza a página a cada 30 segundos (30000 milissegundos)
+        setInterval(fetchOrders, 2000);
+    </script>
 {% endblock %}
