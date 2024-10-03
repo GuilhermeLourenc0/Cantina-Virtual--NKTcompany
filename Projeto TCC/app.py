@@ -1,12 +1,22 @@
-from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response
+from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response, send_file
 from usuario import Usuario
 from sistema import Sistema
 import random
 from twilio.rest import Client
+import os
+
+
 
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'  # Chave secreta para gerenciamento de sessões
+
+
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static', 'uploads')
+
+# Crie o diretório se ele não existir
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 
 
 account_sid = 'AC475dc4dd74f017977d282babb6ed02fe'
@@ -215,8 +225,6 @@ def compras():
 # Rota para exibir detalhes de um produto único
 @app.route("/produto_unico", methods=['GET', 'POST'])
 def exibir_produto_unico():
-    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     
     if request.method == 'POST':
         btn_produto = request.form.get('btn-produto')  # Obtém o ID do produto selecionado
@@ -265,19 +273,6 @@ def habilitar_produto_adm():
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
 
 
-
-
-
-
-
-
-# Rota para exibir o perfil do usuário
-@app.route("/perfil", methods=['GET', 'POST'])
-def perfil():
-    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect('/logar')  # Redireciona para a página de login
-    else:
-        return render_template("perfil.html")  # Renderiza a página do perfil do usuário
 
 
 
@@ -664,6 +659,101 @@ def nova_senha():
         else:
             flash("Erro ao atualizar a senha. Tente novamente.", "error")
             return redirect("/nova-senha")
+
+
+
+
+
+
+
+# ================ PERFIL ================
+@app.route('/perfil', methods=['GET'])
+def perfil():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None:
+        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+
+    # Recupera o ID do cliente da sessão
+    id_cliente = session['usuario_logado'].get('id_cliente')
+    
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    perfil_usuario = sistema.obter_perfil(id_cliente)  # Método que você deve criar para obter os detalhes do usuário
+    
+    if perfil_usuario is None:
+        flash('Perfil não encontrado.', 'error')
+        return redirect('/')  # Redireciona se o perfil não for encontrado
+
+    # Renderiza o template com os detalhes do perfil
+    return render_template("perfil.html", perfil_usuario=perfil_usuario)
+
+
+
+
+
+
+
+
+
+@app.route('/atualizar_perfil', methods=['POST'])
+def atualizar_perfil():
+    if 'usuario_logado' not in session:
+        return redirect('/logar')  # Redireciona se o usuário não estiver logado
+
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+
+    # Obtém dados do formulário
+    nome = request.form.get('nome')
+    senha = request.form.get('senha')
+    confirmar_senha = request.form.get('confirmar_senha')
+    imagem_perfil = request.files.get('imagem_perfil')
+
+    # Verifica se as senhas coincidem
+    if senha != confirmar_senha:
+        flash('As senhas não coincidem.', 'error')
+        return redirect('/perfil')  # Redireciona para o perfil se houver erro
+
+    # Obter o ID do cliente da sessão
+    id_cliente = session['usuario_logado']['id_cliente']
+    
+    # Verifica a senha atual para confirmar a alteração
+    if not sistema.verificar_senha(id_cliente, senha):
+        flash('Senha incorreta.', 'error')
+        return redirect('/perfil')
+
+    # Verifica se uma imagem foi enviada
+    caminho_imagem = None
+    if imagem_perfil and imagem_perfil.filename != '':
+        caminho_imagem = os.path.join(app.config['UPLOAD_FOLDER'], imagem_perfil.filename)
+        try:
+            imagem_perfil.save(caminho_imagem)
+            flash('Imagem salva com sucesso!', 'success')
+        except Exception as e:
+            flash(f'Erro ao salvar a imagem: {str(e)}', 'error')
+
+    # Atualiza nome e imagem (sem alterar a senha)
+    resultado = sistema.atualizar_perfil(id_cliente, nome, senha, caminho_imagem)
+
+    if 'error' in resultado:
+        flash(resultado['error'], 'error')
+    else:
+        flash('Perfil atualizado com sucesso!', 'success')
+
+    return redirect('/perfil')  # Redireciona para a página de perfil após a atualização
+
+
+
+@app.route('/imagem_perfil/<int:id_cliente>')
+def imagem_perfil(id_cliente):
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    imagem = sistema.obter_imagem_perfil(id_cliente)  # Nova função que você deve criar
+
+    if imagem:
+        return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
+    return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
+
+
+
+
+
 
 
 app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração

@@ -29,7 +29,7 @@ h2 {
     flex-direction: column;
 }
 
-form {
+.form {
     margin-top: 30px;
     display: flex;
     flex-direction: column;
@@ -43,7 +43,7 @@ form {
     margin-top: -30px;
 }
 
-form input {
+.form input {
     width: 100%;
     border: none;
     border-bottom: 1px solid black;
@@ -57,12 +57,12 @@ input.dark2 {
     color: white;
 }
 
-form.dark1 {
+.form.dark1 {
     border: 1px solid rgb(255, 255, 255);
     background-color: rgb(0, 0, 0);
 }
 
-form input:focus {
+.form input:focus {
     outline: none;
 }
 
@@ -153,4 +153,7 @@ form input:focus {
     top: calc(100% - 151px);
 }
 
+.overlay input{
 
+    z-index: 1000 !important;
+}
