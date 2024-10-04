@@ -4,43 +4,73 @@
 <body>
     <main>
         <div class="btn-voltar">
-            <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
+            <button onclick="window.history.back()" aria-label="Voltar">
+                <img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt="Voltar">
+            </button>
         </div>
         
         <div class="titulo">
             <h2>Olá! Cadastre-Se agora para Começar</h2>
         </div>
-    <section class="container-principal">
-       
-    
-      
-        <div class="formulario">
-            
-            <form action="" method="post">
-                <input id="nome" name="nome" placeholder="Nome Completo" type="text">
-                <input id="tel" name="tel" placeholder="Telefone" type="text">
-                <input id="email" name="email" placeholder="E-mail"  type="text">
-                <input id="senha" name="senha" placeholder="Senha"  type="password">
-                <div class="select">
-
-                <select id="curso" name="curso">
-                    <option value="#">Selecione o seu curso</option>
-                    {% for registro in cursos %}
-                    <option value="{{ registro.id_curso }}">{{ registro.curso }}</option>
-                    {% endfor %}
-                </select>
-
-                <button type="submit">Registrar</button>
-
-                <p>Já está registrado? <a href="/logar" class="login-btn">Faça o login</a></p>
-
-                </div>
-
-            </form>
-
-        </div> 
-    </section>
+        
+        <section class="container-principal">
+            <div class="formulario">
+                <form id="form-cadastro" action="" method="post">
+                    <input id="nome" name="nome" placeholder="Nome Completo" type="text" required>
+        
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="prefix">+55</span>
+                            <input id="tel" name="tel" placeholder="Número de Telefone" type="text" oninput="formatPhone()" required>
+                        </div>
+                    </div>
+                    
+                    <input id="email" name="email" placeholder="E-mail" type="email" required>
+                    <input id="senha" name="senha" placeholder="Senha" type="password" required>
+        
+                    <div class="select">
+                        <select id="curso" name="curso" required>
+                            <option value="">Selecione o seu curso</option>
+                            {% for registro in cursos %}
+                                <option value="{{ registro.id_curso }}">{{ registro.curso }}</option>
+                            {% endfor %}
+                        </select>
+        
+                        <button type="submit">Registrar</button>
+        
+                        <p>Já está registrado? <a href="/logar" class="login-btn">Faça o login</a></p>
+                    </div>
+                </form>
+            </div>
+        </section>
     </main>
-    {% endblock %}
 
-    
+    <script>
+        document.getElementById('form-cadastro').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var telInput = document.getElementById('tel');
+            var telValue = telInput.value.trim();
+            
+            if (telValue) {
+                telValue = '+55' + telValue.replace(/\D/g, ''); // Remove qualquer caractere não numérico
+                telInput.value = telValue;
+            }
+            
+            this.submit();
+        });
+        
+        function formatPhone() {
+            var telInput = document.getElementById('tel');
+            var value = telInput.value.replace(/\D/g, ''); // Remove não numéricos
+            if (value.length > 10) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3'); // Formato para celular
+            } else if (value.length > 6) {
+                value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3'); // Formato para telefone fixo
+            } else if (value.length > 2) {
+                value = value.replace(/(\d{2})(\d{1,5})/, '($1) $2'); // Formato para DDD
+            }
+            telInput.value = value;
+        }
+    </script>
+{% endblock %}
