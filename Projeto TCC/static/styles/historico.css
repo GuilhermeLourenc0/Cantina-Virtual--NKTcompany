@@ -1,66 +1,72 @@
-*{
+:root {
+    --cor-primaria: #4CAF50;
+    --cor-secundaria: rgb(156, 0, 0);
+    --cor-fundo: #f9f9f9;
+    --cor-texto: #333;
+    --cor-borda: #ccc;
+    --cor-botao-hover: #0056b3;
+    --cor-botao-active: #004a92;
+  }
+  
+  *{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-
-
-
-.cbc-cima .perfil{
+  }
+  
+  .cbc-cima .perfil{
     height: 50px;
     width: 50px;
     border-radius: 100px;
-}
-
-.cbc-cima .perfil:active{
+  }
+  
+  .cbc-cima .perfil:active{
     filter: grayscale(70%);
-
-}
-
-.logo{
+  }
+  
+  .logo{
     height: 70px;
-}
-
-.menu{
+  }
+  
+  .menu{
     height: 40px;
-}
-
-.cbc-baixo{
-    background-color: rgb(156, 0, 0);
+  }
+  
+  .cbc-baixo{
+    background-color: var(--cor-secundaria);
     display: none;
     justify-content: space-around;
-    
-}
-
-body {
+  }
+  
+  body {
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
     margin: 0;
     padding: 0;
-}
-
-.order-filter {
+  }
+  
+  .order-filter {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
     flex-direction: column;
     align-items: center;
-}
-
-.order-filter label {
+  }
+  
+  .order-filter label {
     margin-right: 10px;
     font-size: 1.1em;
-}
-
-.order-filter select {
+  }
+  
+  .order-filter select {
     padding: 5px;
     font-size: 1.1em;
     border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-.order-card {
+    border: 1px solid var(--cor-borda);
+  }
+  
+  .order-card {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -69,40 +75,40 @@ body {
     min-width: 300px;
     margin: 35px 0px 5px 0px;
     transition: transform 0.3s;
-}
-
-.order-card:hover {
+  }
+  
+  .order-card:hover {
     transform: translateY(-5px);
-}
-
-.order-header {
+  }
+  
+  .order-header {
     display: flex;
     justify-content: space-between;
     font-size: 1.2em;
     margin-bottom: 10px;
-}
-
-.order-number {
-    color: #4CAF50;
+  }
+  
+  .order-number {
+    color: var(--cor-primaria);
     font-weight: bold;
-}
-
-.order-date {
+  }
+  
+  .order-date {
     color: #888;
     font-style: italic;
-}
-
-.order-details {
+  }
+  
+  .order-details {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
-}
-
-.order-details span {
+  }
+  
+  .order-details span {
     font-size: 1.1em;
     color: #666;
-}
-
-h3{
+  }
+  
+  h3{
     text-align: center;
-}
+  }

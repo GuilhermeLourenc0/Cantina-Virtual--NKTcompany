@@ -1,13 +1,24 @@
+:root {
+  --primary-color: #CF2236;
+  --secondary-color: #9C0000;
+  --accent-color: #FFD700;
+  --background-color: #F4F4F5;
+  --text-color: #333;
+  --highlight-color: #727272;
+  --status-color: #FFFFFF;
+  --status-cor-color: #15FF00;
+  --footer-button-color: #11B102;
+  --car-icon-color: #FFFFFF;
+  --dark-mode-color: #303136;
+}
+
 *{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-
-
 figure{
-
     margin: 0 !important;
     display: flex;
     align-items: center;
@@ -15,7 +26,6 @@ figure{
 }
 
 html{
-
     overflow-y: scroll;
 }
 
@@ -41,7 +51,7 @@ html{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color:rgba(207,34,38,255);
+    background-color: var(--primary-color);
 }
 
 .gambiarra{
@@ -56,7 +66,6 @@ html{
 
 .cbc-cima .perfil:active{
     filter: grayscale(70%);
-
 }
 
 .logo{
@@ -70,14 +79,13 @@ html{
 }
 
 .cbc-baixo{
-    background-color: rgb(156, 0, 0);
+    background-color: var(--secondary-color);
     display: none;
     justify-content: space-around;
-    
 }
 
 h2 {
-    color: #333;
+    color: var(--text-color);
     font-size: 1.8rem; /* Tamanho ajustado para mobile */
     text-align: center;
     margin-bottom: 30px;
@@ -89,7 +97,6 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
     padding: 0 20px; /* Espaço lateral para mobile */
 }
 
@@ -98,6 +105,7 @@ h2 {
     justify-content: space-between;
     text-align: left;
 }
+
 .grid-produto{
     width: 100%;  
 }
@@ -140,6 +148,7 @@ h2 {
     flex-direction: column;
     align-items: baseline;
 }
+
 .card-produtos img {
     height: 90px; /* Tamanho da imagem */
     width: 90px; /* Tamanho da imagem */
@@ -155,7 +164,7 @@ h2 {
 .produto-nome {
     font-size: 1rem; /* Ajustado para mobile */
     font-weight: 500;
-    color: #333;
+    color: var(--text-color);
 }
 
 .produto-desc{
@@ -165,10 +174,11 @@ h2 {
 .produto-preco {
     font-size: 1rem;
     font-weight: 700;
-    color: #727272;
+    color: var(--highlight-color);
 }
+
 .footer{
-    background-color: rgba(207,34,38,255);
+    background-color: var(--primary-color);
     width: 100%;
     height: 80px;
     display: flex;
@@ -176,20 +186,19 @@ h2 {
     align-items: center;
     position: fixed;
     left: 0;
-    bottom: 0;
+    bottom: 0 ;
 }
 
 .status{
-    color: rgb(255, 255, 255);
+    color: var(--status-color);
 }
 
 .status-cor{
-    color: rgb(21, 255, 0);
+    color: var(--status-cor-color);
 }
 
 .footer button{
-
-    background-color: rgb(17, 177, 2);
+    background-color: var(--footer-button-color);
     border-radius: 10px;
     border: none;
     padding: 10px;
@@ -210,7 +219,7 @@ h2 {
 .bar1, .bar2, .bar3 {
     width: 40px;                                         
     height: 5px;
-    background-color: rgba(255, 215, 7, 1);
+    background-color: var(--accent-color);
     margin: 6px 0;
     transition: 0.6s;
 }
@@ -227,58 +236,58 @@ h2 {
     transform: rotate(45deg) translate(-7px, -7px);
 }
 
-  .sidenav {
+.sidenav {
     height: 100%;
     width: 0;
     position: fixed;
     z-index: 2;
     top: 0;
     right: 0;
-    background-color: rgb(209, 31, 31);
+    background-color: var(--primary-color);
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
-  }
-  .sidenav a {
+}
+
+.sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: rgb(255, 255, 255);
+    color: var(--status-color);
     display: block;
     transition: 0.3s;
-  }
-  
-  .sidenav a:hover {
+}
+
+.sidenav a:hover {
     color: #bbbbbb;
     text-decoration: none;
-  }
-  
-  .sidenav .closebtn {
+}
+
+.sidenav .closebtn {
     position: absolute;
     top: 0;
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
-  }
+}
 
-  hr{
+hr{
+    background-color: var(--status-color);
+}
 
-    background-color: rgb(255, 255, 255);
-  }
-
-  .car-icon{
+.car-icon{
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 40px;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
-    background-color: white;
+    background-color: var(--car-icon-color);
     height: 70px;
     width: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+}
 
-  .car-icon:hover {
+.car-icon:hover {
     transform: scale(1.1);
     box-shadow: 4px 4px 9px rgba(0, 0, 0, 0.2);
 }
@@ -287,31 +296,32 @@ h2 {
     background-color: rgb(250, 250, 250);
 }
 
-  .car-icon img{
+.car-icon img{
     height: 50px;
-  }
+}
 
-  footer{
+footer{
     position: fixed;
     bottom: 0;
     margin-left: 370px;
     margin-bottom: 10px;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
-  }
+}
 
-  footer:hover {
+footer:hover {
     transform: translate(-50px, 0px); /* Move a div 20px para a direita e para baixo */
 }
-  footer section{
+
+footer section{
     display: flex;
     justify-content: flex-end;
     margin-right: 15px;
     margin-bottom: 10px;
-  }
+}
 
-  /* Modo Escuro */
+/* Modo Escuro */
 
-  /* The switch - the box around the slider */
+/* The switch - the box around the slider */
 .switch {
     display: block;
     --width-of-switch: 3.5em;
@@ -323,29 +333,29 @@ h2 {
     position: relative;
     width: var(--width-of-switch);
     height: var(--height-of-switch);
-  }
-  
-  /* Hide default HTML checkbox */
-  .switch input {
+}
+
+/* Hide default HTML checkbox */
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
-  }
-  
-  /* The slider */
-  .slider {
+}
+
+/* The slider */
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #f4f4f5;
+    background-color: var(--background-color);
     transition: .4s;
     border-radius: 30px;
-  }
-  
-  .slider:before {
+}
+
+.slider:before {
     position: absolute;
     content: "";
     height: var(--size-of-icon,1.4em);
@@ -357,28 +367,28 @@ h2 {
     background: linear-gradient(40deg,#ff0080,#ff8c00 70%);
     ;
    transition: .4s;
-  }
-  
-  input:checked + .slider {
-    background-color: #303136;
-  }
-  
-  input:checked + .slider:before {
+}
+
+input:checked + .slider {
+    background-color: var(--dark-mode-color);
+}
+
+input:checked + .slider:before {
     left: calc(100% - (var(--size-of-icon,1.4em) + var(--slider-offset,0.3em)));
-    background: #303136;
+    background: var(--dark-mode-color);
     /* change the value of second inset in box-shadow to change the angle and direction of the moon  */
     box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb;
-  }
+}
 
-  .carousel-item img{
+.carousel-item img{
     height: 600px;
     margin-bottom: 20px;
-  }
+}
 
-  .dark-mode{
+.dark-mode{
     height: 290px;
     width: 380px;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
-  }
+}

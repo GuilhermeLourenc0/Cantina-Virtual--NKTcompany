@@ -1,106 +1,116 @@
-* {
+:root {
+    --cor-primaria: rgba(207, 34, 38, 255);
+    --cor-secundaria: rgb(238, 238, 238);
+    --cor-fundo: rgb(245, 245, 245);
+    --cor-borda: rgb(238, 238, 238);
+    --cor-texto: #000;
+    --cor-botao-hover: #fff;
+    --cor-botao-active: #fff;
+    --cor-placeholder: #7e7d7d;
+    --cor-preto: #000;
+    --cor-branco: #fff;
+  }
+  
+  * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-
-body {
-    background-color: white;
-    color: black;
-}
-
-body.dark {
-    background-color: rgb(0, 0, 0);
-    color: rgb(255, 255, 255);
-}
-
-h2 {
+  }
+  
+  body {
+    background-color: var(--cor-branco);
+    color: var(--cor-preto);
+  }
+  
+  body.dark {
+    background-color: var(--cor-preto);
+    color: var(--cor-branco);
+  }
+  
+  h2 {
     margin-top: 30px;
     margin-bottom: 20px;
     font-size: 40px;
     font-weight: bold;
     font-style: italic;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-.container-principal {
+  }
+  
+  .container-principal {
     display: flex;
     align-items: center;
     flex-direction: column;
-}
-
-form {
+  }
+  
+  form {
     margin-top: 30px;
     display: flex;
     flex-direction: column;
     position: relative;
-    /* superior | direita | inferior | esquerda */
     padding: 150px 20px 20px 20px;
-    border: 1px solid rgb(0 0 0);
-    /* border-radius: 15px; */
-    background-color: white;
+    border: 1px solid var(--cor-preto);
+    background-color: var(--cor-branco);
     width: 300px;
     margin-top: -30px;
-}
-
-form input {
+  }
+  
+  form input {
     width: 100%;
     border: none;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--cor-preto);
     margin-bottom: 40px;
     padding-right: 40px;
     background-color: transparent;
-}
-
-input.dark2 {
-    border-bottom: 1px solid rgb(255, 255, 255);
-    color: white;
-}
-
-form.dark1 {
-    border: 1px solid rgb(255, 255, 255);
-    background-color: rgb(0, 0, 0);
-}
-
-form input:focus {
+  }
+  
+  input.dark2 {
+    border-bottom: 1px solid var(--cor-branco);
+    color: var(--cor-branco);
+  }
+  
+  form.dark1 {
+    border: 1px solid var(--cor-branco);
+    background-color: var(--cor-preto);
+  }
+  
+  form input:focus {
     outline: none;
-}
-
-.btn-confirmar {
+  }
+  
+  .btn-confirmar {
     padding: 10px 2px;
-    background-color: rgba(207, 34, 38, 255);
+    background-color: var(--cor-primaria);
     width: 150px;
     border-radius: 6px;
     border: none;
     margin-bottom: 10px;
     margin-top: -10px;
-    color: white;
+    color: var(--cor-botao-hover);
     font-weight: 700;
     font-style: italic;
     align-self: center;
-}
-
-/* Estilo da imagem de perfil e sobreposição */
-.profile-container {
+  }
+  
+  .profile-container {
     z-index: 1;
     position: relative;
     height: 150px;
     width: 150px;
     border-radius: 100px;
     overflow: hidden;
-    margin-bottom: -75px; /* Ajuste para que o formulário fique sobreposto */
-}
-
-.profile-image {
+    margin-bottom: -75px;
+  }
+  
+  .profile-image {
     width: 100%;
     height: 100%;
     background-image: url('https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg');
     background-size: cover;
     background-position: center;
     transition: filter 0.5s ease;
-}
-
-.overlay {
+  }
+  
+  .overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -111,22 +121,22 @@ form input:focus {
     justify-content: center;
     opacity: 0;
     transition: opacity 0.5s ease;
-}
-
-.overlay-image {
+  }
+  
+  .overlay-image {
     width: 80%;
     height: auto;
-}
-
-.profile-container:hover .profile-image {
+  }
+  
+  .profile-container:hover .profile-image {
     filter: blur(3px) grayscale(30%);
-}
-
-.profile-container:hover .overlay {
+  }
+  
+  .profile-container:hover .overlay {
     opacity: 1;
-}
+  }
 
-.overlay input[type="file"] {
+  .overlay input[type="file"] {
     position: absolute;
     top: 0;
     left: 0;
@@ -135,9 +145,9 @@ form input:focus {
     height: 100%;
     opacity: 0;
     cursor: pointer;
-}
+  }
 
-.toggle-button, .toggle-button2 {
+  .toggle-button, .toggle-button2 {
     z-index: 0;
     position: absolute;
     right: 22px;
@@ -147,10 +157,8 @@ form input:focus {
     background-color: transparent;
     cursor: pointer;
     padding: 0;
-}
+  }
 
-.toggle-button2 {
+  .toggle-button2 {
     top: calc(100% - 151px);
-}
-
-
+  }

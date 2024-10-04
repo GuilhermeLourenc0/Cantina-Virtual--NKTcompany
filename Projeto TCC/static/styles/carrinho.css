@@ -1,41 +1,62 @@
-* {
+:root {
+    --cor-primaria: black;
+    --cor-secundaria: rgb(180, 180, 180);
+    --cor-fundo: #f8f8f8;
+    --cor-borda: #ddd;
+    --cor-botao-hover: #fff;
+    --cor-botao-active: #fff;
+    --cor-texto: black;
+    --cor-verde: rgb(0, 110, 0);
+  }
+
+  :root {
+    --cor-primaria: black;
+    --cor-secundaria: rgb(180, 180, 180);
+    --cor-fundo: #f8f8f8;
+    --cor-borda: #ddd;
+    --cor-botao-hover: #fff;
+    --cor-botao-active: #fff;
+    --cor-texto: black;
+    --cor-verde: rgb(0, 110, 0);
+  }
+  
+  * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-
-.container-principal {
+  }
+  
+  .container-principal {
     display: flex;
     flex-direction: column;
-}
-
-.subtitle {
+  }
+  
+  .subtitle {
     margin-left: 20px;
-}
-
-.imgdiv{
+  }
+  
+  .imgdiv{
     display: flex;
-    
-}
-
-.produto-card {
+  }
+  
+  .produto-card {
     display: flex;
     height: 150px;
     align-items: center;  
-    border-bottom:1px solid rgb(180, 180, 180) ;
-}
-
-.img-produto{
-   margin-left: 20px; 
-}
-
-.produto-card img {
+    border-bottom:1px solid var(--cor-secundaria);
+  }
+  
+  .img-produto{
+    margin-left: 20px; 
+  }
+  
+  .produto-card img {
     height: 110px;
     width: 100px;
     border-radius: 5px;
-}
-
-.button {
+  }
+  
+  .button {
     border: none;
     background: none;
     height: 30px;
@@ -49,61 +70,60 @@
     justify-content: center;
     align-items: center;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-}
-
-.button img{
+  }
+  
+  .button img{
     height: 20px;
     width: 20px;
     display: flex;
-}
-
-.cima{
+  }
+  
+  .cima{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-left: 8px;
-}
-
-.btn-lixo{
+  }
+  
+  .btn-lixo{
     border: none;
     background: none;
     height: 10px;
-}
-
-.cima input{
+  }
+  
+  .cima input{
     width: 35px;
     border: none;
     text-align: center;
     pointer-events: none;
-    background-color: #f8f8f8;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
+    background-color: var(--cor-fundo);
+  }
+  
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
-    
-}
-
-.cima input:focus{
+  }
+  
+  .cima input:focus{
     outline: none;
-}
-
-.cima button{
+  }
+  
+  .cima button{
     border: none;
     background: none;
-}
-
-.baixo{
+  }
+  
+  .baixo{
     display: flex;
     flex-direction: column;
-}
-
-.baixo span{
+  }
+  
+  .baixo span{
     margin-left: 8px;
-}
-
-.finalizacao { 
+  }
+  
+  .finalizacao { 
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -112,67 +132,67 @@ input[type="number"]::-webkit-inner-spin-button {
     left: 0;
     width: 100%;
     background-color: #fff;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--cor-borda);
     padding: 10px;
     box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-}
-
-.finalizacao button{
+  }
+  
+  .finalizacao button{
     width: 370px;
     margin-bottom: 15px;
     height: 40px;
-}
-
-.finalizacompra{
-    color: white;
-    background-color: black;
-}
-
-.finalizacao a{
-    color: black;
-}
-
-.preco{
+  }
+  
+  .finalizacompra{
+    color: var(--cor-botao-hover);
+    background-color: var(--cor-primaria);
+  }
+  
+  .finalizacao a{
+    color: var(--cor-texto);
+  }
+  
+  .preco{
     width: 95%;
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
-}
-
-.preco-item{
+  }
+  
+  .preco-item{
     margin-top: 34px;
-    color: rgb(0, 110, 0);
-}
-
-.span3{
+    color: var(--cor-verde);
+  }
+  
+  .span3{
     margin-bottom: 120px
-}
-
-.desc-baixo{
+  }
+  
+  .desc-baixo{
     font-size: 10px;
-}
-
-.qnt-btn{
+  }
+  
+  .qnt-btn{
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 0px;
-    background-color: #f8f8f8;
+    background-color: var(--cor-fundo);
     border-radius: 5px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
-}
-
-.qnt-btn button{
+  }
+  
+  .qnt-btn button{
     color: red;
-}
-
-.qnt-btn button:focus {
+  }
+  
+  .qnt-btn button:focus {
     outline: none;
-}
-
-.obs-item{
+  }
+  
+  .obs-item{
     font-size: 10px;
-}
+  }

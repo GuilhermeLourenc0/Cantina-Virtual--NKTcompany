@@ -1,143 +1,143 @@
-*{
+:root {
+    --cor-primaria: rgb(161, 23, 23);
+    --cor-secundaria: rgb(238, 238, 238);
+    --cor-fundo: rgb(245, 245, 245);
+    --cor-borda: rgb(238, 238, 238);
+    --cor-texto: #000;
+    --cor-botao-hover: #fff;
+    --cor-botao-active: #fff;
+    --cor-placeholder: #7e7d7d;
+  }
+
+  *{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-
-
-.titulo{
+  }
+  
+  .titulo{
     margin-top: 2.5rem;
     display: flex;
     margin-left: 26px;
     margin-right: 20px;
     margin-bottom: 20px;
-}
-
-h2{
+  }
+  
+  h2{
     font-weight: bolder;
     text-align: left;
-}
-
-.container-principal{
+    color: var(--cor-texto);
+  }
+  
+  .container-principal{
     display: flex;
     align-items: center;
     flex-direction: column;
-}
-
-form{
+  }
+  
+  form{
     display: flex;
     flex-direction: column;
-}
-
-form input{
+  }
+  
+  form input{
     width: 23.7rem;
     height: 30px;
     padding: 30px;
     border-radius: 5px;
-    border: 2px solid rgb(238, 238, 238);
-    background-color: rgb(245, 245, 245);
+    border: 2px solid var(--cor-borda);
+    background-color: var(--cor-fundo);
     margin-top: 15px;
-}
-
-input::placeholder {
-    color: #7e7d7d; /* Mude para a cor desejada */
-}
-
-.checkbox{
+  }
+  
+  input::placeholder {
+    color: var(--cor-placeholder);
+  }
+  
+  .checkbox{
     display: flex;
     flex-direction: row;
     margin-top: 30px;
     margin-right: 204px;
     margin-bottom: 40px;
-}
-
-.container-principal button{
+  }
+  
+  .container-principal button{
     padding: 15px;
-    background-color: rgb(161, 23, 23);
+    background-color: var(--cor-primaria);
     width: 23.7rem;
     border-radius: 6px;
     border: none;
-    
     margin-top: 10px;
     color: white;
-}
-
-form input:focus{
+  }
+  
+  form input:focus{
     outline: none;
-}
-.formulario form{
+  }
+  
+  .formulario form{
     width: 30rem;
     height: 30rem;
     display: flex;
     align-items: center;
     flex-direction: column;
-}
-
-.select{
+  }
+  
+  .select{
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-}
-
-.select select{
+  }
+  
+  .select select{
     width: 23.7rem;
-    
     padding: 19px;
     border-radius: 5px;
-    border: 2px solid rgb(238, 238, 238);
-    background-color: rgb(245, 245, 245);
-    
-}
-
-.login-btn{
+    border: 2px solid var(--cor-borda);
+    background-color: var(--cor-fundo);
+  }
+  
+  .login-btn{
     text-decoration: none;
-    color: rgb(156, 0, 0);
-}
-
-.login-btn{
+    color: var(--cor-primaria);
+  }
+  
+  .login-btn:hover{
     text-decoration: none;
-    color: rgb(156, 0, 0);
-    text-decoration: none; 
-}
-
-.login-btn:hover{
-    text-decoration: none;
-    color: rgb(156, 0, 0);
-    text-decoration: none; 
-}
-
-.cbc-cima{
-    display: none   ;
-}
-
-.gambiarra{
+    color: var(--cor-primaria);
+  }
+  
+  .cbc-cima{
     display: none;
-}
-
-.btn-voltar img{
+  }
+  
+  .gambiarra{
+    display: none;
+  }
+  
+  .btn-voltar img{
     height: 20px;
-    
-}
-
-.btn-voltar button{
+  }
+  
+  .btn-voltar button{
     display: flex;
     align-items: center;
     justify-content: center;
     height: 40px;
     background-color: transparent;
-    border: 1px solid rgb(236, 236, 236);
+    border: 1px solid var(--cor-borda);
     width: 40px;
     border-radius: 6px;
     margin-top: 10px;
     margin-left: 26px;
-}
-
-option{
-    background-color: rgb(245, 245, 245);
-    color: #000;     
-    font-size: 8px; /* Tamanho da fonte das opções */
-      
-}
+  }
+  
+  option{
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-size: 8px;
+  }
