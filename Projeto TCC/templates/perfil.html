@@ -9,21 +9,17 @@
 
                 <div class="profile-container" id="profile-container">
                     <div class="profile-image">
-                        <img 
-                            src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}" 
-                            alt="Imagem do Perfil" 
-                            width="150" 
-                            height="150" 
-                            onerror="this.onerror=null;this.src='../static/img/default-avatar.png';">
+                        <!-- Pré-visualização da imagem do perfil -->
+                        <img id="profile-img" src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}" alt="Imagem do Perfil" width="150" height="150" onerror="this.src='../static/img/default-avatar.png';">
                     </div>
                     
                     <div class="overlay">
-                        <input type="file" id="file-upload" name="imagem_perfil" accept="image/png, image/jpeg">
+                        <!-- Input para seleção da nova imagem -->
+                        <input type="file" id="file-upload" name="imagem_perfil" accept="image/png, image/jpeg" onchange="previewImage(event)">
                         <img src="../static/img/btn-editar.png" alt="Imagem Sobreposta" class="overlay-image">
                     </div>
                 </div>
                 
-
                 <div class="formulario">
                     <div class="form">
                         <input placeholder="*Nome" type="text" name="nome" required value="{{ session['usuario_logado']['nome_comp'] }}">
@@ -45,7 +41,24 @@
         </section>
     </main>
 
+    <!-- Script para pré-visualizar a imagem selecionada -->
     <script>
+        function previewImage(event) {
+            var input = event.target;  // O input file
+            var reader = new FileReader();
+
+            reader.onload = function() {
+                var dataURL = reader.result;  // O resultado será o URL da imagem
+                var imgElement = document.getElementById('profile-img');  // Seleciona a tag img
+                imgElement.src = dataURL;  // Define o src da imagem como o novo URL gerado
+            };
+
+            if (input.files && input.files[0]) {
+                reader.readAsDataURL(input.files[0]);  // Lê a imagem selecionada e chama o onload
+            }
+        }
+
+        // Funções para exibir e ocultar senha
         function togglePassword1(event) {
             event.preventDefault();
             const passwordField = document.getElementById('password');

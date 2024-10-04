@@ -97,11 +97,14 @@ input.dark2 {
     background-image: url('../img/default-avatar.png');
     background-size: cover;
     background-position: center;
+    overflow: hidden;
     transition: filter 0.5s ease;
 }
 
 .profile-image img{
 
+    object-fit: cover;
+    margin: 0 auto;
     width: 100%;
     height: 100%;
 }

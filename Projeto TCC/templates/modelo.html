@@ -18,21 +18,31 @@
 
         <nav class="cbc-cima">
 
-            <figure>
+
                 <div class="perfil-icon">
                     <a href="/perfil">
-                        <img class="perfil" 
-                            src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}" 
-                            alt="Imagem do Perfil" 
-                            width="150" 
-                            height="150" 
-                            onerror="this.onerror=null;this.src='../static/img/default-avatar.png';"></a>
+                        {% if session.get('usuario_logado') %}
+                            <img class="perfil"
+                                src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}"
+                                alt="Imagem do Perfil"
+                                width="150"
+                                height="150"
+                                onerror="this.onerror=null;this.src='../static/img/default-avatar.png';">
+                        {% else %}
+                            <!-- Se o usuário não estiver logado, exibe uma imagem padrão -->
+                            <img class="perfil"
+                                src="../static/img/default-avatar.png"
+                                alt="Imagem do Perfil"
+                                width="150"
+                                height="150">
+                        {% endif %}
                 </div>
-            </figure>
+ 
 
-            <figure>
-                <a href="/"><img class="logo" src="../static/img/logo.png" alt=""></a>
-            </figure>
+            
+                <a class="logo-lu" href="/"><figure>
+                    <img class="logo" src="../static/img/logo.png" alt="">
+                </figure></a>
 
             <div class="menu-container" onclick="toggleMenu(this)">
                 <div class="bar1"></div>
