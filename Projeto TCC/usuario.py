@@ -92,29 +92,7 @@ class Usuario:
         mydb.commit()
         mydb.close()
         return lista_cursos
-
-    def exibir_categorias(self):
-        """
-        Retorna uma lista com todas as categorias de produtos disponíveis, consultando a tabela `tb_categoria`.
-        Cada categoria contém o ID da categoria e o nome da categoria.
-        
-        Retorno:
-        - Uma lista de dicionários, onde cada dicionário representa uma categoria com 'id_categoria' e 'nome'.
-        """
-        mydb = Conexao.conectar()  # Conecta ao banco de dados
-        mycursor = mydb.cursor()
-
-        # Query SQL para selecionar todas as categorias
-        sql = "SELECT * from tb_categoria"
-        mycursor.execute(sql)
-
-        # Obtém os resultados e os organiza em uma lista
-        resultado = mycursor.fetchall()
-        lista_categorias = [{'id_categoria': categoria[0], 'nome': categoria[1]} for categoria in resultado]
-
-        mydb.commit()
-        mydb.close()
-        return lista_categorias
+    
 
     def logar(self, email, senha):
         """
@@ -171,41 +149,6 @@ class Usuario:
         mycursor.execute(sql_remover_carrinho)
         mydb.commit()  # Confirma as alterações
         mydb.close()  # Fecha a conexão
-
-    def inserir_produto(self, nomeP, preco, imagem, descricao, categoria):
-        """
-        Insere um novo produto no sistema, associando-o à categoria correta. As informações do produto
-        incluem nome, preço, URL da imagem, descrição e a categoria do produto.
-        
-        Parâmetros:
-        - nomeP: nome do produto.
-        - preco: preço do produto.
-        - imagem: URL da imagem do produto.
-        - descricao: breve descrição do produto.
-        - categoria: ID da categoria à qual o produto pertence.
-        
-        Retorno:
-        - Retorna True se o produto for inserido com sucesso, ou False em caso de erro.
-        """
-        mydb = Conexao.conectar()  # Conecta ao banco de dados
-        mycursor = mydb.cursor()
-
-        # Query SQL para inserir o produto na tabela `tb_produto`
-        sql = f"INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) VALUES ('{nomeP}', {preco}, '{imagem}', '{descricao}', {categoria})"
-        mycursor.execute(sql)
-
-        # Atualiza os atributos do objeto com os dados do produto
-        self.imagem = imagem
-        self.preco = preco
-        self.nomeP = nomeP
-        self.categoria = categoria
-        self.descricao = descricao
-        self.logado = True  # Marca o usuário como logado após a inserção do produto
-
-        mydb.commit()  # Confirma as alterações no banco de dados
-        mydb.close()  # Fecha a conexão
-        return True
-
 
 
     def verificar_usuario(self, email, telefone):
