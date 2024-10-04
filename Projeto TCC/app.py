@@ -132,7 +132,11 @@ def verificacao():
     if request.method == 'GET':
         return render_template("verificacao.html")  # Renderiza a página onde o usuário insere o código
     else:
-        codigo_inserido = request.form["codigo"]
+        codigo1 = request.form["codigo1"]
+        codigo2 = request.form["codigo2"]
+        codigo3 = request.form["codigo3"]
+        codigo4 = request.form["codigo4"]
+        codigo_inserido = codigo1 + codigo2 + codigo3 + codigo4
         verification_code = session.get('verification_code')
 
         if codigo_inserido == verification_code:
