@@ -38,7 +38,7 @@ class Carrinho:
             """
             mycursor.execute(sql_inserir, (id_cliente, cod_produto))
 
-<<<<<<< HEAD
+
         return produtos
     
 
@@ -68,10 +68,6 @@ class Carrinho:
         sql_limpar_carrinho = "DELETE FROM tb_carrinho WHERE id_cliente = %s"
         mycursor.execute(sql_limpar_carrinho, (id_cliente,))
 
-        mydb.commit()
-        mydb.close()
-        return True
-=======
         mydb.commit()
         mydb.close()
         return True
@@ -142,4 +138,3 @@ class Carrinho:
 
         mydb.commit()
         mydb.close()
->>>>>>> 4e7e5e3c974979cfdf594ec5524f4606fa5cae9d
