@@ -94,6 +94,8 @@ ALTER TABLE tb_produto ADD COLUMN habilitado TINYINT(1) DEFAULT 1;
 
 ALTER TABLE tb_produto ADD COLUMN imagem_binaria LONGBLOB;
 
+ALTER TABLE tb_cliente ADD COLUMN imagem_binaria LONGBLOB;
+
 
  -- Inserindo os cursos e turmas no Banco de Dados
 INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),

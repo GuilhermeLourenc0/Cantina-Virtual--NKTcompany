@@ -1,12 +1,22 @@
-from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response
+from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response, send_file
 from usuario import Usuario
 from sistema import Sistema
 import random
 from twilio.rest import Client
+import os
+
+
 
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'  # Chave secreta para gerenciamento de sessões
+
+
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static', 'uploads')
+
+# Crie o diretório se ele não existir
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 
 
 account_sid = 'AC475dc4dd74f017977d282babb6ed02fe'
@@ -215,8 +225,6 @@ def compras():
 # Rota para exibir detalhes de um produto único
 @app.route("/produto_unico", methods=['GET', 'POST'])
 def exibir_produto_unico():
-    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     
     if request.method == 'POST':
         btn_produto = request.form.get('btn-produto')  # Obtém o ID do produto selecionado
@@ -269,16 +277,6 @@ def habilitar_produto_adm():
 
 
 
-
-
-# Rota para exibir o perfil do usuário
-@app.route("/perfil", methods=['GET', 'POST'])
-def perfil():
-    return render_template("perfil.html")  # Renderiza a página do perfil do usuário
-
-
-
-
 # ========== Pedidos ==========
 # Rota para exibir pedidos (para administradores)
 @app.route("/exibir_pedidos", methods=['GET'])
@@ -306,6 +304,51 @@ def obter_pedidos():
 
 
 
+# Rota para atualizar o status do pedido
+@app.route("/atualizar_status_pedido", methods=['POST'])
+def atualizar_status_pedido():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
+
+    # Obtém o ID do pedido e o novo status enviados pelo AJAX
+    id_pedido = request.form.get('id_pedido')
+    novo_status = request.form.get('status')
+
+    # Verifica se o ID do pedido e o status são válidos
+    if id_pedido and novo_status:
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        sucesso = sistema.atualizar_status_pedido(id_pedido, novo_status)  # Atualiza o status do pedido no sistema
+        
+        if sucesso:
+            return jsonify({'status': 'sucesso'})
+        else:
+            return jsonify({'status': 'erro', 'mensagem': 'Não foi possível atualizar o status.'})
+    return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
+
+
+# Rota para cancelar um pedido
+@app.route("/cancelar_pedido", methods=['POST'])
+def cancelar_pedido():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
+
+    id_pedido = request.form.get('id_pedido')
+
+    # Verifica se o ID do pedido é válido
+    if id_pedido:
+        sistema = Sistema()  # Cria uma instância da classe Sistema
+        sucesso = sistema.cancelar_pedido(id_pedido)  # Função para cancelar o pedido no sistema
+        
+        if sucesso:
+            return jsonify({'status': 'sucesso'})
+        else:
+            return jsonify({'status': 'erro', 'mensagem': 'Não foi possível cancelar o pedido.'})
+    return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
+
+
+
+
+
 
 # Rota para enviar o carrinho como um pedido
 @app.route("/enviar_carrinho", methods=['POST'])
@@ -324,15 +367,30 @@ def enviar_carrinho():
 
 
 # ========== Histórico de Pedidos ==========
-@app.route("/exibir_historico", methods=['GET'])
-def exibir_historico():
+@app.route("/historico", methods=['GET'])
+def historico():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
+    else:
+        return render_template('historico.html')  # Carrega o template da página de histórico
+
+
+
+
+
+
+@app.route("/exibir_historico_ajax", methods=['GET'])
+def exibir_historico_ajax():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return jsonify({'redirect': '/logar'})  # Redireciona para a página de login via JSON
     else:
         id_cliente = session['usuario_logado']['id_cliente']
         sistema = Sistema()  # Cria uma instância da classe Sistema
         lista_historico = sistema.exibir_historico(id_cliente)  # Obtém a lista de pedidos
-        return render_template('historico.html', lista_historico=lista_historico)  # Passa a variável para o template
+
+        return jsonify(lista_historico)  # Retorna os pedidos como JSON
+
+
 
 
 
@@ -466,19 +524,6 @@ def carrinho():
 
 
 
-# # Rota para alterar a senha
-# @app.route("trocar_senha", methods=['POST'])
-# def trocar_senha():
-#     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-#         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
-#     else:
-#         if request.method == 'POST':
-#             sistema = Sistema()
-
-#             id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
-#             senha_cliente = session.get('usuario_logado')['senha']  # Obtém a senha do cliente da sessão
-#             sistema.trocar_senha(id_cliente, senha_cliente)
-
 
 @app.route("/editar_produto", methods=['POST', 'GET'])
 def editar_produto():
@@ -533,6 +578,180 @@ def imagem_produto(cod_produto):
     if imagem:
         return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
     return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
+
+
+
+
+
+# Rota para solicitar troca de senha
+@app.route("/trocar_senha", methods=['GET', 'POST'])
+def trocar_senha():
+    if request.method == 'GET':
+        return render_template("trocar-senha.html")  # Renderiza a página para troca de senha
+    else:
+        email = request.form['email']
+        telefone = request.form['telefone']
+        
+        # Verifique se o usuário existe (você deve implementar isso na classe Usuario)
+        usuario = Usuario()
+        if usuario.verificar_usuario(email, telefone):  # Supondo que exista uma função para verificar o usuário
+            # Gerar um código de verificação aleatório com 4 dígitos, incluindo zeros à esquerda
+            verification_code = str(random.randint(1000, 9999)).zfill(4)
+
+            # Enviar o código de verificação via SMS
+            message = client.messages.create(
+                to=telefone,
+                from_="+13195190041",
+                body=f'Seu código para troca de senha é: {verification_code}'
+            )
+            print(message.sid)
+
+            # Armazenar o telefone e o código de verificação na sessão
+            session['telefone_verificacao'] = telefone
+            session['verification_code'] = verification_code
+            session['email_usuario'] = email  # Armazena o email do usuário na sessão
+            
+            return redirect("/verificacao_troca_senha")  # Redireciona para a tela de verificação
+        else:
+            flash("Usuário não encontrado. Verifique as informações.", "error")
+            return redirect("/trocar_senha")
+
+
+
+
+
+
+
+# Rota para verificação do código de troca de senha
+@app.route("/verificacao_troca_senha", methods=['GET', 'POST'])
+def verificacao_troca_senha():
+    if request.method == 'GET':
+        return render_template("verificacao-troca-senha.html")  # Renderiza a página onde o usuário insere o código
+    else:
+        codigo_inserido = request.form["codigo"]
+        verification_code = session.get('verification_code')
+
+        if codigo_inserido == verification_code:
+            return redirect("/nova_senha")  # Redireciona para a página para criar uma nova senha
+        else:
+            return render_template("verificacao-troca-senha.html", erro="Código incorreto. Tente novamente.")
+
+
+
+
+
+
+# Rota para definir uma nova senha
+@app.route("/nova_senha", methods=['GET', 'POST'])
+def nova_senha():
+    if request.method == 'GET':
+        return render_template("nova-senha.html")  # Renderiza a página para inserir nova senha
+    else:
+        nova_senha = request.form['nova_senha']
+        email_usuario = session.get('email_usuario')
+
+        # Atualiza a senha do usuário (você deve implementar isso na classe Usuario)
+        usuario = Usuario()
+        if usuario.atualizar_senha(email_usuario, nova_senha):  # Implementar essa função na classe Usuario
+            flash("Senha atualizada com sucesso!", "success")
+            session.clear()  # Limpa a sessão após a troca de senha
+            return redirect("/logar")  # Redireciona para a página de login
+        else:
+            flash("Erro ao atualizar a senha. Tente novamente.", "error")
+            return redirect("/nova-senha")
+
+
+
+
+
+
+
+# ================ PERFIL ================
+@app.route('/perfil', methods=['GET'])
+def perfil():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None:
+        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+
+    # Recupera o ID do cliente da sessão
+    id_cliente = session['usuario_logado'].get('id_cliente')
+    
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    perfil_usuario = sistema.obter_perfil(id_cliente)  # Método que você deve criar para obter os detalhes do usuário
+    
+    if perfil_usuario is None:
+        flash('Perfil não encontrado.', 'error')
+        return redirect('/')  # Redireciona se o perfil não for encontrado
+
+    # Renderiza o template com os detalhes do perfil
+    return render_template("perfil.html", perfil_usuario=perfil_usuario)
+
+
+
+
+
+
+
+
+
+@app.route('/atualizar_perfil', methods=['POST'])
+def atualizar_perfil():
+    if 'usuario_logado' not in session:
+        return redirect('/logar')  # Redireciona se o usuário não estiver logado
+
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+
+    # Obtém dados do formulário
+    nome = request.form.get('nome')
+    senha = request.form.get('senha')
+    confirmar_senha = request.form.get('confirmar_senha')
+    imagem_perfil = request.files.get('imagem_perfil')
+
+    # Verifica se as senhas coincidem
+    if senha != confirmar_senha:
+        flash('As senhas não coincidem.', 'error')
+        return redirect('/perfil')  # Redireciona para o perfil se houver erro
+
+    # Obter o ID do cliente da sessão
+    id_cliente = session['usuario_logado']['id_cliente']
+    
+    # Verifica a senha atual para confirmar a alteração
+    if not sistema.verificar_senha(id_cliente, senha):
+        flash('Senha incorreta.', 'error')
+        return redirect('/perfil')
+
+    # Verifica se uma imagem foi enviada
+    caminho_imagem = None
+    if imagem_perfil and imagem_perfil.filename != '':
+        caminho_imagem = os.path.join(app.config['UPLOAD_FOLDER'], imagem_perfil.filename)
+        try:
+            imagem_perfil.save(caminho_imagem)
+            flash('Imagem salva com sucesso!', 'success')
+        except Exception as e:
+            flash(f'Erro ao salvar a imagem: {str(e)}', 'error')
+
+    # Atualiza nome e imagem (sem alterar a senha)
+    resultado = sistema.atualizar_perfil(id_cliente, nome, senha, caminho_imagem)
+
+    if 'error' in resultado:
+        flash(resultado['error'], 'error')
+    else:
+        flash('Perfil atualizado com sucesso!', 'success')
+
+    return redirect('/perfil')  # Redireciona para a página de perfil após a atualização
+
+
+
+@app.route('/imagem_perfil/<int:id_cliente>')
+def imagem_perfil(id_cliente):
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    imagem = sistema.obter_imagem_perfil(id_cliente)  # Nova função que você deve criar
+
+    if imagem:
+        return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
+    return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
+
+
+
 
 
 

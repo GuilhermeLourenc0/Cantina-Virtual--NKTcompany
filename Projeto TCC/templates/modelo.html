@@ -35,17 +35,19 @@
             </div>
             
             <div id="mySidenav" class="sidenav">
-                <a href="/logar">Entrar</a>
-                <hr>
+                {% if not session.get('usuario_logado') %}
+                    <a href="/logar">Entrar</a>
+                    <hr>
+                {% endif %}
                 <a href="/exibir_carrinho">Carrinho</a>
                 <hr>
-                <a href="/perfil">Perfil</a>
+                <a href="/atualizar_perfil">Perfil</a>
                 <hr>
-                <a href="/inicialadm">Adm</a>
+                <a href="/historico">Pedidos</a>
                 <hr>
-                <a href="/exibir_historico">Histórico de Pedidos</a>
-                <hr>
+                {% if session.get('usuario_logado') %}
                 <a href="/logout">Sair</a>
+                {% endif %}
                 <div class="dark-mode">
                     <label class="switch" for="chk">
                         <input type="checkbox" id="chk">
