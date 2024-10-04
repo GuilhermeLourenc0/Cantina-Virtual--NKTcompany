@@ -33,6 +33,7 @@ def principal():
     lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
     return render_template("index.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
 
+
 @app.route("/produtos_json", methods=['GET'])
 def produtos():
     sistema = Sistema()  # Cria uma instância da classe Sistema
@@ -50,31 +51,6 @@ def principal_adm():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos_adm()  # Obtém a lista de produtos
     return render_template("index-adm.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
-
-
-# # Rota para cadastro de novos usuários
-# @app.route("/cadastro", methods=["GET", "POST"])
-# def cadastro():
-#     if request.method == 'GET':
-#         usuario = Usuario()  # Cria uma instância da classe Usuario
-#         cursos = usuario.exibir_cursos()  # Obtém a lista de cursos disponíveis
-#         return render_template("cadastrar.html", cursos=cursos)  # Exibe o formulário de cadastro
-#     else:
-#         # Coleta os dados do formulário de cadastro
-#         nome = request.form["nome"]
-#         telefone = request.form["tel"]
-#         email = request.form["email"]
-#         senha = request.form["senha"]
-#         curso = request.form["curso"]
-#         tipo = "cliente"  # Tipo de usuário definido como cliente
-
-#         usuario = Usuario()  # Cria uma instância da classe Usuario
-#         if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
-#             return redirect("/")  # Redireciona para a página inicial se o cadastro for bem-sucedido
-#         else:
-#             return redirect("/cadastro")  # Redireciona para a página de cadastro em caso de erro
-
-
 
 # Define a rota de cadastro
 @app.route("/cadastro", methods=["GET", "POST"])
@@ -124,8 +100,6 @@ def cadastro():
             return redirect("/cadastro")
 
 
-
-
 # Rota para a tela de verificação
 @app.route("/verificacao", methods=["GET", "POST"])
 def verificacao():
@@ -143,7 +117,6 @@ def verificacao():
             return redirect("/")  # Redireciona para a página principal após a verificação
         else:
             return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
-
 
 
 # Rota para login de usuários
@@ -178,6 +151,8 @@ def logar():
             session.clear()  # Limpa a sessão em caso de falha no login
             return redirect("/logar")  # Redireciona para a página de login
 
+
+
 # Rota para logout de usuários
 @app.route('/logout')
 def logout():
@@ -187,9 +162,6 @@ def logout():
         usuario.logout(id_cliente)  # Realiza o logout do usuário
         session.clear()  # Limpa a sessão
         return redirect("/")  # Redireciona para a página inicial
-
-
-
 
 
 # Rota para inserção de novos produtos
@@ -214,16 +186,12 @@ def inserir_produtos():
             return "ERRO AO INSERIR PRODUTO"  # Mensagem de erro em caso de falha
 
 
-
-
 # Rota para exibição de produtos
 @app.route("/exibir_produtos")
 def compras():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
     return render_template("produto.html", lista_produtos=lista_produtos)  # Renderiza a página com a lista de produtos
-
-
 
 
 # Rota para exibir detalhes de um produto único
@@ -252,9 +220,6 @@ def exibir_produto_unico():
     return render_template("produto.html", lista_prounico=lista_prounico)
 
 
-
-
-
 # Habilitar e desabilitar o produto (adm)
 @app.route("/desabilitar_produto_adm", methods=['POST'])
 def desabilitar_produto_adm():
@@ -266,6 +231,7 @@ def desabilitar_produto_adm():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
 
+
 @app.route("/habilitar_produto_adm", methods=['POST'])
 def habilitar_produto_adm():
     try:
@@ -275,10 +241,6 @@ def habilitar_produto_adm():
         return jsonify({'status': 'success'})  # Retorna uma resposta de sucesso
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
-
-
-
-
 
 
 # ========== Pedidos ==========
@@ -293,8 +255,6 @@ def exibir_pedidos():
         return render_template('recebePedido.html', lista_pedidos=lista_pedidos)  # Passa a variável para o template
 
 
-
-
 # Rota para obter os pedidos em JSON
 @app.route("/obter_pedidos", methods=['GET'])
 def obter_pedidos():
@@ -304,8 +264,6 @@ def obter_pedidos():
         sistema = Sistema()  # Cria uma instância da classe Sistema
         lista_pedidos = sistema.exibir_pedidos()  # Obtém a lista de pedidos
         return jsonify(lista_pedidos)  # Retorna a lista de pedidos em formato JSON
-
-
 
 
 # Rota para atualizar o status do pedido
@@ -350,10 +308,6 @@ def cancelar_pedido():
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
 
 
-
-
-
-
 # Rota para enviar o carrinho como um pedido
 @app.route("/enviar_carrinho", methods=['POST'])
 def enviar_carrinho():
@@ -365,11 +319,6 @@ def enviar_carrinho():
     return jsonify(success=False, message="Erro ao enviar o carrinho.")
 
 
-
-
-
-
-
 # ========== Histórico de Pedidos ==========
 @app.route("/historico", methods=['GET'])
 def historico():
@@ -377,10 +326,6 @@ def historico():
         return redirect('/logar')  # Redireciona para a página de login
     else:
         return render_template('historico.html')  # Carrega o template da página de histórico
-
-
-
-
 
 
 @app.route("/exibir_historico_ajax", methods=['GET'])
@@ -393,16 +338,6 @@ def exibir_historico_ajax():
         lista_historico = sistema.exibir_historico(id_cliente)  # Obtém a lista de pedidos
 
         return jsonify(lista_historico)  # Retorna os pedidos como JSON
-
-
-
-
-
-
-
-
-
-
 
 
 # ========== Carrinho ==========
@@ -424,8 +359,6 @@ def atualizar_preco_total():
         print(f"Erro ao atualizar preço total: {e}")
         return jsonify({'success': False, 'message': 'Erro ao atualizar preço total'})
     
-
-
 
 # Rota para atualizar a quantidade de um produto no carrinho via AJAX
 @app.route("/atualizar_quantidade", methods=['POST'])
@@ -453,8 +386,6 @@ def atualizar_quantidade():
         return jsonify({'success': False, 'message': 'Erro ao atualizar quantidade'})
         
 
-
-
 # Rota para excluir um produto
 @app.route("/excluir_produto_carrinho", methods=['POST'])
 def excluir_produto_carrinho():
@@ -477,8 +408,6 @@ def excluir_produto_carrinho():
         print(f"Erro ao excluir produto: {e}")  # Registra o erro no console
         return jsonify({'success': False, 'message': 'Erro ao excluir produto'})
     
-
-
 
 # Rota para exibir o carrinho de compras
 @app.route("/exibir_carrinho", methods=['GET', 'POST'])
@@ -503,8 +432,6 @@ def exibir_carrinho():
         return render_template("carrinho.html", lista_carrinho=lista_carrinho)  # Renderiza a página do carrinho com a lista de produtos
     
 
-
-
 # Rota para inserir produtos no carrinho
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
@@ -525,8 +452,6 @@ def carrinho():
             return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
 
         return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
-
-
 
 
 @app.route("/editar_produto", methods=['POST', 'GET'])
@@ -574,6 +499,7 @@ def atualizar_produto():
     flash('Produto atualizado com sucesso!', 'success')
     return redirect('/')  # Ou para uma página de detalhes do produto
 
+
 @app.route('/imagem_produto/<int:cod_produto>')
 def imagem_produto(cod_produto):
     sistema = Sistema()  # Cria uma instância da classe Sistema
@@ -582,9 +508,6 @@ def imagem_produto(cod_produto):
     if imagem:
         return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
     return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
-
-
-
 
 
 # Rota para solicitar troca de senha
@@ -621,11 +544,6 @@ def trocar_senha():
             return redirect("/trocar_senha")
 
 
-
-
-
-
-
 # Rota para verificação do código de troca de senha
 @app.route("/verificacao_troca_senha", methods=['GET', 'POST'])
 def verificacao_troca_senha():
@@ -639,10 +557,6 @@ def verificacao_troca_senha():
             return redirect("/nova_senha")  # Redireciona para a página para criar uma nova senha
         else:
             return render_template("verificacao-troca-senha.html", erro="Código incorreto. Tente novamente.")
-
-
-
-
 
 
 # Rota para definir uma nova senha
@@ -665,11 +579,6 @@ def nova_senha():
             return redirect("/nova-senha")
 
 
-
-
-
-
-
 # ================ PERFIL ================
 @app.route('/perfil', methods=['GET'])
 def perfil():
@@ -688,13 +597,6 @@ def perfil():
 
     # Renderiza o template com os detalhes do perfil
     return render_template("perfil.html", perfil_usuario=perfil_usuario)
-
-
-
-
-
-
-
 
 
 @app.route('/atualizar_perfil', methods=['POST'])
@@ -745,8 +647,6 @@ def atualizar_perfil():
     return redirect('/perfil')  # Redireciona para a página de perfil após a atualização
 
 
-
-
 @app.route('/imagem_perfil/<int:id_cliente>')
 def imagem_perfil(id_cliente):
     sistema = Sistema()  # Cria uma instância da classe Sistema
@@ -757,12 +657,6 @@ def imagem_perfil(id_cliente):
     else:
         # Retorna a imagem padrão caso não exista imagem personalizada para o usuário
         return redirect(url_for('static', filename='img/default-avatar.png'))
-
-
-
-
-
-
 
 
 app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração
