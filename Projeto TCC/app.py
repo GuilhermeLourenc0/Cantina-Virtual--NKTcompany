@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response, send_file
+from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response, url_for
 from usuario import Usuario
 from sistema import Sistema
 import random
@@ -728,9 +728,10 @@ def atualizar_perfil():
             flash('Imagem salva com sucesso!', 'success')
         except Exception as e:
             flash(f'Erro ao salvar a imagem: {str(e)}', 'error')
+            return redirect('/perfil')  # Redireciona se falhar ao salvar a imagem
 
     # Atualiza nome e imagem (sem alterar a senha)
-    resultado = sistema.atualizar_perfil(id_cliente, nome, senha, caminho_imagem)
+    resultado = sistema.atualizar_perfil(id_cliente, nome, caminho_imagem)
 
     if 'error' in resultado:
         flash(resultado['error'], 'error')
@@ -741,14 +742,18 @@ def atualizar_perfil():
 
 
 
+
 @app.route('/imagem_perfil/<int:id_cliente>')
 def imagem_perfil(id_cliente):
     sistema = Sistema()  # Cria uma instância da classe Sistema
-    imagem = sistema.obter_imagem_perfil(id_cliente)  # Nova função que você deve criar
+    imagem = sistema.obter_imagem_perfil(id_cliente)
 
     if imagem:
-        return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
-    return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
+        return Response(imagem, mimetype='image/jpeg')  # ou o tipo MIME correto para a imagem
+    else:
+        # Retorna a imagem padrão caso não exista imagem personalizada para o usuário
+        return redirect(url_for('static', filename='img/default-avatar.png'))
+
 
 
 

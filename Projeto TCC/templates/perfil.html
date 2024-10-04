@@ -9,7 +9,12 @@
 
                 <div class="profile-container" id="profile-container">
                     <div class="profile-image">
-                        <img src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}" alt="Imagem do Perfil" width="150" height="150" onerror="this.src='../static/img/default-avatar.png';">
+                        <img 
+                            src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}" 
+                            alt="Imagem do Perfil" 
+                            width="150" 
+                            height="150" 
+                            onerror="this.onerror=null;this.src='../static/img/default-avatar.png';">
                     </div>
                     
                     <div class="overlay">

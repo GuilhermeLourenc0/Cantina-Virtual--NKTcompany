@@ -94,10 +94,16 @@ input.dark2 {
 .profile-image {
     width: 100%;
     height: 100%;
-    background-image: url('https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg');
+    background-image: url('../img/default-avatar.png');
     background-size: cover;
     background-position: center;
     transition: filter 0.5s ease;
+}
+
+.profile-image img{
+
+    width: 100%;
+    height: 100%;
 }
 
 .overlay {
