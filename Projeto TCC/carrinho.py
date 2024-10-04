@@ -38,7 +38,6 @@ class Carrinho:
             """
             mycursor.execute(sql_inserir, (id_cliente, cod_produto))
 
-
         return produtos
     
 
@@ -137,4 +136,6 @@ class Carrinho:
         mycursor.execute(sql, (quantidade, id_carrinho))
 
         mydb.commit()
+
         mydb.close()
+
