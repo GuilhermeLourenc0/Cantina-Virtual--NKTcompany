@@ -1,19 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+{% extends "modelo.html" %}
+{% block conteudo %}
+<link rel="stylesheet" href="../static/styles/trocar-senha.css">
+
 <body>
-    <form method="POST">
-        <label>Email:</label>
-        <input type="email" name="email" required>
-        <label>Telefone:</label>
-        <input type="text" name="telefone" required>
-        <button type="submit">Enviar Código</button>
-    </form>
+    <main>
+        <div class="btn-voltar">
+        <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
+    </div>
+
+    <div class="titulo">
+        <h2>Esqueceu a sua Senha?</h2>
+        <p>Coloque suas informações cadastradas e receba o código</p>
+    </div>
+
+    <section class="container-principal">
+
+        <div class="formulario">
+
+            <form method="POST">
+                <input name="email" id="email" placeholder="*E-mail" type="email" required>
+                <input name="telefone" placeholder="*Telefone" type="tel" required>
+                <button type="submit">Enviar Código</button>
+            </form>
+
+        </div>
+
+    </section>
+
+
+
     
+    
+    {% endblock %}
+
+                
+    </main>
+
+
 </body>
+
 </html>
