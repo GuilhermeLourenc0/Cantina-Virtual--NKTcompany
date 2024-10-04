@@ -1,0 +1,4 @@
+flask
+mysql-connection-python
+azure-storage-blob
+twilio

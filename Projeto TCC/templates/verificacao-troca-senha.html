@@ -4,14 +4,58 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cantina Digital</title>
+    <link rel="stylesheet" href="../static/styles/verificacao.css">
 </head>
 <body>
-    <form method="POST">
-        <label>Código de Verificação:</label>
-        <input type="text" name="codigo" required>
-        <button type="submit">Verificar</button>
-    </form>
+
+    <div class="btn-voltar">
+        <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg"
+                alt=""></button>
+    </div>
+
+    <section class="container">
+
+        <span class="titulo">Codigo de Acesso</span>
+        <span class="subtitulo">Insira o código para trocar a senha</span>
+        <span class="telefone">Enviamos o código para: <a href="/cadastro">+5516998999889</a></span>
+
+        <div class="formulario">
+            <form method="POST">
+                <label for="codigo"></label>
+                <div class="codigo-verificacao">
+                    <input type="text" maxlength="1" placeholder="0" name="codigo1" class="digito" required>
+                    <input type="text" maxlength="1" placeholder="0" name="codigo2" class="digito" required>
+                    <input type="text" maxlength="1" placeholder="0" name="codigo3" class="digito" required>
+                    <input type="text" maxlength="1" placeholder="0" name="codigo4" class="digito" required>
+                </div>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+        {% if erro %}
+        <p style="color: red;">{{ erro }}</p>
+        {% endif %}
+
+    </section>
+
+    <script>
+        const digitos = document.querySelectorAll(".digito");
+
+        digitos.forEach((digito, index) => {
+            digito.addEventListener("input", () => {
+                if (digito.value.length === 1 && index < digitos.length - 1) {
+                    digitos[index + 1].focus();
+                }
+            });
+
+            digito.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && index > 0 && digito.value.length === 0) {
+                    digitos[index - 1].focus();
+                }
+            });
+        });
+    </script>
+
     {% if erro %}
     <p>{{ erro }}</p>
     {% endif %}
