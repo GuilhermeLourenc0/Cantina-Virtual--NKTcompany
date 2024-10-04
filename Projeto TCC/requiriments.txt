@@ -1,0 +1,11 @@
+--Nomes--
+
+flask
+mysql
+twilio
+
+--Atalhos--
+
+pip install flask
+python -m pip install mysql-connection-python
+pip install twilio
