@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response, url_for
 from usuario import Usuario
 from sistema import Sistema
+from carrinho import Carrinho
+from perfil import Perfil
+from adm import Adm
 import random
 from twilio.rest import Client
 import os
@@ -12,7 +15,8 @@ app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'  # Chave secreta para gerenciamento de sessões
 
 
-app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static', 'uploads')
+# Configuração do diretório de upload
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'uploads')
 
 # Crie o diretório se ele não existir
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -168,8 +172,8 @@ def logout():
 @app.route("/inserir_produtos", methods=['GET', 'POST'])
 def inserir_produtos():
     if request.method == 'GET':
-        usuario = Usuario()  # Cria uma instância da classe Usuario
-        categorias = usuario.exibir_categorias()  # Obtém a lista de categorias de produtos
+        adm = Adm()  # Cria uma instância da classe Usuario
+        categorias = adm.exibir_categorias()  # Obtém a lista de categorias de produtos
         return render_template("cad-produto.html", categorias=categorias)  # Exibe o formulário de cadastro de produtos
     else:
         # Coleta os dados do formulário de inserção de produtos
@@ -179,8 +183,8 @@ def inserir_produtos():
         categoria = request.form["categoria"]
         descricao = request.form["descricao"]
 
-        usuario = Usuario()  # Cria uma instância da classe Usuario
-        if usuario.inserir_produto(nome_produto, preco_produto, imagem_url, descricao, categoria):
+        adm = Adm()  # Cria uma instância da classe Usuario
+        if adm.inserir_produto(nome_produto, preco_produto, imagem_url, descricao, categoria):
             return redirect("/inserir_produtos")  # Redireciona para a página de inserção de produtos após sucesso
         else:
             return "ERRO AO INSERIR PRODUTO"  # Mensagem de erro em caso de falha
@@ -224,9 +228,9 @@ def exibir_produto_unico():
 @app.route("/desabilitar_produto_adm", methods=['POST'])
 def desabilitar_produto_adm():
     try:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
+        adm = Adm()  # Cria uma instância da classe Sistema
         btn_desabilitar = request.form.get("btn_desabilitar")  # Obtém o ID do produto
-        sistema.desabilitar_produto_adm(btn_desabilitar)  # Desabilita o produto
+        adm.desabilitar_produto_adm(btn_desabilitar)  # Desabilita o produto
         return jsonify({'status': 'success'})  # Retorna uma resposta de sucesso
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
@@ -235,9 +239,9 @@ def desabilitar_produto_adm():
 @app.route("/habilitar_produto_adm", methods=['POST'])
 def habilitar_produto_adm():
     try:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
+        adm = Adm()  # Cria uma instância da classe Sistema
         btn_habilitar = request.form.get("btn_habilitar")  # Obtém o ID do produto
-        sistema.habilitar_produto_adm(btn_habilitar)  # Habilita o produto
+        adm.habilitar_produto_adm(btn_habilitar)  # Habilita o produto
         return jsonify({'status': 'success'})  # Retorna uma resposta de sucesso
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
@@ -250,8 +254,8 @@ def exibir_pedidos():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
     else:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
-        lista_pedidos = sistema.exibir_pedidos()  # Obtém a lista de pedidos
+        adm = Adm()  # Cria uma instância da classe Sistema
+        lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
         return render_template('recebePedido.html', lista_pedidos=lista_pedidos)  # Passa a variável para o template
 
 
@@ -261,8 +265,8 @@ def obter_pedidos():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
     else:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
-        lista_pedidos = sistema.exibir_pedidos()  # Obtém a lista de pedidos
+        adm = Adm()  # Cria uma instância da classe Sistema
+        lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
         return jsonify(lista_pedidos)  # Retorna a lista de pedidos em formato JSON
 
 
@@ -351,8 +355,8 @@ def atualizar_preco_total():
     id_cliente = session.get('usuario_logado')['id_cliente']
 
     try:
-        sistema = Sistema()
-        lista_carrinho = sistema.exibir_carrinho(id_cliente)
+        carrinho = Carrinho()
+        lista_carrinho = carrinho.exibir_carrinho(id_cliente)
         return jsonify({'success': True, 'total_preco': lista_carrinho['total_preco']})
 
     except Exception as e:
@@ -376,8 +380,8 @@ def atualizar_quantidade():
         if not id_carrinho or not quantidade:
             return jsonify({'success': False, 'message': 'Dados incompletos'})
 
-        sistema = Sistema()
-        sistema.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
+        carrinho = Carrinho()
+        carrinho.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
 
         return jsonify({'success': True})
 
@@ -399,8 +403,8 @@ def excluir_produto_carrinho():
         if not id_carrinho:
             return jsonify({'success': False, 'message': 'ID do carrinho não encontrado'})
 
-        sistema = Sistema()  # Cria uma instância da classe Sistema
-        sistema.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
+        carrinho = Carrinho()  # Cria uma instância da classe Sistema
+        carrinho.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
 
         return jsonify({'success': True})  # Retorna sucesso se a exclusão for bem-sucedida
 
@@ -415,20 +419,20 @@ def exibir_carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     else:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
+        carrinho = Carrinho()  # Cria uma instância da classe Sistema
         id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
 
         if request.method == 'POST':
             if 'btn-excluir' in request.form:
                 id_carrinho = request.form['btn-excluir']  # Obtém o ID do carrinho do produto a ser excluído
-                sistema.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
+                carrinho.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
             else:
                 # Atualiza a quantidade dos produtos no carrinho
                 quantidades = request.form.getlist('quantidades')
                 for id_carrinho, quantidade in quantidades.items():
-                    sistema.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
+                    carrinho.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
 
-        lista_carrinho = sistema.exibir_carrinho(id_cliente)  # Obtém a lista de produtos no carrinho
+        lista_carrinho = carrinho.exibir_carrinho(id_cliente)  # Obtém a lista de produtos no carrinho
         return render_template("carrinho.html", lista_carrinho=lista_carrinho)  # Renderiza a página do carrinho com a lista de produtos
     
 
@@ -447,11 +451,16 @@ def carrinho():
 
             session['IDs']['IDs_produtos'].append(id_produto)  # Adiciona o ID do produto à lista na sessão
 
-            sistema = Sistema()  # Cria uma instância da classe Sistema
-            sistema.inserir_produto_carrinho(id_produto, id_cliente)  # Adiciona o produto ao carrinho do cliente
+            carrinho = Carrinho()  # Cria uma instância da classe Sistema
+            carrinho.inserir_produto_carrinho(id_produto, id_cliente)  # Adiciona o produto ao carrinho do cliente
             return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
 
         return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
+
+
+
+
+
 
 
 @app.route("/editar_produto", methods=['POST', 'GET'])
@@ -486,7 +495,7 @@ def atualizar_produto():
     if 'usuario_logado' not in session:
         return redirect('/logar')
 
-    sistema = Sistema()  # Cria uma instância da classe Sistema
+    adm = Adm()  # Cria uma instância da classe Sistema
     id_produto = request.form.get('id_produto')
     nome = request.form.get('nome')
     preco = request.form.get('preco')
@@ -494,16 +503,16 @@ def atualizar_produto():
     imagem = request.files.get('imagem')  # Para o upload de imagem
 
     # lógica para atualizar o produto no banco de dados
-    sistema.atualizar_produto(id_produto, nome, preco, descricao, imagem)
+    adm.atualizar_produto(id_produto, nome, preco, descricao, imagem)
 
     flash('Produto atualizado com sucesso!', 'success')
-    return redirect('/')  # Ou para uma página de detalhes do produto
+    return redirect('/inicialadm')  # Ou para uma página de detalhes do produto
 
 
 @app.route('/imagem_produto/<int:cod_produto>')
 def imagem_produto(cod_produto):
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    imagem = sistema.obter_imagem_produto(cod_produto)
+    adm = Adm()  # Cria uma instância da classe Sistema
+    imagem = adm.obter_imagem_produto(cod_produto)
 
     if imagem:
         return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
@@ -588,8 +597,8 @@ def perfil():
     # Recupera o ID do cliente da sessão
     id_cliente = session['usuario_logado'].get('id_cliente')
     
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    perfil_usuario = sistema.obter_perfil(id_cliente)  # Método que você deve criar para obter os detalhes do usuário
+    perfil = Perfil()  # Cria uma instância da classe Sistema
+    perfil_usuario = perfil.obter_perfil(id_cliente)  # Método que você deve criar para obter os detalhes do usuário
     
     if perfil_usuario is None:
         flash('Perfil não encontrado.', 'error')
@@ -604,7 +613,7 @@ def atualizar_perfil():
     if 'usuario_logado' not in session:
         return redirect('/logar')  # Redireciona se o usuário não estiver logado
 
-    sistema = Sistema()  # Cria uma instância da classe Sistema
+    perfil = Perfil()  # Cria uma instância da classe Sistema
 
     # Obtém dados do formulário
     nome = request.form.get('nome')
@@ -621,7 +630,7 @@ def atualizar_perfil():
     id_cliente = session['usuario_logado']['id_cliente']
     
     # Verifica a senha atual para confirmar a alteração
-    if not sistema.verificar_senha(id_cliente, senha):
+    if not perfil.verificar_senha(id_cliente, senha):
         flash('Senha incorreta.', 'error')
         return redirect('/perfil')
 
@@ -637,7 +646,7 @@ def atualizar_perfil():
             return redirect('/perfil')  # Redireciona se falhar ao salvar a imagem
 
     # Atualiza nome e imagem (sem alterar a senha)
-    resultado = sistema.atualizar_perfil(id_cliente, nome, caminho_imagem)
+    resultado = perfil.atualizar_perfil(id_cliente, nome, caminho_imagem)
 
     if 'error' in resultado:
         flash(resultado['error'], 'error')
@@ -649,8 +658,8 @@ def atualizar_perfil():
 
 @app.route('/imagem_perfil/<int:id_cliente>')
 def imagem_perfil(id_cliente):
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    imagem = sistema.obter_imagem_perfil(id_cliente)
+    perfil = Perfil()  # Cria uma instância da classe Sistema
+    imagem = perfil.obter_imagem_perfil(id_cliente)
 
     if imagem:
         return Response(imagem, mimetype='image/jpeg')  # ou o tipo MIME correto para a imagem
