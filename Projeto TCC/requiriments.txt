@@ -1,11 +1,4 @@
---Nomes--
-
 flask
-mysql
+mysql-connection-python
+azure-storage-blob
 twilio
-
---Atalhos--
-
-pip install flask
-python -m pip install mysql-connection-python
-pip install twilio
