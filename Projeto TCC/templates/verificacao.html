@@ -1,19 +1,61 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificação</title>
+    <link rel="stylesheet" href="../static/styles/verificacao.css">
 </head>
+
 <body>
-    <h1>Verificação de Código</h1>
-    <form method="POST" action="/verificacao">
-        <label for="codigo">Insira o código enviado por SMS:</label>
-        <input type="text" id="codigo" name="codigo" required>
-        <button type="submit">Verificar</button>
-    </form>
-    {% if erro %}
+
+    <div class="btn-voltar">
+        <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg"
+                alt=""></button>
+    </div>
+
+    <section class="container">
+
+        <span class="titulo">Codigo de Acesso</span>
+        <span class="subtitulo">Insira o código para criar a conta</span>
+        <span class="telefone">Enviamos o código para: <a href="/cadastro">+5516998999889</a></span>
+        
+        <div class="formulario">
+            <form method="POST" action="/verificacao">
+                <label for="codigo"></label>
+                <div class="codigo-verificacao">
+                    <input type="text" maxlength="1" placeholder="0" name="codigo" class="digito" required>
+                    <input type="text" maxlength="1" placeholder="0" name="codigo" class="digito" required>
+                    <input type="text" maxlength="1" placeholder="0" name="codigo" class="digito" required>
+                    <input type="text" maxlength="1" placeholder="0" name="codigo" class="digito" required>
+                </div>
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+        {% if erro %}
         <p style="color: red;">{{ erro }}</p>
-    {% endif %}
+        {% endif %}
+
+    </section>
+
+    <script>
+        const digitos = document.querySelectorAll(".digito");
+
+        digitos.forEach((digito, index) => {
+            digito.addEventListener("input", () => {
+                if (digito.value.length === 1 && index < digitos.length - 1) {
+                    digitos[index + 1].focus();
+                }
+            });
+
+            digito.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && index > 0 && digito.value.length === 0) {
+                    digitos[index - 1].focus();
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>
