@@ -43,8 +43,10 @@
                 <hr>
                 <a href="/atualizar_perfil">Perfil</a>
                 <hr>
+                {% if session.get('usuario_logado') %}
                 <a href="/historico">Pedidos</a>
                 <hr>
+                {% endif %}
                 {% if session.get('usuario_logado') %}
                 <a href="/logout">Sair</a>
                 {% endif %}
