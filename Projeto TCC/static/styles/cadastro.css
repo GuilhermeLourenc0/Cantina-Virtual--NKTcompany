@@ -149,10 +149,11 @@ option{
 
 .input-group {
     display: flex;
-    align-items: center; /* Alinha verticalmente o prefixo e o campo de entrada */
+    align-items: center; /* Garante que o input e o prefixo tenham a mesma altura */
 }
 
 .prefix {
+    margin-top: 15px;
     background-color: rgb(245, 245, 245); /* A mesma cor de fundo do input */
     padding: 10px; /* Espaço ao redor do prefixo */
     border: 2px solid rgb(238, 238, 238); /* A mesma borda dos inputs */
@@ -161,17 +162,20 @@ option{
     display: flex; /* Garante que o conteúdo do prefixo fique centralizado */
     align-items: center; /* Alinha verticalmente */
     justify-content: center; /* Centraliza horizontalmente */
+    height: 100%; /* Garante que o prefixo tenha a mesma altura do input */
 }
 
 input[type="text"] {
     padding: 10px; /* Ajusta o padding do input para alinhar com o prefixo */
     border-radius: 0 5px 5px 0; /* Bordas arredondadas */
     flex: 1; /* O campo de entrada ocupa o espaço restante */
+    height: 40px; /* Mantém uma altura consistente */
 }
+
 
 /* Se necessário, você pode ajustar a altura do campo de entrada */
 input[type="text"], .prefix {
-    height: 40px; /* Define uma altura padrão para o prefixo e o input */
+    height: 56px; /* Define uma altura padrão para o prefixo e o input */
 }
 
 input::placeholder {
