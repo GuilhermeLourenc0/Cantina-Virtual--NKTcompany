@@ -313,8 +313,8 @@ def cancelar_pedido():
 def enviar_carrinho():
     if 'usuario_logado' in session:
         id_cliente = session['usuario_logado']['id_cliente']
-        sistema = Sistema()
-        sistema.enviar_carrinho(id_cliente)
+        adm = Adm()
+        adm.enviar_carrinho(id_cliente)
         return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
     return jsonify(success=False, message="Erro ao enviar o carrinho.")
 
