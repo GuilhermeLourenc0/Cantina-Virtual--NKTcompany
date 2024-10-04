@@ -25,6 +25,7 @@
 
         function renderOrders(lista_historico) {
             const orderList = document.getElementById('order-list');
+    
             orderList.innerHTML = '';  // Limpa o conteúdo atual
 
             for (const [id_cliente, dados_cliente] of Object.entries(lista_historico)) {

@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, session, jsonify, flash, Response, url_for
 from usuario import Usuario
 from sistema import Sistema
+from carrinho import Carrinho
+from perfil import Perfil
+from adm import Adm
 import random
 from twilio.rest import Client
 import os
@@ -12,7 +15,8 @@ app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'  # Chave secreta para gerenciamento de sessões
 
 
-app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static', 'uploads')
+# Configuração do diretório de upload
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'uploads')
 
 # Crie o diretório se ele não existir
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -33,6 +37,7 @@ def principal():
     lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
     return render_template("index.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
 
+
 @app.route("/produtos_json", methods=['GET'])
 def produtos():
     sistema = Sistema()  # Cria uma instância da classe Sistema
@@ -50,31 +55,6 @@ def principal_adm():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos_adm()  # Obtém a lista de produtos
     return render_template("index-adm.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
-
-
-# # Rota para cadastro de novos usuários
-# @app.route("/cadastro", methods=["GET", "POST"])
-# def cadastro():
-#     if request.method == 'GET':
-#         usuario = Usuario()  # Cria uma instância da classe Usuario
-#         cursos = usuario.exibir_cursos()  # Obtém a lista de cursos disponíveis
-#         return render_template("cadastrar.html", cursos=cursos)  # Exibe o formulário de cadastro
-#     else:
-#         # Coleta os dados do formulário de cadastro
-#         nome = request.form["nome"]
-#         telefone = request.form["tel"]
-#         email = request.form["email"]
-#         senha = request.form["senha"]
-#         curso = request.form["curso"]
-#         tipo = "cliente"  # Tipo de usuário definido como cliente
-
-#         usuario = Usuario()  # Cria uma instância da classe Usuario
-#         if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
-#             return redirect("/")  # Redireciona para a página inicial se o cadastro for bem-sucedido
-#         else:
-#             return redirect("/cadastro")  # Redireciona para a página de cadastro em caso de erro
-
-
 
 # Define a rota de cadastro
 @app.route("/cadastro", methods=["GET", "POST"])
@@ -124,8 +104,6 @@ def cadastro():
             return redirect("/cadastro")
 
 
-
-
 # Rota para a tela de verificação
 @app.route("/verificacao", methods=["GET", "POST"])
 def verificacao():
@@ -143,7 +121,6 @@ def verificacao():
             return redirect("/")  # Redireciona para a página principal após a verificação
         else:
             return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
-
 
 
 # Rota para login de usuários
@@ -178,6 +155,8 @@ def logar():
             session.clear()  # Limpa a sessão em caso de falha no login
             return redirect("/logar")  # Redireciona para a página de login
 
+
+
 # Rota para logout de usuários
 @app.route('/logout')
 def logout():
@@ -189,15 +168,12 @@ def logout():
         return redirect("/")  # Redireciona para a página inicial
 
 
-
-
-
 # Rota para inserção de novos produtos
 @app.route("/inserir_produtos", methods=['GET', 'POST'])
 def inserir_produtos():
     if request.method == 'GET':
-        usuario = Usuario()  # Cria uma instância da classe Usuario
-        categorias = usuario.exibir_categorias()  # Obtém a lista de categorias de produtos
+        adm = Adm()  # Cria uma instância da classe Usuario
+        categorias = adm.exibir_categorias()  # Obtém a lista de categorias de produtos
         return render_template("cad-produto.html", categorias=categorias)  # Exibe o formulário de cadastro de produtos
     else:
         # Coleta os dados do formulário de inserção de produtos
@@ -207,13 +183,11 @@ def inserir_produtos():
         categoria = request.form["categoria"]
         descricao = request.form["descricao"]
 
-        usuario = Usuario()  # Cria uma instância da classe Usuario
-        if usuario.inserir_produto(nome_produto, preco_produto, imagem_url, descricao, categoria):
+        adm = Adm()  # Cria uma instância da classe Usuario
+        if adm.inserir_produto(nome_produto, preco_produto, imagem_url, descricao, categoria):
             return redirect("/inserir_produtos")  # Redireciona para a página de inserção de produtos após sucesso
         else:
             return "ERRO AO INSERIR PRODUTO"  # Mensagem de erro em caso de falha
-
-
 
 
 # Rota para exibição de produtos
@@ -222,8 +196,6 @@ def compras():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
     return render_template("produto.html", lista_produtos=lista_produtos)  # Renderiza a página com a lista de produtos
-
-
 
 
 # Rota para exibir detalhes de um produto único
@@ -252,33 +224,27 @@ def exibir_produto_unico():
     return render_template("produto.html", lista_prounico=lista_prounico)
 
 
-
-
-
 # Habilitar e desabilitar o produto (adm)
 @app.route("/desabilitar_produto_adm", methods=['POST'])
 def desabilitar_produto_adm():
     try:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
+        adm = Adm()  # Cria uma instância da classe Sistema
         btn_desabilitar = request.form.get("btn_desabilitar")  # Obtém o ID do produto
-        sistema.desabilitar_produto_adm(btn_desabilitar)  # Desabilita o produto
+        adm.desabilitar_produto_adm(btn_desabilitar)  # Desabilita o produto
         return jsonify({'status': 'success'})  # Retorna uma resposta de sucesso
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
+
 
 @app.route("/habilitar_produto_adm", methods=['POST'])
 def habilitar_produto_adm():
     try:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
+        adm = Adm()  # Cria uma instância da classe Sistema
         btn_habilitar = request.form.get("btn_habilitar")  # Obtém o ID do produto
-        sistema.habilitar_produto_adm(btn_habilitar)  # Habilita o produto
+        adm.habilitar_produto_adm(btn_habilitar)  # Habilita o produto
         return jsonify({'status': 'success'})  # Retorna uma resposta de sucesso
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
-
-
-
-
 
 
 # ========== Pedidos ==========
@@ -288,11 +254,9 @@ def exibir_pedidos():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
     else:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
-        lista_pedidos = sistema.exibir_pedidos()  # Obtém a lista de pedidos
+        adm = Adm()  # Cria uma instância da classe Sistema
+        lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
         return render_template('recebePedido.html', lista_pedidos=lista_pedidos)  # Passa a variável para o template
-
-
 
 
 # Rota para obter os pedidos em JSON
@@ -301,11 +265,9 @@ def obter_pedidos():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
     else:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
-        lista_pedidos = sistema.exibir_pedidos()  # Obtém a lista de pedidos
+        adm = Adm()  # Cria uma instância da classe Sistema
+        lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
         return jsonify(lista_pedidos)  # Retorna a lista de pedidos em formato JSON
-
-
 
 
 # Rota para atualizar o status do pedido
@@ -350,24 +312,15 @@ def cancelar_pedido():
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
 
 
-
-
-
-
 # Rota para enviar o carrinho como um pedido
 @app.route("/enviar_carrinho", methods=['POST'])
 def enviar_carrinho():
     if 'usuario_logado' in session:
         id_cliente = session['usuario_logado']['id_cliente']
-        sistema = Sistema()
-        sistema.enviar_carrinho(id_cliente)
+        adm = Adm()
+        adm.enviar_carrinho(id_cliente)
         return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
     return jsonify(success=False, message="Erro ao enviar o carrinho.")
-
-
-
-
-
 
 
 # ========== Histórico de Pedidos ==========
@@ -377,10 +330,6 @@ def historico():
         return redirect('/logar')  # Redireciona para a página de login
     else:
         return render_template('historico.html')  # Carrega o template da página de histórico
-
-
-
-
 
 
 @app.route("/exibir_historico_ajax", methods=['GET'])
@@ -395,16 +344,6 @@ def exibir_historico_ajax():
         return jsonify(lista_historico)  # Retorna os pedidos como JSON
 
 
-
-
-
-
-
-
-
-
-
-
 # ========== Carrinho ==========
     
 # Rota para atualizar o preço total do carrinho via AJAX
@@ -416,16 +355,14 @@ def atualizar_preco_total():
     id_cliente = session.get('usuario_logado')['id_cliente']
 
     try:
-        sistema = Sistema()
-        lista_carrinho = sistema.exibir_carrinho(id_cliente)
+        carrinho = Carrinho()
+        lista_carrinho = carrinho.exibir_carrinho(id_cliente)
         return jsonify({'success': True, 'total_preco': lista_carrinho['total_preco']})
 
     except Exception as e:
         print(f"Erro ao atualizar preço total: {e}")
         return jsonify({'success': False, 'message': 'Erro ao atualizar preço total'})
     
-
-
 
 # Rota para atualizar a quantidade de um produto no carrinho via AJAX
 @app.route("/atualizar_quantidade", methods=['POST'])
@@ -443,8 +380,8 @@ def atualizar_quantidade():
         if not id_carrinho or not quantidade:
             return jsonify({'success': False, 'message': 'Dados incompletos'})
 
-        sistema = Sistema()
-        sistema.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
+        carrinho = Carrinho()
+        carrinho.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
 
         return jsonify({'success': True})
 
@@ -452,8 +389,6 @@ def atualizar_quantidade():
         print(f"Erro ao atualizar quantidade: {e}")
         return jsonify({'success': False, 'message': 'Erro ao atualizar quantidade'})
         
-
-
 
 # Rota para excluir um produto
 @app.route("/excluir_produto_carrinho", methods=['POST'])
@@ -468,8 +403,8 @@ def excluir_produto_carrinho():
         if not id_carrinho:
             return jsonify({'success': False, 'message': 'ID do carrinho não encontrado'})
 
-        sistema = Sistema()  # Cria uma instância da classe Sistema
-        sistema.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
+        carrinho = Carrinho()  # Cria uma instância da classe Sistema
+        carrinho.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
 
         return jsonify({'success': True})  # Retorna sucesso se a exclusão for bem-sucedida
 
@@ -478,32 +413,28 @@ def excluir_produto_carrinho():
         return jsonify({'success': False, 'message': 'Erro ao excluir produto'})
     
 
-
-
 # Rota para exibir o carrinho de compras
 @app.route("/exibir_carrinho", methods=['GET', 'POST'])
 def exibir_carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     else:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
+        carrinho = Carrinho()  # Cria uma instância da classe Sistema
         id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
 
         if request.method == 'POST':
             if 'btn-excluir' in request.form:
                 id_carrinho = request.form['btn-excluir']  # Obtém o ID do carrinho do produto a ser excluído
-                sistema.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
+                carrinho.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
             else:
                 # Atualiza a quantidade dos produtos no carrinho
                 quantidades = request.form.getlist('quantidades')
                 for id_carrinho, quantidade in quantidades.items():
-                    sistema.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
+                    carrinho.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
 
-        lista_carrinho = sistema.exibir_carrinho(id_cliente)  # Obtém a lista de produtos no carrinho
+        lista_carrinho = carrinho.exibir_carrinho(id_cliente)  # Obtém a lista de produtos no carrinho
         return render_template("carrinho.html", lista_carrinho=lista_carrinho)  # Renderiza a página do carrinho com a lista de produtos
     
-
-
 
 # Rota para inserir produtos no carrinho
 @app.route("/inserir_carrinho", methods=['POST'])
@@ -520,11 +451,14 @@ def carrinho():
 
             session['IDs']['IDs_produtos'].append(id_produto)  # Adiciona o ID do produto à lista na sessão
 
-            sistema = Sistema()  # Cria uma instância da classe Sistema
-            sistema.inserir_produto_carrinho(id_produto, id_cliente)  # Adiciona o produto ao carrinho do cliente
+            carrinho = Carrinho()  # Cria uma instância da classe Sistema
+            carrinho.inserir_produto_carrinho(id_produto, id_cliente)  # Adiciona o produto ao carrinho do cliente
             return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
 
         return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
+
+
+
 
 
 
@@ -561,7 +495,7 @@ def atualizar_produto():
     if 'usuario_logado' not in session:
         return redirect('/logar')
 
-    sistema = Sistema()  # Cria uma instância da classe Sistema
+    adm = Adm()  # Cria uma instância da classe Sistema
     id_produto = request.form.get('id_produto')
     nome = request.form.get('nome')
     preco = request.form.get('preco')
@@ -569,22 +503,20 @@ def atualizar_produto():
     imagem = request.files.get('imagem')  # Para o upload de imagem
 
     # lógica para atualizar o produto no banco de dados
-    sistema.atualizar_produto(id_produto, nome, preco, descricao, imagem)
+    adm.atualizar_produto(id_produto, nome, preco, descricao, imagem)
 
     flash('Produto atualizado com sucesso!', 'success')
-    return redirect('/')  # Ou para uma página de detalhes do produto
+    return redirect('/inicialadm')  # Ou para uma página de detalhes do produto
+
 
 @app.route('/imagem_produto/<int:cod_produto>')
 def imagem_produto(cod_produto):
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    imagem = sistema.obter_imagem_produto(cod_produto)
+    adm = Adm()  # Cria uma instância da classe Sistema
+    imagem = adm.obter_imagem_produto(cod_produto)
 
     if imagem:
         return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
     return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
-
-
-
 
 
 # Rota para solicitar troca de senha
@@ -621,11 +553,6 @@ def trocar_senha():
             return redirect("/trocar_senha")
 
 
-
-
-
-
-
 # Rota para verificação do código de troca de senha
 @app.route("/verificacao_troca_senha", methods=['GET', 'POST'])
 def verificacao_troca_senha():
@@ -639,10 +566,6 @@ def verificacao_troca_senha():
             return redirect("/nova_senha")  # Redireciona para a página para criar uma nova senha
         else:
             return render_template("verificacao-troca-senha.html", erro="Código incorreto. Tente novamente.")
-
-
-
-
 
 
 # Rota para definir uma nova senha
@@ -665,11 +588,6 @@ def nova_senha():
             return redirect("/nova-senha")
 
 
-
-
-
-
-
 # ================ PERFIL ================
 @app.route('/perfil', methods=['GET'])
 def perfil():
@@ -679,8 +597,8 @@ def perfil():
     # Recupera o ID do cliente da sessão
     id_cliente = session['usuario_logado'].get('id_cliente')
     
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    perfil_usuario = sistema.obter_perfil(id_cliente)  # Método que você deve criar para obter os detalhes do usuário
+    perfil = Perfil()  # Cria uma instância da classe Sistema
+    perfil_usuario = perfil.obter_perfil(id_cliente)  # Método que você deve criar para obter os detalhes do usuário
     
     if perfil_usuario is None:
         flash('Perfil não encontrado.', 'error')
@@ -690,19 +608,12 @@ def perfil():
     return render_template("perfil.html", perfil_usuario=perfil_usuario)
 
 
-
-
-
-
-
-
-
 @app.route('/atualizar_perfil', methods=['POST'])
 def atualizar_perfil():
     if 'usuario_logado' not in session:
         return redirect('/logar')  # Redireciona se o usuário não estiver logado
 
-    sistema = Sistema()  # Cria uma instância da classe Sistema
+    perfil = Perfil()  # Cria uma instância da classe Sistema
 
     # Obtém dados do formulário
     nome = request.form.get('nome')
@@ -719,7 +630,7 @@ def atualizar_perfil():
     id_cliente = session['usuario_logado']['id_cliente']
     
     # Verifica a senha atual para confirmar a alteração
-    if not sistema.verificar_senha(id_cliente, senha):
+    if not perfil.verificar_senha(id_cliente, senha):
         flash('Senha incorreta.', 'error')
         return redirect('/perfil')
 
@@ -735,7 +646,7 @@ def atualizar_perfil():
             return redirect('/perfil')  # Redireciona se falhar ao salvar a imagem
 
     # Atualiza nome e imagem (sem alterar a senha)
-    resultado = sistema.atualizar_perfil(id_cliente, nome, caminho_imagem)
+    resultado = perfil.atualizar_perfil(id_cliente, nome, caminho_imagem)
 
     if 'error' in resultado:
         flash(resultado['error'], 'error')
@@ -745,24 +656,16 @@ def atualizar_perfil():
     return redirect('/perfil')  # Redireciona para a página de perfil após a atualização
 
 
-
-
 @app.route('/imagem_perfil/<int:id_cliente>')
 def imagem_perfil(id_cliente):
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    imagem = sistema.obter_imagem_perfil(id_cliente)
+    perfil = Perfil()  # Cria uma instância da classe Sistema
+    imagem = perfil.obter_imagem_perfil(id_cliente)
 
     if imagem:
         return Response(imagem, mimetype='image/jpeg')  # ou o tipo MIME correto para a imagem
     else:
         # Retorna a imagem padrão caso não exista imagem personalizada para o usuário
         return redirect(url_for('static', filename='img/default-avatar.png'))
-
-
-
-
-
-
 
 
 app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração

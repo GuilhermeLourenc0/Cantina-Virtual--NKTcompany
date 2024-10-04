@@ -18,15 +18,32 @@
 
         <nav class="cbc-cima">
 
-            <figure>
-                <div class="perfil-icon">
-                    <a href="/perfil"><img class="perfil" src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg" alt=""></a>
-                </div>
-            </figure>
 
-            <figure>
-                <a href="/inicialadm"><img class="logo" src="../static/img/logo.png" alt=""></a>
-            </figure>
+                <div class="perfil-icon">
+                    <a href="/perfil">
+                        {% if session.get('usuario_logado') %}
+                            <img class="perfil"
+                                src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}"
+                                alt="Imagem do Perfil"
+                                width="150"
+                                height="150"
+                                onerror="this.onerror=null;this.src='../static/img/default-avatar.png';">
+                        {% else %}
+                            <!-- Se o usuário não estiver logado, exibe uma imagem padrão -->
+                            <img class="perfil"
+                                src="../static/img/default-avatar.png"
+                                alt="Imagem do Perfil"
+                                width="150"
+                                height="150">
+                        {% endif %}
+                    </a>
+                </div>
+ 
+
+            
+                <a class="logo-lu" href="/inicialadm"><figure>
+                    <img class="logo" src="../static/img/logo.png" alt="">
+                </figure></a>
 
             <div class="menu-container" onclick="toggleMenu(this)">
                 <div class="bar1"></div>
@@ -35,11 +52,11 @@
             </div>
             
             <div id="mySidenav" class="sidenav">
+                <a href="/inserir_produtos">Adicionar Produto</a>
+                <hr>
                 <a href="/exibir_pedidos">Pedidos</a>
                 <hr>
-                <a href="/inserir_produtos">Inserir Produtos</a>
-                <hr>
-                <a href="/adm">Editar Produtos</a>
+                <a href="/logout">Sair</a>
                 <div class="dark-mode">
                     <label class="switch" for="chk">
                         <input type="checkbox" id="chk">
