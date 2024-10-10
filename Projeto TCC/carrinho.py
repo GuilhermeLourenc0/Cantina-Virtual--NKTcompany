@@ -9,105 +9,34 @@ class Carrinho:
 
 
     # Método para inserir um item (produto ou marmita) no carrinho de um cliente
-    # def inserir_item_carrinho(self, id_item, tipo_item, id_cliente):
-    #     mydb = Conexao.conectar()
-    #     mycursor = mydb.cursor()
-
-    #     # Verifica se o item já está no carrinho do cliente
-    #     sql_verificar = """
-    #         SELECT quantidade FROM tb_carrinho
-    #         WHERE id_cliente = %s AND id_item = %s AND tipo_item = %s
-    #     """
-    #     mycursor.execute(sql_verificar, (id_cliente, id_item, tipo_item))
-    #     resultado = mycursor.fetchone()
-
-    #     if resultado:
-    #         # Se o item já estiver no carrinho, atualiza a quantidade
-    #         nova_quantidade = resultado[0] + 1
-    #         sql_update = """
-    #             UPDATE tb_carrinho
-    #             SET quantidade = %s
-    #             WHERE id_cliente = %s AND id_item = %s AND tipo_item = %s
-    #         """
-    #         mycursor.execute(sql_update, (nova_quantidade, id_cliente, id_item, tipo_item))
-    #     else:
-    #         # Se o item não estiver no carrinho, insere um novo item
-    #         sql_inserir = """
-    #             INSERT INTO tb_carrinho (id_cliente, id_item, tipo_item, quantidade)
-    #             VALUES (%s, %s, %s, 1)
-    #         """
-    #         mycursor.execute(sql_inserir, (id_cliente, id_item, tipo_item))
-
-    #     mydb.commit()
-    #     mydb.close()
-    #     return True
-
-
-
-    # Método para inserir um produto no carrinho de um cliente
-    def inserir_produto_carrinho(self, cod_produto, id_cliente):
+    def inserir_item_carrinho(self, id_item, tipo_item, id_cliente):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Verifica se o produto já está no carrinho do cliente
+        # Verifica se o item já está no carrinho do cliente
         sql_verificar = """
             SELECT quantidade FROM tb_carrinho
-            WHERE id_cliente = %s AND cod_produto = %s
+            WHERE id_cliente = %s AND id_item = %s AND tipo_item = %s
         """
-        mycursor.execute(sql_verificar, (id_cliente, cod_produto))
+        mycursor.execute(sql_verificar, (id_cliente, id_item, tipo_item))
         resultado = mycursor.fetchone()
 
         if resultado:
-            # Se o produto já estiver no carrinho, atualiza a quantidade
+            # Se o item já estiver no carrinho, atualiza a quantidade
             nova_quantidade = resultado[0] + 1
             sql_update = """
                 UPDATE tb_carrinho
                 SET quantidade = %s
-                WHERE id_cliente = %s AND cod_produto = %s
+                WHERE id_cliente = %s AND id_item = %s AND tipo_item = %s
             """
-            mycursor.execute(sql_update, (nova_quantidade, id_cliente, cod_produto))
+            mycursor.execute(sql_update, (nova_quantidade, id_cliente, id_item, tipo_item))
         else:
-            # Se o produto não estiver no carrinho, insere um novo item
+            # Se o item não estiver no carrinho, insere um novo item
             sql_inserir = """
-                INSERT INTO tb_carrinho (id_cliente, cod_produto, quantidade)
-                VALUES (%s, %s, 1)
+                INSERT INTO tb_carrinho (id_cliente, id_item, tipo_item, quantidade)
+                VALUES (%s, %s, %s, 1)
             """
-            mycursor.execute(sql_inserir, (id_cliente, cod_produto))
-
-        mydb.commit()
-        mydb.close()
-        return True
-    
-
-   # Método para inserir uma marmita no carrinho de um cliente
-    def inserir_marmita_carrinho(self, id_marmita, id_cliente):
-        mydb = Conexao.conectar()
-        mycursor = mydb.cursor()
-
-        # Verifica se a marmita já está no carrinho do cliente
-        sql_verificar = """
-            SELECT quantidade FROM tb_carrinho
-            WHERE id_cliente = %s AND id_marmita = %s
-        """
-        mycursor.execute(sql_verificar, (id_cliente, id_marmita))
-        resultado = mycursor.fetchone()
-
-        if resultado:
-            # Se a marmita já estiver no carrinho, atualiza a quantidade
-            nova_quantidade = resultado[0] + 1
-            sql_update = """
-                UPDATE tb_carrinho
-                SET quantidade = %s
-                WHERE id_cliente = %s AND id_marmita = %s
-            """
-            mycursor.execute(sql_update, (nova_quantidade, id_cliente, id_marmita))
-        else:
-            # Se a marmita não estiver no carrinho, insere um novo item
-            sql_inserir = """
-                INSERT INTO tb_carrinho (id_cliente, id_marmita, quantidade)
-                VALUES (%s, %s, 1)
-            """
-            mycursor.execute(sql_inserir, (id_cliente, id_marmita))
+            mycursor.execute(sql_inserir, (id_cliente, id_item, tipo_item))
 
         mydb.commit()
         mydb.close()
