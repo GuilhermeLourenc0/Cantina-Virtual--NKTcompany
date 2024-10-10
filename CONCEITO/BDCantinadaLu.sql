@@ -53,6 +53,8 @@ CREATE TABLE tb_carrinho (
  FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
 );
 
+
+
 -- Ajustando a tabela tb_categoria
 CREATE TABLE tb_categoria (
     id_categoria INT AUTO_INCREMENT, 

@@ -4,22 +4,22 @@
 
 <body>
     <main>
-
-        <img class="ft-item" src="https://lirp.cdn-website.com/33406c6e/dms3rep/multi/opt/marmita-90fe85be-640w.jpg"
+        {% for marmita in lista_marunica %}
+        <img class="ft-item" src="{{ marmita.imagem_marmita }}"
             alt="">
 
         <section class="descricao">
-            <span class="nome-produto">Marmitex Média</span>
-            <span class="descricao-produto">Uma bel marmita</span>
-            <span class="preco-produto">R$ 15,99</span>
+            <span class="nome-produto">{{ marmita.nome_marmita }}</span>
+            <span class="descricao-produto">{{ marmita.descricao }}</span>
+            <span class="preco-produto">{{ marmita.preco }}</span>
 
             <div class="opc">
 
                 <div class="sair">
                     <a href="/">Voltar</a>
 
-                    <form action="/inserir_carrinho" method="post">
-                        <button type="submit" value="">Adicionar a sacola</button>
+                    <form action="/inserir_carrinho_marmita" method="post">
+                        <button type="submit" value="{{ marmita.id_marmita }}">Adicionar a sacola</button>
                     </form>
                 </div>
 
@@ -147,6 +147,6 @@
 
 
         </script>
-
+        {% endfor %}
     </main>
     {% endblock %}

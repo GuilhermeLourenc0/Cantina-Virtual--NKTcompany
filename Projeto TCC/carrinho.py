@@ -41,6 +41,42 @@ class Carrinho:
         mydb.commit()
         mydb.close()
         return True
+    
+
+   # Método para inserir uma marmita no carrinho de um cliente
+    def inserir_marmita_carrinho(self, id_marmita, id_cliente):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # Verifica se a marmita já está no carrinho do cliente
+        sql_verificar = """
+            SELECT quantidade FROM tb_carrinho
+            WHERE id_cliente = %s AND id_marmita = %s
+        """
+        mycursor.execute(sql_verificar, (id_cliente, id_marmita))
+        resultado = mycursor.fetchone()
+
+        if resultado:
+            # Se a marmita já estiver no carrinho, atualiza a quantidade
+            nova_quantidade = resultado[0] + 1
+            sql_update = """
+                UPDATE tb_carrinho
+                SET quantidade = %s
+                WHERE id_cliente = %s AND id_marmita = %s
+            """
+            mycursor.execute(sql_update, (nova_quantidade, id_cliente, id_marmita))
+        else:
+            # Se a marmita não estiver no carrinho, insere um novo item
+            sql_inserir = """
+                INSERT INTO tb_carrinho (id_cliente, id_marmita, quantidade)
+                VALUES (%s, %s, 1)
+            """
+            mycursor.execute(sql_inserir, (id_cliente, id_marmita))
+
+        mydb.commit()
+        mydb.close()
+        return True
+
 
 
     # Método para exibir os produtos no carrinho de um cliente

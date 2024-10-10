@@ -284,7 +284,7 @@ def exibir_marmita_unica():
         return redirect('/')  # Ou outra página que faça sentido
 
     # Renderiza o template com os detalhes do produto
-    return render_template("produto.html", lista_marunica=lista_marunica)
+    return render_template("marmita.html", lista_marunica=lista_marunica)
 
 
 # Habilitar e desabilitar o produto (adm)
@@ -522,7 +522,26 @@ def carrinho():
 
 
 
+# Rota para inserir produtos no carrinho
+@app.route("/inserir_carrinho_marmita", methods=['POST'])
+def carrinho_marmita():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+    else:
+        if request.method == 'POST':
+            id_marmita = session.get('id')['id_marmita']  # Obtém o ID do produto da sessão
+            id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
 
+            if 'IDs' not in session:
+                session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
+
+            session['IDs']['IDs_produtos'].append(id_marmita)  # Adiciona o ID do produto à lista na sessão
+
+            carrinho = Carrinho()  # Cria uma instância da classe Sistema
+            carrinho.inserir_marmita_carrinho(id_marmita, id_cliente)  # Adiciona o produto ao carrinho do cliente
+            return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
+
+        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
 
 
 
