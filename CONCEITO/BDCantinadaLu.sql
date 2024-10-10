@@ -68,6 +68,9 @@ INSERT INTO tb_categoria (nome) VALUES
 ('Lanches'),
 ('Gelados');
 
+INSERT INTO tb_categoria (nome)
+VALUES ('Marmita');
+
 CREATE TABLE tb_pedidos (
     id_pedido INT AUTO_INCREMENT,
     id_cliente INT NOT NULL,
@@ -95,6 +98,46 @@ ALTER TABLE tb_produto ADD COLUMN habilitado TINYINT(1) DEFAULT 1;
 ALTER TABLE tb_produto ADD COLUMN imagem_binaria LONGBLOB;
 
 ALTER TABLE tb_cliente ADD COLUMN imagem_binaria LONGBLOB;
+
+
+-- Tabela de Marmita
+CREATE TABLE tb_marmita (
+    id_marmita INT AUTO_INCREMENT,
+    nome_marmita VARCHAR(100),
+    preco DECIMAL(10,2),
+    tamanho VARCHAR(20), -- Por exemplo: Pequena, Média, Grande
+    PRIMARY KEY (id_marmita)
+);
+
+ALTER TABLE tb_marmita
+ADD COLUMN descricao VARCHAR(255),
+ADD COLUMN url_img VARCHAR(255);
+
+ALTER TABLE tb_marmita ADD COLUMN habilitado TINYINT(1) DEFAULT 1;
+
+-- Tabela de Guarnição
+CREATE TABLE tb_guarnicao (
+    id_guarnicao INT AUTO_INCREMENT,
+    nome_guarnicao VARCHAR(100),
+    PRIMARY KEY (id_guarnicao)
+);
+
+-- Tabela de Associação Marmita - Guarnição (Sem Quantidade)
+CREATE TABLE tb_marmita_guarnicao (
+    id_marmita_guarnicao INT AUTO_INCREMENT,
+    id_marmita INT NOT NULL,
+    id_guarnicao INT NOT NULL,
+    PRIMARY KEY (id_marmita_guarnicao),
+    FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita),
+    FOREIGN KEY (id_guarnicao) REFERENCES tb_guarnicao(id_guarnicao)
+);
+
+
+
+INSERT INTO tb_guarnicao (nome_guarnicao) VALUES
+('Batata Frita'),
+('Salada de Folhas'),
+('Farofa');
 
 
  -- Inserindo os cursos e turmas no Banco de Dados
