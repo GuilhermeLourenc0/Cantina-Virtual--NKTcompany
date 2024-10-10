@@ -1,0 +1,385 @@
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+main {
+    max-width: 1200px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: auto;
+}
+
+.descricao {
+    padding: 20px;
+}
+
+.ft-item {
+    width: 100%;
+    max-height: 350px;
+}
+
+/* Seção de descrição do produto */
+.descricao {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: rgb(255, 255, 255);
+}
+
+.nome-produto {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.descricao-produto {
+    display: block;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.preco-produto {
+    display: block;
+    font-size: 20px;
+    color: #000000;
+    font-weight: bold;
+}
+
+/* Seção de avaliação por estrelas */
+.rating {
+    display: inline-block;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    float: right;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.3s;
+}
+
+.rating label:before {
+    content: '\2605';
+    font-size: 30px;
+}
+
+.rating input:checked~label,
+.rating label:hover,
+.rating label:hover~label {
+    color: #ffbb00;
+    transition: color 0.3s;
+}
+
+/* Botão de adicionar ao carrinho */
+form button {
+    display: inline-block;
+    padding: 10px 30px;
+    background-color: #ff0000;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:active {
+    background-color: #bb0606;
+    border: none;
+}
+
+.sair {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    width: 90vw;
+    background-color: white;
+    border: 1px solid rgb(255, 255, 255);
+    z-index: 10;
+}
+
+.sair a {
+    border: 1px solid black;
+    font-weight: 200;
+    text-decoration: none;
+    color: #000000;
+    padding: 10px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.espacamento1 {
+    width: 100%;
+    height: 60px;
+    background-color: white;
+}
+
+.cima {
+    display: flex;
+    justify-content: space-between;
+}
+
+.observacao img {
+    height: 25px;
+}
+
+.observacao input {
+    width: 90vw;
+    border: 1px solid rgb(212, 212, 212);
+    padding: 10px;
+}
+
+
+.acompanhamentos {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.header {
+    background-color: #e0e0e0;
+    /* Fundo cinza claro */
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h3 {
+    font-size: 22px;
+    margin: 0;
+    color: #333;
+}
+
+.header p {
+    font-size: 14px;
+    margin: 5px 0 0 0;
+    color: #666;
+}
+
+.seta {
+    cursor: pointer;
+    font-size: 20px;
+    transition: transform 0.3s;
+}
+
+.opcoes-acompanhamentos {
+    display: flex;
+    flex-direction: column;
+}
+
+.opcoes-guarnicoes {
+    display: flex;
+    flex-direction: column;
+}
+
+.acompanhamento {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid rgb(233, 231, 231);
+}
+
+.acompanhamento2 {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid rgb(233, 231, 231);
+}
+
+.acompanhamento img {
+    width: 40px;
+    /* Tamanho da imagem */
+    height: 40px;
+    margin-left: 11px;
+    margin-right: 10px;
+    /* Espaço entre imagem e texto */
+    border-radius: 5px;
+    border: 0.5px solid red;
+}
+
+.acompanhamento2 img {
+    width: 40px;
+    /* Tamanho da imagem */
+    height: 40px;
+    margin-left: 11px;
+    margin-right: 10px;
+    /* Espaço entre imagem e texto */
+    border-radius: 5px;
+    border: 0.5px solid red;
+}
+
+.acompanhamento label {
+    position: relative;
+    margin-left: auto;
+    /* Para alinhar a bolinha à direita */
+    cursor: pointer;
+    padding-left: 30px;
+    /* Espaço entre o texto e a bolinha */
+    z-index: 1;
+    margin-top: 10px;
+}
+
+.acompanhamento2 label {
+    position: relative;
+    margin-left: auto;
+    /* Para alinhar a bolinha à direita */
+    cursor: pointer;
+    padding-left: 30px;
+    /* Espaço entre o texto e a bolinha */
+    z-index: 1;
+    margin-top: 10px;
+}
+
+.acompanhamento label span {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ff0000;
+    /* Cor da bolinha */
+    border-radius: 50%;
+    background-color: white;
+    /* Fundo da bolinha */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.acompanhamento2 label span {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ff0000;
+    /* Cor da bolinha */
+    border-radius: 50%;
+    background-color: white;
+    /* Fundo da bolinha */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+/* Para ajustar o alinhamento da bolinha ao texto */
+.acompanhamento span {
+    flex-grow: 1;
+    font-size: 18px;
+    /* Tamanho do texto do acompanhamento */
+    margin-right: 5px;
+    /* Espaço entre o texto e a bolinha */
+}
+
+.acompanhamento2 span {
+    flex-grow: 1;
+    font-size: 18px;
+    /* Tamanho do texto do acompanhamento */
+    margin-right: 5px;
+    /* Espaço entre o texto e a bolinha */
+}
+
+input[type="checkbox"] {
+    display: none;
+    /* Oculta o checkbox padrão */
+}
+
+input[type="checkbox"]+span {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ff0000;
+    /* Cor da bolinha */
+    border-radius: 50%;
+    background-color: white;
+    /* Fundo da bolinha */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+input[type="checkbox"]:checked+span {
+    background-color: #ff0000;
+    /* Cor quando selecionado */
+    border-color: #ff0000;
+    /* Cor da borda quando selecionado */
+}
+
+
+
+
+
+
+
+
+.acompanhamento2 label {
+    position: relative;
+    padding-left: 30px; /* Espaçamento para a bolinha */
+    cursor: pointer;
+}
+
+.acompanhamento2 label span {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px; /* Tamanho da bolinha */
+    height: 20px; /* Tamanho da bolinha */
+    border-radius: 50%; /* Torna a bolinha redonda */
+    background-color: white; /* Cor de fundo da bolinha */
+    border: 2px solid #ff0000; /* Borda vermelha */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+input[type="radio"] {
+    display: none; /* Oculta o input padrão */
+}
+
+input[type="radio"]:checked + span {
+    background-color: #ff0000; /* Cor quando selecionado */
+    border-color: #ff0000; /* Cor da borda quando selecionado */
+}
+
+
+.opcoes-acompanhamentos {
+    display: flex; /* Mantenha como flex */
+}
+
+
+
+
+
+
+.opcoes-acompanhamentos, .opcoes-guarnicoes {
+    max-height: 500px; /* Define uma altura máxima para a animação */
+    overflow: hidden; /* Esconde o conteúdo que transborda */
+    transition: max-height 0.5s ease-out; /* Transição suave */
+}
+
+.opcoes-acompanhamentos.hidden, .opcoes-guarnicoes.hidden {
+    max-height: 0; /* Altura 0 para esconder */
+}
+
+.seta {
+    display: inline-block;
+    transition: transform 0.3s ease; /* Transição suave para a transformação */
+}
+
+.seta.rotated {
+    transform: rotate(90deg); /* Rotaciona a seta 90 graus para a direita */
+}

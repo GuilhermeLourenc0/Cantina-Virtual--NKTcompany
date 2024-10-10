@@ -224,6 +224,12 @@ def exibir_produto_unico():
     return render_template("produto.html", lista_prounico=lista_prounico)
 
 
+@app.route("/marmita", methods=['GET', 'POST'])
+def exibir_marmita():
+    return render_template("marmita.html")
+
+
+
 # Habilitar e desabilitar o produto (adm)
 @app.route("/desabilitar_produto_adm", methods=['POST'])
 def desabilitar_produto_adm():
