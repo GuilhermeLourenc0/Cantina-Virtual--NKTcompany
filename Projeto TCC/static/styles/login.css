@@ -51,13 +51,13 @@ input::placeholder {
     margin-bottom: 40px;
 }
 
-.container-principal button{
+.container-principal .button-entrar{
     padding: 15px;
     background-color: rgb(161, 23, 23);
     width: 23.7rem;
     border-radius: 6px;
     border: none;
-    
+
     margin-top: 10px;
     color: white;
 }
@@ -92,10 +92,45 @@ form input:focus{
     
 }
 
-.login-btn{
-    text-decoration: none;
-    color: rgb(156, 0, 0);
+.input-senha {
+    position: relative;
+    width: 23.7rem; /* Largura consistente com outros inputs */
+    margin-top: 15px;
 }
+
+.input-senha input {
+    width: 100%;
+    padding-right: 40px; /* Espaço para o botão de exibir senha */
+    height: 56px; /* Mesma altura dos outros campos */
+    border-radius: 5px;
+    border: 2px solid rgb(238, 238, 238);
+    background-color: rgb(245, 245, 245);
+    padding-left: 10px;
+}
+
+.input-senha .toggle-button {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.toggle-button{
+    margin-top: 7px;
+    z-index: 0;
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
 
 .login-btn{
     text-decoration: none;
