@@ -35,7 +35,8 @@ client = Client(account_sid, auth_token)
 def principal():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
-    return render_template("index.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
+    lista_marmitas = sistema.exibir_marmitas()
+    return render_template("index.html", lista_produtos=lista_produtos, lista_marmitas = lista_marmitas)  # Renderiza a página inicial com a lista de produtos
 
 
 @app.route("/produtos_json", methods=['GET'])
@@ -176,7 +177,7 @@ def inserir_produtos():
     descricao = request.form['descricao']
     categoria = request.form['categoria']
 
-    # Captura o tamanho da marmita (adicionando um campo de tamanho no HTML)
+    # Captura o tamanho da marmita (campo exibido apenas quando marmita for selecionada)
     tamanho = request.form.get('tamanho')
 
     # Captura as guarnições existentes
@@ -185,16 +186,22 @@ def inserir_produtos():
     # Captura as novas guarnições
     novas_guarnicoes = request.form.getlist('nova_guarnicoes')
 
-    # Cria uma instância do objeto que contém o método inserir_produto
+    # Cria uma instância do objeto que contém o método de inserção
     adm = Adm()  # Substitua pelo seu objeto real
 
     # Verifica se a categoria selecionada é "Marmita"
-    if categoria == "ID_DA_CATEGORIA_MARMITA":  # Substitua pelo ID real da categoria "Marmita"
+    id_categoria_marmita = 7  # Substitua pelo ID real da categoria "Marmita"
+    
+    # Corrige a comparação para garantir que os tipos sejam compatíveis
+    if int(categoria) == id_categoria_marmita:
+        # Insere uma marmita
         sucesso = adm.inserir_marmita(nome, preco, img, descricao, tamanho, novas_guarnicoes)
     else:
+        # Insere um produto normal
         sucesso = adm.inserir_produto(nome, preco, img, descricao, categoria, novas_guarnicoes)
 
     return redirect('/')  # Redireciona para a página inicial ou outra página desejada
+
 
 
 
@@ -252,6 +259,32 @@ def exibir_produto_unico():
 
     # Renderiza o template com os detalhes do produto
     return render_template("produto.html", lista_prounico=lista_prounico)
+
+
+# Rota para exibir detalhes de um produto único
+@app.route("/marmita_unica", methods=['GET', 'POST'])
+def exibir_marmita_unica():
+    
+    if request.method == 'POST':
+        btn_marmita = request.form.get('btn-produto')  # Obtém o ID do produto selecionado
+        session['id'] = {'id_marmita': btn_marmita}  # Armazena o ID na sessão
+        
+    # Recupera o ID do produto da sessão
+    id_marmita = session['id'].get('id_marmita')
+    
+    if id_marmita is None:
+        flash('ID do produto não encontrado.', 'error')
+        return redirect('/')  # Redireciona se o ID não estiver na sessão
+
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    lista_marunica = sistema.exibir_marmita(id_marmita)
+    
+    if lista_marunica is None:
+        flash('Produto não encontrado.', 'error')
+        return redirect('/')  # Ou outra página que faça sentido
+
+    # Renderiza o template com os detalhes do produto
+    return render_template("produto.html", lista_marunica=lista_marunica)
 
 
 # Habilitar e desabilitar o produto (adm)
