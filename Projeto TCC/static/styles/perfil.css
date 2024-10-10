@@ -158,8 +158,16 @@ input.dark2 {
     padding: 0;
 }
 
+.toggle-button:focus{
+    outline: none;
+}
+
 .toggle-button2 {
     top: calc(100% - 151px);
+}
+
+.toggle-button2:focus{
+    outline: none;
 }
 
 .overlay input{
