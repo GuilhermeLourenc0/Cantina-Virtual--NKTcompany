@@ -1,0 +1,152 @@
+{% extends "modelo.html" %}
+{% block conteudo %}
+<link rel="stylesheet" href="../static/styles/marmita.css">
+
+<body>
+    <main>
+
+        <img class="ft-item" src="https://lirp.cdn-website.com/33406c6e/dms3rep/multi/opt/marmita-90fe85be-640w.jpg"
+            alt="">
+
+        <section class="descricao">
+            <span class="nome-produto">Marmitex Média</span>
+            <span class="descricao-produto">Uma bel marmita</span>
+            <span class="preco-produto">R$ 15,99</span>
+
+            <div class="opc">
+
+                <div class="sair">
+                    <a href="/">Voltar</a>
+
+                    <form action="/inserir_carrinho" method="post">
+                        <button type="submit" value="">Adicionar a sacola</button>
+                    </form>
+                </div>
+
+        </section>
+
+        <div class="acompanhamentos">
+            <div class="header">
+                <div class="titulosubtitulo">
+                    <h3>Acompanhamentos</h3>
+                    <p>Escolha até 3 acompanhamentos</p>
+                </div>
+                <span class="seta" onclick="toggleAcompanhamentos(this)">&#9660;</span> <!-- Seta para baixo -->
+            </div>
+
+            <div class="opcoes-acompanhamentos" style="display: flex;">
+                <div class="acompanhamento" onclick="document.getElementById('feijao').click();">
+                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Arroz">
+                    <span>Feijão</span>
+                    <label>
+                        <input type="checkbox" id="feijao" name="acompanhamento" value="arroz">
+                        <span></span>
+                    </label>
+                </div>
+                <div class="acompanhamento" onclick="document.getElementById('salada').click();">
+                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Salada">
+                    <span>Salada</span>
+                    <label>
+                        <input type="checkbox" id="salada" name="acompanhamento" value="salada">
+                        <span></span>
+                    </label>
+                </div>
+                <div class="acompanhamento" onclick="document.getElementById('batata').click();">
+                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Purê">
+                    <span>Batata Frita</span>
+                    <label>
+                        <input type="checkbox" id="batata" name="acompanhamento" value="batata">
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="acompanhamentos">
+            <div class="header" >
+                <div class="titulosubtitulo">
+                    <h3>Guarnições</h3>
+                    <p>Escolha no máximo 1 guarnição</p>
+                </div>
+                <span class="seta" onclick="toggleGuarnicoes(this)">&#9660;</span> <!-- Seta para baixo -->
+            </div>
+
+            <div class="opcoes-guarnicoes" style="display: flex;">
+                <div class="acompanhamento" onclick="document.getElementById('carne').click();">
+                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Carne">
+                    <span>Carne</span>
+                    <label>
+                        <input type="radio" id="carne" name="acompanhamento" value="carne">
+                        <span></span>
+                    </label>
+                </div>
+                <div class="acompanhamento" onclick="document.getElementById('ovo').click();">
+                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Ovo">
+                    <span>Ovo</span>
+                    <label>
+                        <input type="radio" id="ovo" name="acompanhamento" value="ovo">
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="espacamento1"></div>
+
+        <script>
+            const input = document.getElementById('meuInput');
+            const contador = document.getElementById('contador');
+
+            input.addEventListener('input', () => {
+                contador.textContent = input.value.length; // Atualiza o número de caracteres digitados
+            });
+
+            function toggleAcompanhamentos(seta) {
+                const opcoes = document.querySelector('.opcoes-acompanhamentos');
+
+                if (opcoes.classList.contains('hidden')) {
+                    opcoes.classList.remove('hidden'); // Remove a classe para mostrar
+                    seta.innerHTML = '&#9660;'; // Seta para baixo
+                    seta.classList.remove('rotated'); // Remove a rotação
+                } else {
+                    opcoes.classList.add('hidden'); // Adiciona a classe para esconder
+                    seta.innerHTML = '&#9654;'; // Seta para direita
+                    seta.classList.add('rotated'); // Adiciona a rotação para a direita
+                }
+            }
+
+            function toggleGuarnicoes(seta) {
+                const opcoes = document.querySelector('.opcoes-guarnicoes');
+
+                if (opcoes.classList.contains('hidden')) {
+                    opcoes.classList.remove('hidden'); // Remove a classe para mostrar
+                    seta.innerHTML = '&#9660;'; // Seta para baixo
+                    seta.classList.remove('rotated'); // Remove a rotação
+                } else {
+                    opcoes.classList.add('hidden'); // Adiciona a classe para esconder
+                    seta.innerHTML = '&#9654;'; // Seta para direita
+                    seta.classList.add('rotated'); // Adiciona a rotação para a direita
+                }
+            }
+
+
+
+
+
+        </script>
+
+    </main>
+    {% endblock %}
