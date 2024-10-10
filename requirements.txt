@@ -1,4 +1,4 @@
 flask
-mysql-connection-python
+mysql-connector-python
 azure-storage-blob
 twilio
