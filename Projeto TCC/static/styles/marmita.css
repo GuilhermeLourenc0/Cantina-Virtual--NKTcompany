@@ -162,18 +162,24 @@ form button:active {
 }
 
 .header h3 {
-    font-size: 22px;
+    font-size: 18px;
     margin: 0;
     color: #333;
+    font-weight: 900;
 }
 
 .header p {
-    font-size: 14px;
+    font-size: 12px;
     margin: 5px 0 0 0;
     color: #666;
 }
 
+.titulosubtitulo{
+    margin-left: 11px;
+}
+
 .seta {
+    margin-right: 10px;
     cursor: pointer;
     font-size: 20px;
     transition: transform 0.3s;
