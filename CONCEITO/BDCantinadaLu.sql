@@ -92,9 +92,7 @@ CREATE TABLE tb_produtos_pedidos (
 
 ALTER TABLE tb_produto ADD COLUMN habilitado TINYINT(1) DEFAULT 1;
 
-ALTER TABLE tb_produto ADD COLUMN imagem_binaria LONGBLOB;
-
-ALTER TABLE tb_cliente ADD COLUMN imagem_binaria LONGBLOB;
+ALTER TABLE tb_produto ADD COLUMN imagem_binaria varchar(225);
 
 
  -- Inserindo os cursos e turmas no Banco de Dados
