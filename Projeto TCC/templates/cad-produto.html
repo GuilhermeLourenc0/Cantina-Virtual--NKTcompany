@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="../static/styles/cad-produto.css">
 <body>
     <main>
-    <form action="" method="post">
+    <form action="/inserir_produtos" method="post">
         <div class="btn-voltar">
             <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
         </div>
@@ -15,19 +15,105 @@
         <input name="nome" type="text" id="nome" placeholder="Nome do produto" required>
         <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.10" placeholder="Preço" required>
         
+        <!-- Campo para imagem da marmita -->
+        <input name="img" type="url" id="img" accept="image/*" class="input-image" placeholder="Url imagem" required>
         
-
-        <input name="img" type="url" id="img" accept="image/*" class="input-image"  placeholder="Url imagem"required>
+        <!-- Campo para descrição da marmita -->
         <textarea name="descricao" id="descricao" placeholder="Descrição do produto" class="input-descricao" required></textarea>
-        <select id="categoria" name="categoria" required>
+        
+        <select id="categoria" name="categoria" required onchange="exibirGuarnicoes()">
             {% for registro in categorias %}
             <option value="{{ registro.id_categoria }}">{{ registro.nome }}</option>
             {% endfor %}
         </select>
+
+        <!-- Campo de tamanho da marmita (inicialmente oculto) -->
+        <div id="tamanhoDiv" style="display: none; margin-top: 15px;">
+            <label for="tamanho">Tamanho da Marmita:</label>
+            <select name="tamanho" id="tamanho">
+                <option value="">Selecione o tamanho</option>
+                <option value="Pequena">Pequena</option>
+                <option value="Média">Média</option>
+                <option value="Grande">Grande</option>
+            </select>
+        </div>
+
+        <!-- Guarnições (inicialmente oculto) -->
+        <div id="guarnicoes" style="display: none; margin-top: 15px;">
+            <h4>Escolha as guarnições:</h4>
+            {% for guarnicao in lista_guarnicao %}
+            <div>
+                <input type="checkbox" id="guarnicao_{{ guarnicao.id_guarnicao }}" name="guarnicoes" value="{{ guarnicao.id_guarnicao }}">
+                <label for="guarnicao_{{ guarnicao.id_guarnicao }}">{{ guarnicao.nome_guarnicao }}</label>
+            </div>
+            {% endfor %}
+            <div id="lista_novas_guarnicoes"></div>
+        </div>
         
-        
+        <!-- Seção para adicionar novas guarnições (inicialmente oculta) -->
+        <div id="nova_guarnicao" style="display: none; margin-top: 15px;">
+            <h4>Adicionar nova guarnição:</h4>
+            <input type="text" id="nome_guarnicao" placeholder="Nome da nova guarnição">
+            <button type="button" onclick="adicionarGuarnicao()">Adicionar Guarnição</button>
+        </div>
+
         <button type="submit" class="btn-Cadastrar">Adicionar</button>
     </form>
     </main>
+
+    <script>
+        function exibirGuarnicoes() {
+            var categoriaSelect = document.getElementById("categoria");
+            var guarnicoesDiv = document.getElementById("guarnicoes");
+            var novaGuarnicaoDiv = document.getElementById("nova_guarnicao");
+            var tamanhoDiv = document.getElementById("tamanhoDiv");
+            var tamanhoSelect = document.getElementById("tamanho");
+
+            // Se a categoria selecionada for "Marmita", exibe as guarnições e o tamanho
+            if (categoriaSelect.options[categoriaSelect.selectedIndex].text === "Marmita") {
+                guarnicoesDiv.style.display = "block";
+                novaGuarnicaoDiv.style.display = "block"; // Exibe a seção para adicionar novas guarnições
+                tamanhoDiv.style.display = "block"; // Exibe o select para o tamanho
+                tamanhoSelect.setAttribute('required', 'required'); // Define o campo tamanho como obrigatório
+            } else {
+                guarnicoesDiv.style.display = "none";
+                novaGuarnicaoDiv.style.display = "none"; // Oculta a seção para adicionar novas guarnições
+                tamanhoDiv.style.display = "none"; // Oculta o select para o tamanho
+                tamanhoSelect.removeAttribute('required'); // Remove a obrigatoriedade do campo tamanho
+                tamanhoSelect.value = ""; // Reseta o valor do select tamanho
+            }
+        }
+
+        function adicionarGuarnicao() {
+            var nomeGuarnicao = document.getElementById("nome_guarnicao").value.trim();
+            if (nomeGuarnicao) {
+                // Faz uma requisição AJAX para adicionar a nova guarnição ao banco de dados
+                fetch('/adicionar_guarnicao', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'nome_guarnicao=' + encodeURIComponent(nomeGuarnicao)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Cria um novo elemento de guarnição e adiciona à seção de guarnições
+                        var listaNovesGuarnicoesDiv = document.getElementById("lista_novas_guarnicoes");
+                        var novaGuarnicaoDiv = document.createElement("div");
+                        
+                        novaGuarnicaoDiv.innerHTML = `<input type="checkbox" name="guarnicoes" value="${nomeGuarnicao}" checked>
+                            <label>${nomeGuarnicao}</label>`;
+                        listaNovesGuarnicoesDiv.appendChild(novaGuarnicaoDiv);
+                        
+                        // Limpa o campo de entrada
+                        document.getElementById("nome_guarnicao").value = ""; 
+                    } else {
+                        alert("Erro ao adicionar a guarnição.");
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 {% endblock %}

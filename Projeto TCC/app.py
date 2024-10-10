@@ -168,26 +168,56 @@ def logout():
         return redirect("/")  # Redireciona para a página inicial
 
 
-# Rota para inserção de novos produtos
-@app.route("/inserir_produtos", methods=['GET', 'POST'])
+@app.route('/inserir_produtos', methods=['POST'])
 def inserir_produtos():
-    if request.method == 'GET':
-        adm = Adm()  # Cria uma instância da classe Usuario
-        categorias = adm.exibir_categorias()  # Obtém a lista de categorias de produtos
-        return render_template("cad-produto.html", categorias=categorias)  # Exibe o formulário de cadastro de produtos
-    else:
-        # Coleta os dados do formulário de inserção de produtos
-        imagem_url = request.form["img"]
-        nome_produto = request.form["nome"]
-        preco_produto = request.form["preco"]
-        categoria = request.form["categoria"]
-        descricao = request.form["descricao"]
+    nome = request.form['nome']
+    preco = request.form['preco']
+    img = request.form['img']
+    descricao = request.form['descricao']
+    categoria = request.form['categoria']
 
-        adm = Adm()  # Cria uma instância da classe Usuario
-        if adm.inserir_produto(nome_produto, preco_produto, imagem_url, descricao, categoria):
-            return redirect("/inserir_produtos")  # Redireciona para a página de inserção de produtos após sucesso
-        else:
-            return "ERRO AO INSERIR PRODUTO"  # Mensagem de erro em caso de falha
+    # Captura o tamanho da marmita (adicionando um campo de tamanho no HTML)
+    tamanho = request.form.get('tamanho')
+
+    # Captura as guarnições existentes
+    guarnicoes_existentes = request.form.getlist('guarnicoes')
+
+    # Captura as novas guarnições
+    novas_guarnicoes = request.form.getlist('nova_guarnicoes')
+
+    # Cria uma instância do objeto que contém o método inserir_produto
+    adm = Adm()  # Substitua pelo seu objeto real
+
+    # Verifica se a categoria selecionada é "Marmita"
+    if categoria == "ID_DA_CATEGORIA_MARMITA":  # Substitua pelo ID real da categoria "Marmita"
+        sucesso = adm.inserir_marmita(nome, preco, img, descricao, tamanho, novas_guarnicoes)
+    else:
+        sucesso = adm.inserir_produto(nome, preco, img, descricao, categoria, novas_guarnicoes)
+
+    return redirect('/')  # Redireciona para a página inicial ou outra página desejada
+
+
+
+
+@app.route("/exibir_guarnicao")
+def exibir_guarnicao():
+    adm = Adm()  # Cria uma instância da classe Sistema
+    lista_guarnicao = adm.exibir_guarnição()  # Obtém a lista de guarnições
+    categorias = adm.exibir_categorias()  # Obtém a lista de categorias de produtos
+    return render_template("cad-produto.html", lista_guarnicao=lista_guarnicao, categorias=categorias)
+
+
+@app.route('/adicionar_guarnicao', methods=['POST'])
+def adicionar_guarnicao():
+    nome_guarnicao = request.form.get('nome_guarnicao')
+    adm = Adm()
+    if nome_guarnicao:
+        sucesso, id_guarnicao = adm.inserir_guarnicao(nome_guarnicao)  # Modifique a função para retornar o ID
+        return jsonify(success=sucesso, id_guarnicao=id_guarnicao)
+    return jsonify(success=False)
+ 
+
+
 
 
 # Rota para exibição de produtos
@@ -317,8 +347,8 @@ def cancelar_pedido():
 def enviar_carrinho():
     if 'usuario_logado' in session:
         id_cliente = session['usuario_logado']['id_cliente']
-        adm = Adm()
-        adm.enviar_carrinho(id_cliente)
+        carrinho = Carrinho()
+        carrinho.enviar_carrinho(id_cliente)
         return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
     return jsonify(success=False, message="Erro ao enviar o carrinho.")
 

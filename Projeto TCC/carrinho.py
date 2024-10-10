@@ -38,35 +38,6 @@ class Carrinho:
             """
             mycursor.execute(sql_inserir, (id_cliente, cod_produto))
 
-        return produtos
-    
-
-    # Método para enviar o conteúdo do carrinho como um pedido
-    def enviar_carrinho(self, id_cliente):
-        mydb = Conexao.conectar()
-        mycursor = mydb.cursor()
-
-        # 1. Insere um novo pedido na tabela `tb_pedidos`
-        sql_pedido = "INSERT INTO tb_pedidos (id_cliente, data_pedido, status) VALUES (%s, CURDATE(), 'Pendente')"
-        mycursor.execute(sql_pedido, (id_cliente,))
-        id_pedido = mycursor.lastrowid  # Obtém o ID do novo pedido
-
-        # 2. Obtém os itens do carrinho
-        sql_carrinho = "SELECT cod_produto, quantidade FROM tb_carrinho WHERE id_cliente = %s"
-        mycursor.execute(sql_carrinho, (id_cliente,))
-        itens_carrinho = mycursor.fetchall()
-
-        # 3. Insere os produtos do carrinho na tabela `tb_produtos_pedidos`
-        for item in itens_carrinho:
-            cod_produto = item[0]
-            quantidade = item[1]
-            sql_produtos_pedido = "INSERT INTO tb_produtos_pedidos (id_pedido, cod_produto, quantidade) VALUES (%s, %s, %s)"
-            mycursor.execute(sql_produtos_pedido, (id_pedido, cod_produto, quantidade))
-
-        # 4. Remove os itens do carrinho após finalizar o pedido
-        sql_limpar_carrinho = "DELETE FROM tb_carrinho WHERE id_cliente = %s"
-        mycursor.execute(sql_limpar_carrinho, (id_cliente,))
-
         mydb.commit()
         mydb.close()
         return True
@@ -136,6 +107,35 @@ class Carrinho:
         mycursor.execute(sql, (quantidade, id_carrinho))
 
         mydb.commit()
-
         mydb.close()
 
+
+        # Método para enviar o conteúdo do carrinho como um pedido
+    def enviar_carrinho(self, id_cliente):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # 1. Insere um novo pedido na tabela `tb_pedidos`
+        sql_pedido = "INSERT INTO tb_pedidos (id_cliente, data_pedido, status) VALUES (%s, CURDATE(), 'Pendente')"
+        mycursor.execute(sql_pedido, (id_cliente,))
+        id_pedido = mycursor.lastrowid  # Obtém o ID do novo pedido
+
+        # 2. Obtém os itens do carrinho
+        sql_carrinho = "SELECT cod_produto, quantidade FROM tb_carrinho WHERE id_cliente = %s"
+        mycursor.execute(sql_carrinho, (id_cliente,))
+        itens_carrinho = mycursor.fetchall()
+
+        # 3. Insere os produtos do carrinho na tabela `tb_produtos_pedidos`
+        for item in itens_carrinho:
+            cod_produto = item[0]
+            quantidade = item[1]
+            sql_produtos_pedido = "INSERT INTO tb_produtos_pedidos (id_pedido, cod_produto, quantidade) VALUES (%s, %s, %s)"
+            mycursor.execute(sql_produtos_pedido, (id_pedido, cod_produto, quantidade))
+
+        # 4. Remove os itens do carrinho após finalizar o pedido
+        sql_limpar_carrinho = "DELETE FROM tb_carrinho WHERE id_cliente = %s"
+        mycursor.execute(sql_limpar_carrinho, (id_cliente,))
+
+        mydb.commit()
+        mydb.close()
+        return True

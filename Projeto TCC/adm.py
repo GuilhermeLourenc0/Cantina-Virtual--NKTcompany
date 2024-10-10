@@ -102,21 +102,7 @@ class Adm:
 
 
     # ====================== Inserir Produtos =========================
-    def inserir_produto(self, nomeP, preco, imagem, descricao, categoria):
-        """
-        Insere um novo produto no sistema, associando-o à categoria correta. As informações do produto
-        incluem nome, preço, URL da imagem, descrição e a categoria do produto.
-        
-        Parâmetros:
-        - nomeP: nome do produto.
-        - preco: preço do produto.
-        - imagem: URL da imagem do produto.
-        - descricao: breve descrição do produto.
-        - categoria: ID da categoria à qual o produto pertence.
-        
-        Retorno:
-        - Retorna True se o produto for inserido com sucesso, ou False em caso de erro.
-        """
+    def inserir_produto(self, nomeP, preco, imagem, descricao, categoria, guarnicoes_novas=[]):
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()
 
@@ -124,18 +110,104 @@ class Adm:
         sql = f"INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) VALUES ('{nomeP}', {preco}, '{imagem}', '{descricao}', {categoria})"
         mycursor.execute(sql)
 
-        # Atualiza os atributos do objeto com os dados do produto
-        self.imagem = imagem
-        self.preco = preco
-        self.nomeP = nomeP
-        self.categoria = categoria
-        self.descricao = descricao
-        self.logado = True  # Marca o usuário como logado após a inserção do produto
+        # Captura o ID do produto recém-inserido para associar guarnições
+        id_produto = mycursor.lastrowid
+
+        # Inserir novas guarnições se existirem
+        for nova_guarnicao in guarnicoes_novas:
+            self.inserir_guarnicao(nova_guarnicao)
+
+            # Associar a nova guarnição ao produto
+            sql_associacao = "INSERT INTO tb_produto_guarnicao (id_produto, id_guarnicao) VALUES (%s, %s)"
+            mycursor.execute(sql_associacao, (id_produto, nova_guarnicao))
 
         mydb.commit()  # Confirma as alterações no banco de dados
         mydb.close()  # Fecha a conexão
         return True
+
     
+    def inserir_marmita(self, nomeP, preco, imagem, descricao, tamanho, guarnicoes_novas=[]):
+        """
+        Insere uma nova marmita no sistema, associando-a à categoria correta. As informações da marmita
+        incluem nome, preço, URL da imagem, descrição, tamanho e as guarnições associadas.
+        
+        Parâmetros:
+        - nomeP: nome da marmita.
+        - preco: preço da marmita.
+        - imagem: URL da imagem da marmita.
+        - descricao: breve descrição da marmita.
+        - tamanho: tamanho da marmita (Pequena, Média, Grande).
+        - guarnicoes_novas: lista de novas guarnições a serem inseridas.
+        
+        Retorno:
+        - Retorna True se a marmita for inserida com sucesso, ou False em caso de erro.
+        """
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()
+
+        # Query SQL para inserir a marmita na tabela `tb_marmita`
+        sql = f"""
+        INSERT INTO tb_marmita (nome_marmita, preco, url_img, descricao, tamanho)
+        VALUES ('{nomeP}', {preco}, '{imagem}', '{descricao}', '{tamanho}')
+        """
+        mycursor.execute(sql)
+        
+        # Captura o ID da marmita recém-inserida para associar guarnições
+        id_marmita = mycursor.lastrowid
+
+        # Inserir novas guarnições se existirem
+        for nova_guarnicao in guarnicoes_novas:
+            self.inserir_guarnicao(nova_guarnicao)
+
+            # Associar a nova guarnição à marmita (supondo que você tenha uma tabela de associação)
+            sql_associacao = "INSERT INTO tb_marmita_guarnicao (id_marmita, id_guarnicao) VALUES (%s, %s)"
+            mycursor.execute(sql_associacao, (id_marmita, nova_guarnicao))
+
+        mydb.commit()  # Confirma as alterações no banco de dados
+        mydb.close()  # Fecha a conexão
+        return True
+
+
+
+
+    def exibir_guarnição(self):
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()
+        # Query SQL para inserir o produto na tabela `tb_produto`
+        sql = f"SELECT * FROM tb_guarnicao"
+        mycursor.execute(sql)
+        resultado = mycursor.fetchall()  # Obtém todos os resultados
+
+        lista_guarnicao = []
+
+        # Itera sobre os resultados e adiciona cada produto à lista
+        for produto in resultado:
+            lista_guarnicao.append({
+                'nome_guarnicao': produto[1],
+                'id_guarnicao': produto[0]
+            })
+
+        mydb.close()  # Fecha a conexão com o banco de dados
+        return lista_guarnicao if lista_guarnicao else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+
+
+
+    def inserir_guarnicao(self, nome_guarnicao):
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()
+
+        # Query SQL para inserir a nova guarnição
+        sql = "INSERT INTO tb_guarnicao (nome_guarnicao) VALUES (%s)"
+        mycursor.execute(sql, (nome_guarnicao,))
+
+        mydb.commit()  # Confirma as alterações no banco de dados
+        id_guarnicao = mycursor.lastrowid  # Captura o ID da nova guarnição
+        mydb.close()  # Fecha a conexão
+        return True, id_guarnicao  # Retorna True e o ID
+
+
+
+
 
     def exibir_categorias(self):
         """
