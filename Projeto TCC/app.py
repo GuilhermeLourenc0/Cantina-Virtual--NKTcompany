@@ -9,8 +9,6 @@ from twilio.rest import Client
 import os
 
 
-
-
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'  # Chave secreta para gerenciamento de sessões
 

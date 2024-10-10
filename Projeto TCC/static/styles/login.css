@@ -131,6 +131,9 @@ form input:focus{
     padding: 0;
 }
 
+.toggle-button:focus{
+    outline: none;
+}
 
 .login-btn{
     text-decoration: none;

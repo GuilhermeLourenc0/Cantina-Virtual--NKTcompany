@@ -104,6 +104,10 @@ form input:focus{
     padding: 0;
 }
 
+.toggle-button:focus{
+    outline: none;
+}
+
 .formulario form{
     width: 30rem;
     height: 30rem;
