@@ -86,14 +86,25 @@ class Perfil:
         mycursor = mydb.cursor()
         
         try:
-            mycursor.execute("SELECT nome_comp, imagem_binaria FROM tb_cliente WHERE id_cliente = %s", (id_cliente,))
+            print(f"Buscando perfil para id_cliente: {id_cliente}")  # Log do ID do cliente
+            sql = "SELECT nome_comp, imagem_binaria FROM tb_cliente WHERE id_cliente = %s"
+            mycursor.execute(sql, (id_cliente,))
             perfil = mycursor.fetchone()
-            return perfil  # Retorna uma tupla (nome, imagem) ou None se não encontrado
+            
+            if perfil:
+                nome, imagem = perfil
+                if imagem is None:
+                    imagem = '/static/img/default-avatar.png'  # Caminho para uma imagem padrão
+                return {'nome': nome, 'imagem': imagem}  # Retorna um dicionário com nome e imagem
+            return None  # Retorna None se não houver perfil
         except Exception as e:
+            print(f"Erro ao obter perfil: {e}")  # Log de erro
             return None  # Lida com qualquer erro
         finally:
             mycursor.close()
             mydb.close()
+
+
 
 
     def obter_imagem_perfil(self, id_cliente):
