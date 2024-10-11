@@ -149,7 +149,7 @@ def logar():
             tipo = session.get('usuario_logado')['tipo']
             
             if tipo != 'cliente':
-                return redirect("/adm")  # Redireciona para a página inicial do adm
+                return redirect("/inicialadm")  # Redireciona para a página inicial do adm
             else:
                 return redirect("/")  # Redireciona para a página inicial
 
@@ -201,7 +201,7 @@ def inserir_produtos():
         # Insere um produto normal
         sucesso = adm.inserir_produto(nome, preco, img, descricao, categoria, novas_guarnicoes)
 
-    return redirect('/')  # Redireciona para a página inicial ou outra página desejada
+    return redirect('/inicialadm')  # Redireciona para a página inicial ou outra página desejada
 
 
 
