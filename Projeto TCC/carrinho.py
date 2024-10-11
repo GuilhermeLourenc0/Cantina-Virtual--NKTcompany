@@ -8,7 +8,6 @@ class Carrinho:
         self.id_produto = None
 
 
-    # Método para inserir um item (produto ou marmita) no carrinho de um cliente
     def inserir_item_carrinho(self, cod_produto, id_marmita, id_cliente):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
@@ -41,6 +40,7 @@ class Carrinho:
         mydb.commit()
         mydb.close()
         return True
+
 
 
 
@@ -150,14 +150,12 @@ class Carrinho:
 
             # 1. Verifica se o carrinho tem itens (produtos e marmitas)
             sql_carrinho = """
-                SELECT cod_produto, quantidade FROM tb_carrinho WHERE id_cliente = %s AND cod_produto IS NOT NULL
-                UNION ALL
-                SELECT id_marmita, quantidade FROM tb_carrinho WHERE id_cliente = %s AND id_marmita IS NOT NULL
+                SELECT cod_produto, id_marmita, quantidade 
+                FROM tb_carrinho 
+                WHERE id_cliente = %s
             """
-            mycursor.execute(sql_carrinho, (id_cliente, id_cliente))
+            mycursor.execute(sql_carrinho, (id_cliente,))
             itens_carrinho = mycursor.fetchall()
-
-            print(f"Itens do carrinho: {itens_carrinho}")  # Log dos itens do carrinho
 
             if not itens_carrinho:
                 print("Carrinho está vazio, não é possível enviar o pedido.")
@@ -168,26 +166,24 @@ class Carrinho:
             mycursor.execute(sql_pedido, (id_cliente,))
             id_pedido = mycursor.lastrowid  # Obtém o ID do novo pedido
 
-            print(f"Pedido criado com ID: {id_pedido}")  # Log do ID do pedido
-
             # 3. Insere os produtos e marmitas do carrinho na tabela `tb_produtos_pedidos`
             for item in itens_carrinho:
-                cod_item = item[0]
-                quantidade = item[1]
-                print(f"Inserindo item: {cod_item} com quantidade: {quantidade}")  # Log dos itens sendo inseridos
+                cod_produto = item[0]
+                id_marmita = item[1]
+                quantidade = item[2]
 
-                if cod_item:  # Se é um produto
+                if cod_produto:  # Se for um produto
                     sql_produtos_pedido = """
                         INSERT INTO tb_produtos_pedidos (id_pedido, cod_produto, quantidade) 
                         VALUES (%s, %s, %s)
                     """
-                    mycursor.execute(sql_produtos_pedido, (id_pedido, cod_item, quantidade))
-                else:  # Se é uma marmita
+                    mycursor.execute(sql_produtos_pedido, (id_pedido, cod_produto, quantidade))
+                elif id_marmita:  # Se for uma marmita
                     sql_marmitas_pedido = """
-                        INSERT INTO tb_produtos_pedidos (id_pedido, cod_produto, quantidade) 
+                        INSERT INTO tb_produtos_pedidos (id_pedido, id_marmita, quantidade) 
                         VALUES (%s, %s, %s)
                     """
-                    mycursor.execute(sql_marmitas_pedido, (id_pedido, cod_item, quantidade))
+                    mycursor.execute(sql_marmitas_pedido, (id_pedido, id_marmita, quantidade))
 
             # 4. Remove os itens do carrinho após finalizar o pedido
             sql_limpar_carrinho = "DELETE FROM tb_carrinho WHERE id_cliente = %s"

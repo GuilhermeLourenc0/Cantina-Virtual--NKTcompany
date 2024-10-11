@@ -432,6 +432,7 @@ def enviar_carrinho():
 
 
 
+
 # ========== Histórico de Pedidos ==========
 @app.route("/historico", methods=['GET'])
 def historico():
@@ -558,14 +559,18 @@ def carrinho():
     else:
         if request.method == 'POST':
             id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
-            cod_produto = request.form.get('cod_produto')  # Obtém o ID do produto
+            cod_produto = request.form.get('cod_produto')  # Obtém o ID do produto (pode ser None)
             id_marmita = request.form.get('id_marmita')  # Obtém o ID da marmita (pode ser None)
 
             carrinho = Carrinho()  # Cria uma instância da classe Carrinho
-            carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente)  # Adiciona o item ao carrinho do cliente
+            if cod_produto or id_marmita:  # Garante que pelo menos um item foi enviado
+                carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente)  # Adiciona o item ao carrinho do cliente
+            else:
+                print("Nenhum item foi selecionado para adicionar ao carrinho.")
             return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
 
         return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
+
 
 
 

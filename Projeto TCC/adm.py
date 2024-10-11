@@ -8,19 +8,21 @@ class Adm:
         self.id_produto = None
 
 
-   # Método para exibir todos os pedidos com detalhes dos produtos
     def exibir_pedidos(self):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Consulta SQL para obter todos os pedidos com detalhes dos produtos
+        # Consulta SQL para obter os pedidos com detalhes de produtos e marmitas
         sql = """
-            SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, pr.nome_produto, pr.preco, pp.quantidade, p.data_pedido, p.status
+            SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, 
+                pr.nome_produto, pr.preco AS preco_produto, pp.quantidade, 
+                m.nome_marmita, m.preco AS preco_marmita, m.tamanho, m.descricao, 
+                p.data_pedido, p.status
             FROM tb_pedidos p
             JOIN tb_cliente cl ON p.id_cliente = cl.id_cliente
             JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
-            JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
-            ORDER BY cl.id_cliente, p.id_pedido, pr.nome_produto
+            LEFT JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
+            LEFT JOIN tb_marmita m ON pp.id_marmita = m.id_marmita
         """
         mycursor.execute(sql)
         resultados = mycursor.fetchall()
@@ -36,8 +38,12 @@ class Adm:
             nome_produto = resultado[4]
             preco_produto = resultado[5]
             quantidade_produto = resultado[6]
-            data_pedido = resultado[7]
-            status_pedido = resultado[8]
+            nome_marmita = resultado[7]
+            preco_marmita = resultado[8]
+            tamanho_marmita = resultado[9]
+            descricao_marmita = resultado[10]
+            data_pedido = resultado[11]
+            status_pedido = resultado[12]
 
             # Adiciona o cliente se não estiver no dicionário
             if id_cliente not in pedidos:
@@ -53,21 +59,50 @@ class Adm:
                     'data_pedido': data_pedido,
                     'status': status_pedido,
                     'produtos': [],
+                    'marmitas': [],
                     'total_preco': 0
                 }
 
-            # Adiciona o produto ao pedido
-            pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
-                'nome_produto': nome_produto,
-                'preco': preco_produto,
-                'quantidade': quantidade_produto
-            })
+            # Adiciona o produto ao pedido, se houver
+            if nome_produto:
+                preco_produto_float = float(preco_produto) if preco_produto is not None else 0.0
+                pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
+                    'nome_produto': nome_produto,
+                    'preco': preco_produto_float,
+                    'quantidade': quantidade_produto
+                })
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_produto_float * quantidade_produto
 
-            # Atualiza o total de preço do pedido
-            pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_produto * quantidade_produto
+            # Adiciona a marmita ao pedido, se houver
+            if nome_marmita:
+                preco_marmita_float = float(preco_marmita) if preco_marmita is not None else 0.0
+                pedidos[id_cliente]['pedidos'][id_pedido]['marmitas'].append({
+                    'nome_marmita': nome_marmita,
+                    'preco': preco_marmita_float,
+                    'tamanho': tamanho_marmita,
+                    'descricao': descricao_marmita
+                })
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita_float
 
         mydb.close()
-        return pedidos
+
+        # Ordenar pedidos por id_cliente e id_pedido
+        pedidos_ordenados = {
+            cliente_id: {
+                'nome_cliente': dados['nome_cliente'],
+                'telefone': dados['telefone'],
+                'pedidos': dict(sorted(dados['pedidos'].items(), key=lambda item: item[0]))
+            }
+            for cliente_id, dados in sorted(pedidos.items(), key=lambda item: item[0])
+        }
+
+        return pedidos_ordenados
+
+
+
+
+
+
 
 
 
