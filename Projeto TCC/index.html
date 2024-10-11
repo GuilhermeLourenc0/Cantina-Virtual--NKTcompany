@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cantina Digital</title>
+
+    <link rel="stylesheet" href="/Projeto TCC/static/styles/inicial.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+<body>
+    <header class="container-header">
+
+        <div class="cbc-cima">
+
+            <a href=""><img class="perfil" src="https://gpsbrasilia.com.br/wp-content/uploads/2023/12/Design-sem-nome-2023-12-12T113049.133.jpg" alt=""></a>
+
+            <img class="logo" src="/Projeto TCC/static/img/logo.png" alt="">
+
+            <div class="menu-container" onclick="toggleMenu(this)">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
+            
+            <div id="mySidenav" class="sidenav"  >
+                
+                <a href="#">Cadastrar</a>
+                <a href="#">Logar</a>
+                <a href="#">Carrinho</a>
+
+            </div>
+              </div>
+            
+        </div>
+
+        <div class="cbc-baixo">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+        </div>
+
+    </header>
+
+    <main>
+
+        <section class="carrossel">
+            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img class="d-block w-100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTUh_MAwGDys4wQt6-IOxXF0yfYwzqJk-08g&s" alt="Primeiro Slide">
+                  </div>
+                  <div class="carousel-item">
+                    <img class="d-block w-100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTUh_MAwGDys4wQt6-IOxXF0yfYwzqJk-08g&s" alt="Segundo Slide">
+                  </div>
+                  <div class="carousel-item">
+                    <img class="d-block w-100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTUh_MAwGDys4wQt6-IOxXF0yfYwzqJk-08g&s" alt="Terceiro Slide">
+                  </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Anterior</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Próximo</span>
+                </a>
+              </div>
+        </section>
+
+        
+        <section class="container-produtos">
+
+            <h2>Nossos Produtos</h2>
+
+            <div class="grid-produto">
+
+                <div class="produtos">
+
+                    <a href="">
+                    <div class="card-produtos">
+
+                        <img src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="">
+                        <span>Coxinha</span>
+                        <span>R$7,00</span>
+
+                    </div></a>
+                    
+
+                    <a href="">
+                        <div class="card-produtos">
+    
+                            <img src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="">
+                            <span>Coxinha</span>
+                            <span>R$7,00</span>
+    
+                        </div></a>
+
+                    <a href="">
+                        <div class="card-produtos">
+    
+                            <img src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="">
+                            <span>Coxinha</span>
+                            <span>R$7,00</span>
+    
+                        </div></a>
+
+                    <a href="">
+                        <div class="card-produtos">
+        
+                            <img src="https://salgadosparavender.com.br/wp-content/uploads/2024/05/coxinha-de-frango-com-catupiry.webp" alt="">
+                            <span>Coxinha</span>
+                            <span>R$7,00</span>
+        
+                        </div></a>
+
+
+                </div>
+
+            </div>
+           
+        </section>
+
+
+        <!-------------------------------------- SESSÃO DE ANIMAÇÃO DO MENU ------------------------------------------------------------>
+
+
+        <script>
+           function toggleMenu(x) {
+
+    x.classList.toggle("change");
+
+    // Abrir e fechar o menu lateral
+    const menu = document.getElementById("mySidenav");
+    menu.classList.toggle("open"); 
+}
+        </script>
+        
+
+    </main>
+
+    <footer>
+
+        <section class="footer">
+
+            <div class="footer-esquerda">
+                <span class="status">Status:</span>
+                <span class="status-cor">Finalizado</span>
+            </div>
+
+            <div class="footer-direita">
+                <button>Ver Sacola</button>
+            </div>
+
+        </section>
+        
+        
+    </footer>
+
+</body>
+</html>
