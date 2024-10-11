@@ -96,6 +96,11 @@ ALTER TABLE tb_produto ADD COLUMN imagem_binaria LONGBLOB;
 
 ALTER TABLE tb_cliente ADD COLUMN imagem_binaria LONGBLOB;
 
+-- Inserindo Produtos
+INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) VALUES 
+('Coxinha de Frango', 5.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLigfyds3_5OSm0C4_VTYXDa5g6e32kV9h7g&s', 'Coxinha de frango crocante', 2),
+('Suco Natural de Laranja', 6.50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg7d8e8lFMBd04BSdGzf3FaB2yUNbcISqjqQ&s', 'Suco natural de laranja 300ml', 3),
+('Pão de Queijo', 3.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtErpNOUfP6-yJLahND5XkZQpF_hPvas8-7g&s', 'Pão de queijo mineiro tradicional', 1);
 
  -- Inserindo os cursos e turmas no Banco de Dados
 INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
@@ -310,3 +315,6 @@ INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 ('Operador de Máquinas e Implementos Agrícolas - 24/2024-T'),
 ('Soldador ao Arco Elétrico e Oxigás - SOLDA-S-2C24'),
 ('Torneiro Mecânico - TORNO-2A24');
+
+INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
+VALUES ('Administrador', '123456789', 'adm@adm.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'adm');

@@ -58,8 +58,10 @@
                 {% endif %}
                 <a href="/exibir_carrinho">Carrinho</a>
                 <hr>
+                {% if session.get('usuario_logado') %}
                 <a href="/perfil">Perfil</a>
                 <hr>
+                {% endif %}
                 {% if session.get('usuario_logado') %}
                 <a href="/historico">Pedidos</a>
                 <hr>
