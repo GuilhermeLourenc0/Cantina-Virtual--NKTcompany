@@ -8,32 +8,34 @@
             <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
         </div>
 
+        <div id="message" class="hidden">Login realizado com sucesso!</div>
+
         <div class="titulo">
             <h2>Olá! Logue agora para Começar</h2>
         </div>
         <section class="container-principal">
-            
+
             <div class="formulario">
 
-            <form action="" method="post">
-                <input name="email" id="email" placeholder="*E-mail" type="text" required>
+                <form id="loginForm" action="" method="post" onsubmit="return handleLogin(event)">
+                    <input name="email" id="email" placeholder="*E-mail" type="text" required>
 
-                <div class="input-senha">
-                    <input name="senha" id="senha" placeholder="*Senha" type="password" required>
-                    <button type="button" class="toggle-button" onclick="togglePassword1(event)">
-                        <img id="toggle-icon" src="../static/img/olho-fechado.png" alt="Mostrar Senha" width="25" height="25">
-                    </button>
-                </div>
+                    <div class="input-senha">
+                        <input name="senha" id="senha" placeholder="*Senha" type="password" required>
+                        <button type="button" class="toggle-button" onclick="togglePassword1(event)">
+                            <img id="toggle-icon" src="../static/img/olho-fechado.png" alt="Mostrar Senha" width="25" height="25">
+                        </button>
+                    </div>
 
-                <a href="/trocar_senha"><span>Esqueceu sua senha</span></a>
-                <button class="button-entrar" type="submit">Entrar</button>
-            </form>
+                    <a href="/trocar_senha"><span>Esqueceu sua senha</span></a>
+                    <button class="button-entrar" type="submit">Entrar</button>
+                </form>
 
-        </div>
+            </div>
 
-        <span class="semConta">Ainda não tem conta?<a href="/cadastro"> Crie Aqui!</a></span>
-        
-    </section>
+            <span class="semConta">Ainda não tem conta?<a href="/cadastro"> Crie Aqui!</a></span>
+
+        </section>
 
     </main>
 
@@ -51,6 +53,29 @@
                 passwordField.type = 'password';
                 toggleIcon.src = '../static/img/olho-fechado.png'; // Imagem de senha oculta
                 toggleIcon.alt = 'Mostrar Senha';
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault(); // Impede o envio do formulário
+
+            const usuario = document.getElementById('email').value; // Usuário
+            const senha = document.getElementById('senha').value; // Senha
+
+            // Verifique as credenciais (exemplo simples)
+            if (usuario === 'mat@mat' && senha === '123') {
+                // Mostra a caixa de mensagem
+                const messageBox = document.getElementById('message');
+                messageBox.classList.remove('hidden');
+                messageBox.style.display = 'block';
+
+                // Esconde a mensagem após 5 segundos e envia o formulário
+                setTimeout(() => {
+                    messageBox.style.display = 'none';
+                    document.getElementById('loginForm').submit(); // Envia o formulário
+                }, 1500);
+            } else {
+                alert('Login falhou!'); // Mensagem de erro
             }
         }
     </script>
