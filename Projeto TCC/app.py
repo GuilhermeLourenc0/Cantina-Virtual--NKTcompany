@@ -311,18 +311,17 @@ def habilitar_produto_adm():
 
 
 # ========== Pedidos ==========
-# Rota para exibir pedidos (para administradores)
 @app.route("/exibir_pedidos", methods=['GET'])
-def exibir_pedidos():
+def exibir_pedidos_route():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
     else:
-        adm = Adm()  # Cria uma instância da classe Sistema
+        adm = Adm()  # Cria uma instância da classe Adm
         lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
         return render_template('recebePedido.html', lista_pedidos=lista_pedidos)  # Passa a variável para o template
 
 
-# Rota para obter os pedidos em JSON
+
 @app.route("/obter_pedidos", methods=['GET'])
 def obter_pedidos():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
@@ -330,7 +329,18 @@ def obter_pedidos():
     else:
         adm = Adm()  # Cria uma instância da classe Sistema
         lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
+        print(lista_pedidos)  # Debug: Verifique os dados retornados
         return jsonify(lista_pedidos)  # Retorna a lista de pedidos em formato JSON
+
+
+
+
+
+
+
+
+
+
 
 
 # Rota para atualizar o status do pedido
@@ -375,15 +385,27 @@ def cancelar_pedido():
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
 
 
-# Rota para enviar o carrinho como um pedido
 @app.route("/enviar_carrinho", methods=['POST'])
-def enviar_carrinho():
-    if 'usuario_logado' in session:
-        id_cliente = session['usuario_logado']['id_cliente']
-        carrinho = Carrinho()
-        carrinho.enviar_carrinho(id_cliente)
-        return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
-    return jsonify(success=False, message="Erro ao enviar o carrinho.")
+def enviar_carrinho_route():
+    # Verifica se o usuário está logado
+    if 'usuario_logado' not in session:
+        return jsonify(success=False, message="Usuário não está logado.", redirect="/logar")
+    
+    id_cliente = session['usuario_logado']['id_cliente']
+    carrinho = Carrinho()  # Cria uma instância da classe Carrinho
+
+    # Tenta enviar o carrinho como pedido
+    try:
+        if carrinho.enviar_carrinho(id_cliente):
+            return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
+        else:
+            return jsonify(success=False, message="Erro ao enviar o carrinho. Tente novamente.")
+    except Exception as e:
+        # Loga o erro se necessário
+        print(f"Erro ao enviar o carrinho: {e}")
+        return jsonify(success=False, message="Ocorreu um erro inesperado. Tente novamente.")
+
+
 
 
 # ========== Histórico de Pedidos ==========
@@ -504,46 +526,43 @@ def exibir_carrinho():
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
-    else:
-        if request.method == 'POST':
-            id_produto = session.get('id')['id_produto']  # Obtém o ID do produto da sessão
-            id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
+    
+    if request.method == 'POST':
+        id_produto = session.get('id', {}).get('id_produto')  # Obtém o ID do produto da sessão, com fallback para evitar KeyError
+        id_cliente = session['usuario_logado']['id_cliente']  # Obtém o ID do cliente da sessão
 
-            if 'IDs' not in session:
-                session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
+        if 'IDs' not in session:
+            session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
 
-            session['IDs']['IDs_produtos'].append(id_produto)  # Adiciona o ID do produto à lista na sessão
+        session['IDs']['IDs_produtos'].append(id_produto)  # Adiciona o ID do produto à lista na sessão
 
-            carrinho = Carrinho()  # Cria uma instância da classe Carrinho
-            carrinho.inserir_item_carrinho(id_produto, 'produto', id_cliente)  # Adiciona o produto ao carrinho do cliente
-            return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
+        carrinho = Carrinho()  # Cria uma instância da classe Carrinho
+        carrinho.inserir_item_carrinho(id_produto, id_cliente, 'produto')  # Adiciona o produto ao carrinho do cliente
+        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
 
-        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
-
-
+    return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
 
 
-
-# Rota para inserir produtos no carrinho
+# Rota para inserir marmitas no carrinho
 @app.route("/inserir_carrinho_marmita", methods=['POST'])
 def carrinho_marmita():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
-    else:
-        if request.method == 'POST':
-            id_marmita = session.get('id')['id_marmita']  # Obtém o ID da marmita da sessão
-            id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
+    
+    if request.method == 'POST':
+        id_marmita = session.get('id', {}).get('id_marmita')  # Obtém o ID da marmita da sessão, com fallback
+        id_cliente = session['usuario_logado']['id_cliente']  # Obtém o ID do cliente da sessão
 
-            if 'IDs' not in session:
-                session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
+        if 'IDs' not in session:
+            session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
 
-            session['IDs']['IDs_produtos'].append(id_marmita)  # Adiciona o ID da marmita à lista na sessão
+        session['IDs']['IDs_produtos'].append(id_marmita)  # Adiciona o ID da marmita à lista na sessão
 
-            carrinho = Carrinho()  # Cria uma instância da classe Carrinho
-            carrinho.inserir_item_carrinho(id_marmita, 'marmita', id_cliente)  # Adiciona a marmita ao carrinho do cliente
-            return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
+        carrinho = Carrinho()  # Cria uma instância da classe Carrinho
+        carrinho.inserir_item_carrinho(id_marmita, id_cliente, 'marmita')  # Adiciona a marmita ao carrinho do cliente
+        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
 
-        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
+    return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
 
 
 

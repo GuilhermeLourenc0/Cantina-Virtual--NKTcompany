@@ -8,7 +8,6 @@
         {% for registro in lista_carrinho.produtos %}
         <div class="form-exclui-carrinho">
 
-
             <section class="container-principal">
 
                 <div class="produto-card">
@@ -25,29 +24,63 @@
                                 <span>{{ registro.nome_produto }}</span>
 
                                 <div class="qnt-btn">
-                                    <button class="menos-btn" type="button"
-                                        data-id="{{ registro.id_carrinho }}">-</button>
+                                    <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
                                     <input type="number" id="quantidade-{{ registro.id_carrinho }}"
                                         value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
-                                    <button class="mais-btn" type="button"
-                                        data-id="{{ registro.id_carrinho }}">+</button>
+                                    <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
                                 </div>
-
                             </div>
 
                             <div class="baixo">
-                                <span class="desc-baixo">Marmita de 500g acompanha Arroz, feijão, Batata frit...</span>
+                                <span class="desc-baixo">{{ 'Descrição do produto' }}</span> <!-- Você pode mudar isso se tiver descrição -->
                                 <span class="preco-item">R$ {{ registro.preco }}</span>
-
-                                <span class="obs-item">OBS: Sem feijão, pfv</span>
+                                <span class="obs-item">OBS: {{ 'Observação do produto' }}</span> <!-- Mude se necessário -->
                             </div>
-
                         </div>
                     </div>
 
+                </div>
+            </section>
+        </div>
+        {% endfor %}
+
+        {% for registro in lista_carrinho.marmitas %}
+        <div class="form-exclui-carrinho">
+
+            <section class="container-principal">
+
+                <div class="produto-card">
+
+                    <div class="imgdiv">
+                        <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Marmita">
+
+                        <button class="button btn-excluir" data-id="{{ registro.id_carrinho }}">
+                            <img src="../static/img/lixo.png" alt="Excluir Marmita">
+                        </button>
+
+                        <div class="direita-card">
+                            <div class="cima">
+                                <span>{{ registro.nome_produto }}</span>
+
+                                <div class="qnt-btn">
+                                    <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
+                                    <input type="number" id="quantidade-{{ registro.id_carrinho }}"
+                                        value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
+                                    <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
+                                </div>
+                            </div>
+
+                            <div class="baixo">
+                                <span class="desc-baixo">{{ 'Descrição da marmita' }}</span> <!-- Você pode mudar isso se tiver descrição -->
+                                <span class="preco-item">R$ {{ registro.preco }}</span>
+                                <span class="obs-item">OBS: {{ 'Observação da marmita' }}</span> <!-- Mude se necessário -->
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
-            </div>
+            </section>
+        </div>
         {% endfor %}
 
         <div class="finalizacao">
@@ -65,6 +98,7 @@
         <span class="span3">.</span>
     </main>
 
+    <!-- O restante do script permanece o mesmo -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Função para atualizar a quantidade de produtos

@@ -8,38 +8,43 @@ class Adm:
         self.id_produto = None
 
 
-    # Método para exibir todos os pedidos com detalhes dos produtos
     def exibir_pedidos(self):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Consulta SQL para obter todos os pedidos com detalhes dos produtos
+        # Consulta SQL para obter os pedidos com produtos e marmitas
         sql = """
-            SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, pr.nome_produto, pr.preco, pp.quantidade, p.data_pedido, p.status
+            SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, 
+                pr.nome_produto, pr.preco AS preco_produto, pp.quantidade AS quantidade_produto,
+                m.nome_marmita, m.preco AS preco_marmita, mp.quantidade AS quantidade_marmita,
+                p.data_pedido, p.status
             FROM tb_pedidos p
             JOIN tb_cliente cl ON p.id_cliente = cl.id_cliente
-            JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
-            JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
-            ORDER BY cl.id_cliente, p.id_pedido, pr.nome_produto
+            LEFT JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
+            LEFT JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
+            LEFT JOIN tb_marmitas_pedidos mp ON p.id_pedido = mp.id_pedido
+            LEFT JOIN tb_marmita m ON mp.id_marmita = m.id_marmita
+            ORDER BY cl.id_cliente, p.id_pedido
         """
         mycursor.execute(sql)
         resultados = mycursor.fetchall()
 
         pedidos = {}
 
-        # Itera sobre os resultados e organiza as informações de pedidos
         for resultado in resultados:
             id_pedido = resultado[0]
             id_cliente = resultado[1]
             nome_cliente = resultado[2]
             telefone_cliente = resultado[3]
             nome_produto = resultado[4]
-            preco_produto = resultado[5]
-            quantidade_produto = resultado[6]
-            data_pedido = resultado[7]
-            status_pedido = resultado[8]
+            preco_produto = float(resultado[5]) if resultado[5] is not None else 0.0
+            quantidade_produto = resultado[6] or 0  # Verificando se não é None
+            nome_marmita = resultado[7]
+            preco_marmita = float(resultado[8]) if resultado[8] is not None else 0.0
+            quantidade_marmita = resultado[9] or 0  # Verificando se não é None
+            data_pedido = resultado[10]
+            status_pedido = resultado[11]
 
-            # Adiciona o cliente se não estiver no dicionário
             if id_cliente not in pedidos:
                 pedidos[id_cliente] = {
                     'nome_cliente': nome_cliente,
@@ -47,27 +52,39 @@ class Adm:
                     'pedidos': {}
                 }
 
-            # Adiciona o pedido se não estiver no dicionário
             if id_pedido not in pedidos[id_cliente]['pedidos']:
                 pedidos[id_cliente]['pedidos'][id_pedido] = {
                     'data_pedido': data_pedido,
                     'status': status_pedido,
                     'produtos': [],
-                    'total_preco': 0
+                    'marmitas': [],
+                    'total_preco': 0.0  # Inicializa como 0.0
                 }
 
-            # Adiciona o produto ao pedido
-            pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
-                'nome_produto': nome_produto,
-                'preco': preco_produto,
-                'quantidade': quantidade_produto
-            })
+            if nome_produto:
+                pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
+                    'nome_produto': nome_produto,
+                    'preco': preco_produto,
+                    'quantidade': quantidade_produto
+                })
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_produto * quantidade_produto
 
-            # Atualiza o total de preço do pedido
-            pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_produto * quantidade_produto
+            if nome_marmita and quantidade_marmita > 0:  # Verifique se a quantidade é maior que zero
+                pedidos[id_cliente]['pedidos'][id_pedido]['marmitas'].append({
+                    'nome_marmita': nome_marmita,
+                    'preco': preco_marmita,
+                    'quantidade': quantidade_marmita
+                })
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita * quantidade_marmita
 
         mydb.close()
         return pedidos
+
+
+
+
+
+
     
 
     # ========================== desabilitar / habilitar produto ===================================
