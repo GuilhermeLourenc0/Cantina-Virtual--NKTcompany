@@ -7,22 +7,16 @@
 
         {% for registro in lista_carrinho.produtos %}
         <div class="form-exclui-carrinho">
-
             <section class="container-principal">
-
                 <div class="produto-card">
-
                     <div class="imgdiv">
                         <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Produto">
-
                         <button class="button btn-excluir" data-id="{{ registro.id_carrinho }}">
                             <img src="../static/img/lixo.png" alt="Excluir Produto">
                         </button>
-
                         <div class="direita-card">
                             <div class="cima">
                                 <span>{{ registro.nome_produto }}</span>
-
                                 <div class="qnt-btn">
                                     <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
                                     <input type="number" id="quantidade-{{ registro.id_carrinho }}"
@@ -30,15 +24,13 @@
                                     <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
                                 </div>
                             </div>
-
                             <div class="baixo">
-                                <span class="desc-baixo">{{ 'Descrição do produto' }}</span> <!-- Você pode mudar isso se tiver descrição -->
+                                <span class="desc-baixo">{{ 'Descrição do produto' }}</span>
                                 <span class="preco-item">R$ {{ registro.preco }}</span>
-                                <span class="obs-item">OBS: {{ 'Observação do produto' }}</span> <!-- Mude se necessário -->
+                                <span class="obs-item">OBS: {{ 'Observação do produto' }}</span>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </section>
         </div>
@@ -46,22 +38,16 @@
 
         {% for registro in lista_carrinho.marmitas %}
         <div class="form-exclui-carrinho">
-
             <section class="container-principal">
-
                 <div class="produto-card">
-
                     <div class="imgdiv">
                         <img class="img-produto" src="{{ registro.imagem_produto }}" alt="Imagem Marmita">
-
                         <button class="button btn-excluir" data-id="{{ registro.id_carrinho }}">
                             <img src="../static/img/lixo.png" alt="Excluir Marmita">
                         </button>
-
                         <div class="direita-card">
                             <div class="cima">
-                                <span>{{ registro.nome_produto }}</span>
-
+                                <span>{{ registro.nome_marmita }}</span>
                                 <div class="qnt-btn">
                                     <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
                                     <input type="number" id="quantidade-{{ registro.id_carrinho }}"
@@ -69,15 +55,13 @@
                                     <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
                                 </div>
                             </div>
-
                             <div class="baixo">
-                                <span class="desc-baixo">{{ 'Descrição da marmita' }}</span> <!-- Você pode mudar isso se tiver descrição -->
+                                <span class="desc-baixo">{{ registro.descricao }}</span>
                                 <span class="preco-item">R$ {{ registro.preco }}</span>
-                                <span class="obs-item">OBS: {{ 'Observação da marmita' }}</span> <!-- Mude se necessário -->
+                                <span class="obs-item">OBS: {{ 'Observação da marmita' }}</span>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </section>
         </div>
@@ -98,7 +82,6 @@
         <span class="span3">.</span>
     </main>
 
-    <!-- O restante do script permanece o mesmo -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Função para atualizar a quantidade de produtos
@@ -167,7 +150,12 @@
                     },
                     body: JSON.stringify({ id_carrinho: idCarrinho })
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na requisição: ' + response.status);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         location.reload(); // Atualiza a página após exclusão bem-sucedida

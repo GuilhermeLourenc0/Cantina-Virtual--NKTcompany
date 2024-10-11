@@ -21,8 +21,6 @@
                     <div class="dir">
                         <p><span id="contador">0</span>/140</p>
                     </div>
-                    
-                    
                 </div>
                 <div class="baixo">
                     <input type="text" id="meuInput" placeholder="Ex: Tirar o feijão" maxlength="140">   
@@ -33,12 +31,10 @@
                 <a href="/">Voltar</a>
 
                 <form action="/inserir_carrinho" method="post">
-                    <button type="submit" value="{{ registro.cod_produto }}">Adicionar a sacola</button>
+                    <input type="hidden" name="cod_produto" value="{{ registro.cod_produto }}"> <!-- ID do produto -->
+                    <button type="submit">Adicionar a sacola</button>
                 </form>
             </div>
-
-            
-
         </section>
 
         <div class="gambiarra1"></div>

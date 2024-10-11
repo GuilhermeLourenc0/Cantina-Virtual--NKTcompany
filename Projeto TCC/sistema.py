@@ -59,7 +59,7 @@ class Sistema:
 
 
     # Método para exibir um único produto com base no ID
-    def exibir_produto(self):
+    def exibir_produto(self, id):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 

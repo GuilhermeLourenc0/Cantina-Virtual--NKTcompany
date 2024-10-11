@@ -422,9 +422,11 @@ def enviar_carrinho():
     if 'usuario_logado' in session:
         id_cliente = session['usuario_logado']['id_cliente']
         carrinho = Carrinho()
-        carrinho.enviar_carrinho(id_cliente)
-        return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
-    return jsonify(success=False, message="Erro ao enviar o carrinho.")
+        if carrinho.enviar_carrinho(id_cliente):
+            return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
+        else:
+            return jsonify(success=False, message="Erro ao enviar o carrinho.")
+    return jsonify(success=False, message="Usuário não autenticado.")
 
 
 
@@ -497,27 +499,31 @@ def atualizar_quantidade():
         return jsonify({'success': False, 'message': 'Erro ao atualizar quantidade'})
         
 
-# Rota para excluir um produto
+# Rota para excluir um item (produto ou marmita) do carrinho
 @app.route("/excluir_produto_carrinho", methods=['POST'])
 def excluir_produto_carrinho():
+    # Verifica se o usuário está autenticado
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return jsonify({'success': False, 'message': 'Usuário não autenticado'})
 
     try:
-        data = request.get_json()  # Obtém os dados JSON da requisição
-        id_carrinho = data.get('id_carrinho')  # Obtém o ID do carrinho
+        # Obtém os dados JSON da requisição
+        data = request.get_json()
+        id_carrinho = data.get('id_carrinho')  # Obtém o ID do item no carrinho
 
+        # Verifica se o ID do carrinho foi fornecido
         if not id_carrinho:
             return jsonify({'success': False, 'message': 'ID do carrinho não encontrado'})
 
-        carrinho = Carrinho()  # Cria uma instância da classe Sistema
-        carrinho.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
+        carrinho = Carrinho()  # Cria uma instância da classe Carrinho
+        carrinho.remover_produto_carrinho(id_carrinho)  # Remove o item do carrinho
 
         return jsonify({'success': True})  # Retorna sucesso se a exclusão for bem-sucedida
 
     except Exception as e:
-        print(f"Erro ao excluir produto: {e}")  # Registra o erro no console
-        return jsonify({'success': False, 'message': 'Erro ao excluir produto'})
+        print(f"Erro ao excluir item do carrinho: {e}")  # Registra o erro no console
+        return jsonify({'success': False, 'message': 'Erro ao excluir item do carrinho'})
+
     
 
 # Rota para exibir o carrinho de compras
@@ -541,28 +547,27 @@ def exibir_carrinho():
 
         lista_carrinho = carrinho.exibir_carrinho(id_cliente)  # Obtém a lista de produtos no carrinho
         return render_template("carrinho.html", lista_carrinho=lista_carrinho)  # Renderiza a página do carrinho com a lista de produtos
+
+
     
 
-# Rota para inserir produtos no carrinho
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     else:
         if request.method == 'POST':
-            id_produto = session.get('id')['id_produto']  # Obtém o ID do produto da sessão
             id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
+            cod_produto = request.form.get('cod_produto')  # Obtém o ID do produto
+            id_marmita = request.form.get('id_marmita')  # Obtém o ID da marmita (pode ser None)
 
-            if 'IDs' not in session:
-                session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
-
-            session['IDs']['IDs_produtos'].append(id_produto)  # Adiciona o ID do produto à lista na sessão
-
-            carrinho = Carrinho()  # Cria uma instância da classe Sistema
-            carrinho.inserir_produto_carrinho(id_produto, id_cliente)  # Adiciona o produto ao carrinho do cliente
+            carrinho = Carrinho()  # Cria uma instância da classe Carrinho
+            carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente)  # Adiciona o item ao carrinho do cliente
             return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
 
         return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
+
+
 
 # Rota para inserir marmitas no carrinho
 @app.route("/inserir_carrinho_marmita", methods=['POST'])
