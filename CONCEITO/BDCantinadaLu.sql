@@ -367,14 +367,3 @@ INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 
 INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
 VALUES ('Administrador', '123456789', 'adm@adm.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'adm');
-
-
-
-CREATE TABLE tb_marmitas_pedidos (
-    id_marmita_pedido INT AUTO_INCREMENT PRIMARY KEY,
-    id_pedido INT,
-    id_marmita INT,
-    quantidade INT,
-    FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido),
-    FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita)
-);
