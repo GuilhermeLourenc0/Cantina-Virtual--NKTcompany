@@ -25,7 +25,11 @@
 
         function renderOrders(lista_historico) {
             const orderList = document.getElementById('order-list');
-    
+            if (!orderList) {
+                console.error("Element with ID 'order-list' not found.");
+                return;  // Não continue se o elemento não existir
+            }
+
             orderList.innerHTML = '';  // Limpa o conteúdo atual
 
             for (const [id_cliente, dados_cliente] of Object.entries(lista_historico)) {
@@ -54,19 +58,34 @@
                     const orderDetails = document.createElement('div');
                     orderDetails.classList.add('order-details');
                     const productList = document.createElement('ul');
+
+                    // Adiciona produtos
                     dados_pedido.produtos.forEach(produto => {
+                        console.log(produto);  // Debug: Verifique o produto
                         const productItem = document.createElement('li');
-                        productItem.textContent = `${produto.quantidade}x ${produto.nome_produto} - R$ ${produto.preco}`;
+                        const precoProduto = typeof produto.preco === 'number' ? produto.preco : parseFloat(produto.preco) || 0; // Converte para número
+                        productItem.textContent = `${produto.quantidade}x ${produto.nome_produto} - R$ ${precoProduto.toFixed(2)}`;
                         productList.appendChild(productItem);
                     });
+
+                    // Adiciona marmitas
+                    dados_pedido.marmitas.forEach(marmita => {
+                        console.log(marmita);  // Debug: Verifique a marmita
+                        const marmitaItem = document.createElement('li');
+                        const precoMarmita = typeof marmita.preco === 'number' ? marmita.preco : parseFloat(marmita.preco) || 0; // Converte para número
+                        marmitaItem.textContent = `Marmita: ${marmita.nome_marmita} - R$ ${precoMarmita.toFixed(2)}`;
+                        productList.appendChild(marmitaItem);
+                    });
+
                     orderDetails.appendChild(productList);
                     orderCard.appendChild(orderDetails);
 
                     // Status e total do pedido
                     const orderStatus = document.createElement('div');
                     orderStatus.classList.add('order-status');
+                    const totalPreco = typeof dados_pedido.total_preco === 'number' ? dados_pedido.total_preco : parseFloat(dados_pedido.total_preco) || 0; // Converte para número
                     orderStatus.innerHTML = `
-                        <span class="order-price">R$ ${dados_pedido.total_preco}</span>
+                        <span class="order-price">R$ ${totalPreco.toFixed(2)}</span>
                         <span class="order-status-text">${dados_pedido.status}</span>
                     `;
                     orderCard.appendChild(orderStatus);
@@ -77,6 +96,9 @@
                 orderList.appendChild(clientDiv);
             }
         }
+
+
+
 
         // Chama a função para carregar os pedidos quando a página carrega
         document.addEventListener('DOMContentLoaded', fetchOrders);

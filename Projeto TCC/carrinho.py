@@ -44,7 +44,7 @@ class Carrinho:
 
 
 
-   # Método para exibir os produtos e marmitas no carrinho de um cliente
+    # Método para exibir os produtos e marmitas no carrinho de um cliente
     def exibir_carrinho(self, id_cliente):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
