@@ -19,7 +19,8 @@ CREATE TABLE tb_cliente (
     email VARCHAR(100),
     id_curso INT,
     senha VARCHAR(255),
-    tipo VARCHAR(20), 
+    tipo VARCHAR(20),
+    imagem_binaria BLOB,  -- Adiciona a coluna para armazenar a imagem
     PRIMARY KEY (id_cliente),
     FOREIGN KEY (id_curso) REFERENCES tb_curso(id_curso)
 );
@@ -146,8 +147,6 @@ INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) V
 ('Coxinha de Frango', 5.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLigfyds3_5OSm0C4_VTYXDa5g6e32kV9h7g&s', 'Coxinha de frango crocante', 2),
 ('Suco Natural de Laranja', 6.50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg7d8e8lFMBd04BSdGzf3FaB2yUNbcISqjqQ&s', 'Suco natural de laranja 300ml', 3),
 ('Pão de Queijo', 3.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtErpNOUfP6-yJLahND5XkZQpF_hPvas8-7g&s', 'Pão de queijo mineiro tradicional', 1);
-
-
 
 
 
@@ -368,3 +367,14 @@ INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 
 INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
 VALUES ('Administrador', '123456789', 'adm@adm.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'adm');
+
+
+
+CREATE TABLE tb_marmitas_pedidos (
+    id_marmita_pedido INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT,
+    id_marmita INT,
+    quantidade INT,
+    FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido),
+    FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita)
+);

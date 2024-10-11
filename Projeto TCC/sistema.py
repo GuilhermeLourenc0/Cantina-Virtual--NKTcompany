@@ -160,22 +160,24 @@ class Sistema:
    
 
 
-    # Método para exibir todos os pedidos de um cliente específico com detalhes dos produtos
+   # Método para exibir todos os pedidos de um cliente específico com detalhes dos produtos e marmitas
     def exibir_historico(self, id_cliente):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Consulta SQL para obter todos os pedidos do cliente específico com detalhes dos produtos
+        # Consulta SQL para obter todos os pedidos do cliente específico com detalhes dos produtos e marmitas
         sql = """
             SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, 
-                pr.nome_produto, pr.preco, pp.quantidade, 
+                pr.nome_produto, pr.preco AS preco_produto, pp.quantidade, 
+                m.nome_marmita, m.preco AS preco_marmita, 
                 p.data_pedido, p.status
             FROM tb_pedidos p
             JOIN tb_cliente cl ON p.id_cliente = cl.id_cliente
             JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
-            JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
+            LEFT JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
+            LEFT JOIN tb_marmita m ON pp.id_marmita = m.id_marmita
             WHERE cl.id_cliente = %s  -- Filtra pelos pedidos do cliente específico
-            ORDER BY p.data_pedido DESC, pr.nome_produto
+            ORDER BY p.data_pedido DESC
         """
         mycursor.execute(sql, (id_cliente,))
         resultados = mycursor.fetchall()
@@ -190,8 +192,10 @@ class Sistema:
             nome_produto = resultado[4]
             preco_produto = resultado[5]
             quantidade_produto = resultado[6]
-            data_pedido = resultado[7]
-            status_pedido = resultado[8]
+            nome_marmita = resultado[7]
+            preco_marmita = resultado[8]
+            data_pedido = resultado[9]
+            status_pedido = resultado[10]
 
             # Adiciona o cliente se não estiver no dicionário
             if id_cliente not in pedidos:
@@ -207,17 +211,27 @@ class Sistema:
                     'data_pedido': data_pedido,
                     'status': status_pedido,
                     'produtos': [],
+                    'marmitas': [],
                     'total_preco': 0  # Inicializa o total do pedido
                 }
 
-            # Adiciona o produto ao pedido e calcula o total
-            total_produto = preco_produto * quantidade_produto
-            pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
-                'nome_produto': nome_produto,
-                'preco': preco_produto,
-                'quantidade': quantidade_produto
-            })
-            pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += total_produto  # Atualiza o total do pedido
+            # Adiciona o produto ao pedido, se houver
+            if nome_produto:
+                total_produto = preco_produto * quantidade_produto
+                pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
+                    'nome_produto': nome_produto,
+                    'preco': preco_produto,
+                    'quantidade': quantidade_produto
+                })
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += total_produto  # Atualiza o total do pedido
+
+            # Adiciona a marmita ao pedido, se houver
+            if nome_marmita:
+                pedidos[id_cliente]['pedidos'][id_pedido]['marmitas'].append({
+                    'nome_marmita': nome_marmita,
+                    'preco': preco_marmita
+                })
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita  # Atualiza o total do pedido
 
         mydb.close()
         return pedidos
