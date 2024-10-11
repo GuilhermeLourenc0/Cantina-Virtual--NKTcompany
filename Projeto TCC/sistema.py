@@ -59,7 +59,7 @@ class Sistema:
 
 
     # Método para exibir um único produto com base no ID
-    def exibir_produto(self, id):
+    def exibir_produto(self):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
@@ -131,6 +131,30 @@ class Sistema:
             })
         mydb.close()  # Fecha a conexão com o banco de dados
         return lista_marmitas if lista_marmitas else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+    
+    def exibir_marmitas_adm(self):
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()   # Cria um cursor para executar queries
+
+        # Consulta SQL para selecionar todos os produtos
+        sql = "SELECT * FROM tb_marmita"
+        mycursor.execute(sql)      # Executa a consulta
+        resultado = mycursor.fetchall()  # Obtém todos os resultados
+
+        lista_marmitas = []
+
+        # Itera sobre os resultados e adiciona cada produto à lista
+        for produto in resultado:
+                lista_marmitas.append({
+                    'nome_marmita': produto[1],
+                    'preco': produto[2],
+                    'imagem_marmita': produto[5],
+                    'tamanho': produto[3],
+                    'descricao': produto[4],
+                    'id_marmita': produto[0]
+                })
+        mydb.close()  # Fecha a conexão com o banco de dados
+        return lista_marmitas if lista_marmitas else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
 
 
    
@@ -197,6 +221,7 @@ class Sistema:
 
         mydb.close()
         return pedidos
+
 
 
 

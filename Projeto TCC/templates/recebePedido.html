@@ -1,75 +1,126 @@
 {% extends "modelo-adm.html" %}
 {% block conteudo %}
-<link rel="stylesheet" href="../static/styles/recebePedido.css">
-<link rel="stylesheet" href="../static/styles/media/media-recebePedido.css">
+    <link rel="stylesheet" href="../static/styles/recebePedido.css">
+    <link rel="stylesheet" href="../static/styles/media/media-recebePedido.css">
 
-<body>
-<main>
-    <section class="container-cards" id="order-container">
-        <!-- Os pedidos serão carregados dinamicamente aqui -->
-    </section>
-</main>
+    <body>
+    <main>
+        <section class="container-cards" id="order-container">
+            <!-- Os pedidos serão carregados dinamicamente aqui -->
+        </section>
+    </main>
 
-<script>
-// Função para exibir os pedidos via AJAX
-function carregarPedidos() {
-    fetch('/obter_pedidos')  // Altere para a rota correta
-        .then(response => response.json())
-        .then(data => {
-            const orderContainer = document.getElementById('order-container');
-            orderContainer.innerHTML = ''; // Limpa o conteúdo antes de carregar os pedidos
+    <script>
+        // Função para exibir os pedidos via AJAX
+        function carregarPedidos() {
+            fetch('/obter_pedidos')  // Altere para a rota correta
+                .then(response => response.json())
+                .then(data => {
+                    const orderContainer = document.getElementById('order-container');
+                    orderContainer.innerHTML = ''; // Limpa o conteúdo antes de carregar os pedidos
 
-            for (const [id_cliente, cliente] of Object.entries(data)) {
-                let cardPedidos = `<div class="card-pedidos">`;
+                    for (const [id_cliente, cliente] of Object.entries(data)) {
+                        let cardPedidos = `<div class="card-pedidos">`;
 
-                for (const [id_pedido, pedido] of Object.entries(cliente.pedidos)) {
-                    cardPedidos += `
-                        <div class="order-card">
-                            <h2>Cliente: ${cliente.nome_cliente}</h2>
-                            <div class="order-header">
-                                <span class="order-number">#${id_pedido}</span>
-                                <span class="order-time">${new Date(pedido.data_pedido).toLocaleTimeString()}</span>
-                                <span class="order-date">${new Date(pedido.data_pedido).toLocaleDateString()}</span>
-                            </div>
-                            <div class="order-details">
-                                <h3>Pedido:</h3>
-                                <ul>`;
-                    pedido.produtos.forEach(produto => {
-                        cardPedidos += `<li>${produto.nome_produto} - Quantidade: ${produto.quantidade} - Preço: R$ ${produto.preco}</li>`;
-                    });
+                        for (const [id_pedido, pedido] of Object.entries(cliente.pedidos)) {
+                            cardPedidos += `
+                                <div class="order-card">
+                                    <h2>Cliente: ${cliente.nome_cliente}</h2>
+                                    <div class="order-header">
+                                        <span class="order-number">#${id_pedido}</span>
+                                        <span class="order-time">${new Date(pedido.data_pedido).toLocaleTimeString()}</span>
+                                        <span class="order-date">${new Date(pedido.data_pedido).toLocaleDateString()}</span>
+                                    </div>
+                                    <div class="order-details">
+                                        <ul>`;
+                            pedido.produtos.forEach(produto => {
+                                cardPedidos += `<li>${produto.nome_produto}</li>`;
+                            });
 
-                    cardPedidos += `</ul>
-                                    <ul>`;
-                    pedido.marmitas.forEach(marmita => {
-                        cardPedidos += `<li>${marmita.nome_marmita} - Quantidade: ${marmita.quantidade} - Preço: R$ ${marmita.preco}</li>`;
-                    });
+                            cardPedidos += `</ul>
+                                        <ul class="order-quantity">`;
+                            pedido.produtos.forEach(produto => {
+                                cardPedidos += `<li>${produto.quantidade}</li>`;
+                            });
 
-                    cardPedidos += `</ul>
-                            </div>
-                            <div class="order-status">
-                                <span class="order-price">Total: R$ ${pedido.total_preco}</span>
-                            </div>
-                            <div class="btn-cancelar">
-                                <button class="status-btn" data-pedido="${id_pedido}" value="preparando">Preparando</button>
-                                <button class="status-btn" data-pedido="${id_pedido}" value="feito">Pronto</button>
-                                <button class="status-btn" data-pedido="${id_pedido}" value="entregue">Entregue</button>
-                                <button class="cancel-btn" data-pedido="${id_pedido}">Cancelar</button>
-                            </div>
-                        </div>`;
-                }
-                cardPedidos += `</div>`;
-                orderContainer.innerHTML += cardPedidos; // Adiciona os pedidos na página
+                            cardPedidos += `</ul>
+                                    </div>
+                                    <div class="order-status">
+                                        <span class="order-price">R$ ${pedido.total_preco}</span>
+                                    </div>
+                                    <div class="btn-cancelar">
+                                        <button class="status-btn" data-pedido="${id_pedido}" value="preparando">Preparando</button>
+                                        <button class="status-btn" data-pedido="${id_pedido}" value="feito">Pronto</button>
+                                        <button class="status-btn" data-pedido="${id_pedido}" value="entregue">Entregue</button>
+                                        <button class="cancel-btn" data-pedido="${id_pedido}">Cancelar</button>
+                                    </div>
+                                </div>`;
+                        }
+                        cardPedidos += `</div>`;
+                        orderContainer.innerHTML += cardPedidos; // Adiciona os pedidos na página
+                    }
+                })
+                .catch(error => console.error('Erro ao carregar os pedidos:', error));
+        }
+
+        // Atualiza a lista de pedidos a cada 5 segundos (tempo ajustável)
+        setInterval(carregarPedidos, 2000);
+
+        // Carrega os pedidos quando a página é carregada
+        window.onload = carregarPedidos;
+
+        // Função para lidar com cliques nos botões de status e cancelar
+        document.addEventListener('click', function (e) {
+            // Para os botões de status
+            if (e.target.classList.contains('status-btn')) {
+                const idPedido = e.target.getAttribute('data-pedido');
+                const novoStatus = e.target.value;
+
+                // Envia uma solicitação POST via AJAX para atualizar o status do pedido
+                fetch('/atualizar_status_pedido', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `id_pedido=${idPedido}&status=${novoStatus}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'sucesso') {
+                        alert('Status atualizado com sucesso!');
+                        carregarPedidos();  // Atualiza a lista de pedidos na página
+                    } else {
+                        alert('Erro ao atualizar o status: ' + data.mensagem);
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar a solicitação:', error));
             }
-        })
-        .catch(error => console.error('Erro ao carregar os pedidos:', error));
-}
 
-// Atualiza a lista de pedidos a cada 5 segundos (tempo ajustável)
-setInterval(carregarPedidos, 2000);
+            // Para o botão de cancelar pedido
+            if (e.target.classList.contains('cancel-btn')) {
+                const idPedido = e.target.getAttribute('data-pedido');
 
-// Carrega os pedidos quando a página é carregada
-window.onload = carregarPedidos;
-</script>
+                // Envia uma solicitação POST via AJAX para cancelar o pedido
+                fetch('/cancelar_pedido', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `id_pedido=${idPedido}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'sucesso') {
+                        alert('Pedido cancelado com sucesso!');
+                        carregarPedidos();  // Atualiza a lista de pedidos na página
+                    } else {
+                        alert('Erro ao cancelar o pedido: ' + data.mensagem);
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar a solicitação:', error));
+            }
+        });
+    </script>
 
-</body>
+    </body>
 {% endblock %}
