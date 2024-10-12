@@ -46,6 +46,13 @@ def produtos():
     return jsonify(lista_produtos)  # Retorna os produtos em formato JSON
 
 
+@app.route("/marmitas_json", methods=['GET'])
+def marmitas():
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    lista_marmitas = sistema.exibir_marmitas()  # Obtém a lista de produtos
+    return jsonify(lista_marmitas)  # Retorna os produtos em formato JSON
+
+
 @app.route("/inicialadm")
 def inicialadm():
     return render_template("inicialAdm.html") 
