@@ -184,12 +184,15 @@ def inserir_produtos():
     img = request.form['img']
     descricao = request.form['descricao']
     categoria = request.form['categoria']
-
+    
     # Captura o tamanho da marmita (campo exibido apenas quando marmita for selecionada)
     tamanho = request.form.get('tamanho')
 
-    # Captura as guarnições existentes
+    # Captura as guarnições existentes (selecionadas via checkbox)
     guarnicoes_existentes = request.form.getlist('guarnicoes')
+
+    # Captura os acompanhamentos existentes (selecionados via checkbox)
+    acompanhamentos_existentes = request.form.getlist('acompanhamentos')
 
     # Captura as novas guarnições
     novas_guarnicoes = request.form.getlist('nova_guarnicoes')
@@ -200,10 +203,9 @@ def inserir_produtos():
     # Verifica se a categoria selecionada é "Marmita"
     id_categoria_marmita = 7  # Substitua pelo ID real da categoria "Marmita"
     
-    # Corrige a comparação para garantir que os tipos sejam compatíveis
     if int(categoria) == id_categoria_marmita:
-        # Insere uma marmita
-        sucesso = adm.inserir_marmita(nome, preco, img, descricao, tamanho, novas_guarnicoes)
+        # Insere uma marmita e associa guarnições e acompanhamentos
+        sucesso = adm.inserir_marmita(nome, preco, img, descricao, tamanho, guarnicoes_existentes, novas_guarnicoes, acompanhamentos_existentes)
     else:
         # Insere um produto normal
         sucesso = adm.inserir_produto(nome, preco, img, descricao, categoria, novas_guarnicoes)
@@ -214,12 +216,16 @@ def inserir_produtos():
 
 
 
+
+
 @app.route("/exibir_guarnicao")
 def exibir_guarnicao():
-    adm = Adm()  # Cria uma instância da classe Sistema
-    lista_guarnicao = adm.exibir_guarnição()  # Obtém a lista de guarnições
-    categorias = adm.exibir_categorias()  # Obtém a lista de categorias de produtos
-    return render_template("cad-produto.html", lista_guarnicao=lista_guarnicao, categorias=categorias)
+    adm = Adm()
+    lista_guarnicao = adm.exibir_guarnicao()
+    lista_acompanhamento = adm.exibir_acompanhamento()
+    categorias = adm.exibir_categorias()
+    return render_template("cad-produto.html", lista_guarnicao=lista_guarnicao, lista_acompanhamento=lista_acompanhamento, categorias=categorias)
+
 
 
 @app.route('/adicionar_guarnicao', methods=['POST'])
@@ -231,6 +237,19 @@ def adicionar_guarnicao():
         return jsonify(success=sucesso, id_guarnicao=id_guarnicao)
     return jsonify(success=False)
  
+
+
+
+
+@app.route('/adicionar_acompanhamento', methods=['POST'])
+def adicionar_acompanhamento():
+    nome_acompanhamento = request.form.get('nome_acompanhamento')
+    adm = Adm()
+    if nome_acompanhamento:
+        sucesso, id_acompanhamento = adm.inserir_acompanhamento(nome_acompanhamento)
+        return jsonify(success=sucesso, id_acompanhamento=id_acompanhamento)
+    return jsonify(success=False)
+
 
 
 

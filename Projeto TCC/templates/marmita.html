@@ -10,7 +10,7 @@
         <section class="descricao">
             <span class="nome-produto">{{ marmita.nome_marmita }}</span>
             <span class="descricao-produto">{{ marmita.descricao }}</span>
-            <span class="preco-produto">{{ marmita.preco }}</span>
+            <span class="preco-produto">R$ {{ marmita.preco }}</span>
 
             <div class="opc">
                 <div class="sair">
@@ -20,7 +20,6 @@
                         <input type="hidden" name="id_marmita" value="{{ marmita.id_marmita }}"> <!-- ID da marmita -->
                         <button type="submit">Adicionar a sacola</button>
                     </form>
-                    
                 </div>
             </div>
         </section>
@@ -35,30 +34,16 @@
             </div>
 
             <div class="opcoes-acompanhamentos" style="display: flex;">
-                <div class="acompanhamento" onclick="document.getElementById('feijao').click();">
-                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Feijão">
-                    <span>Feijão</span>
+                {% for acompanhamento in marmita.acompanhamentos %}
+                <div class="acompanhamento">
+                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="{{ acompanhamento }}">
+                    <span>{{ acompanhamento }}</span>
                     <label>
-                        <input type="checkbox" id="feijao" name="acompanhamento" value="feijao">
+                        <input type="checkbox" name="acompanhamento" value="{{ acompanhamento }}">
                         <span></span>
                     </label>
                 </div>
-                <div class="acompanhamento" onclick="document.getElementById('salada').click();">
-                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Salada">
-                    <span>Salada</span>
-                    <label>
-                        <input type="checkbox" id="salada" name="acompanhamento" value="salada">
-                        <span></span>
-                    </label>
-                </div>
-                <div class="acompanhamento" onclick="document.getElementById('batata').click();">
-                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Batata Frita">
-                    <span>Batata Frita</span>
-                    <label>
-                        <input type="checkbox" id="batata" name="acompanhamento" value="batata">
-                        <span></span>
-                    </label>
-                </div>
+                {% endfor %}
             </div>
         </div>
 
@@ -72,63 +57,19 @@
             </div>
 
             <div class="opcoes-guarnicoes" style="display: flex;">
-                <div class="acompanhamento" onclick="document.getElementById('carne').click();">
-                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Carne">
-                    <span>Carne</span>
+                {% for guarnicao in marmita.guarnicoes %}
+                <div class="acompanhamento">
+                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="{{ guarnicao }}">
+                    <span>{{ guarnicao }}</span>
                     <label>
-                        <input type="radio" id="carne" name="guarnicao" value="carne">
+                        <input type="radio" name="guarnicao" value="{{ guarnicao }}">
                         <span></span>
                     </label>
                 </div>
-                <div class="acompanhamento" onclick="document.getElementById('ovo').click();">
-                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="Ovo">
-                    <span>Ovo</span>
-                    <label>
-                        <input type="radio" id="ovo" name="guarnicao" value="ovo">
-                        <span></span>
-                    </label>
-                </div>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="espacamento1"></div>
-
-        <script>
-            const input = document.getElementById('meuInput');
-            const contador = document.getElementById('contador');
-
-            input.addEventListener('input', () => {
-                contador.textContent = input.value.length; // Atualiza o número de caracteres digitados
-            });
-
-            function toggleAcompanhamentos(seta) {
-                const opcoes = document.querySelector('.opcoes-acompanhamentos');
-
-                if (opcoes.classList.contains('hidden')) {
-                    opcoes.classList.remove('hidden'); // Remove a classe para mostrar
-                    seta.innerHTML = '&#9660;'; // Seta para baixo
-                    seta.classList.remove('rotated'); // Remove a rotação
-                } else {
-                    opcoes.classList.add('hidden'); // Adiciona a classe para esconder
-                    seta.innerHTML = '&#9654;'; // Seta para direita
-                    seta.classList.add('rotated'); // Adiciona a rotação para a direita
-                }
-            }
-
-            function toggleGuarnicoes(seta) {
-                const opcoes = document.querySelector('.opcoes-guarnicoes');
-
-                if (opcoes.classList.contains('hidden')) {
-                    opcoes.classList.remove('hidden'); // Remove a classe para mostrar
-                    seta.innerHTML = '&#9660;'; // Seta para baixo
-                    seta.classList.remove('rotated'); // Remove a rotação
-                } else {
-                    opcoes.classList.add('hidden'); // Adiciona a classe para esconder
-                    seta.innerHTML = '&#9654;'; // Seta para direita
-                    seta.classList.add('rotated'); // Adiciona a rotação para a direita
-                }
-            }
-        </script>
         {% endfor %}
     </main>
     {% endblock %}

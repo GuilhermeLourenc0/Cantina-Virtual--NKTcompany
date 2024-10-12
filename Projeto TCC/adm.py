@@ -202,10 +202,10 @@ class Adm:
         return True
 
     
-    def inserir_marmita(self, nomeP, preco, imagem, descricao, tamanho, guarnicoes_novas=[]):
+    def inserir_marmita(self, nomeP, preco, imagem, descricao, tamanho, guarnicoes_existentes=[], guarnicoes_novas=[], acompanhamentos_existentes=[], acompanhamentos_novos=[]):
         """
         Insere uma nova marmita no sistema, associando-a à categoria correta. As informações da marmita
-        incluem nome, preço, URL da imagem, descrição, tamanho e as guarnições associadas.
+        incluem nome, preço, URL da imagem, descrição, tamanho e as guarnições e acompanhamentos associados.
         
         Parâmetros:
         - nomeP: nome da marmita.
@@ -213,7 +213,10 @@ class Adm:
         - imagem: URL da imagem da marmita.
         - descricao: breve descrição da marmita.
         - tamanho: tamanho da marmita (Pequena, Média, Grande).
+        - guarnicoes_existentes: lista de IDs das guarnições já existentes.
         - guarnicoes_novas: lista de novas guarnições a serem inseridas.
+        - acompanhamentos_existentes: lista de IDs dos acompanhamentos já existentes.
+        - acompanhamentos_novos: lista de novos acompanhamentos a serem inseridos.
         
         Retorno:
         - Retorna True se a marmita for inserida com sucesso, ou False em caso de erro.
@@ -221,32 +224,48 @@ class Adm:
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()
 
-        # Query SQL para inserir a marmita na tabela `tb_marmita`
+        # Inserir marmita na tabela `tb_marmita`
         sql = f"""
         INSERT INTO tb_marmita (nome_marmita, preco, url_img, descricao, tamanho)
-        VALUES ('{nomeP}', {preco}, '{imagem}', '{descricao}', '{tamanho}')
+        VALUES (%s, %s, %s, %s, %s)
         """
-        mycursor.execute(sql)
+        mycursor.execute(sql, (nomeP, preco, imagem, descricao, tamanho))
         
-        # Captura o ID da marmita recém-inserida para associar guarnições
+        # Capturar o ID da marmita recém-inserida
         id_marmita = mycursor.lastrowid
 
-        # Inserir novas guarnições se existirem
-        for nova_guarnicao in guarnicoes_novas:
-            self.inserir_guarnicao(nova_guarnicao)
-
-            # Associar a nova guarnição à marmita (supondo que você tenha uma tabela de associação)
+        # Associar guarnições existentes à marmita
+        for id_guarnicao in guarnicoes_existentes:
             sql_associacao = "INSERT INTO tb_marmita_guarnicao (id_marmita, id_guarnicao) VALUES (%s, %s)"
-            mycursor.execute(sql_associacao, (id_marmita, nova_guarnicao))
+            mycursor.execute(sql_associacao, (id_marmita, id_guarnicao))
 
-        mydb.commit()  # Confirma as alterações no banco de dados
+        # Inserir e associar novas guarnições
+        for nova_guarnicao in guarnicoes_novas:
+            _, id_guarnicao = self.inserir_guarnicao(nova_guarnicao)
+            sql_associacao = "INSERT INTO tb_marmita_guarnicao (id_marmita, id_guarnicao) VALUES (%s, %s)"
+            mycursor.execute(sql_associacao, (id_marmita, id_guarnicao))
+
+        # Associar acompanhamentos existentes à marmita
+        for id_acompanhamento in acompanhamentos_existentes:
+            sql_associacao = "INSERT INTO tb_marmita_acompanhamento (id_marmita, id_acompanhamento) VALUES (%s, %s)"
+            mycursor.execute(sql_associacao, (id_marmita, id_acompanhamento))
+
+        # Inserir e associar novos acompanhamentos
+        for novo_acompanhamento in acompanhamentos_novos:
+            _, id_acompanhamento = self.inserir_acompanhamento(novo_acompanhamento)
+            sql_associacao = "INSERT INTO tb_marmita_acompanhamento (id_marmita, id_acompanhamento) VALUES (%s, %s)"
+            mycursor.execute(sql_associacao, (id_marmita, id_acompanhamento))
+
+        mydb.commit()  # Confirma as alterações
         mydb.close()  # Fecha a conexão
         return True
 
 
 
 
-    def exibir_guarnição(self):
+
+
+    def exibir_guarnicao(self):
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()
         # Query SQL para inserir o produto na tabela `tb_produto`
@@ -280,6 +299,41 @@ class Adm:
         id_guarnicao = mycursor.lastrowid  # Captura o ID da nova guarnição
         mydb.close()  # Fecha a conexão
         return True, id_guarnicao  # Retorna True e o ID
+    
+
+
+    def inserir_acompanhamento(self, nome_acompanhamento):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        sql = "INSERT INTO tb_acompanhamentos (nome_acompanhamento) VALUES (%s)"
+        mycursor.execute(sql, (nome_acompanhamento,))
+
+        mydb.commit()
+        id_acompanhamento = mycursor.lastrowid
+        mydb.close()
+        return True, id_acompanhamento
+    
+
+
+    def exibir_acompanhamento(self):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+        sql = "SELECT * FROM tb_acompanhamentos"
+        mycursor.execute(sql)
+        resultado = mycursor.fetchall()
+
+        lista_acompanhamento = []
+        for acompanhamento in resultado:
+            lista_acompanhamento.append({
+                'nome_acompanhamento': acompanhamento[1],
+                'id_acompanhamento': acompanhamento[0]
+            })
+
+        mydb.close()
+        return lista_acompanhamento if lista_acompanhamento else []
+
+
 
 
 
