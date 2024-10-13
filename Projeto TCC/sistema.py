@@ -83,12 +83,12 @@ class Sistema:
     
 
 
-    # Método para exibir um único produto com base no ID, incluindo guarnições e acompanhamentos
-    def exibir_marmita(self, id):
+    def exibir_marmita(self, id_marmita):
+        # Conexão e consulta ao banco
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Consulta SQL para selecionar a marmita e suas guarnições associadas
+        # Consulta SQL para selecionar a marmita, guarnições e acompanhamentos
         sql = """
         SELECT m.*, g.nome_guarnicao, a.nome_acompanhamento
         FROM tb_marmita AS m
@@ -98,35 +98,44 @@ class Sistema:
         LEFT JOIN tb_acompanhamentos AS a ON ma.id_acompanhamento = a.id_acompanhamento
         WHERE m.id_marmita = %s
         """
-        mycursor.execute(sql, (id,))
-        resultado = mycursor.fetchall()  # Obtém todos os resultados para incluir guarnições e acompanhamentos
+        mycursor.execute(sql, (id_marmita,))
+        resultado = mycursor.fetchall()
 
         # Caso a consulta não encontre resultados
         if not resultado:
             return None
 
-        # Extrai os dados principais da marmita
-        dados_marmita = resultado[0]
-        dicionario_produto = {
-            'id_marmita': dados_marmita[0],
-            'nome_marmita': dados_marmita[1],
-            'preco': dados_marmita[2],
-            'tamanho': dados_marmita[3],
-            'descricao': dados_marmita[4],
-            'imagem_marmita': dados_marmita[5],
-            'guarnicoes': set(),  # Usamos um set para evitar duplicatas
+        # Extrai os dados principais da marmita e organiza guarnições e acompanhamentos
+        dados_marmita = {
+            'id_marmita': resultado[0][0],  # ID da marmita
+            'nome_marmita': resultado[0][1],  # Nome da marmita
+            'preco': resultado[0][2],  # Preço
+            'tamanho': resultado[0][3],  # Tamanho
+            'descricao': resultado[0][4],  # Descrição
+            'imagem_marmita': resultado[0][5],  # Imagem
+            'guarnicoes': set(),  # Usamos set para evitar duplicatas
             'acompanhamentos': set()
         }
 
         # Adiciona as guarnições e acompanhamentos encontrados
         for item in resultado:
             if item[6]:  # Nome da guarnição está na posição 6
-                dicionario_produto['guarnicoes'].add(item[6])
+                dados_marmita['guarnicoes'].add(item[7])
             if item[7]:  # Nome do acompanhamento está na posição 7
-                dicionario_produto['acompanhamentos'].add(item[7])
+                dados_marmita['acompanhamentos'].add(item[8])
 
+        # Converter os sets para listas para uso no template
+        dados_marmita['guarnicoes'] = list(dados_marmita['guarnicoes'])
+        dados_marmita['acompanhamentos'] = list(dados_marmita['acompanhamentos'])
+
+        # Fecha a conexão
         mydb.close()
-        return [dicionario_produto]  # Retorna a lista com o dicionário atualizado
+
+        # Retorna a lista com o dicionário da marmita
+        return [dados_marmita]
+
+
+
 
 
 

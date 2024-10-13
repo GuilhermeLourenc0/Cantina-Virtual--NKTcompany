@@ -130,11 +130,40 @@ CREATE TABLE tb_marmita_guarnicao (
     FOREIGN KEY (id_guarnicao) REFERENCES tb_guarnicao(id_guarnicao)
 );
 
--- Inserindo Guarnições
-INSERT INTO tb_guarnicao (nome_guarnicao) VALUES
-('Batata Frita'),
-('Salada de Folhas'),
-('Farofa');
+-- Tabela de Acompanhamentos
+CREATE TABLE tb_acompanhamentos (
+    id_acompanhamento INT AUTO_INCREMENT PRIMARY KEY,
+    nome_acompanhamento VARCHAR(100) NOT NULL
+);
+
+-- Tabela de Relacionamento Marmita-Acompanhamento
+CREATE TABLE tb_marmita_acompanhamento (
+    id_marmita_acompanhamento INT AUTO_INCREMENT,
+    id_marmita INT NOT NULL,
+    id_acompanhamento INT NOT NULL,
+    PRIMARY KEY (id_marmita_acompanhamento),
+    FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita) ON DELETE CASCADE,
+    FOREIGN KEY (id_acompanhamento) REFERENCES tb_acompanhamentos(id_acompanhamento) ON DELETE CASCADE
+);
+
+
+INSERT INTO tb_acompanhamentos (nome_acompanhamento)
+VALUES 
+    ('Feijão'),
+    ('Salada'),
+    ('Batata Frita'),
+    ('Arroz Integral'),
+    ('Farofa');
+
+INSERT INTO tb_guarnicao (nome_guarnicao)
+VALUES 
+    ('Carne'),
+    ('Ovo'),
+    ('Frango Grelhado'),
+    ('Linguiça'),
+    ('Peixe');
+
+
 
 -- Inserindo Marmitas
 INSERT INTO tb_marmita (nome_marmita, preco, tamanho, descricao, url_img, habilitado) VALUES 

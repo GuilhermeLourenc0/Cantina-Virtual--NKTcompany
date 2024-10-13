@@ -5,7 +5,7 @@
 <body>
     <main>
         {% for marmita in lista_marunica %}
-        <img class="ft-item" src="{{ marmita.imagem_marmita }}" alt="">
+        <img class="ft-item" src="{{ marmita.imagem_marmita }}" alt="Imagem da Marmita">
 
         <section class="descricao">
             <span class="nome-produto">{{ marmita.nome_marmita }}</span>
@@ -24,6 +24,7 @@
             </div>
         </section>
 
+        <!-- Acompanhamentos Section -->
         <div class="acompanhamentos">
             <div class="header">
                 <div class="titulosubtitulo">
@@ -34,19 +35,24 @@
             </div>
 
             <div class="opcoes-acompanhamentos" style="display: flex;">
-                {% for acompanhamento in marmita.acompanhamentos %}
-                <div class="acompanhamento">
-                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="{{ acompanhamento }}">
-                    <span>{{ acompanhamento }}</span>
-                    <label>
-                        <input type="checkbox" name="acompanhamento" value="{{ acompanhamento }}">
-                        <span></span>
-                    </label>
-                </div>
-                {% endfor %}
+                {% if marmita.acompanhamentos and marmita.acompanhamentos|length > 0 %}
+                    {% for acompanhamento in marmita.acompanhamentos %}
+                    <div class="acompanhamento">
+                        <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="{{ acompanhamento }}">
+                        <span>{{ acompanhamento }}</span>
+                        <label>
+                            <input type="checkbox" name="acompanhamento" value="{{ acompanhamento }}">
+                            <span></span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Nenhum acompanhamento disponível.</p>
+                {% endif %}
             </div>
         </div>
 
+        <!-- Guarnições Section -->
         <div class="acompanhamentos">
             <div class="header">
                 <div class="titulosubtitulo">
@@ -57,19 +63,61 @@
             </div>
 
             <div class="opcoes-guarnicoes" style="display: flex;">
-                {% for guarnicao in marmita.guarnicoes %}
-                <div class="acompanhamento">
-                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="{{ guarnicao }}">
-                    <span>{{ guarnicao }}</span>
-                    <label>
-                        <input type="radio" name="guarnicao" value="{{ guarnicao }}">
-                        <span></span>
-                    </label>
-                </div>
-                {% endfor %}
+                {% if marmita.guarnicoes and marmita.guarnicoes|length > 0 %}
+                    {% for guarnicao in marmita.guarnicoes %}
+                    <div class="acompanhamento">
+                        <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="{{ guarnicao }}">
+                        <span>{{ guarnicao }}</span>
+                        <label>
+                            <input type="radio" name="guarnicao" value="{{ guarnicao }}">
+                            <span></span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Nenhuma guarnição disponível.</p>
+                {% endif %}
             </div>
         </div>
 
         {% endfor %}
     </main>
-    {% endblock %}
+</body>
+
+<div class="espacamento1"></div>
+
+<script>
+    const input = document.getElementById('meuInput');
+    const contador = document.getElementById('contador');
+
+    input.addEventListener('input', () => {
+        contador.textContent = input.value.length; // Atualiza o número de caracteres digitados
+    });
+
+    function toggleAcompanhamentos(seta) {
+        const opcoes = seta.parentElement.parentElement.querySelector('.opcoes-acompanhamentos');
+        if (opcoes.classList.contains('hidden')) {
+            opcoes.classList.remove('hidden'); // Remove a classe para mostrar
+            seta.innerHTML = '&#9660;'; // Seta para baixo
+            seta.classList.remove('rotated'); // Remove a rotação
+        } else {
+            opcoes.classList.add('hidden'); // Adiciona a classe para esconder
+            seta.innerHTML = '&#9654;'; // Seta para direita
+            seta.classList.add('rotated'); // Adiciona a rotação para a direita
+        }
+    }
+
+    function toggleGuarnicoes(seta) {
+        const opcoes = seta.parentElement.parentElement.querySelector('.opcoes-guarnicoes');
+        if (opcoes.classList.contains('hidden')) {
+            opcoes.classList.remove('hidden'); // Remove a classe para mostrar
+            seta.innerHTML = '&#9660;'; // Seta para baixo
+            seta.classList.remove('rotated'); // Remove a rotação
+        } else {
+            opcoes.classList.add('hidden'); // Adiciona a classe para esconder
+            seta.innerHTML = '&#9654;'; // Seta para direita
+            seta.classList.add('rotated'); // Adiciona a rotação para a direita
+        }
+    }
+</script>
+{% endblock %}
