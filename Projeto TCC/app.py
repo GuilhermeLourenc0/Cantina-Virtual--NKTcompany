@@ -600,26 +600,6 @@ def carrinho():
 
 
 
-# Rota para inserir marmitas no carrinho
-@app.route("/inserir_carrinho_marmita", methods=['POST'])
-def carrinho_marmita():
-    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
-    
-    if request.method == 'POST':
-        id_marmita = session.get('id', {}).get('id_marmita')  # Obtém o ID da marmita da sessão, com fallback
-        id_cliente = session['usuario_logado']['id_cliente']  # Obtém o ID do cliente da sessão
-
-        if 'IDs' not in session:
-            session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
-
-        session['IDs']['IDs_produtos'].append(id_marmita)  # Adiciona o ID da marmita à lista na sessão
-
-        carrinho = Carrinho()  # Cria uma instância da classe Carrinho
-        carrinho.inserir_item_carrinho(id_marmita, id_cliente, 'marmita')  # Adiciona a marmita ao carrinho do cliente
-        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
-
-    return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
 
 
 

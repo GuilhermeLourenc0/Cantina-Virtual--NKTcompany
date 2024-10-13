@@ -20,7 +20,7 @@ CREATE TABLE tb_cliente (
     id_curso INT,
     senha VARCHAR(255),
     tipo VARCHAR(20),
-    imagem_binaria BLOB,  -- Adiciona a coluna para armazenar a imagem
+    imagem_binaria BLOB,
     PRIMARY KEY (id_cliente),
     FOREIGN KEY (id_curso) REFERENCES tb_curso(id_curso)
 );
@@ -79,7 +79,7 @@ CREATE TABLE tb_marmita (
     id_marmita INT AUTO_INCREMENT,
     nome_marmita VARCHAR(100),
     preco DECIMAL(10,2),
-    tamanho VARCHAR(20), -- Ex: Pequena, Média, Grande
+    tamanho VARCHAR(20),
     descricao VARCHAR(255),
     url_img VARCHAR(255),
     habilitado TINYINT(1) DEFAULT 1,
@@ -97,7 +97,7 @@ CREATE TABLE tb_produtos_pedidos (
     FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido),
     FOREIGN KEY (cod_produto) REFERENCES tb_produto(cod_produto),
     FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita),
-    CHECK (cod_produto IS NOT NULL OR id_marmita IS NOT NULL)  -- Deve ter pelo menos um preenchido
+    CHECK (cod_produto IS NOT NULL OR id_marmita IS NOT NULL)
 );
 
 -- Tabela de Carrinho
@@ -120,7 +120,7 @@ CREATE TABLE tb_guarnicao (
     PRIMARY KEY (id_guarnicao)
 );
 
--- Tabela de Associação Marmita - Guarnição (Sem Quantidade)
+-- Tabela de Associação Marmita - Guarnição
 CREATE TABLE tb_marmita_guarnicao (
     id_marmita_guarnicao INT AUTO_INCREMENT,
     id_marmita INT NOT NULL,
@@ -145,6 +145,7 @@ CREATE TABLE tb_marmita_acompanhamento (
     FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita) ON DELETE CASCADE,
     FOREIGN KEY (id_acompanhamento) REFERENCES tb_acompanhamentos(id_acompanhamento) ON DELETE CASCADE
 );
+
 
 
 INSERT INTO tb_acompanhamentos (nome_acompanhamento)
@@ -176,6 +177,39 @@ INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) V
 ('Coxinha de Frango', 5.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLigfyds3_5OSm0C4_VTYXDa5g6e32kV9h7g&s', 'Coxinha de frango crocante', 2),
 ('Suco Natural de Laranja', 6.50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg7d8e8lFMBd04BSdGzf3FaB2yUNbcISqjqQ&s', 'Suco natural de laranja 300ml', 3),
 ('Pão de Queijo', 3.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtErpNOUfP6-yJLahND5XkZQpF_hPvas8-7g&s', 'Pão de queijo mineiro tradicional', 1);
+
+-- Relacionando guarnições com marmitas
+INSERT INTO tb_marmita_guarnicao (id_marmita, id_guarnicao) VALUES
+(1, 1),  -- Marmita Pequena com Carne
+(1, 2),  -- Marmita Pequena com Ovo
+(2, 2),  -- Marmita Média com Ovo
+(2, 3),  -- Marmita Média com Frango Grelhado
+(3, 4),  -- Marmita Grande com Linguiça
+(3, 5);  -- Marmita Grande com Peixe
+
+-- Relacionando acompanhamentos com marmitas
+INSERT INTO tb_marmita_acompanhamento (id_marmita, id_acompanhamento) VALUES
+(1, 1),  -- Marmita Pequena com Feijão
+(1, 2),  -- Marmita Pequena com Salada
+(2, 3),  -- Marmita Média com Batata Frita
+(2, 4),  -- Marmita Média com Arroz Integral
+(3, 1),  -- Marmita Grande com Feijão
+(3, 5);  -- Marmita Grande com Farofa
+
+CREATE TABLE tb_carrinho_guarnicao (
+    id_guarnicao INT AUTO_INCREMENT PRIMARY KEY,
+    id_carrinho INT NOT NULL,
+    guarnicao VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_carrinho) REFERENCES tb_carrinho(id_carrinho)
+);
+
+
+CREATE TABLE tb_carrinho_acompanhamento (
+    id_acompanhamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_carrinho INT NOT NULL,
+    acompanhamento VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_carrinho) REFERENCES tb_carrinho(id_carrinho)
+);
 
 
 
