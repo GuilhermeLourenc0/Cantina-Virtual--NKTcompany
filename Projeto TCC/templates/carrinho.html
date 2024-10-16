@@ -73,9 +73,7 @@
                 <span id="total-preco" class="span2">R$ {{ lista_carrinho.total_preco }}</span>
             </div>
 
-            <form action="/enviar_carrinho" method="post">
-                <button onclick="enviarCarrinho()" class="button1">Enviar</button>
-            </form>
+            <button type="button" onclick="enviarCarrinho()" class="button1">Enviar</button>
             <a href="/">Continuar Comprando</a>
         </div>
 
@@ -189,18 +187,38 @@
 
         // Função para enviar o carrinho via AJAX
         function enviarCarrinho() {
-            fetch('/enviar_carrinho', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        window.location.href = '/'; // Redireciona para a página inicial
-                    } else {
-                        alert('Erro ao enviar o carrinho');
-                    }
-                })
-                .catch(error => console.error('Erro ao enviar o carrinho:', error));
+            // Coletando os itens do carrinho
+            const itensCarrinho = [];
+            document.querySelectorAll('.produto-card').forEach(produto => {
+                const idCarrinho = produto.querySelector('input[type="number"]').getAttribute('data-id');
+                const quantidade = produto.querySelector('input[type="number"]').value;
+                itensCarrinho.push({ id_carrinho: idCarrinho, quantidade: quantidade });
+            });
+
+            fetch('/enviar_carrinho', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ itens: itensCarrinho })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = '/'; // Redireciona para a página inicial
+                } else {
+                    alert('Erro ao enviar o carrinho');
+                }
+            })
+            .catch(error => console.error('Erro ao enviar o carrinho:', error));
         }
+
     </script>
 </body>
 {% endblock %}

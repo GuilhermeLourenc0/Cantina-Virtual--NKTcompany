@@ -90,49 +90,62 @@ class Sistema:
 
         # Consulta SQL para selecionar a marmita, guarnições e acompanhamentos
         sql = """
-        SELECT m.*, g.nome_guarnicao, a.nome_acompanhamento
-        FROM tb_marmita AS m
+        SELECT 
+            m.id_marmita, m.nome_marmita, m.preco, m.tamanho, m.descricao, m.url_img, 
+            GROUP_CONCAT(DISTINCT CONCAT(g.id_guarnicao, ':', g.nome_guarnicao) SEPARATOR ', ') AS guarnicoes,
+            GROUP_CONCAT(DISTINCT CONCAT(a.id_acompanhamento, ':', a.nome_acompanhamento) SEPARATOR ', ') AS acompanhamentos
+        FROM 
+            tb_marmita AS m
         LEFT JOIN tb_marmita_guarnicao AS mg ON m.id_marmita = mg.id_marmita
         LEFT JOIN tb_guarnicao AS g ON mg.id_guarnicao = g.id_guarnicao
         LEFT JOIN tb_marmita_acompanhamento AS ma ON m.id_marmita = ma.id_marmita
         LEFT JOIN tb_acompanhamentos AS a ON ma.id_acompanhamento = a.id_acompanhamento
         WHERE m.id_marmita = %s
+        GROUP BY m.id_marmita;
         """
         mycursor.execute(sql, (id_marmita,))
-        resultado = mycursor.fetchall()
+        resultado = mycursor.fetchone()
 
         # Caso a consulta não encontre resultados
         if not resultado:
             return None
 
-        # Extrai os dados principais da marmita e organiza guarnições e acompanhamentos
+        # Função auxiliar para dividir os resultados de guarnições e acompanhamentos
+        def processar_itens(itens):
+            if not itens:
+                return []
+            lista_itens = []
+            for item in itens.split(', '):
+                id_item, nome_item = item.split(':')
+                lista_itens.append({'id': id_item, 'nome': nome_item})
+            return lista_itens
+
+        # Processa guarnições e acompanhamentos
+        guarnicoes = processar_itens(resultado[6])  # IDs e nomes das guarnições
+        acompanhamentos = processar_itens(resultado[7])  # IDs e nomes dos acompanhamentos
+
+        # Organiza os dados da marmita
         dados_marmita = {
-            'id_marmita': resultado[0][0],  # ID da marmita
-            'nome_marmita': resultado[0][1],  # Nome da marmita
-            'preco': resultado[0][2],  # Preço
-            'tamanho': resultado[0][3],  # Tamanho
-            'descricao': resultado[0][4],  # Descrição
-            'imagem_marmita': resultado[0][5],  # Imagem
-            'guarnicoes': set(),  # Usamos set para evitar duplicatas
-            'acompanhamentos': set()
+            'id_marmita': resultado[0],  # ID da marmita
+            'nome_marmita': resultado[1],  # Nome da marmita
+            'preco': resultado[2],  # Preço
+            'tamanho': resultado[3],  # Tamanho
+            'descricao': resultado[4],  # Descrição
+            'imagem_marmita': resultado[5],  # Imagem
+            'guarnicoes': guarnicoes,  # Lista de dicionários com ID e nome das guarnições
+            'acompanhamentos': acompanhamentos  # Lista de dicionários com ID e nome dos acompanhamentos
         }
-
-        # Adiciona as guarnições e acompanhamentos encontrados
-        for item in resultado:
-            if item[6]:  # Nome da guarnição está na posição 6
-                dados_marmita['guarnicoes'].add(item[7])
-            if item[7]:  # Nome do acompanhamento está na posição 7
-                dados_marmita['acompanhamentos'].add(item[8])
-
-        # Converter os sets para listas para uso no template
-        dados_marmita['guarnicoes'] = list(dados_marmita['guarnicoes'])
-        dados_marmita['acompanhamentos'] = list(dados_marmita['acompanhamentos'])
 
         # Fecha a conexão
         mydb.close()
 
         # Retorna a lista com o dicionário da marmita
         return [dados_marmita]
+
+
+
+
+
 
 
 

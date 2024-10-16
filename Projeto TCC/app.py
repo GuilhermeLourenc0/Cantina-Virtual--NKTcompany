@@ -442,17 +442,39 @@ def cancelar_pedido():
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
 
 
-# Rota para enviar o carrinho como um pedido
 @app.route("/enviar_carrinho", methods=['POST'])
 def enviar_carrinho():
     if 'usuario_logado' in session:
         id_cliente = session['usuario_logado']['id_cliente']
-        carrinho = Carrinho()
-        if carrinho.enviar_carrinho(id_cliente):
-            return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
-        else:
-            return jsonify(success=False, message="Erro ao enviar o carrinho.")
-    return jsonify(success=False, message="Usuário não autenticado.")
+        data = request.get_json()
+
+        # Verifica se os dados foram enviados corretamente
+        if data is None:
+            return jsonify(success=False, message="Erro ao obter dados do carrinho."), 400
+
+        itens = data.get('itens', [])
+        
+        # Verifica se os itens estão vazios
+        if not itens:
+            return jsonify(success=False, message="Carrinho está vazio."), 400
+
+        try:
+            carrinho = Carrinho()
+            if carrinho.enviar_carrinho(id_cliente, itens):
+                # Chama a função para remover todo o carrinho
+                carrinho.remover_todo_carrinho(id_cliente)
+                return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
+            else:
+                return jsonify(success=False, message="Erro ao enviar o carrinho."), 500
+        except Exception as e:
+            print(f"Erro ao processar pedido: {e}")
+            return jsonify(success=False, message="Erro interno do servidor."), 500
+            
+    return jsonify(success=False, message="Usuário não autenticado."), 401
+
+
+
+
 
 
 
@@ -581,21 +603,34 @@ def exibir_carrinho():
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+        return redirect('/logar')
     else:
         if request.method == 'POST':
-            id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
-            cod_produto = request.form.get('cod_produto')  # Obtém o ID do produto (pode ser None)
-            id_marmita = request.form.get('id_marmita')  # Obtém o ID da marmita (pode ser None)
+            id_cliente = session.get('usuario_logado')['id_cliente']
+            cod_produto = request.form.get('cod_produto')  # Se estiver usando
+            id_marmita = request.form.get('id_marmita')
 
-            carrinho = Carrinho()  # Cria uma instância da classe Carrinho
-            if cod_produto or id_marmita:  # Garante que pelo menos um item foi enviado
-                carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente)  # Adiciona o item ao carrinho do cliente
-            else:
-                print("Nenhum item foi selecionado para adicionar ao carrinho.")
-            return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
+            # Captura guarnições e acompanhamentos selecionados
+            guarnicoes_selecionadas = request.form.getlist('guarnicao')  # Captura todos os IDs das guarnições selecionadas
+            acompanhamentos_selecionados = request.form.getlist('acompanhamento')  # Captura todos os IDs dos acompanhamentos selecionados
+            
+            # Debug: Imprimindo os dados recebidos
+            print("Guarnições recebidas:", guarnicoes_selecionadas)
+            print("Acompanhamentos recebidos:", acompanhamentos_selecionados)
 
-        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
+            # Valida e insere no carrinho
+            carrinho = Carrinho()
+            if cod_produto or id_marmita:
+                carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente, 
+                                                guarnicoes_selecionadas, acompanhamentos_selecionados)
+            return redirect("/exibir_carrinho")
+
+        return redirect("/exibir_carrinho")
+
+
+
+
+
 
 
 

@@ -8,7 +8,7 @@ class Carrinho:
         self.id_produto = None
 
 
-    def inserir_item_carrinho(self, cod_produto, id_marmita, id_cliente):
+    def inserir_item_carrinho(self, cod_produto, id_marmita, id_cliente, guarnicoes_selecionadas=None, acompanhamentos_selecionados=None):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
@@ -37,9 +37,34 @@ class Carrinho:
             """
             mycursor.execute(sql_inserir, (id_cliente, cod_produto, id_marmita))
 
+            # Obtém o ID do carrinho recém-inserido
+            id_carrinho = mycursor.lastrowid
+
+            # Inserindo guarnições na tabela tb_carrinho_guarnicao
+            if guarnicoes_selecionadas:
+                sql_inserir_guarnicao = """
+                    INSERT INTO tb_carrinho_guarnicao (id_carrinho, guarnicao)
+                    VALUES (%s, %s)
+                """
+                for guarnicao in guarnicoes_selecionadas:  # Itera diretamente sobre a lista
+                    if guarnicao:  # Evita inserir valores vazios
+                        mycursor.execute(sql_inserir_guarnicao, (id_carrinho, guarnicao))
+
+            # Inserindo acompanhamentos na tabela tb_carrinho_acompanhamento
+            if acompanhamentos_selecionados:
+                sql_inserir_acompanhamento = """
+                    INSERT INTO tb_carrinho_acompanhamento (id_carrinho, acompanhamento)
+                    VALUES (%s, %s)
+                """
+                for acompanhamento in acompanhamentos_selecionados:  # Itera diretamente sobre a lista
+                    if acompanhamento:  # Evita inserir valores vazios
+                        mycursor.execute(sql_inserir_acompanhamento, (id_carrinho, acompanhamento))
+
         mydb.commit()
         mydb.close()
         return True
+
+
 
 
 
@@ -122,12 +147,27 @@ class Carrinho:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Consulta SQL para remover o produto do carrinho
-        sql = "DELETE FROM tb_carrinho WHERE id_carrinho = %s"
-        mycursor.execute(sql, (id_carrinho,))
+        try:
+            # Remove guarnições relacionadas
+            sql_remover_guarnicoes = "DELETE FROM tb_carrinho_guarnicao WHERE id_carrinho = %s"
+            mycursor.execute(sql_remover_guarnicoes, (id_carrinho,))
 
-        mydb.commit()
-        mydb.close()
+            # Remove acompanhamentos relacionados
+            sql_remover_acompanhamentos = "DELETE FROM tb_carrinho_acompanhamento WHERE id_carrinho = %s"
+            mycursor.execute(sql_remover_acompanhamentos, (id_carrinho,))
+
+            # Agora remove o produto do carrinho
+            sql_remover_carrinho = "DELETE FROM tb_carrinho WHERE id_carrinho = %s"
+            mycursor.execute(sql_remover_carrinho, (id_carrinho,))
+
+            mydb.commit()
+            print(f"Produto com ID {id_carrinho} removido com sucesso do carrinho.")
+        except Exception as e:
+            mydb.rollback()
+            print(f"Erro ao remover o produto do carrinho: {e}")
+        finally:
+            mydb.close()
+
 
 
     # Método para atualizar a quantidade de um produto específico no carrinho
@@ -142,18 +182,14 @@ class Carrinho:
         mydb.commit()
         mydb.close()
 
-    def enviar_carrinho(self, id_cliente):
+    def enviar_carrinho(self, id_cliente, itens):
         try:
             # Conexão ao banco de dados
             mydb = Conexao.conectar()
             mycursor = mydb.cursor()
 
-            # 1. Verifica se o carrinho tem itens (produtos e marmitas)
-            sql_carrinho = """
-                SELECT cod_produto, id_marmita, quantidade 
-                FROM tb_carrinho 
-                WHERE id_cliente = %s
-            """
+            # 1. Verifica se o carrinho tem itens
+            sql_carrinho = "SELECT cod_produto, id_marmita, quantidade FROM tb_carrinho WHERE id_cliente = %s"
             mycursor.execute(sql_carrinho, (id_cliente,))
             itens_carrinho = mycursor.fetchall()
 
@@ -173,21 +209,29 @@ class Carrinho:
                 quantidade = item[2]
 
                 if cod_produto:  # Se for um produto
-                    sql_produtos_pedido = """
-                        INSERT INTO tb_produtos_pedidos (id_pedido, cod_produto, quantidade) 
-                        VALUES (%s, %s, %s)
-                    """
+                    sql_produtos_pedido = "INSERT INTO tb_produtos_pedidos (id_pedido, cod_produto, quantidade) VALUES (%s, %s, %s)"
                     mycursor.execute(sql_produtos_pedido, (id_pedido, cod_produto, quantidade))
                 elif id_marmita:  # Se for uma marmita
-                    sql_marmitas_pedido = """
-                        INSERT INTO tb_produtos_pedidos (id_pedido, id_marmita, quantidade) 
-                        VALUES (%s, %s, %s)
-                    """
+                    sql_marmitas_pedido = "INSERT INTO tb_produtos_pedidos (id_pedido, id_marmita, quantidade) VALUES (%s, %s, %s)"
                     mycursor.execute(sql_marmitas_pedido, (id_pedido, id_marmita, quantidade))
 
-            # 4. Remove os itens do carrinho após finalizar o pedido
-            sql_limpar_carrinho = "DELETE FROM tb_carrinho WHERE id_cliente = %s"
-            mycursor.execute(sql_limpar_carrinho, (id_cliente,))
+                    # 4. Insere guarnições e acompanhamentos da marmita
+                    sql_guarnicoes = "SELECT guarnicao FROM tb_carrinho_guarnicao WHERE id_carrinho = (SELECT id_carrinho FROM tb_carrinho WHERE id_cliente = %s AND id_marmita = %s)"
+                    mycursor.execute(sql_guarnicoes, (id_cliente, id_marmita))
+                    guarnicoes = mycursor.fetchall()
+                    for guarnicao in guarnicoes:
+                        sql_inserir_guarnicao = "INSERT INTO tb_guarnicoes_pedidos (id_pedido, guarnicao) VALUES (%s, %s)"
+                        mycursor.execute(sql_inserir_guarnicao, (id_pedido, guarnicao[0]))
+
+                    sql_acompanhamentos = "SELECT acompanhamento FROM tb_carrinho_acompanhamento WHERE id_carrinho = (SELECT id_carrinho FROM tb_carrinho WHERE id_cliente = %s AND id_marmita = %s)"
+                    mycursor.execute(sql_acompanhamentos, (id_cliente, id_marmita))
+                    acompanhamentos = mycursor.fetchall()
+                    for acompanhamento in acompanhamentos:
+                        sql_inserir_acompanhamento = "INSERT INTO tb_acompanhamentos_pedidos (id_pedido, acompanhamento) VALUES (%s, %s)"
+                        mycursor.execute(sql_inserir_acompanhamento, (id_pedido, acompanhamento[0]))
+
+            # 5. Remove os itens do carrinho após finalizar o pedido
+            self.remover_produto_carrinho(id_cliente)
 
             # Confirma as operações
             mydb.commit()
@@ -202,4 +246,30 @@ class Carrinho:
 
         finally:
             # Fecha a conexão com o banco de dados
+            mydb.close()
+
+
+    def remover_todo_carrinho(self, id_cliente):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        try:
+            # Remove guarnições relacionadas
+            sql_remover_guarnicoes = "DELETE FROM tb_carrinho_guarnicao WHERE id_carrinho = (SELECT id_carrinho FROM tb_carrinho WHERE id_cliente = %s)"
+            mycursor.execute(sql_remover_guarnicoes, (id_cliente,))
+
+            # Remove acompanhamentos relacionados
+            sql_remover_acompanhamentos = "DELETE FROM tb_carrinho_acompanhamento WHERE id_carrinho = (SELECT id_carrinho FROM tb_carrinho WHERE id_cliente = %s)"
+            mycursor.execute(sql_remover_acompanhamentos, (id_cliente,))
+
+            # Agora remove o produto do carrinho
+            sql_remover_carrinho = "DELETE FROM tb_carrinho WHERE id_cliente = %s"
+            mycursor.execute(sql_remover_carrinho, (id_cliente,))
+
+            mydb.commit()
+            print(f"Todos os produtos do cliente {id_cliente} foram removidos do carrinho com sucesso.")
+        except Exception as e:
+            mydb.rollback()
+            print(f"Erro ao remover os produtos do carrinho: {e}")
+        finally:
             mydb.close()
