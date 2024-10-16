@@ -575,7 +575,6 @@ def excluir_produto_carrinho():
 
     
 
-# Rota para exibir o carrinho de compras
 @app.route("/exibir_carrinho", methods=['GET', 'POST'])
 def exibir_carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
@@ -596,6 +595,7 @@ def exibir_carrinho():
 
         lista_carrinho = carrinho.exibir_carrinho(id_cliente)  # Obtém a lista de produtos no carrinho
         return render_template("carrinho.html", lista_carrinho=lista_carrinho)  # Renderiza a página do carrinho com a lista de produtos
+
 
 
     

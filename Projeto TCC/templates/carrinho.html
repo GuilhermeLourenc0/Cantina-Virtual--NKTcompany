@@ -2,6 +2,7 @@
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/carrinho.css">
 
+<div class="espacamento1"></div>
 <body>
     <main>
 
@@ -58,6 +59,25 @@
                             <div class="baixo">
                                 <span class="desc-baixo">{{ registro.descricao }}</span>
                                 <span class="preco-item">R$ {{ registro.preco }}</span>
+
+                                <div class="guarnicoes">
+                                    <strong>Guarnições:</strong>
+                                    <ul>
+                                        {% for guarnicao in registro.guarnicoes %}
+                                        <li>{{ guarnicao }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                                <div class="acompanhamentos">
+                                    <strong>Acompanhamentos:</strong>
+                                    <ul>
+                                        {% for acompanhamento in registro.acompanhamentos %}
+                                        <li>{{ acompanhamento }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
                                 <span class="obs-item">OBS: {{ 'Observação da marmita' }}</span>
                             </div>
                         </div>
@@ -66,6 +86,8 @@
             </section>
         </div>
         {% endfor %}
+
+        
 
         <div class="finalizacao">
             <div class="preco">

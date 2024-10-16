@@ -117,7 +117,6 @@ class Carrinho:
 
 
 
-    # Método para exibir os produtos e marmitas no carrinho de um cliente
     def exibir_carrinho(self, id_cliente):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
@@ -163,17 +162,40 @@ class Carrinho:
 
             total_preco += preco_produto * quantidade_produto  # Atualiza o total de preço
 
-        # Itera sobre os resultados de marmitas e adiciona ao carrinho
+        # Itera sobre os resultados de marmitas e adiciona ao carrinho, buscando guarnições e acompanhamentos
         for resultado in resultado_marmitas:
             preco_marmita = resultado[2]
             quantidade_marmita = resultado[5]
 
+            # Consulta para obter guarnições da marmita no carrinho
+            sql_guarnicoes = """
+                SELECT g.nome_guarnicao 
+                FROM tb_carrinho_guarnicao AS cg
+                JOIN tb_guarnicao AS g ON cg.guarnicao = g.id_guarnicao
+                WHERE cg.id_carrinho = %s
+            """
+            mycursor.execute(sql_guarnicoes, (resultado[4],))
+            guarnicoes = [row[0] for row in mycursor.fetchall()]
+
+            # Consulta para obter acompanhamentos da marmita no carrinho
+            sql_acompanhamentos = """
+                SELECT a.nome_acompanhamento 
+                FROM tb_carrinho_acompanhamento AS ca
+                JOIN tb_acompanhamentos AS a ON ca.acompanhamento = a.id_acompanhamento
+                WHERE ca.id_carrinho = %s
+            """
+            mycursor.execute(sql_acompanhamentos, (resultado[4],))
+            acompanhamentos = [row[0] for row in mycursor.fetchall()]
+
+            # Adiciona as guarnições e acompanhamentos ao dicionário da marmita
             lista_carrinho['marmitas'].append({
                 'nome_marmita': resultado[1],
                 'preco': preco_marmita,
-                'imagem_produto': resultado[3],  # Agora pegando a imagem da tabela tb_marmitas
+                'imagem_produto': resultado[3],
                 'id_carrinho': resultado[4],
-                'quantidade': quantidade_marmita
+                'quantidade': quantidade_marmita,
+                'guarnicoes': guarnicoes,
+                'acompanhamentos': acompanhamentos
             })
 
             total_preco += preco_marmita * quantidade_marmita  # Atualiza o total de preço
@@ -185,6 +207,11 @@ class Carrinho:
             'marmitas': lista_carrinho['marmitas'],
             'total_preco': total_preco_formatado
         }
+
+
+
+
+
 
 
 
