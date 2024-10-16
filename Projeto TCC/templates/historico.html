@@ -80,6 +80,22 @@
                     orderDetails.appendChild(productList);
                     orderCard.appendChild(orderDetails);
 
+                    // Adiciona guarnições, se houver
+                    if (dados_pedido.guarnicoes) {
+                        const guarnicaoDiv = document.createElement('div');
+                        guarnicaoDiv.classList.add('order-guarnicoes');
+                        guarnicaoDiv.textContent = `Guarnições: ${dados_pedido.guarnicoes}`;
+                        orderCard.appendChild(guarnicaoDiv);
+                    }
+
+                    // Adiciona acompanhamentos, se houver
+                    if (dados_pedido.acompanhamentos) {
+                        const acompanhamentoDiv = document.createElement('div');
+                        acompanhamentoDiv.classList.add('order-acompanhamentos');
+                        acompanhamentoDiv.textContent = `Acompanhamentos: ${dados_pedido.acompanhamentos}`;
+                        orderCard.appendChild(acompanhamentoDiv);
+                    }
+
                     // Status e total do pedido
                     const orderStatus = document.createElement('div');
                     orderStatus.classList.add('order-status');
@@ -96,9 +112,6 @@
                 orderList.appendChild(clientDiv);
             }
         }
-
-
-
 
         // Chama a função para carregar os pedidos quando a página carrega
         document.addEventListener('DOMContentLoaded', fetchOrders);
