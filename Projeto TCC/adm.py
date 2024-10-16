@@ -60,6 +60,8 @@ class Adm:
                     'status': status_pedido,
                     'produtos': [],
                     'marmitas': [],
+                    'guarnicoes': [],  # Inicializa a lista de guarnições
+                    'acompanhamentos': [],  # Inicializa a lista de acompanhamentos
                     'total_preco': 0
                 }
 
@@ -84,6 +86,31 @@ class Adm:
                 })
                 pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita_float
 
+        # Buscar guarnições e acompanhamentos para cada pedido
+        for id_cliente, dados in pedidos.items():
+            for id_pedido in dados['pedidos']:
+                # Buscar guarnições
+                sql_guarnicoes = """
+                    SELECT g.nome_guarnicao 
+                    FROM tb_guarnicoes_pedidos AS cg
+                    JOIN tb_guarnicao AS g ON cg.id_guarnicao = g.id_guarnicao
+                    WHERE cg.id_pedido = %s
+                """
+                mycursor.execute(sql_guarnicoes, (id_pedido,))
+                guarnicoes = [row[0] for row in mycursor.fetchall()]
+                pedidos[id_cliente]['pedidos'][id_pedido]['guarnicoes'] = guarnicoes  # Adiciona as guarnições ao pedido
+
+                # Buscar acompanhamentos
+                sql_acompanhamentos = """
+                    SELECT a.nome_acompanhamento 
+                    FROM tb_acompanhamentos_pedidos AS ca
+                    JOIN tb_acompanhamentos AS a ON ca.id_acompanhamento = a.id_acompanhamento
+                    WHERE ca.id_pedido = %s
+                """
+                mycursor.execute(sql_acompanhamentos, (id_pedido,))
+                acompanhamentos = [row[0] for row in mycursor.fetchall()]
+                pedidos[id_cliente]['pedidos'][id_pedido]['acompanhamentos'] = acompanhamentos  # Adiciona os acompanhamentos ao pedido
+
         mydb.close()
 
         # Ordenar pedidos por id_cliente e id_pedido
@@ -97,6 +124,7 @@ class Adm:
         }
 
         return pedidos_ordenados
+
 
 
 

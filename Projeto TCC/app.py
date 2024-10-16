@@ -368,14 +368,20 @@ def habilitar_marmita_adm():
 
 
 # ========== Pedidos ==========
+
 @app.route("/exibir_pedidos", methods=['GET'])
 def exibir_pedidos_route():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
-    else:
+
+    try:
         adm = Adm()  # Cria uma instância da classe Adm
         lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
         return render_template('recebePedido.html', lista_pedidos=lista_pedidos)  # Passa a variável para o template
+
+    except Exception as e:
+        print(f"Erro ao exibir pedidos: {e}")  # Log do erro
+        return render_template('error.html', message="Erro ao carregar pedidos.")  # Renderiza uma página de erro
 
 
 
@@ -383,11 +389,17 @@ def exibir_pedidos_route():
 def obter_pedidos():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
-    else:
-        adm = Adm()  # Cria uma instância da classe Sistema
+
+    try:
+        adm = Adm()  # Cria uma instância da classe Adm
         lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
         print(lista_pedidos)  # Debug: Verifique os dados retornados
         return jsonify(lista_pedidos)  # Retorna a lista de pedidos em formato JSON
+
+    except Exception as e:
+        print(f"Erro ao obter pedidos: {e}")  # Log do erro
+        return jsonify({'error': "Erro ao carregar pedidos."})  # Retorna mensagem de erro em JSON
+
 
 
 

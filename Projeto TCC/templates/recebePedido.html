@@ -34,7 +34,8 @@
                                     <div class="order-details">
                                         <h3>Pedidos:</h3>
                                         <ul>`;
-                                // Exibe os produtos e marmitas em uma única lista
+                                
+                                // Exibe os produtos
                                 if (pedido.produtos && pedido.produtos.length > 0) {
                                     pedido.produtos.forEach(produto => {
                                         if (produto.nome_produto) {
@@ -43,6 +44,7 @@
                                     });
                                 }
 
+                                // Exibe as marmitas
                                 if (pedido.marmitas && pedido.marmitas.length > 0) {
                                     pedido.marmitas.forEach(marmita => {
                                         if (marmita.nome_marmita) {
@@ -51,9 +53,23 @@
                                     });
                                 }
 
-                                // Exibe uma mensagem caso não haja produtos ou marmitas
-                                if (pedido.produtos.length === 0 && pedido.marmitas.length === 0) {
-                                    cardPedidos += `<li>Nenhum produto ou marmita</li>`;
+                                // Exibe as guarnições
+                                if (pedido.guarnicoes && pedido.guarnicoes.length > 0) {
+                                    pedido.guarnicoes.forEach(guarnicao => {
+                                        cardPedidos += `<li>Guarnição: ${guarnicao}`;
+                                    });
+                                }
+
+                                // Exibe os acompanhamentos
+                                if (pedido.acompanhamentos && pedido.acompanhamentos.length > 0) {
+                                    pedido.acompanhamentos.forEach(acompanhamento => {
+                                        cardPedidos += `<li>Acompanhamento: ${acompanhamento}</li>`;
+                                    });
+                                }
+
+                                // Exibe uma mensagem caso não haja produtos, marmitas, guarnições ou acompanhamentos
+                                if (pedido.produtos.length === 0 && pedido.marmitas.length === 0 && pedido.guarnicoes.length === 0 && pedido.acompanhamentos.length === 0) {
+                                    cardPedidos += `<li>Nenhum produto, marmita, guarnição ou acompanhamento</li>`;
                                 }
 
                             cardPedidos += `</ul>
