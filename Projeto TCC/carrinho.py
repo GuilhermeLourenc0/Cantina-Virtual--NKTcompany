@@ -302,22 +302,39 @@ class Carrinho:
         mycursor = mydb.cursor()
 
         try:
-            # Remove guarnições relacionadas
-            sql_remover_guarnicoes = "DELETE FROM tb_carrinho_guarnicao WHERE id_carrinho = (SELECT id_carrinho FROM tb_carrinho WHERE id_cliente = %s)"
-            mycursor.execute(sql_remover_guarnicoes, (id_cliente,))
+            # Obter todos os ids do carrinho relacionados ao cliente
+            sql_obter_ids_carrinho = "SELECT id_carrinho FROM tb_carrinho WHERE id_cliente = %s"
+            mycursor.execute(sql_obter_ids_carrinho, (id_cliente,))
+            ids_carrinho = mycursor.fetchall()
 
-            # Remove acompanhamentos relacionados
-            sql_remover_acompanhamentos = "DELETE FROM tb_carrinho_acompanhamento WHERE id_carrinho = (SELECT id_carrinho FROM tb_carrinho WHERE id_cliente = %s)"
-            mycursor.execute(sql_remover_acompanhamentos, (id_cliente,))
+            if not ids_carrinho:
+                print(f"Carrinho do cliente {id_cliente} está vazio.")
+                return
 
-            # Agora remove o produto do carrinho
-            sql_remover_carrinho = "DELETE FROM tb_carrinho WHERE id_cliente = %s"
+            ids_carrinho_list = [str(id[0]) for id in ids_carrinho]  # Converte os ids para uma lista
+
+            # Remove guarnições relacionadas ao carrinho
+            sql_remover_guarnicoes = f"DELETE FROM tb_carrinho_guarnicao WHERE id_carrinho IN ({','.join(ids_carrinho_list)})"
+            mycursor.execute(sql_remover_guarnicoes)
+
+            # Remove acompanhamentos relacionados ao carrinho
+            sql_remover_acompanhamentos = f"DELETE FROM tb_carrinho_acompanhamento WHERE id_carrinho IN ({','.join(ids_carrinho_list)})"
+            mycursor.execute(sql_remover_acompanhamentos)
+
+            # Remove todos os itens do carrinho
+            sql_remover_carrinho = f"DELETE FROM tb_carrinho WHERE id_cliente = %s"
             mycursor.execute(sql_remover_carrinho, (id_cliente,))
 
+            # Confirma a remoção
             mydb.commit()
-            print(f"Todos os produtos do cliente {id_cliente} foram removidos do carrinho com sucesso.")
+            print(f"Todos os itens do cliente {id_cliente} foram removidos do carrinho com sucesso.")
+
         except Exception as e:
+            # Em caso de erro, desfaz as alterações
             mydb.rollback()
             print(f"Erro ao remover os produtos do carrinho: {e}")
+
         finally:
+            # Fecha a conexão com o banco de dados
             mydb.close()
+
