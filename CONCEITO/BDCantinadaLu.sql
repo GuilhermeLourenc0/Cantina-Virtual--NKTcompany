@@ -147,6 +147,24 @@ CREATE TABLE tb_marmita_acompanhamento (
 );
 
 
+-- Tabela para armazenar as guarnições dos pedidos
+CREATE TABLE tb_guarnicoes_pedidos (
+    id_guarnicao INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    guarnicao VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido) ON DELETE CASCADE
+);
+
+-- Tabela para armazenar os acompanhamentos dos pedidos
+CREATE TABLE tb_acompanhamentos_pedidos (
+    id_acompanhamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    acompanhamento VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido) ON DELETE CASCADE
+);
+
+
+
 
 INSERT INTO tb_acompanhamentos (nome_acompanhamento)
 VALUES 

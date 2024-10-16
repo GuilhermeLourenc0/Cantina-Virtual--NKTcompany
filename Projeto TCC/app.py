@@ -607,14 +607,14 @@ def carrinho():
     else:
         if request.method == 'POST':
             id_cliente = session.get('usuario_logado')['id_cliente']
-            cod_produto = request.form.get('cod_produto')  # Se estiver usando
-            id_marmita = request.form.get('id_marmita')
+            cod_produto = request.form.get('cod_produto')  # Para produtos
+            id_marmita = request.form.get('id_marmita')  # Para marmitas
 
             # Captura guarnições e acompanhamentos selecionados
-            guarnicoes_selecionadas = request.form.getlist('guarnicao')  # Captura todos os IDs das guarnições selecionadas
-            acompanhamentos_selecionados = request.form.getlist('acompanhamento')  # Captura todos os IDs dos acompanhamentos selecionados
-            
-            # Debug: Imprimindo os dados recebidos
+            guarnicoes_selecionadas = request.form.getlist('guarnicao')  # Lista de guarnições selecionadas
+            acompanhamentos_selecionados = request.form.getlist('acompanhamento')  # Lista de acompanhamentos selecionados
+
+            # Debug: Imprime os dados recebidos para verificar
             print("Guarnições recebidas:", guarnicoes_selecionadas)
             print("Acompanhamentos recebidos:", acompanhamentos_selecionados)
 
@@ -622,10 +622,11 @@ def carrinho():
             carrinho = Carrinho()
             if cod_produto or id_marmita:
                 carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente, 
-                                                guarnicoes_selecionadas, acompanhamentos_selecionados)
+                                               guarnicoes_selecionadas, acompanhamentos_selecionados)
             return redirect("/exibir_carrinho")
 
         return redirect("/exibir_carrinho")
+
 
 
 

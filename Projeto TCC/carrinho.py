@@ -12,57 +12,105 @@ class Carrinho:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Verifica se o item (produto ou marmita) já está no carrinho do cliente
-        sql_verificar = """
-            SELECT quantidade FROM tb_carrinho
-            WHERE id_cliente = %s AND (cod_produto = %s OR id_marmita = %s)
-        """
-        mycursor.execute(sql_verificar, (id_cliente, cod_produto, id_marmita))
-        resultado = mycursor.fetchone()
-
-        if resultado:
-            # Se o item já estiver no carrinho, atualiza a quantidade
-            nova_quantidade = resultado[0] + 1
-            sql_update = """
-                UPDATE tb_carrinho
-                SET quantidade = %s
-                WHERE id_cliente = %s AND (cod_produto = %s OR id_marmita = %s)
-            """
-            mycursor.execute(sql_update, (nova_quantidade, id_cliente, cod_produto, id_marmita))
-        else:
-            # Se o item não estiver no carrinho, insere um novo item
-            sql_inserir = """
-                INSERT INTO tb_carrinho (id_cliente, cod_produto, id_marmita, quantidade)
-                VALUES (%s, %s, %s, 1)
-            """
-            mycursor.execute(sql_inserir, (id_cliente, cod_produto, id_marmita))
-
-            # Obtém o ID do carrinho recém-inserido
-            id_carrinho = mycursor.lastrowid
-
-            # Inserindo guarnições na tabela tb_carrinho_guarnicao
-            if guarnicoes_selecionadas:
-                sql_inserir_guarnicao = """
-                    INSERT INTO tb_carrinho_guarnicao (id_carrinho, guarnicao)
-                    VALUES (%s, %s)
+        try:
+            if id_marmita:
+                # Verifica se já existe uma marmita com as mesmas guarnições e acompanhamentos no carrinho
+                sql_verificar_marmita = """
+                    SELECT c.id_carrinho
+                    FROM tb_carrinho c
+                    LEFT JOIN tb_carrinho_guarnicao cg ON c.id_carrinho = cg.id_carrinho
+                    LEFT JOIN tb_carrinho_acompanhamento ca ON c.id_carrinho = ca.id_carrinho
+                    WHERE c.id_cliente = %s AND c.id_marmita = %s
+                    GROUP BY c.id_carrinho
+                    HAVING 
+                        (COALESCE(GROUP_CONCAT(DISTINCT cg.guarnicao ORDER BY cg.guarnicao), '') = %s) AND 
+                        (COALESCE(GROUP_CONCAT(DISTINCT ca.acompanhamento ORDER BY ca.acompanhamento), '') = %s)
                 """
-                for guarnicao in guarnicoes_selecionadas:  # Itera diretamente sobre a lista
-                    if guarnicao:  # Evita inserir valores vazios
-                        mycursor.execute(sql_inserir_guarnicao, (id_carrinho, guarnicao))
+                
+                # Concatena as guarnições e acompanhamentos selecionados para comparação
+                guarnicoes_str = ','.join(sorted(guarnicoes_selecionadas)) if guarnicoes_selecionadas else ''
+                acompanhamentos_str = ','.join(sorted(acompanhamentos_selecionados)) if acompanhamentos_selecionados else ''
 
-            # Inserindo acompanhamentos na tabela tb_carrinho_acompanhamento
-            if acompanhamentos_selecionados:
-                sql_inserir_acompanhamento = """
-                    INSERT INTO tb_carrinho_acompanhamento (id_carrinho, acompanhamento)
-                    VALUES (%s, %s)
+                # Executa a consulta para verificar se existe uma marmita igual no carrinho
+                mycursor.execute(sql_verificar_marmita, (
+                    id_cliente, id_marmita, guarnicoes_str, acompanhamentos_str
+                ))
+                resultado = mycursor.fetchone()
+
+                if resultado:
+                    # Marmita com as mesmas guarnições e acompanhamentos já existe, atualiza a quantidade
+                    id_carrinho = resultado[0]
+                    sql_atualizar_quantidade = """
+                        UPDATE tb_carrinho
+                        SET quantidade = quantidade + 1
+                        WHERE id_carrinho = %s
+                    """
+                    mycursor.execute(sql_atualizar_quantidade, (id_carrinho,))
+                else:
+                    # Se não existir marmita com as mesmas características, insere uma nova
+                    sql_inserir_carrinho = """
+                        INSERT INTO tb_carrinho (id_cliente, cod_produto, id_marmita, quantidade)
+                        VALUES (%s, %s, %s, 1)
+                    """
+                    mycursor.execute(sql_inserir_carrinho, (id_cliente, cod_produto, id_marmita))
+
+                    # Obtém o ID do carrinho recém-inserido
+                    id_carrinho = mycursor.lastrowid
+
+                    # Inserir guarnições na tabela tb_carrinho_guarnicao
+                    if guarnicoes_selecionadas:
+                        sql_inserir_guarnicao = """
+                            INSERT INTO tb_carrinho_guarnicao (id_carrinho, guarnicao)
+                            VALUES (%s, %s)
+                        """
+                        for guarnicao in guarnicoes_selecionadas:
+                            mycursor.execute(sql_inserir_guarnicao, (id_carrinho, guarnicao))
+
+                    # Inserir acompanhamentos na tabela tb_carrinho_acompanhamento
+                    if acompanhamentos_selecionados:
+                        sql_inserir_acompanhamento = """
+                            INSERT INTO tb_carrinho_acompanhamento (id_carrinho, acompanhamento)
+                            VALUES (%s, %s)
+                        """
+                        for acompanhamento in acompanhamentos_selecionados:
+                            mycursor.execute(sql_inserir_acompanhamento, (id_carrinho, acompanhamento))
+
+            else:
+                # Para produtos, verifica se já existe no carrinho e atualiza a quantidade
+                sql_verificar_produto = """
+                    SELECT quantidade FROM tb_carrinho
+                    WHERE id_cliente = %s AND cod_produto = %s
                 """
-                for acompanhamento in acompanhamentos_selecionados:  # Itera diretamente sobre a lista
-                    if acompanhamento:  # Evita inserir valores vazios
-                        mycursor.execute(sql_inserir_acompanhamento, (id_carrinho, acompanhamento))
+                mycursor.execute(sql_verificar_produto, (id_cliente, cod_produto))
+                resultado = mycursor.fetchone()
 
-        mydb.commit()
-        mydb.close()
-        return True
+                if resultado:
+                    nova_quantidade = resultado[0] + 1
+                    sql_update_produto = """
+                        UPDATE tb_carrinho
+                        SET quantidade = %s
+                        WHERE id_cliente = %s AND cod_produto = %s
+                    """
+                    mycursor.execute(sql_update_produto, (nova_quantidade, id_cliente, cod_produto))
+                else:
+                    # Se o produto não existir no carrinho, insere um novo
+                    sql_inserir_produto = """
+                        INSERT INTO tb_carrinho (id_cliente, cod_produto, quantidade)
+                        VALUES (%s, %s, 1)
+                    """
+                    mycursor.execute(sql_inserir_produto, (id_cliente, cod_produto))
+
+            mydb.commit()
+
+        except Exception as e:
+            mydb.rollback()
+            print(f"Erro ao inserir item no carrinho: {e}")
+        finally:
+            mydb.close()
+
+
+
+
 
 
 
