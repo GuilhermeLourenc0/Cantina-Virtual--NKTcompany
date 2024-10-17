@@ -10,7 +10,7 @@
                 <div class="profile-container" id="profile-container">
                     <div class="profile-image">
                         <!-- Pré-visualização da imagem do perfil -->
-                        <img id="profile-img" src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}" alt="Imagem do Perfil" width="150" height="150" onerror="this.src='../static/img/default-avatar.png';">
+                        <img id="profile-img" src="{{ session['usuario_logado']['imagem'] }}" alt="Imagem do Perfil" width="150" height="150" onerror="this.src='../static/img/default-avatar.png';">
                     </div>
                     
                     <div class="overlay">
