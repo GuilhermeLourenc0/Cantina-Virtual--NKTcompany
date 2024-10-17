@@ -127,6 +127,7 @@ class Usuario:
             self.senha = resultado[5]
             self.tipo = resultado[6]
             self.email = resultado[3]
+            self.imagem = resultado[7]
         else:
             self.logado = False
 

@@ -7,6 +7,7 @@ from adm import Adm
 import random
 from twilio.rest import Client
 import os
+from upload_file import upload_file
 
 
 
@@ -105,7 +106,8 @@ def cadastro():
                     "tel": usuario.tel, 
                     "id_cliente": usuario.id_cliente, 
                     "tipo": usuario.tipo,
-                    "senha": usuario.senha
+                    "senha": usuario.senha,
+                    "imagem":usuario.imagem
                 }
             # Redireciona para a tela de verificação
             return redirect("/verificacao")
@@ -151,7 +153,8 @@ def logar():
                 "tel": usuario.tel, 
                 "id_cliente": usuario.id_cliente, 
                 "tipo": usuario.tipo,
-                "senha": usuario.senha
+                "senha": usuario.senha,
+                "imagem":usuario.imagem
             }
             tipo = session.get('usuario_logado')['tipo']
             
@@ -814,6 +817,7 @@ def atualizar_perfil():
     senha = request.form.get('senha')
     confirmar_senha = request.form.get('confirmar_senha')
     imagem_perfil = request.files.get('imagem_perfil')
+    caminho_imagem = upload_file(imagem_perfil)
 
     # Verifica se as senhas coincidem
     if senha != confirmar_senha:
@@ -829,15 +833,15 @@ def atualizar_perfil():
         return redirect('/perfil')
 
     # Verifica se uma imagem foi enviada
-    caminho_imagem = None
-    if imagem_perfil and imagem_perfil.filename != '':
-        caminho_imagem = os.path.join(app.config['UPLOAD_FOLDER'], imagem_perfil.filename)
-        try:
-            imagem_perfil.save(caminho_imagem)
-            flash('Imagem salva com sucesso!', 'success')
-        except Exception as e:
-            flash(f'Erro ao salvar a imagem: {str(e)}', 'error')
-            return redirect('/perfil')  # Redireciona se falhar ao salvar a imagem
+    # caminho_imagem = None
+    # if imagem_perfil and imagem_perfil != '':
+    #     caminho_imagem = os.path.join(app.config['UPLOAD_FOLDER'], imagem_perfil.filename)
+    #     try:
+    #         imagem_perfil.save(caminho_imagem)
+    #         flash('Imagem salva com sucesso!', 'success')
+    #     except Exception as e:
+    #         flash(f'Erro ao salvar a imagem: {str(e)}', 'error')
+    #         return redirect('/perfil')  # Redireciona se falhar ao salvar a imagem
 
     # Atualiza nome e imagem (sem alterar a senha)
     resultado = perfil.atualizar_perfil(id_cliente, nome, caminho_imagem)
