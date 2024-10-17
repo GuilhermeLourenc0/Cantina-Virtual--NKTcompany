@@ -83,6 +83,7 @@ CREATE TABLE tb_marmita (
     descricao VARCHAR(255),
     url_img VARCHAR(255),
     habilitado TINYINT(1) DEFAULT 1,
+    imagem_binaria LONGBLOB,
     PRIMARY KEY (id_marmita)
 );
 
