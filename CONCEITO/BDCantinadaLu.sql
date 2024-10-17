@@ -230,9 +230,6 @@ CREATE TABLE tb_carrinho_acompanhamento (
     FOREIGN KEY (id_carrinho) REFERENCES tb_carrinho(id_carrinho)
 );
 
-=======
-ALTER TABLE tb_produto ADD COLUMN imagem_binaria varchar(225);
->>>>>>> 0b33e6c9c7c229507918cdb5163b0999f7a8d15a
 
 
  -- Inserindo os cursos e turmas no Banco de Dados
