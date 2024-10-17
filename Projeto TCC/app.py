@@ -729,15 +729,24 @@ def editar_marmita():
         flash('ID da marmita não encontrado.', 'error')
         return redirect('/adm')  # Redireciona se o ID não estiver na sessão
 
-    sistema = Sistema()  # Cria uma instância da classe Adm
+    sistema = Sistema()  # Cria uma instância da classe
     lista_marunica = sistema.exibir_marmita(id_marmita)
     
     if not lista_marunica:
         flash('Nenhuma marmita encontrada.', 'error')
         return redirect('/inicialadm')  # Ou outra página relevante
+
+    # Extrai os dados retornados, incluindo as guarnições e acompanhamentos
+    marmita_dados = lista_marunica[0]
     
-    # Renderiza o template com a lista de marmitas
-    return render_template("editarMarmita.html", lista_marunica=lista_marunica)
+    # Renderiza o template com todos os dados necessários
+    return render_template(
+        "editarMarmita.html", 
+        lista_marunica=lista_marunica,
+        todos_acompanhamentos=marmita_dados['todos_acompanhamentos'],  # Passa todos os acompanhamentos
+        todas_guarnicoes=marmita_dados['todas_guarnicoes']  # Passa todas as guarnições
+    )
+
 
 
 
@@ -747,16 +756,15 @@ def editar_marmita():
 @app.route("/atualizar_marmita", methods=['POST'])
 def atualizar_marmita():
     if 'usuario_logado' not in session:
-        flash('Você precisa estar logado para realizar esta ação.', 'error')
-        return redirect('/logar')
+        return jsonify({'status': 'error', 'message': 'Você precisa estar logado para realizar esta ação.'}), 401
     
-    adm = Adm()  # Cria uma instância da classe Adm
+    adm = Adm()
     id_marmita = request.form['id_marmita']
     nome = request.form['nome']
     preco = request.form['preco']
     descricao = request.form['descricao']
     tamanho = request.form['tamanho']
-    imagem = request.files.get('imagem')  # Para o upload de imagem
+    imagem = request.files.get('imagem')
 
     # Capturando acompanhamentos e guarnições selecionados
     acompanhamentos = request.form.getlist('acompanhamentos[]')
@@ -764,17 +772,17 @@ def atualizar_marmita():
 
     # Validação dos campos obrigatórios
     if not id_marmita or not nome or not preco or not descricao or not tamanho:
-        flash('Todos os campos obrigatórios devem ser preenchidos.', 'error')
-        return redirect('/editar_marmita')
+        return jsonify({'status': 'error', 'message': 'Todos os campos obrigatórios devem ser preenchidos.'}), 400
     
     try:
-        # Chama a função de atualização com os novos parâmetros
+        # Atualiza a marmita com os dados fornecidos
         adm.atualizar_marmita(id_marmita, nome, preco, descricao, tamanho, acompanhamentos, guarnicoes, imagem)
-        flash('Marmita atualizada com sucesso!', 'success')
+        return jsonify({'status': 'success', 'message': 'Marmita atualizada com sucesso!'})
     except Exception as e:
-        flash(f'Ocorreu um erro ao atualizar a marmita: {str(e)}', 'error')
-    
-    return redirect('/editar_marmita')
+        return jsonify({'status': 'error', 'message': f'Ocorreu um erro ao atualizar a marmita: {str(e)}'}), 500
+
+
+
 
 
 

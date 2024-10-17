@@ -22,9 +22,9 @@
             <tbody>
                 {% for marmita in lista_marunica %}
                 <tr>
-                    <form method="POST" action="/atualizar_marmita" enctype="multipart/form-data">
+                    <form id="form-marmita-{{ marmita.id_marmita }}" enctype="multipart/form-data" onsubmit="atualizarMarmita(event, {{ marmita.id_marmita }})">
                         <input type="hidden" name="id_marmita" value="{{ marmita.id_marmita }}">
-                        
+
                         <td>
                             <input type="text" name="nome" value="{{ marmita.nome_marmita }}" required>
                         </td>
@@ -35,7 +35,7 @@
                             <textarea name="descricao" required>{{ marmita.descricao }}</textarea>
                         </td>
                         <td>
-                            <img src="{{ url_for('imagem_marmita', id_marmita=marmita.id_marmita) }}" alt="Imagem da Marmita {{ marmita.nome_marmita }}" style="width: 100px; height: auto;">
+                            <img id="imagem-atual-{{ marmita.id_marmita }}" src="{{ marmita.url_img }}" alt="Imagem da Marmita {{ marmita.nome_marmita }}" style="width: 100px; height: auto;">
                         </td>
                         <td>
                             <input type="file" name="imagem" accept="image/png, image/jpeg">
@@ -47,22 +47,25 @@
                                 <option value="Grande" {% if marmita.tamanho == 'Grande' %}selected{% endif %}>Grande</option>
                             </select>
                         </td>
-                        <td>
-                            {% for acompanhamento in marmita.acompanhamentos %}
-                            <label>
-                                <input type="checkbox" name="acompanhamentos[]" value="{{ acompanhamento.id }}" {% if acompanhamento.id in marmita.acompanhamentos_selecionados %}checked{% endif %}>
-                                {{ acompanhamento.nome }}
-                            </label><br>
-                            {% endfor %}
-                        </td>
-                        <td>
-                            {% for guarnicao in marmita.guarnicoes %}
-                            <label>
-                                <input type="checkbox" name="guarnicoes[]" value="{{ guarnicao.id }}" {% if guarnicao.id in marmita.guarnicoes_selecionadas %}checked{% endif %}>
-                                {{ guarnicao.nome }}
-                            </label><br>
-                            {% endfor %}
-                        </td>
+
+                            <td>
+                                {% for acompanhamento in todos_acompanhamentos %}
+                                <label>
+                                    <input type="checkbox" name="acompanhamentos[]" value="{{ acompanhamento.id }}" {% if acompanhamento.id in marmita.acompanhamentos %}checked{% endif %}>
+                                    {{ acompanhamento.nome }}
+                                </label><br>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for guarnicao in todas_guarnicoes %}
+                                <label>
+                                    <input type="checkbox" name="guarnicoes[]" value="{{ guarnicao.id }}" {% if guarnicao.id in marmita.guarnicoes %}checked{% endif %}>
+                                    {{ guarnicao.nome }}
+                                </label><br>
+                                {% endfor %}
+                            </td>
+                            
+
                         <td>
                             <button type="submit">Atualizar Marmita</button>
                         </td>
@@ -75,5 +78,34 @@
 </body>
 
 <div class="espacamento1"></div>
+
+<script>
+function atualizarMarmita(event, idMarmita) {
+    event.preventDefault();
+
+    let form = document.getElementById('form-marmita-' + idMarmita);
+    let formData = new FormData(form);
+
+    fetch("/atualizar_marmita", {
+        method: "POST",
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);
+            if (data.url_imagem) {
+                document.getElementById('imagem-atual-' + idMarmita).src = data.url_imagem; // Atualiza a imagem atualizada em tempo real
+            }
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao tentar atualizar a marmita.');
+    });
+}
+</script>
 
 {% endblock %}

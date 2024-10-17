@@ -88,8 +88,8 @@ class Sistema:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Consulta SQL para selecionar a marmita, guarnições e acompanhamentos
-        sql = """
+        # Consulta SQL para selecionar a marmita, guarnições e acompanhamentos associados
+        sql_marmita = """
         SELECT 
             m.id_marmita, m.nome_marmita, m.preco, m.tamanho, m.descricao, m.url_img,
             GROUP_CONCAT(DISTINCT CONCAT(g.id_guarnicao, ':', g.nome_guarnicao) SEPARATOR ', ') AS guarnicoes,
@@ -103,7 +103,7 @@ class Sistema:
         WHERE m.id_marmita = %s
         GROUP BY m.id_marmita;
         """
-        mycursor.execute(sql, (id_marmita,))
+        mycursor.execute(sql_marmita, (id_marmita,))
         resultado = mycursor.fetchone()
 
         # Caso a consulta não encontre resultados
@@ -120,9 +120,19 @@ class Sistema:
                 lista_itens.append({'id': id_item, 'nome': nome_item})
             return lista_itens
 
-        # Processa guarnições e acompanhamentos
-        guarnicoes = processar_itens(resultado[6])  # IDs e nomes das guarnições
-        acompanhamentos = processar_itens(resultado[7])  # IDs e nomes dos acompanhamentos
+        # Processa guarnições e acompanhamentos associados à marmita
+        guarnicoes_associadas = processar_itens(resultado[6])  # IDs e nomes das guarnições
+        acompanhamentos_associados = processar_itens(resultado[7])  # IDs e nomes dos acompanhamentos
+
+        # Consulta SQL para pegar todas as guarnições
+        sql_todas_guarnicoes = "SELECT id_guarnicao, nome_guarnicao FROM tb_guarnicao"
+        mycursor.execute(sql_todas_guarnicoes)
+        todas_guarnicoes = [{'id': str(row[0]), 'nome': row[1]} for row in mycursor.fetchall()]
+
+        # Consulta SQL para pegar todos os acompanhamentos
+        sql_todos_acompanhamentos = "SELECT id_acompanhamento, nome_acompanhamento FROM tb_acompanhamentos"
+        mycursor.execute(sql_todos_acompanhamentos)
+        todos_acompanhamentos = [{'id': str(row[0]), 'nome': row[1]} for row in mycursor.fetchall()]
 
         # Organiza os dados da marmita
         dados_marmita = {
@@ -132,8 +142,10 @@ class Sistema:
             'tamanho': resultado[3],  # Tamanho
             'descricao': resultado[4],  # Descrição
             'imagem_marmita': resultado[5],  # Imagem
-            'guarnicoes': guarnicoes,  # Lista de dicionários com ID e nome das guarnições
-            'acompanhamentos': acompanhamentos  # Lista de dicionários com ID e nome dos acompanhamentos
+            'guarnicoes': guarnicoes_associadas,  # Guarnições associadas à marmita
+            'acompanhamentos': acompanhamentos_associados,  # Acompanhamentos associados à marmita
+            'todas_guarnicoes': todas_guarnicoes,  # Todas as guarnições disponíveis
+            'todos_acompanhamentos': todos_acompanhamentos  # Todos os acompanhamentos disponíveis
         }
 
         # Fecha a conexão
@@ -141,6 +153,7 @@ class Sistema:
 
         # Retorna a lista com o dicionário da marmita
         return [dados_marmita]
+
 
 
 
