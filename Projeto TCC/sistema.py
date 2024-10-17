@@ -91,7 +91,7 @@ class Sistema:
         # Consulta SQL para selecionar a marmita, guarnições e acompanhamentos
         sql = """
         SELECT 
-            m.id_marmita, m.nome_marmita, m.preco, m.tamanho, m.descricao, m.url_img, 
+            m.id_marmita, m.nome_marmita, m.preco, m.tamanho, m.descricao, m.url_img,
             GROUP_CONCAT(DISTINCT CONCAT(g.id_guarnicao, ':', g.nome_guarnicao) SEPARATOR ', ') AS guarnicoes,
             GROUP_CONCAT(DISTINCT CONCAT(a.id_acompanhamento, ':', a.nome_acompanhamento) SEPARATOR ', ') AS acompanhamentos
         FROM 

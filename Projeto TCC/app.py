@@ -304,14 +304,15 @@ def exibir_marmita_unica():
         return redirect('/')  # Redireciona se o ID não estiver na sessão
 
     sistema = Sistema()  # Cria uma instância da classe Sistema
-    lista_marunica = sistema.exibir_marmita(id_marmita)
+    dados_marmita = sistema.exibir_marmita(id_marmita)  # Aqui agora retorna um único item
     
-    if lista_marunica is None:
+    if dados_marmita is None:
         flash('Produto não encontrado.', 'error')
         return redirect('/')  # Ou outra página que faça sentido
 
     # Renderiza o template com os detalhes do produto
-    return render_template("marmita.html", lista_marunica=lista_marunica)
+    return render_template("marmita.html", marmita=dados_marmita[0])
+
 
 
 # Habilitar e desabilitar o produto (adm)
