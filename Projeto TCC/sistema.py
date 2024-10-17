@@ -195,7 +195,8 @@ class Sistema:
                     'imagem_marmita': produto[5],
                     'tamanho': produto[3],
                     'descricao': produto[4],
-                    'id_marmita': produto[0]
+                    'id_marmita': produto[0],
+                    'habilitado': produto[6]  # Certifique-se de que este índice corresponde ao campo 'habilitado'
                 })
         mydb.close()  # Fecha a conexão com o banco de dados
         return lista_marmitas if lista_marmitas else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
