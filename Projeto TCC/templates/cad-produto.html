@@ -50,6 +50,7 @@
                 <label for="guarnicao_{{ guarnicao.id_guarnicao }}">{{ guarnicao.nome_guarnicao }}</label>
             </div>
             {% endfor %}
+            <div id="lista_novas_guarnicoes"></div>
 
             <!-- Acompanhamentos -->
             <h5>Acompanhamentos:</h5>
@@ -59,8 +60,6 @@
                 <label for="acompanhamento_{{ acompanhamento.id_acompanhamento }}">{{ acompanhamento.nome_acompanhamento }}</label>
             </div>
             {% endfor %}
-
-            <div id="lista_novas_guarnicoes"></div>
             <div id="lista_novos_acompanhamentos"></div>
         </div>
         
@@ -114,6 +113,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        // Adiciona a nova guarnição na lista de guarnições, não nos acompanhamentos
                         var listaNovasGuarnicoesDiv = document.getElementById("lista_novas_guarnicoes");
                         var novaGuarnicaoDiv = document.createElement("div");
                         
@@ -121,7 +121,7 @@
                             <label>${nomeGuarnicao}</label>`;
                         listaNovasGuarnicoesDiv.appendChild(novaGuarnicaoDiv);
                         
-                        document.getElementById("nome_guarnicao").value = ""; 
+                        document.getElementById("nome_guarnicao").value = ""; // Limpa o campo de texto
                     } else {
                         alert("Erro ao adicionar a guarnição.");
                     }
@@ -142,6 +142,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        // Adiciona o novo acompanhamento na lista de acompanhamentos
                         var listaNovosAcompanhamentosDiv = document.getElementById("lista_novos_acompanhamentos");
                         var novoAcompanhamentoDiv = document.createElement("div");
                         
@@ -149,13 +150,14 @@
                             <label>${nomeAcompanhamento}</label>`;
                         listaNovosAcompanhamentosDiv.appendChild(novoAcompanhamentoDiv);
                         
-                        document.getElementById("nome_acompanhamento").value = ""; 
+                        document.getElementById("nome_acompanhamento").value = ""; // Limpa o campo de texto
                     } else {
                         alert("Erro ao adicionar o acompanhamento.");
                     }
                 });
             }
         }
+
     </script>
 </body>
 {% endblock %}

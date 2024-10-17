@@ -709,6 +709,93 @@ def imagem_produto(cod_produto):
     return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
 
 
+
+
+
+
+
+@app.route("/editar_marmita", methods=['POST', 'GET'])
+def editar_marmita():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+    
+    if request.method == 'POST':
+        btn_marmita = request.form.get('btn-marmita')  # Obtém o ID do produto selecionado
+        session['id'] = {'id_marmita': btn_marmita}  # Armazena o ID na sessão
+
+    id_marmita = session['id'].get('id_marmita')
+    
+    if id_marmita is None:
+        flash('ID da marmita não encontrado.', 'error')
+        return redirect('/adm')  # Redireciona se o ID não estiver na sessão
+
+    sistema = Sistema()  # Cria uma instância da classe Adm
+    lista_marunica = sistema.exibir_marmita(id_marmita)
+    
+    if not lista_marunica:
+        flash('Nenhuma marmita encontrada.', 'error')
+        return redirect('/inicialadm')  # Ou outra página relevante
+    
+    # Renderiza o template com a lista de marmitas
+    return render_template("editarMarmita.html", lista_marunica=lista_marunica)
+
+
+
+
+
+
+@app.route("/atualizar_marmita", methods=['POST'])
+def atualizar_marmita():
+    if 'usuario_logado' not in session:
+        flash('Você precisa estar logado para realizar esta ação.', 'error')
+        return redirect('/logar')
+    
+    adm = Adm()  # Cria uma instância da classe Adm
+    id_marmita = request.form['id_marmita']
+    nome = request.form['nome']
+    preco = request.form['preco']
+    descricao = request.form['descricao']
+    tamanho = request.form['tamanho']
+    imagem = request.files.get('imagem')  # Para o upload de imagem
+
+    # Capturando acompanhamentos e guarnições selecionados
+    acompanhamentos = request.form.getlist('acompanhamentos[]')
+    guarnicoes = request.form.getlist('guarnicoes[]')
+
+    # Validação dos campos obrigatórios
+    if not id_marmita or not nome or not preco or not descricao or not tamanho:
+        flash('Todos os campos obrigatórios devem ser preenchidos.', 'error')
+        return redirect('/editar_marmita')
+    
+    try:
+        # Chama a função de atualização com os novos parâmetros
+        adm.atualizar_marmita(id_marmita, nome, preco, descricao, tamanho, acompanhamentos, guarnicoes, imagem)
+        flash('Marmita atualizada com sucesso!', 'success')
+    except Exception as e:
+        flash(f'Ocorreu um erro ao atualizar a marmita: {str(e)}', 'error')
+    
+    return redirect('/editar_marmita')
+
+
+
+
+
+@app.route('/imagem_marmita/<int:id_marmita>')
+def imagem_marmita(id_marmita):
+    adm = Adm()
+    imagem = adm.obter_imagem_marmita(id_marmita)
+    
+    if imagem:
+        return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
+    return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
+
+
+
+
+
+
+
+
 # Rota para solicitar troca de senha
 @app.route("/trocar_senha", methods=['GET', 'POST'])
 def trocar_senha():

@@ -434,3 +434,64 @@ class Adm:
         if resultado:
             return resultado[0]  # Retorna a imagem binária
         return None  # Retorna None se não encontrar
+    
+
+    def atualizar_marmita(self, id_marmita, nome, preco, descricao, tamanho, acompanhamentos, guarnicoes, file=None):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # Monta a consulta SQL para atualizar a marmita
+        sql = """
+            UPDATE tb_marmita
+            SET nome_marmita = %s, preco = %s, descricao = %s, tamanho = %s
+        """
+        valores = (nome, preco, descricao, tamanho)
+
+        # Se um arquivo foi enviado
+        if file:
+            # Lê os dados da imagem como binário
+            dados_imagem = file.read()
+            sql += ", imagem_binaria = %s, url_img = %s"  # Atualiza a coluna da imagem
+            valores += (dados_imagem, f"/imagem_marmita/{id_marmita}")  # Adiciona a URL da imagem aos valores
+
+        sql += " WHERE id_marmita = %s"  # Condição para o ID da marmita
+        valores += (id_marmita,)  # Adiciona o ID da marmita aos valores
+
+        # Executa a consulta para atualizar a marmita
+        mycursor.execute(sql, valores)
+
+        # Limpa os acompanhamentos e guarnições antigos
+        mycursor.execute("DELETE FROM tb_marmitas_acompanhamentos WHERE id_marmita = %s", (id_marmita,))
+        mycursor.execute("DELETE FROM tb_marmitas_guarnicoes WHERE id_marmita = %s", (id_marmita,))
+
+        # Adiciona os novos acompanhamentos
+        for id_acompanhamento in acompanhamentos:
+            mycursor.execute("INSERT INTO tb_marmitas_acompanhamentos (id_marmita, id_acompanhamento) VALUES (%s, %s)",
+                            (id_marmita, id_acompanhamento))
+
+        # Adiciona as novas guarnições
+        for id_guarnicao in guarnicoes:
+            mycursor.execute("INSERT INTO tb_marmitas_guarnicoes (id_marmita, id_guarnicao) VALUES (%s, %s)",
+                            (id_marmita, id_guarnicao))
+
+        mydb.commit()
+        mydb.close()
+
+
+
+
+    # Função para obter a imagem de uma marmita
+    def obter_imagem_marmita(self, id_marmita):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        # Consulta SQL para obter a imagem da marmita
+        sql = "SELECT imagem_binaria FROM tb_marmita WHERE id_marmita = %s"
+        mycursor.execute(sql, (id_marmita,))
+        resultado = mycursor.fetchone()
+
+        mydb.close()
+
+        if resultado:
+            return resultado[0]  # Retorna a imagem binária
+        return None  # Retorna None se não encontrar
