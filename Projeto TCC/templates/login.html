@@ -1,39 +1,99 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
-<link rel="stylesheet" href="../static/styles/login.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
 
 <body>
     <main>
         <div class="btn-voltar">
-            <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
+            <button onclick="window.history.back()">
+                <img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt="Voltar">
+            </button>
         </div>
 
         <div class="titulo">
             <h2>Olá! Logue agora para Começar</h2>
         </div>
         <section class="container-principal">
-            
             <div class="formulario">
+                <form action="{{ url_for('logar') }}" method="post">
+                    <input name="email" id="email" placeholder="*E-mail" type="text" required>
+                    <input name="senha" id="senha" placeholder="*Senha" type="password" required>
+                    <a href="/trocar_senha"><span>Esqueceu sua senha?</span></a>
+                    <button type="submit">Entrar</button>
+                </form>
+                <!-- Animação do checkmark após login bem-sucedido -->
 
-            <form action="" method="post">
-                <input name="email" id="email" placeholder="*E-mail"  type="text">
-                <input name="senha" id="senha" placeholder="*Senha"  type="password">
-                <a href="/trocar_senha"><span>Esqueceu sua senha</span></a>
-                <button type="submit">Entrar</button>
-            </form>
+            </div>
+            <span class="semConta">Ainda não tem conta? <a href="/cadastro">Crie Aqui!</a></span>
+        </section>
 
+        <div class="success-checkmark-overlay {% if login_sucesso %}visible{% else %}hidden{% endif %}"
+            id="success-overlay">
+            <div id="success-checkmark" class="success-checkmark">
+                <div class="check-icon">
+                    <span class="icon-line line-tip"></span>
+                    <span class="icon-line line-long"></span>
+                    <div class="icon-circle"></div>
+                    <div class="icon-fix"></div>
+                </div>
+                <span class="success-message" id="success-message">Logado com sucesso!</span>
+            </div>
         </div>
 
-        <span class="semConta">Ainda não tem conta?<a href="/cadastro"> Crie Aqui!</a></span>
-        
-    </section>
-    
-    {% endblock %}
 
-                
+
+        <!-- JavaScript para exibir a animação e redirecionar -->
+        {% if login_sucesso %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var loginSucesso = "{{ login_sucesso|tojson|default('false') }}";
+
+                if (loginSucesso) {
+                    const successOverlay = document.getElementById('success-overlay');
+                    const successMessage = document.getElementById('success-message');
+                    successOverlay.classList.add('visible'); // Mostra a sobreposição
+
+                    // Função para exibir a mensagem letra por letra
+                    const message = "Logado com sucesso!"; // Define a mensagem diretamente
+                    successMessage.innerText = ''; // Limpa o texto original
+
+                    let index = 0;
+                    const interval = setInterval(function () {
+                        if (index < message.length) {
+                            successMessage.innerText += message[index]; // Adiciona a próxima letra
+                            successMessage.style.opacity = 1; // Torna visível
+                            successMessage.style.transform = 'translateY(0)'; // Move para a posição original
+                            index++;
+                        } else {
+                            clearInterval(interval); // Para a animação quando todas as letras forem exibidas
+                        }
+                    }, 100); // Ajuste o intervalo conforme necessário (100ms = 0.1s por letra)
+
+                    // Após alguns segundos, redireciona para a página inicial
+                    setTimeout(function () {
+                        successOverlay.classList.remove('visible'); // Remove a classe antes do redirecionamento
+                        window.location.href = "/";
+                    }, 3000); // 3 segundos antes do redirecionamento
+                }
+            });
+
+
+
+        </script>
+        {% endif %}
+
+        <style>
+            .visible {
+                display: flex;
+                /* Mostra a sobreposição quando a classe 'visible' é adicionada */
+            }
+
+            .hidden {
+                display: none;
+                /* Esconde a sobreposição quando a classe 'hidden' é adicionada */
+            }
+        </style>
+
     </main>
-
-
 </body>
-
-</html>
+{% endblock %}

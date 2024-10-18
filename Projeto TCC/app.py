@@ -140,10 +140,17 @@ def logar():
         return render_template('login.html')  # Exibe o formulário de login
     else:
         # Coleta os dados do formulário de login
-        senha = request.form['senha']
         email = request.form['email']
+        senha = request.form['senha']
+        
+        # Verifica se os campos estão preenchidos
+        if not email or not senha:
+            flash('Por favor, preencha todos os campos.', 'error')
+            return redirect("/logar")
+        
         usuario = Usuario()  # Cria uma instância da classe Usuario
         usuario.logar(email, senha)  # Tenta fazer o login
+
         if usuario.logado:
             # Se o login for bem-sucedido, armazena os dados do usuário na sessão
             session['usuario_logado'] = {
@@ -153,18 +160,17 @@ def logar():
                 "id_cliente": usuario.id_cliente, 
                 "tipo": usuario.tipo,
                 "senha": usuario.senha,
-                "imagem":usuario.imagem
+                "imagem": usuario.imagem
             }
-            tipo = session.get('usuario_logado')['tipo']
+            session['login_sucesso'] = True  # Define a flag de sucesso
             
-            if tipo != 'cliente':
-                return redirect("/inicialadm")  # Redireciona para a página inicial do adm
-            else:
-                return redirect("/")  # Redireciona para a página inicial
-
+            # Não redireciona diretamente; renderiza a página de login com a animação
+            return render_template('login.html', login_sucesso=True)
         else:
             session.clear()  # Limpa a sessão em caso de falha no login
+            flash('Login ou senha incorretos. Tente novamente.', 'error')
             return redirect("/logar")  # Redireciona para a página de login
+
 
 
 
