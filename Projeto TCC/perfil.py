@@ -43,22 +43,8 @@ class Perfil:
             sql = "UPDATE tb_cliente SET nome_comp = %s"
             valores = [nome]
 
-            # Verifica se o cliente já possui uma imagem
-            mycursor.execute("SELECT imagem_binaria FROM tb_cliente WHERE id_cliente = %s", (id_cliente,))
-            imagem_existente = mycursor.fetchone()
-
-            # Se uma nova imagem foi enviada
-            if caminho_imagem:
-                with open(caminho_imagem, 'rb') as imagem:
-                    dados_imagem = imagem.read()
-
-                # Atualiza a imagem binária, se existir ou adiciona a nova
-                if imagem_existente and imagem_existente[0] is not None:
-                    sql += ", imagem_binaria = %s"
-                    valores.append(dados_imagem)
-                else:
-                    sql += ", imagem_binaria = %s"
-                    valores.append(dados_imagem)
+            sql += ", imagem_binaria = %s"
+            valores.append(caminho_imagem)
 
             # Adiciona a condição para o WHERE
             sql += " WHERE id_cliente = %s"

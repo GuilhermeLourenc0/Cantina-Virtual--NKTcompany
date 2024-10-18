@@ -23,7 +23,7 @@
                     <a href="/perfil">
                         {% if session.get('usuario_logado') %}
                             <img class="perfil"
-                                src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}"
+                                src="{{ session['usuario_logado']['imagem'] }}"
                                 alt="Imagem do Perfil"
                                 width="150"
                                 height="150"
