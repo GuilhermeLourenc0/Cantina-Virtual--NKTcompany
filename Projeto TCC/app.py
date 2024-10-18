@@ -7,8 +7,9 @@ from adm import Adm
 import random
 from twilio.rest import Client
 import os
-
-
+import requests
+from datetime import datetime
+from dateutil import parser  # Importando dateutil para facilitar o parse de datas
 
 
 app = Flask(__name__)
@@ -33,10 +34,29 @@ client = Client(account_sid, auth_token)
 # Rota para a página inicial
 @app.route("/")
 def principal():
-    sistema = Sistema()  # Cria uma instância da classe Sistema
-    lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
-    lista_marmitas = sistema.exibir_marmitas()
-    return render_template("index.html", lista_produtos=lista_produtos, lista_marmitas = lista_marmitas)  # Renderiza a página inicial com a lista de produtos
+    # Obtém o horário atual de Brasília
+    try:
+        response = requests.get('http://worldtimeapi.org/api/timezone/America/Sao_Paulo')
+        data = response.json()
+        hora_atual = datetime.fromisoformat(data['datetime']).hour
+        minutos_atuais = datetime.fromisoformat(data['datetime']).minute
+
+        # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
+        site_aberto = hora_atual >= 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais < 45))
+
+        if site_aberto:
+            # Se estiver no horário de funcionamento, exibe o conteúdo normalmente
+            sistema = Sistema()  # Cria uma instância da classe Sistema
+            lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
+            lista_marmitas = sistema.exibir_marmitas()  # Obtém a lista de marmitas
+            return render_template("index.html", lista_produtos=lista_produtos, lista_marmitas=lista_marmitas, site_aberto=site_aberto)
+        
+        # Retorna o template mesmo se o site estiver fechado
+        return render_template("index.html", site_aberto=site_aberto)
+
+    except Exception as e:
+        print(f"Erro ao obter horário de Brasília: {e}")
+        return "Erro ao verificar o horário de funcionamento."
 
 
 @app.route("/produtos_json", methods=['GET'])
@@ -457,33 +477,52 @@ def cancelar_pedido():
 
 @app.route("/enviar_carrinho", methods=['POST'])
 def enviar_carrinho():
-    if 'usuario_logado' in session:
-        id_cliente = session['usuario_logado']['id_cliente']
-        data = request.get_json()
+    # Obtém o horário atual de Brasília
+    try:
+        response = requests.get('http://worldtimeapi.org/api/timezone/America/Sao_Paulo')
+        data = response.json()
+        hora_atual = datetime.fromisoformat(data['datetime']).hour
+        minutos_atuais = datetime.fromisoformat(data['datetime']).minute
 
-        # Verifica se os dados foram enviados corretamente
-        if data is None:
-            return jsonify(success=False, message="Erro ao obter dados do carrinho."), 400
+        # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
+        site_aberto = hora_atual > 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais <= 45))
 
-        itens = data.get('itens', [])
-        
-        # Verifica se os itens estão vazios
-        if not itens:
-            return jsonify(success=False, message="Carrinho está vazio."), 400
+        if not site_aberto:
+            return "Site offline. Não é possível enviar pedidos neste horário.", 403
 
-        try:
-            carrinho = Carrinho()
-            if carrinho.enviar_carrinho(id_cliente, itens):
-                # Chama a função para remover todo o carrinho
-                carrinho.remover_todo_carrinho(id_cliente)
-                return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
-            else:
-                return jsonify(success=False, message="Erro ao enviar o carrinho."), 500
-        except Exception as e:
-            print(f"Erro ao processar pedido: {e}")
-            return jsonify(success=False, message="Erro interno do servidor."), 500
-            
-    return jsonify(success=False, message="Usuário não autenticado."), 401
+        if 'usuario_logado' in session:
+            id_cliente = session['usuario_logado']['id_cliente']
+            data = request.get_json()
+
+            # Verifica se os dados foram enviados corretamente
+            if data is None:
+                return "Erro ao obter dados do carrinho.", 400
+
+            itens = data.get('itens', [])
+
+            # Verifica se os itens estão vazios
+            if not itens:
+                return "Carrinho está vazio.", 400
+
+            try:
+                carrinho = Carrinho()
+                if carrinho.enviar_carrinho(id_cliente, itens):
+                    # Chama a função para remover todo o carrinho
+                    carrinho.remover_todo_carrinho(id_cliente)
+                    return "Pedido enviado com sucesso!", 200
+                else:
+                    return "Erro ao enviar o carrinho.", 500
+            except Exception as e:
+                print(f"Erro ao processar pedido: {e}")
+                return "Erro interno do servidor.", 500
+
+        return "Usuário não autenticado.", 401
+
+    except Exception as e:
+        print(f"Erro ao obter horário de Brasília: {e}")
+        return "Erro ao verificar o horário de funcionamento.", 500
+
+
 
 
 
@@ -613,6 +652,7 @@ def exibir_carrinho():
 
     
 
+
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
@@ -623,22 +663,35 @@ def carrinho():
             cod_produto = request.form.get('cod_produto')  # Para produtos
             id_marmita = request.form.get('id_marmita')  # Para marmitas
 
+            # Se for uma marmita, aplica a restrição de horário
+            if id_marmita:
+                # Verifica o horário atual em Brasília
+                response = requests.get('http://worldtimeapi.org/api/timezone/America/Sao_Paulo')
+                data = response.json()
+                datetime_brasilia = parser.isoparse(data['datetime'])  # Usando dateutil para parsear a string
+
+                # Extrai a hora e os minutos atuais
+                hora_atual = datetime_brasilia.hour
+                minutos_atuais = datetime_brasilia.minute
+
+                # Verifica se está no intervalo permitido (7h até 9h30)
+                if (hora_atual < 7) or (hora_atual == 9 and minutos_atuais > 30) or (hora_atual >= 10):
+                    return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 9h30 da manhã."}), 403
+
             # Captura guarnições e acompanhamentos selecionados
             guarnicoes_selecionadas = request.form.getlist('guarnicao')  # Lista de guarnições selecionadas
             acompanhamentos_selecionados = request.form.getlist('acompanhamento')  # Lista de acompanhamentos selecionados
-
-            # Debug: Imprime os dados recebidos para verificar
-            print("Guarnições recebidas:", guarnicoes_selecionadas)
-            print("Acompanhamentos recebidos:", acompanhamentos_selecionados)
 
             # Valida e insere no carrinho
             carrinho = Carrinho()
             if cod_produto or id_marmita:
                 carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente, 
                                                guarnicoes_selecionadas, acompanhamentos_selecionados)
-            return redirect("/exibir_carrinho")
 
         return redirect("/exibir_carrinho")
+
+
+
 
 
 
