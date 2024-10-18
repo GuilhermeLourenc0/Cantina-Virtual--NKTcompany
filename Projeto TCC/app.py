@@ -214,10 +214,6 @@ def inserir_produtos():
 
 
 
-
-
-
-
 @app.route("/exibir_guarnicao")
 def exibir_guarnicao():
     adm = Adm()
@@ -225,7 +221,6 @@ def exibir_guarnicao():
     lista_acompanhamento = adm.exibir_acompanhamento()
     categorias = adm.exibir_categorias()
     return render_template("cad-produto.html", lista_guarnicao=lista_guarnicao, lista_acompanhamento=lista_acompanhamento, categorias=categorias)
-
 
 
 @app.route('/adicionar_guarnicao', methods=['POST'])
@@ -237,9 +232,6 @@ def adicionar_guarnicao():
         return jsonify(success=sucesso, id_guarnicao=id_guarnicao)
     return jsonify(success=False)
  
-
-
-
 
 @app.route('/adicionar_acompanhamento', methods=['POST'])
 def adicionar_acompanhamento():
@@ -958,5 +950,6 @@ def imagem_perfil(id_cliente):
 
 
 app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração
+#app.run(host="0.0.0.0",port=8080)  # Executa o aplicativo Flask em modo de depuração
 
 
