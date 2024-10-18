@@ -299,18 +299,11 @@ form button:active {
     /* Espaço entre o texto e a bolinha */
 }
 
-input[type="checkbox"] {
-    display: none;
-    /* Oculta o checkbox padrão */
-}
+
 
 input[type="checkbox"]+span {
-    position: absolute;
-    left: 0;
-    top: 50%;
+
     transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
     border: 2px solid #ff0000;
     /* Cor da bolinha */
     border-radius: 50%;

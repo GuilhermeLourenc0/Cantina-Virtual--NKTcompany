@@ -19,7 +19,7 @@
         <input name="img" type="url" id="img" accept="image/*" class="input-image" placeholder="Url imagem" required>
         
         <!-- Campo para descrição da marmita -->
-        <textarea name="descricao" id="descricao" placeholder="Descrição do produto" class="input-descricao" required></textarea>
+        <input name="descricao" id="descricao" placeholder="Descrição do produto" class="input-descricao" required></input>
         
         <select id="categoria" name="categoria" required onchange="exibirGuarnicoes()">
             {% for registro in categorias %} 
@@ -28,10 +28,9 @@
         </select>
 
         <!-- Campo de tamanho da marmita (inicialmente oculto) -->
-        <div id="tamanhoDiv" style="display: none; margin-top: 15px;">
-            <label for="tamanho">Tamanho da Marmita:</label>
+        <div id="tamanhoDiv" style="display: none;">
+            
             <select name="tamanho" id="tamanho">
-                <option value="">Selecione o tamanho</option>
                 <option value="Pequena">Pequena</option>
                 <option value="Média">Média</option>
                 <option value="Grande">Grande</option>
@@ -40,14 +39,15 @@
 
         <!-- Guarnições e Acompanhamentos (inicialmente ocultos) -->
         <div id="guarnicoes_acompanhamentos" style="display: none; margin-top: 15px;">
-            <h4>Escolha as guarnições e acompanhamentos:</h4>
+            
 
             <!-- Guarnições -->
             <h5>Guarnições:</h5>
             {% for guarnicao in lista_guarnicao %}
-            <div>
-                <input type="checkbox" id="guarnicao_{{ guarnicao.id_guarnicao }}" name="guarnicoes" value="{{ guarnicao.id_guarnicao }}">
+            <div class="acompanhamento">
+                <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="">
                 <label for="guarnicao_{{ guarnicao.id_guarnicao }}">{{ guarnicao.nome_guarnicao }}</label>
+                <input type="checkbox" id="guarnicao_{{ guarnicao.id_guarnicao }}" name="guarnicoes" value="{{ guarnicao.id_guarnicao }}">
             </div>
             {% endfor %}
             <div id="lista_novas_guarnicoes"></div>
@@ -55,9 +55,10 @@
             <!-- Acompanhamentos -->
             <h5>Acompanhamentos:</h5>
             {% for acompanhamento in lista_acompanhamento %}
-            <div>
-                <input type="checkbox" id="acompanhamento_{{ acompanhamento.id_acompanhamento }}" name="acompanhamentos" value="{{ acompanhamento.id_acompanhamento }}">
+            <div class="acompanhamento">
+                <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="">
                 <label for="acompanhamento_{{ acompanhamento.id_acompanhamento }}">{{ acompanhamento.nome_acompanhamento }}</label>
+                <input type="checkbox" id="acompanhamento_{{ acompanhamento.id_acompanhamento }}" name="acompanhamentos" value="{{ acompanhamento.id_acompanhamento }}">
             </div>
             {% endfor %}
             <div id="lista_novos_acompanhamentos"></div>

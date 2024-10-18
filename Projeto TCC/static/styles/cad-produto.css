@@ -52,9 +52,7 @@ input::placeholder {
 }
 .input-descricao{
   height: 50px;
-  padding-left: 27px;
   padding-right: 30px;
-  padding-top: 13px;
   border-radius: 5px;
   border: 2px solid rgb(238, 238, 238);
   background-color: rgb(245, 245, 245);
@@ -62,6 +60,7 @@ input::placeholder {
 }
 
 .btn-Cadastrar {
+  margin-top: 15px;
   padding: 15px;
   background-color: rgb(161, 23, 23);
   border-radius: 6px;
@@ -124,13 +123,13 @@ pointer-events: none;
 
 select{
   height: 60px;
-  display: flex;
-  text-align: center;
+  width: 351px;
   border: 2px solid rgb(238, 238, 238);
   background-color: rgb(245, 245, 245);
   margin-top: 15px;
   border-radius: 5px;
-  margin-bottom: 15px;
+  padding-left: 23px;
+  color: #6e6e6e;
 }
 
 .btn-voltar img{
@@ -180,4 +179,84 @@ select{
 #guarnicoes label {
   font-size: 16px;
   color: #333;
+}
+
+
+
+
+.acompanhamento {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid rgb(233, 231, 231);
+}
+
+.acompanhamento img {
+  width: 40px;
+  /* Tamanho da imagem */
+  height: 40px;
+  margin-left: 11px;
+  margin-right: 10px;
+  /* Espaço entre imagem e texto */
+  border-radius: 5px;
+  border: 0.5px solid red;
+}
+
+.acompanhamento label {
+  position: relative;
+  /* Para alinhar a bolinha à direita */
+  cursor: pointer;
+  /* Espaço entre o texto e a bolinha */
+  z-index: 1;
+  margin-top: 10px;
+}
+
+.acompanhamento label span {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ff0000;
+  /* Cor da bolinha */
+  border-radius: 50%;
+  background-color: white;
+  /* Fundo da bolinha */
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.acompanhamento span {
+  flex-grow: 1;
+  font-size: 18px;
+  /* Tamanho do texto do acompanhamento */
+  margin-right: 5px;
+  /* Espaço entre o texto e a bolinha */
+}
+
+input[type="checkbox"] {
+  display: none;
+  /* Oculta o checkbox padrão */
+}
+
+input[type="checkbox"]+span {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ff0000;
+  /* Cor da bolinha */
+  border-radius: 50%;
+  background-color: white;
+  /* Fundo da bolinha */
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+input[type="checkbox"]:checked+span {
+  background-color: #ff0000;
+  /* Cor quando selecionado */
+  border-color: #ff0000;
+  /* Cor da borda quando selecionado */
 }
