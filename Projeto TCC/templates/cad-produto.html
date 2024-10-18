@@ -6,28 +6,158 @@
 <link rel="stylesheet" href="../static/styles/cad-produto.css">
 <body>
     <main>
-    <form action="" method="post">
+    <form action="/inserir_produtos" method="post">
         <div class="btn-voltar">
             <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
         </div>
         <h2>Certo! Adicione um produto Agora!</h2>
 
         <input name="nome" type="text" id="nome" placeholder="Nome do produto" required>
-        <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.10" placeholder="Preço" required>
+        <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.01" placeholder="Preço" required>
         
+        <!-- Campo para imagem da marmita -->
+        <input name="img" type="url" id="img" accept="image/*" class="input-image" placeholder="Url imagem" required>
         
-
-        <input name="img" type="url" id="img" accept="image/*" class="input-image"  placeholder="Url imagem"required>
+        <!-- Campo para descrição da marmita -->
         <textarea name="descricao" id="descricao" placeholder="Descrição do produto" class="input-descricao" required></textarea>
-        <select id="categoria" name="categoria" required>
-            {% for registro in categorias %}
+        
+        <select id="categoria" name="categoria" required onchange="exibirGuarnicoes()">
+            {% for registro in categorias %} 
             <option value="{{ registro.id_categoria }}">{{ registro.nome }}</option>
             {% endfor %}
         </select>
+
+        <!-- Campo de tamanho da marmita (inicialmente oculto) -->
+        <div id="tamanhoDiv" style="display: none; margin-top: 15px;">
+            <label for="tamanho">Tamanho da Marmita:</label>
+            <select name="tamanho" id="tamanho">
+                <option value="">Selecione o tamanho</option>
+                <option value="Pequena">Pequena</option>
+                <option value="Média">Média</option>
+                <option value="Grande">Grande</option>
+            </select>
+        </div>
+
+        <!-- Guarnições e Acompanhamentos (inicialmente ocultos) -->
+        <div id="guarnicoes_acompanhamentos" style="display: none; margin-top: 15px;">
+            <h4>Escolha as guarnições e acompanhamentos:</h4>
+
+            <!-- Guarnições -->
+            <h5>Guarnições:</h5>
+            {% for guarnicao in lista_guarnicao %}
+            <div>
+                <input type="checkbox" id="guarnicao_{{ guarnicao.id_guarnicao }}" name="guarnicoes" value="{{ guarnicao.id_guarnicao }}">
+                <label for="guarnicao_{{ guarnicao.id_guarnicao }}">{{ guarnicao.nome_guarnicao }}</label>
+            </div>
+            {% endfor %}
+            <div id="lista_novas_guarnicoes"></div>
+
+            <!-- Acompanhamentos -->
+            <h5>Acompanhamentos:</h5>
+            {% for acompanhamento in lista_acompanhamento %}
+            <div>
+                <input type="checkbox" id="acompanhamento_{{ acompanhamento.id_acompanhamento }}" name="acompanhamentos" value="{{ acompanhamento.id_acompanhamento }}">
+                <label for="acompanhamento_{{ acompanhamento.id_acompanhamento }}">{{ acompanhamento.nome_acompanhamento }}</label>
+            </div>
+            {% endfor %}
+            <div id="lista_novos_acompanhamentos"></div>
+        </div>
         
-        
+        <!-- Seção para adicionar novas guarnições e acompanhamentos (inicialmente oculta) -->
+        <div id="nova_guarnicao_acompanhamento" style="display: none; margin-top: 15px;">
+            <h4>Adicionar nova guarnição ou acompanhamento:</h4>
+            <input type="text" id="nome_guarnicao" placeholder="Nome da nova guarnição">
+            <button type="button" onclick="adicionarGuarnicao()">Adicionar Guarnição</button>
+
+            <input type="text" id="nome_acompanhamento" placeholder="Nome do novo acompanhamento" style="margin-top: 10px;">
+            <button type="button" onclick="adicionarAcompanhamento()">Adicionar Acompanhamento</button>
+        </div>
+
         <button type="submit" class="btn-Cadastrar">Adicionar</button>
     </form>
     </main>
+
+    <script>
+        function exibirGuarnicoes() {
+            var categoriaSelect = document.getElementById("categoria");
+            var guarnicoesDiv = document.getElementById("guarnicoes_acompanhamentos");
+            var novaGuarnicaoDiv = document.getElementById("nova_guarnicao_acompanhamento");
+            var tamanhoDiv = document.getElementById("tamanhoDiv");
+            var tamanhoSelect = document.getElementById("tamanho");
+
+            // Se a categoria selecionada for "Marmita", exibe as guarnições, acompanhamentos e o tamanho
+            if (categoriaSelect.options[categoriaSelect.selectedIndex].text === "Marmita") {
+                guarnicoesDiv.style.display = "block";
+                novaGuarnicaoDiv.style.display = "block";
+                tamanhoDiv.style.display = "block";
+                tamanhoSelect.setAttribute('required', 'required'); 
+            } else {
+                guarnicoesDiv.style.display = "none";
+                novaGuarnicaoDiv.style.display = "none"; 
+                tamanhoDiv.style.display = "none"; 
+                tamanhoSelect.removeAttribute('required'); 
+                tamanhoSelect.value = ""; 
+            }
+        }
+
+        function adicionarGuarnicao() {
+            var nomeGuarnicao = document.getElementById("nome_guarnicao").value.trim();
+            if (nomeGuarnicao) {
+                fetch('/adicionar_guarnicao', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'nome_guarnicao=' + encodeURIComponent(nomeGuarnicao)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Adiciona a nova guarnição na lista de guarnições, não nos acompanhamentos
+                        var listaNovasGuarnicoesDiv = document.getElementById("lista_novas_guarnicoes");
+                        var novaGuarnicaoDiv = document.createElement("div");
+                        
+                        novaGuarnicaoDiv.innerHTML = `<input type="checkbox" name="guarnicoes" value="${data.id_guarnicao}" checked>
+                            <label>${nomeGuarnicao}</label>`;
+                        listaNovasGuarnicoesDiv.appendChild(novaGuarnicaoDiv);
+                        
+                        document.getElementById("nome_guarnicao").value = ""; // Limpa o campo de texto
+                    } else {
+                        alert("Erro ao adicionar a guarnição.");
+                    }
+                });
+            }
+        }
+
+        function adicionarAcompanhamento() {
+            var nomeAcompanhamento = document.getElementById("nome_acompanhamento").value.trim();
+            if (nomeAcompanhamento) {
+                fetch('/adicionar_acompanhamento', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'nome_acompanhamento=' + encodeURIComponent(nomeAcompanhamento)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Adiciona o novo acompanhamento na lista de acompanhamentos
+                        var listaNovosAcompanhamentosDiv = document.getElementById("lista_novos_acompanhamentos");
+                        var novoAcompanhamentoDiv = document.createElement("div");
+                        
+                        novoAcompanhamentoDiv.innerHTML = `<input type="checkbox" name="acompanhamentos" value="${data.id_acompanhamento}" checked>
+                            <label>${nomeAcompanhamento}</label>`;
+                        listaNovosAcompanhamentosDiv.appendChild(novoAcompanhamentoDiv);
+                        
+                        document.getElementById("nome_acompanhamento").value = ""; // Limpa o campo de texto
+                    } else {
+                        alert("Erro ao adicionar o acompanhamento.");
+                    }
+                });
+            }
+        }
+
+    </script>
 </body>
 {% endblock %}

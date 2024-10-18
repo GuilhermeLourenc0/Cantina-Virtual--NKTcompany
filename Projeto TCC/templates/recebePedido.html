@@ -13,7 +13,7 @@
     <script>
         // Função para exibir os pedidos via AJAX
         function carregarPedidos() {
-            fetch('/obter_pedidos')  // Altere para a rota correta
+            fetch('/obter_pedidos')
                 .then(response => response.json())
                 .then(data => {
                     const orderContainer = document.getElementById('order-container');
@@ -32,21 +32,50 @@
                                         <span class="order-date">${new Date(pedido.data_pedido).toLocaleDateString()}</span>
                                     </div>
                                     <div class="order-details">
+                                        <h3>Pedidos:</h3>
                                         <ul>`;
-                            pedido.produtos.forEach(produto => {
-                                cardPedidos += `<li>${produto.nome_produto}</li>`;
-                            });
+                                
+                                // Exibe os produtos
+                                if (pedido.produtos && pedido.produtos.length > 0) {
+                                    pedido.produtos.forEach(produto => {
+                                        if (produto.nome_produto) {
+                                            cardPedidos += `<li>Produto: ${produto.nome_produto} - Quantidade: ${produto.quantidade} - Preço: R$ ${produto.preco.toFixed(2)}</li>`;
+                                        }
+                                    });
+                                }
 
-                            cardPedidos += `</ul>
-                                        <ul class="order-quantity">`;
-                            pedido.produtos.forEach(produto => {
-                                cardPedidos += `<li>${produto.quantidade}</li>`;
-                            });
+                                // Exibe as marmitas
+                                if (pedido.marmitas && pedido.marmitas.length > 0) {
+                                    pedido.marmitas.forEach(marmita => {
+                                        if (marmita.nome_marmita) {
+                                            cardPedidos += `<li>Marmita: ${marmita.nome_marmita} - Tamanho: ${marmita.tamanho} - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
+                                        }
+                                    });
+                                }
+
+                                // Exibe as guarnições
+                                if (pedido.guarnicoes && pedido.guarnicoes.length > 0) {
+                                    pedido.guarnicoes.forEach(guarnicao => {
+                                        cardPedidos += `<li>Guarnição: ${guarnicao}`;
+                                    });
+                                }
+
+                                // Exibe os acompanhamentos
+                                if (pedido.acompanhamentos && pedido.acompanhamentos.length > 0) {
+                                    pedido.acompanhamentos.forEach(acompanhamento => {
+                                        cardPedidos += `<li>Acompanhamento: ${acompanhamento}</li>`;
+                                    });
+                                }
+
+                                // Exibe uma mensagem caso não haja produtos, marmitas, guarnições ou acompanhamentos
+                                if (pedido.produtos.length === 0 && pedido.marmitas.length === 0 && pedido.guarnicoes.length === 0 && pedido.acompanhamentos.length === 0) {
+                                    cardPedidos += `<li>Nenhum produto, marmita, guarnição ou acompanhamento</li>`;
+                                }
 
                             cardPedidos += `</ul>
                                     </div>
                                     <div class="order-status">
-                                        <span class="order-price">R$ ${pedido.total_preco}</span>
+                                        <span class="order-price">Total: R$ ${pedido.total_preco.toFixed(2)}</span>
                                     </div>
                                     <div class="btn-cancelar">
                                         <button class="status-btn" data-pedido="${id_pedido}" value="preparando">Preparando</button>
@@ -63,7 +92,7 @@
                 .catch(error => console.error('Erro ao carregar os pedidos:', error));
         }
 
-        // Atualiza a lista de pedidos a cada 5 segundos (tempo ajustável)
+        // Atualiza a lista de pedidos a cada 2 segundos (tempo ajustável)
         setInterval(carregarPedidos, 2000);
 
         // Carrega os pedidos quando a página é carregada

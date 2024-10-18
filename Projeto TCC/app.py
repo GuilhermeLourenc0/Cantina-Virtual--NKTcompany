@@ -9,6 +9,8 @@ from twilio.rest import Client
 import os
 
 
+
+
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'  # Chave secreta para gerenciamento de sessões
 
@@ -33,7 +35,8 @@ client = Client(account_sid, auth_token)
 def principal():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
-    return render_template("index.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
+    lista_marmitas = sistema.exibir_marmitas()
+    return render_template("index.html", lista_produtos=lista_produtos, lista_marmitas = lista_marmitas)  # Renderiza a página inicial com a lista de produtos
 
 
 @app.route("/produtos_json", methods=['GET'])
@@ -41,6 +44,13 @@ def produtos():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
     return jsonify(lista_produtos)  # Retorna os produtos em formato JSON
+
+
+@app.route("/marmitas_json", methods=['GET'])
+def marmitas():
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    lista_marmitas = sistema.exibir_marmitas()  # Obtém a lista de produtos
+    return jsonify(lista_marmitas)  # Retorna os produtos em formato JSON
 
 
 @app.route("/inicialadm")
@@ -52,7 +62,8 @@ def inicialadm():
 def principal_adm():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos_adm()  # Obtém a lista de produtos
-    return render_template("index-adm.html", lista_produtos=lista_produtos)  # Renderiza a página inicial com a lista de produtos
+    lista_marmitas = sistema.exibir_marmitas_adm()
+    return render_template("index-adm.html", lista_produtos=lista_produtos, lista_marmitas = lista_marmitas)  # Renderiza a página inicial com a lista de produtos
 
 # Define a rota de cadastro
 @app.route("/cadastro", methods=["GET", "POST"])
@@ -145,7 +156,7 @@ def logar():
             tipo = session.get('usuario_logado')['tipo']
             
             if tipo != 'cliente':
-                return redirect("/adm")  # Redireciona para a página inicial do adm
+                return redirect("/inicialadm")  # Redireciona para a página inicial do adm
             else:
                 return redirect("/")  # Redireciona para a página inicial
 
@@ -166,26 +177,81 @@ def logout():
         return redirect("/")  # Redireciona para a página inicial
 
 
-# Rota para inserção de novos produtos
-@app.route("/inserir_produtos", methods=['GET', 'POST'])
+@app.route('/inserir_produtos', methods=['POST'])
 def inserir_produtos():
-    if request.method == 'GET':
-        adm = Adm()  # Cria uma instância da classe Usuario
-        categorias = adm.exibir_categorias()  # Obtém a lista de categorias de produtos
-        return render_template("cad-produto.html", categorias=categorias)  # Exibe o formulário de cadastro de produtos
-    else:
-        # Coleta os dados do formulário de inserção de produtos
-        imagem_url = request.form["img"]
-        nome_produto = request.form["nome"]
-        preco_produto = request.form["preco"]
-        categoria = request.form["categoria"]
-        descricao = request.form["descricao"]
+    nome = request.form['nome']
+    preco = request.form['preco']
+    img = request.form['img']
+    descricao = request.form['descricao']
+    categoria = request.form['categoria']
+    
+    # Captura o tamanho da marmita (campo exibido apenas quando marmita for selecionada)
+    tamanho = request.form.get('tamanho')
 
-        adm = Adm()  # Cria uma instância da classe Usuario
-        if adm.inserir_produto(nome_produto, preco_produto, imagem_url, descricao, categoria):
-            return redirect("/inserir_produtos")  # Redireciona para a página de inserção de produtos após sucesso
-        else:
-            return "ERRO AO INSERIR PRODUTO"  # Mensagem de erro em caso de falha
+    # Captura as guarnições existentes (selecionadas via checkbox)
+    guarnicoes_existentes = request.form.getlist('guarnicoes')
+
+    # Captura os acompanhamentos existentes (selecionados via checkbox)
+    acompanhamentos_existentes = request.form.getlist('acompanhamentos')
+
+    # Captura as novas guarnições
+    novas_guarnicoes = request.form.getlist('nova_guarnicoes')
+
+    # Cria uma instância do objeto que contém o método de inserção
+    adm = Adm()  # Substitua pelo seu objeto real
+
+    # Verifica se a categoria selecionada é "Marmita"
+    id_categoria_marmita = 7  # Substitua pelo ID real da categoria "Marmita"
+    
+    if int(categoria) == id_categoria_marmita:
+        # Insere uma marmita e associa guarnições e acompanhamentos
+        sucesso = adm.inserir_marmita(nome, preco, img, descricao, tamanho, guarnicoes_existentes, novas_guarnicoes, acompanhamentos_existentes)
+    else:
+        # Insere um produto normal
+        sucesso = adm.inserir_produto(nome, preco, img, descricao, categoria, novas_guarnicoes)
+
+    return redirect('/inicialadm')  # Redireciona para a página inicial ou outra página desejada
+
+
+
+
+
+
+
+@app.route("/exibir_guarnicao")
+def exibir_guarnicao():
+    adm = Adm()
+    lista_guarnicao = adm.exibir_guarnicao()
+    lista_acompanhamento = adm.exibir_acompanhamento()
+    categorias = adm.exibir_categorias()
+    return render_template("cad-produto.html", lista_guarnicao=lista_guarnicao, lista_acompanhamento=lista_acompanhamento, categorias=categorias)
+
+
+
+@app.route('/adicionar_guarnicao', methods=['POST'])
+def adicionar_guarnicao():
+    nome_guarnicao = request.form.get('nome_guarnicao')
+    adm = Adm()
+    if nome_guarnicao:
+        sucesso, id_guarnicao = adm.inserir_guarnicao(nome_guarnicao)  # Modifique a função para retornar o ID
+        return jsonify(success=sucesso, id_guarnicao=id_guarnicao)
+    return jsonify(success=False)
+ 
+
+
+
+
+@app.route('/adicionar_acompanhamento', methods=['POST'])
+def adicionar_acompanhamento():
+    nome_acompanhamento = request.form.get('nome_acompanhamento')
+    adm = Adm()
+    if nome_acompanhamento:
+        sucesso, id_acompanhamento = adm.inserir_acompanhamento(nome_acompanhamento)
+        return jsonify(success=sucesso, id_acompanhamento=id_acompanhamento)
+    return jsonify(success=False)
+
+
+
 
 
 # Rota para exibição de produtos
@@ -222,6 +288,33 @@ def exibir_produto_unico():
     return render_template("produto.html", lista_prounico=lista_prounico)
 
 
+# Rota para exibir detalhes de um produto único
+@app.route("/marmita_unica", methods=['GET', 'POST'])
+def exibir_marmita_unica():
+    
+    if request.method == 'POST':
+        btn_marmita = request.form.get('btn-produto')  # Obtém o ID do produto selecionado
+        session['id'] = {'id_marmita': btn_marmita}  # Armazena o ID na sessão
+        
+    # Recupera o ID do produto da sessão
+    id_marmita = session['id'].get('id_marmita')
+    
+    if id_marmita is None:
+        flash('ID do produto não encontrado.', 'error')
+        return redirect('/')  # Redireciona se o ID não estiver na sessão
+
+    sistema = Sistema()  # Cria uma instância da classe Sistema
+    dados_marmita = sistema.exibir_marmita(id_marmita)  # Aqui agora retorna um único item
+    
+    if dados_marmita is None:
+        flash('Produto não encontrado.', 'error')
+        return redirect('/')  # Ou outra página que faça sentido
+
+    # Renderiza o template com os detalhes do produto
+    return render_template("marmita.html", marmita=dados_marmita[0])
+
+
+
 # Habilitar e desabilitar o produto (adm)
 @app.route("/desabilitar_produto_adm", methods=['POST'])
 def desabilitar_produto_adm():
@@ -245,27 +338,79 @@ def habilitar_produto_adm():
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
 
 
+
+
+
+# Habilitar e desabilitar marmita (adm)
+@app.route("/desabilitar_marmita_adm", methods=['POST'])
+def desabilitar_marmita_adm():
+    try:
+        adm = Adm()  # Cria uma instância da classe Sistema
+        btn_desabilitar = request.form.get("btn_desabilitar")  # Obtém o ID da marmita
+        adm.desabilitar_marmita_adm(btn_desabilitar)  # Desabilita a marmita
+        return jsonify({'status': 'success'})  # Retorna uma resposta de sucesso
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
+
+
+@app.route("/habilitar_marmita_adm", methods=['POST'])
+def habilitar_marmita_adm():
+    try:
+        adm = Adm()  # Cria uma instância da classe Sistema
+        btn_habilitar = request.form.get("btn_habilitar")  # Obtém o ID da marmita
+        adm.habilitar_marmita_adm(btn_habilitar)  # Habilita a marmita
+        return jsonify({'status': 'success'})  # Retorna uma resposta de sucesso
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna erro se algo falhar
+
+
+
+
+
+
 # ========== Pedidos ==========
-# Rota para exibir pedidos (para administradores)
+
 @app.route("/exibir_pedidos", methods=['GET'])
-def exibir_pedidos():
+def exibir_pedidos_route():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
-    else:
-        adm = Adm()  # Cria uma instância da classe Sistema
+
+    try:
+        adm = Adm()  # Cria uma instância da classe Adm
         lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
         return render_template('recebePedido.html', lista_pedidos=lista_pedidos)  # Passa a variável para o template
 
+    except Exception as e:
+        print(f"Erro ao exibir pedidos: {e}")  # Log do erro
+        return render_template('error.html', message="Erro ao carregar pedidos.")  # Renderiza uma página de erro
 
-# Rota para obter os pedidos em JSON
+
+
 @app.route("/obter_pedidos", methods=['GET'])
 def obter_pedidos():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
-    else:
-        adm = Adm()  # Cria uma instância da classe Sistema
+
+    try:
+        adm = Adm()  # Cria uma instância da classe Adm
         lista_pedidos = adm.exibir_pedidos()  # Obtém a lista de pedidos
+        print(lista_pedidos)  # Debug: Verifique os dados retornados
         return jsonify(lista_pedidos)  # Retorna a lista de pedidos em formato JSON
+
+    except Exception as e:
+        print(f"Erro ao obter pedidos: {e}")  # Log do erro
+        return jsonify({'error': "Erro ao carregar pedidos."})  # Retorna mensagem de erro em JSON
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Rota para atualizar o status do pedido
@@ -310,15 +455,43 @@ def cancelar_pedido():
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
 
 
-# Rota para enviar o carrinho como um pedido
 @app.route("/enviar_carrinho", methods=['POST'])
 def enviar_carrinho():
     if 'usuario_logado' in session:
         id_cliente = session['usuario_logado']['id_cliente']
-        adm = Adm()
-        adm.enviar_carrinho(id_cliente)
-        return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
-    return jsonify(success=False, message="Erro ao enviar o carrinho.")
+        data = request.get_json()
+
+        # Verifica se os dados foram enviados corretamente
+        if data is None:
+            return jsonify(success=False, message="Erro ao obter dados do carrinho."), 400
+
+        itens = data.get('itens', [])
+        
+        # Verifica se os itens estão vazios
+        if not itens:
+            return jsonify(success=False, message="Carrinho está vazio."), 400
+
+        try:
+            carrinho = Carrinho()
+            if carrinho.enviar_carrinho(id_cliente, itens):
+                # Chama a função para remover todo o carrinho
+                carrinho.remover_todo_carrinho(id_cliente)
+                return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
+            else:
+                return jsonify(success=False, message="Erro ao enviar o carrinho."), 500
+        except Exception as e:
+            print(f"Erro ao processar pedido: {e}")
+            return jsonify(success=False, message="Erro interno do servidor."), 500
+            
+    return jsonify(success=False, message="Usuário não autenticado."), 401
+
+
+
+
+
+
+
+
 
 
 # ========== Histórico de Pedidos ==========
@@ -388,30 +561,33 @@ def atualizar_quantidade():
         return jsonify({'success': False, 'message': 'Erro ao atualizar quantidade'})
         
 
-# Rota para excluir um produto
+# Rota para excluir um item (produto ou marmita) do carrinho
 @app.route("/excluir_produto_carrinho", methods=['POST'])
 def excluir_produto_carrinho():
+    # Verifica se o usuário está autenticado
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return jsonify({'success': False, 'message': 'Usuário não autenticado'})
 
     try:
-        data = request.get_json()  # Obtém os dados JSON da requisição
-        id_carrinho = data.get('id_carrinho')  # Obtém o ID do carrinho
+        # Obtém os dados JSON da requisição
+        data = request.get_json()
+        id_carrinho = data.get('id_carrinho')  # Obtém o ID do item no carrinho
 
+        # Verifica se o ID do carrinho foi fornecido
         if not id_carrinho:
             return jsonify({'success': False, 'message': 'ID do carrinho não encontrado'})
 
-        carrinho = Carrinho()  # Cria uma instância da classe Sistema
-        carrinho.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
+        carrinho = Carrinho()  # Cria uma instância da classe Carrinho
+        carrinho.remover_produto_carrinho(id_carrinho)  # Remove o item do carrinho
 
         return jsonify({'success': True})  # Retorna sucesso se a exclusão for bem-sucedida
 
     except Exception as e:
-        print(f"Erro ao excluir produto: {e}")  # Registra o erro no console
-        return jsonify({'success': False, 'message': 'Erro ao excluir produto'})
+        print(f"Erro ao excluir item do carrinho: {e}")  # Registra o erro no console
+        return jsonify({'success': False, 'message': 'Erro ao excluir item do carrinho'})
+
     
 
-# Rota para exibir o carrinho de compras
 @app.route("/exibir_carrinho", methods=['GET', 'POST'])
 def exibir_carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
@@ -432,28 +608,44 @@ def exibir_carrinho():
 
         lista_carrinho = carrinho.exibir_carrinho(id_cliente)  # Obtém a lista de produtos no carrinho
         return render_template("carrinho.html", lista_carrinho=lista_carrinho)  # Renderiza a página do carrinho com a lista de produtos
+
+
+
     
 
-# Rota para inserir produtos no carrinho
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+        return redirect('/logar')
     else:
         if request.method == 'POST':
-            id_produto = session.get('id')['id_produto']  # Obtém o ID do produto da sessão
-            id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
+            id_cliente = session.get('usuario_logado')['id_cliente']
+            cod_produto = request.form.get('cod_produto')  # Para produtos
+            id_marmita = request.form.get('id_marmita')  # Para marmitas
 
-            if 'IDs' not in session:
-                session['IDs'] = {"IDs_produtos": []}  # Inicializa a lista de IDs de produtos na sessão
+            # Captura guarnições e acompanhamentos selecionados
+            guarnicoes_selecionadas = request.form.getlist('guarnicao')  # Lista de guarnições selecionadas
+            acompanhamentos_selecionados = request.form.getlist('acompanhamento')  # Lista de acompanhamentos selecionados
 
-            session['IDs']['IDs_produtos'].append(id_produto)  # Adiciona o ID do produto à lista na sessão
+            # Debug: Imprime os dados recebidos para verificar
+            print("Guarnições recebidas:", guarnicoes_selecionadas)
+            print("Acompanhamentos recebidos:", acompanhamentos_selecionados)
 
-            carrinho = Carrinho()  # Cria uma instância da classe Sistema
-            carrinho.inserir_produto_carrinho(id_produto, id_cliente)  # Adiciona o produto ao carrinho do cliente
-            return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho
+            # Valida e insere no carrinho
+            carrinho = Carrinho()
+            if cod_produto or id_marmita:
+                carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente, 
+                                               guarnicoes_selecionadas, acompanhamentos_selecionados)
+            return redirect("/exibir_carrinho")
 
-        return redirect("/exibir_carrinho")  # Redireciona para a página do carrinho se o método não for POST
+        return redirect("/exibir_carrinho")
+
+
+
+
+
+
+
 
 
 
@@ -515,6 +707,101 @@ def imagem_produto(cod_produto):
     if imagem:
         return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
     return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
+
+
+
+
+
+
+
+@app.route("/editar_marmita", methods=['POST', 'GET'])
+def editar_marmita():
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+    
+    if request.method == 'POST':
+        btn_marmita = request.form.get('btn-marmita')  # Obtém o ID do produto selecionado
+        session['id'] = {'id_marmita': btn_marmita}  # Armazena o ID na sessão
+
+    id_marmita = session['id'].get('id_marmita')
+    
+    if id_marmita is None:
+        flash('ID da marmita não encontrado.', 'error')
+        return redirect('/adm')  # Redireciona se o ID não estiver na sessão
+
+    sistema = Sistema()  # Cria uma instância da classe
+    lista_marunica = sistema.exibir_marmita(id_marmita)
+    
+    if not lista_marunica:
+        flash('Nenhuma marmita encontrada.', 'error')
+        return redirect('/inicialadm')  # Ou outra página relevante
+
+    # Extrai os dados retornados, incluindo as guarnições e acompanhamentos
+    marmita_dados = lista_marunica[0]
+    
+    # Renderiza o template com todos os dados necessários
+    return render_template(
+        "editarMarmita.html", 
+        lista_marunica=lista_marunica,
+        todos_acompanhamentos=marmita_dados['todos_acompanhamentos'],  # Passa todos os acompanhamentos
+        todas_guarnicoes=marmita_dados['todas_guarnicoes']  # Passa todas as guarnições
+    )
+
+
+
+
+
+
+
+@app.route("/atualizar_marmita", methods=['POST'])
+def atualizar_marmita():
+    if 'usuario_logado' not in session:
+        return jsonify({'status': 'error', 'message': 'Você precisa estar logado para realizar esta ação.'}), 401
+    
+    adm = Adm()
+    id_marmita = request.form['id_marmita']
+    nome = request.form['nome']
+    preco = request.form['preco']
+    descricao = request.form['descricao']
+    tamanho = request.form['tamanho']
+    imagem = request.files.get('imagem')
+
+    # Capturando acompanhamentos e guarnições selecionados
+    acompanhamentos = request.form.getlist('acompanhamentos[]')
+    guarnicoes = request.form.getlist('guarnicoes[]')
+
+    # Validação dos campos obrigatórios
+    if not id_marmita or not nome or not preco or not descricao or not tamanho:
+        return jsonify({'status': 'error', 'message': 'Todos os campos obrigatórios devem ser preenchidos.'}), 400
+    
+    try:
+        # Atualiza a marmita com os dados fornecidos
+        adm.atualizar_marmita(id_marmita, nome, preco, descricao, tamanho, acompanhamentos, guarnicoes, imagem)
+        return jsonify({'status': 'success', 'message': 'Marmita atualizada com sucesso!'})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': f'Ocorreu um erro ao atualizar a marmita: {str(e)}'}), 500
+
+
+
+
+
+
+
+
+@app.route('/imagem_marmita/<int:id_marmita>')
+def imagem_marmita(id_marmita):
+    adm = Adm()
+    imagem = adm.obter_imagem_marmita(id_marmita)
+    
+    if imagem:
+        return Response(imagem, mimetype='image/jpeg')  # Ajuste o tipo MIME conforme o tipo de imagem armazenado
+    return "Imagem não encontrada", 404  # Retorna erro 404 se não encontrar a imagem
+
+
+
+
+
+
 
 
 # Rota para solicitar troca de senha

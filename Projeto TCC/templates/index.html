@@ -1,11 +1,8 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
-<link rel="stylesheet" href="/Projeto TCC/static/styles/inicial.css">
 
 <body>
-
   <main>
-
     <section class="carrossel">
       <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
@@ -30,21 +27,47 @@
       </div>
     </section>
 
+    <!-- Seção de Produtos -->
     <section class="container-produtos">
       <h2>Nossos Produtos</h2>
       <div class="grid-produto">
-        <div class="produtos">
-          {% for registro in lista_produtos %}
+        <div class="produtos" id="produtos-list">
+          {% for produto in lista_produtos %}
           <form action="/produto_unico" method="post">
-            <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
+            <button value="{{ produto.id_produto }}" name="btn-produto" type="submit">
               <div class="card-produtos">
                 <div class="left-lado">
-                  <span class="produto-nome">{{ registro.nome_produto }}</span>
-                  <span class="produto-desc">{{ registro.descricao }}</span>
-                  <span class="produto-preco">R$ {{ registro.preco }}</span>
+                  <span class="produto-nome">{{ produto.nome_produto }}</span>
+                  <span class="produto-desc">{{ produto.descricao }}</span>
+                  <span class="produto-preco">R$ {{ produto.preco }}</span>
                 </div>
                 <div class="right-lado">
-                  <img src="{{ registro.imagem_produto }}" alt="{{ registro.nome_produto }}">
+                  <img src="{{ produto.imagem_produto }}" alt="{{ produto.nome_produto }}">
+                </div>
+              </div>
+            </button>
+          </form>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção de Marmitas -->
+    <section class="container-produtos">
+      <h2>Marmitas</h2>
+      <div class="grid-produto">
+        <div class="produtos" id="marmitas-list">
+          {% for marmita in lista_marmitas %}
+          <form action="/marmita_unica" method="post">
+            <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
+              <div class="card-produtos">
+                <div class="left-lado">
+                  <span class="produto-nome">{{ marmita.nome_marmita }}</span>
+                  <span class="produto-desc">{{ marmita.descricao }}</span>
+                  <span class="produto-preco">R$ {{ marmita.preco }}</span>
+                </div>
+                <div class="right-lado">
+                  <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
                 </div>
               </div>
             </button>
@@ -69,7 +92,7 @@
         url: '/produtos_json',  // URL da rota que retorna os produtos habilitados em JSON
         method: 'GET',
         success: function(data) {
-          const produtosContainer = $('.produtos');
+          const produtosContainer = $('#produtos-list');
           produtosContainer.empty();  // Limpa a lista existente para evitar duplicação
   
           // Itera sobre cada produto retornado e o insere no HTML
@@ -97,15 +120,51 @@
         }
       });
     }
+
+    function atualizarMarmitas() {
+      $.ajax({
+        url: '/marmitas_json',  // URL da rota que retorna as marmitas habilitadas em JSON
+        method: 'GET',
+        success: function(data) {
+          const marmitasContainer = $('#marmitas-list');
+          marmitasContainer.empty();  // Limpa a lista existente para evitar duplicação
+  
+          // Itera sobre cada marmita retornada e a insere no HTML
+          data.forEach(function(marmita) {
+            marmitasContainer.append(`
+              <form action="/marmita_unica" method="post">
+                <button value="${marmita.id_marmita}" name="btn-produto" type="submit">
+                  <div class="card-produtos">
+                    <div class="left-lado">
+                      <span class="produto-nome">${marmita.nome_marmita}</span>
+                      <span class="produto-desc">${marmita.descricao}</span>
+                      <span class="produto-preco">R$ ${marmita.preco}</span>
+                    </div>
+                    <div class="right-lado">
+                      <img src="${marmita.imagem_marmita}" alt="${marmita.nome_marmita}">
+                    </div>
+                  </div>
+                </button>
+              </form>
+            `);
+          });
+        },
+        error: function(error) {
+          console.error("Erro ao carregar marmitas:", error);
+        }
+      });
+    }
   
     // Atualiza a lista de produtos a cada 2 segundos (2000 ms)
     setInterval(atualizarProdutos, 2000);
+    // Atualiza a lista de marmitas a cada 2 segundos (2000 ms)
+    setInterval(atualizarMarmitas, 2000);
   
-    // Chama a função na primeira carga da página
+    // Chama as funções na primeira carga da página
     $(document).ready(function() {
       atualizarProdutos();
+      atualizarMarmitas();
     });
   </script>
-  
 
-  {% endblock %}
+{% endblock %}

@@ -1,8 +1,9 @@
+-- Criação do banco de dados
 CREATE DATABASE bd_cantinadalu;
 
+-- Seleciona o banco de dados a ser usado
 USE bd_cantinadalu;
 
--- Tabela de Clientes
 -- Tabela de Cursos
 CREATE TABLE tb_curso (
     id_curso INT AUTO_INCREMENT,
@@ -16,85 +17,219 @@ CREATE TABLE tb_cliente (
     nome_comp VARCHAR(100),
     telefone VARCHAR(15),
     email VARCHAR(100),
-    id_curso INT,  -- Nova coluna para referência ao curso
+    id_curso INT,
     senha VARCHAR(255),
-    tipo VARCHAR(20), 
+    tipo VARCHAR(20),
+    imagem_binaria BLOB,
     PRIMARY KEY (id_cliente),
     FOREIGN KEY (id_curso) REFERENCES tb_curso(id_curso)
 );
 
--- Ajustando a tabela tb_produto
+-- Tabela de Produtos
 CREATE TABLE tb_produto (
- cod_produto INT AUTO_INCREMENT,
- nome_produto VARCHAR(100),
- preco DECIMAL(10,2),
- url_img VARCHAR(255),
- descricao TEXT,
- id_categoria INT,
- PRIMARY KEY (cod_produto)
+    cod_produto INT AUTO_INCREMENT,
+    nome_produto VARCHAR(100),
+    preco DECIMAL(10,2),
+    url_img VARCHAR(255),
+    descricao TEXT,
+    id_categoria INT,
+    habilitado TINYINT(1) DEFAULT 1,
+    imagem_binaria LONGBLOB,
+    PRIMARY KEY (cod_produto)
 );
 
--- Ajustando a tabela tb_avaliacao
+-- Tabela de Avaliações
 CREATE TABLE tb_avaliacao (
- id_aval INT AUTO_INCREMENT, 
- cod_produto INT NOT NULL,  
- avaliacao DECIMAL(3,2),
- PRIMARY KEY (id_aval, cod_produto),
- FOREIGN KEY (cod_produto) REFERENCES tb_produto (cod_produto)
+    id_aval INT AUTO_INCREMENT,
+    cod_produto INT NOT NULL,
+    avaliacao DECIMAL(3,2),
+    PRIMARY KEY (id_aval, cod_produto),
+    FOREIGN KEY (cod_produto) REFERENCES tb_produto(cod_produto)
 );
 
--- Ajustando a tabela tb_carrinho
-CREATE TABLE tb_carrinho (
- id_carrinho INT AUTO_INCREMENT,
- cod_produto INT NOT NULL,  -- Mudança de VARCHAR para INT
- id_cliente INT NOT NULL,
- PRIMARY KEY (id_carrinho),
- FOREIGN KEY (cod_produto) REFERENCES tb_produto (cod_produto),
- FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
-);
-
--- Ajustando a tabela tb_categoria
+-- Tabela de Categorias
 CREATE TABLE tb_categoria (
-    id_categoria INT AUTO_INCREMENT, 
-    nome VARCHAR(50), 
+    id_categoria INT AUTO_INCREMENT,
+    nome VARCHAR(50),
     PRIMARY KEY (id_categoria)
 );
 
+-- Inserindo categorias
 INSERT INTO tb_categoria (nome) VALUES 
 ('Salgados Assados'),
 ('Salgados Fritos'),
 ('Bebidas'),
 ('Doces'),
 ('Lanches'),
-('Gelados');
+('Gelados'),
+('Marmita');
 
+-- Tabela de Pedidos
 CREATE TABLE tb_pedidos (
     id_pedido INT AUTO_INCREMENT,
     id_cliente INT NOT NULL,
     data_pedido DATE,
     status VARCHAR(50),
     PRIMARY KEY (id_pedido),
-    FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
+    FOREIGN KEY (id_cliente) REFERENCES tb_cliente(id_cliente)
 );
 
-ALTER TABLE tb_carrinho
-ADD COLUMN quantidade INT NOT NULL DEFAULT 1;
+-- Tabela de Marmitas
+CREATE TABLE tb_marmita (
+    id_marmita INT AUTO_INCREMENT,
+    nome_marmita VARCHAR(100),
+    preco DECIMAL(10,2),
+    tamanho VARCHAR(20),
+    descricao VARCHAR(255),
+    url_img VARCHAR(255),
+    habilitado TINYINT(1) DEFAULT 1,
+    imagem_binaria LONGBLOB,
+    PRIMARY KEY (id_marmita)
+);
 
+-- Tabela de Produtos Pedidos
 CREATE TABLE tb_produtos_pedidos (
     id_produto_pedido INT AUTO_INCREMENT,
     id_pedido INT NOT NULL,
-    cod_produto INT NOT NULL,
+    cod_produto INT NULL,
+    id_marmita INT NULL,
     quantidade INT NOT NULL,
     PRIMARY KEY (id_produto_pedido),
     FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido),
-    FOREIGN KEY (cod_produto) REFERENCES tb_produto(cod_produto)
+    FOREIGN KEY (cod_produto) REFERENCES tb_produto(cod_produto),
+    FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita),
+    CHECK (cod_produto IS NOT NULL OR id_marmita IS NOT NULL)
 );
 
-ALTER TABLE tb_produto ADD COLUMN habilitado TINYINT(1) DEFAULT 1;
+-- Tabela de Carrinho
+CREATE TABLE tb_carrinho (
+    id_carrinho INT AUTO_INCREMENT,
+    cod_produto INT,
+    id_marmita INT,
+    id_cliente INT NOT NULL,
+    quantidade INT NOT NULL DEFAULT 1,
+    PRIMARY KEY (id_carrinho),
+    FOREIGN KEY (cod_produto) REFERENCES tb_produto(cod_produto),
+    FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita),
+    FOREIGN KEY (id_cliente) REFERENCES tb_cliente(id_cliente)
+);
 
-ALTER TABLE tb_produto ADD COLUMN imagem_binaria LONGBLOB;
+-- Tabela de Guarnições
+CREATE TABLE tb_guarnicao (
+    id_guarnicao INT AUTO_INCREMENT,
+    nome_guarnicao VARCHAR(100),
+    PRIMARY KEY (id_guarnicao)
+);
 
-ALTER TABLE tb_cliente ADD COLUMN imagem_binaria LONGBLOB;
+-- Tabela de Associação Marmita - Guarnição
+CREATE TABLE tb_marmita_guarnicao (
+    id_marmita_guarnicao INT AUTO_INCREMENT,
+    id_marmita INT NOT NULL,
+    id_guarnicao INT NOT NULL,
+    PRIMARY KEY (id_marmita_guarnicao),
+    FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita),
+    FOREIGN KEY (id_guarnicao) REFERENCES tb_guarnicao(id_guarnicao)
+);
+
+-- Tabela de Acompanhamentos
+CREATE TABLE tb_acompanhamentos (
+    id_acompanhamento INT AUTO_INCREMENT PRIMARY KEY,
+    nome_acompanhamento VARCHAR(100) NOT NULL
+);
+
+-- Tabela de Relacionamento Marmita-Acompanhamento
+CREATE TABLE tb_marmita_acompanhamento (
+    id_marmita_acompanhamento INT AUTO_INCREMENT,
+    id_marmita INT NOT NULL,
+    id_acompanhamento INT NOT NULL,
+    PRIMARY KEY (id_marmita_acompanhamento),
+    FOREIGN KEY (id_marmita) REFERENCES tb_marmita(id_marmita) ON DELETE CASCADE,
+    FOREIGN KEY (id_acompanhamento) REFERENCES tb_acompanhamentos(id_acompanhamento) ON DELETE CASCADE
+);
+
+
+-- Tabela para armazenar as guarnições dos pedidos
+CREATE TABLE tb_guarnicoes_pedidos (
+    id_guarnicao INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    guarnicao VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido) ON DELETE CASCADE
+);
+
+-- Tabela para armazenar os acompanhamentos dos pedidos
+CREATE TABLE tb_acompanhamentos_pedidos (
+    id_acompanhamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    acompanhamento VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido) ON DELETE CASCADE
+);
+
+
+
+
+INSERT INTO tb_acompanhamentos (nome_acompanhamento)
+VALUES 
+    ('Feijão'),
+    ('Salada'),
+    ('Batata Frita'),
+    ('Arroz Integral'),
+    ('Farofa');
+
+INSERT INTO tb_guarnicao (nome_guarnicao)
+VALUES 
+    ('Carne'),
+    ('Ovo'),
+    ('Frango Grelhado'),
+    ('Linguiça'),
+    ('Peixe');
+
+
+
+-- Inserindo Marmitas
+INSERT INTO tb_marmita (nome_marmita, preco, tamanho, descricao, url_img, habilitado) VALUES 
+('Marmita Pequena', 12.90, 'Pequena', 'Arroz, Feijão, Frango grelhado, Salada', 'https://cms-cdn.saipos.com/assets/2023/04/26/Churrasco-marmitex---SAIPOS---Sistema-para-Restaurante-2_uid_64497c22306ef.jpg', 1),
+('Marmita Média', 15.90, 'Média', 'Arroz, Feijão, Carne de Panela, Salada, Farofa', 'https://cms-cdn.saipos.com/assets/2023/04/26/Churrasco-marmitex---SAIPOS---Sistema-para-Restaurante-2_uid_64497c22306ef.jpg', 1),
+('Marmita Grande', 18.90, 'Grande', 'Arroz, Feijão, Bife de Alcatra, Batata Frita, Salada', 'https://cms-cdn.saipos.com/assets/2023/04/26/Churrasco-marmitex---SAIPOS---Sistema-para-Restaurante-2_uid_64497c22306ef.jpg', 1);
+
+-- Inserindo Produtos
+INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) VALUES 
+('Coxinha de Frango', 5.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLigfyds3_5OSm0C4_VTYXDa5g6e32kV9h7g&s', 'Coxinha de frango crocante', 2),
+('Suco Natural de Laranja', 6.50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg7d8e8lFMBd04BSdGzf3FaB2yUNbcISqjqQ&s', 'Suco natural de laranja 300ml', 3),
+('Pão de Queijo', 3.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtErpNOUfP6-yJLahND5XkZQpF_hPvas8-7g&s', 'Pão de queijo mineiro tradicional', 1);
+
+-- Relacionando guarnições com marmitas
+INSERT INTO tb_marmita_guarnicao (id_marmita, id_guarnicao) VALUES
+(1, 1),  -- Marmita Pequena com Carne
+(1, 2),  -- Marmita Pequena com Ovo
+(2, 2),  -- Marmita Média com Ovo
+(2, 3),  -- Marmita Média com Frango Grelhado
+(3, 4),  -- Marmita Grande com Linguiça
+(3, 5);  -- Marmita Grande com Peixe
+
+-- Relacionando acompanhamentos com marmitas
+INSERT INTO tb_marmita_acompanhamento (id_marmita, id_acompanhamento) VALUES
+(1, 1),  -- Marmita Pequena com Feijão
+(1, 2),  -- Marmita Pequena com Salada
+(2, 3),  -- Marmita Média com Batata Frita
+(2, 4),  -- Marmita Média com Arroz Integral
+(3, 1),  -- Marmita Grande com Feijão
+(3, 5);  -- Marmita Grande com Farofa
+
+CREATE TABLE tb_carrinho_guarnicao (
+    id_guarnicao INT AUTO_INCREMENT PRIMARY KEY,
+    id_carrinho INT NOT NULL,
+    guarnicao VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_carrinho) REFERENCES tb_carrinho(id_carrinho)
+);
+
+
+CREATE TABLE tb_carrinho_acompanhamento (
+    id_acompanhamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_carrinho INT NOT NULL,
+    acompanhamento VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_carrinho) REFERENCES tb_carrinho(id_carrinho)
+);
+
 
 
  -- Inserindo os cursos e turmas no Banco de Dados
@@ -310,3 +445,7 @@ INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 ('Operador de Máquinas e Implementos Agrícolas - 24/2024-T'),
 ('Soldador ao Arco Elétrico e Oxigás - SOLDA-S-2C24'),
 ('Torneiro Mecânico - TORNO-2A24');
+
+
+INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
+VALUES ('Administrador', '123456789', 'adm@adm.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'adm');

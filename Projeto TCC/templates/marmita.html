@@ -1,0 +1,147 @@
+{% extends "modelo.html" %} 
+{% block conteudo %}
+<link rel="stylesheet" href="../static/styles/marmita.css">
+
+<body>
+    <main>
+        <img class="ft-item" src="{{ marmita.imagem_marmita }}" alt="Imagem da Marmita">
+
+        <section class="descricao">
+            <span class="nome-produto">{{ marmita.nome_marmita }}</span>
+            <span class="descricao-produto">{{ marmita.descricao }}</span>
+            <span class="preco-produto">R$ {{ marmita.preco }}</span>
+
+            <div class="opc">
+                <form action="/inserir_carrinho" method="post" class="formulario-marmita">
+                    <input type="hidden" name="id_marmita" value="{{ marmita.id_marmita }}"/> <!-- ID da marmita -->
+
+                    <!-- Campos para Acompanhamentos -->
+                    {% if marmita.acompanhamentos and marmita.acompanhamentos|length > 0 %}
+                    <div class="acompanhamentos">
+                        <div class="header">
+                            <div class="titulosubtitulo">
+                                <h3>Acompanhamentos</h3>
+                                <p id="acompanhamento-info">Escolha até <span id="max-acompanhamentos"></span> acompanhamentos</p>
+                            </div>
+                            <span class="seta" onclick="toggleAcompanhamentos(this)">&#9660;</span>
+                        </div>
+                        <div class="opcoes-acompanhamentos hidden">
+                            {% for acompanhamento in marmita.acompanhamentos %}
+                            <div class="acompanhamento">
+                                <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="{{ acompanhamento.nome }}"/>
+                                <span>{{ acompanhamento.nome }}</span>
+                                <label>
+                                    <input type="checkbox" name="acompanhamento" value="{{ acompanhamento.id }}"/>
+                                    <span></span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Campos para Guarnições -->
+                    {% if marmita.guarnicoes and marmita.guarnicoes|length > 0 %}
+                    <div class="acompanhamentos">
+                        <div class="header">
+                            <div class="titulosubtitulo">
+                                <h3>Guarnições</h3>
+                                <p id="guarnicao-info">Escolha até <span id="max-guarnicoes"></span> guarnições</p>
+                            </div>
+                            <span class="seta" onclick="toggleGuarnicoes(this)">&#9660;</span>
+                        </div>
+                        <div class="opcoes-guarnicoes hidden">
+                            {% for guarnicao in marmita.guarnicoes %}
+                            <div class="acompanhamento">
+                                <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="{{ guarnicao.nome }}"/>
+                                <span>{{ guarnicao.nome }}</span>
+                                <label>
+                                    <input type="checkbox" name="guarnicao" value="{{ guarnicao.id }}"/>
+                                    <span></span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Botões no final -->
+                    <div class="sair">
+                        <a href="/">Voltar</a>
+                        <button type="submit">Adicionar a sacola</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+
+<div class="espacamento1"></div>
+
+<script>
+    // Função para definir os limites com base no tamanho da marmita
+    function setLimits() {
+        const tamanhoMarmita = "{{ marmita.tamanho }}"; // Obtenha o tamanho da marmita
+        let maxAcompanhamentos, maxGuarnicoes;
+
+        switch(tamanhoMarmita) {
+            case 'Pequena':
+                maxAcompanhamentos = 2;
+                maxGuarnicoes = 1;
+                break;
+            case 'Média':
+                maxAcompanhamentos = 3;
+                maxGuarnicoes = 1;
+                break;
+            case 'Grande':
+                maxAcompanhamentos = 3;
+                maxGuarnicoes = 2;
+                break;
+            default:
+                maxAcompanhamentos = 0;
+                maxGuarnicoes = 0;
+        }
+
+        document.getElementById('max-acompanhamentos').textContent = maxAcompanhamentos;
+        document.getElementById('max-guarnicoes').textContent = maxGuarnicoes;
+
+        return { maxAcompanhamentos, maxGuarnicoes };
+    }
+
+    // Função para limitar o número de acompanhamentos e guarnições
+    function limitSelection(checkboxes, max, alertMessage) {
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const checkedCount = Array.from(checkboxes).filter(i => i.checked).length;
+                if (checkedCount > max) {
+                    checkbox.checked = false;
+                    alert(alertMessage);
+                }
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const { maxAcompanhamentos, maxGuarnicoes } = setLimits();
+
+        const checkboxesAcompanhamento = document.querySelectorAll('input[name="acompanhamento"]');
+        const checkboxesGuarnicao = document.querySelectorAll('input[name="guarnicao"]');
+
+        limitSelection(checkboxesAcompanhamento, maxAcompanhamentos, `Você só pode selecionar até ${maxAcompanhamentos} acompanhamentos.`);
+        limitSelection(checkboxesGuarnicao, maxGuarnicoes, `Você só pode selecionar até ${maxGuarnicoes} guarnições.`);
+    });
+
+    function toggleAcompanhamentos(seta) {
+        const opcoes = seta.parentElement.parentElement.querySelector('.opcoes-acompanhamentos');
+        opcoes.classList.toggle('hidden'); // Alterna a classe hidden
+        seta.innerHTML = opcoes.classList.contains('hidden') ? '&#9654;' : '&#9660;'; // Muda a seta
+    }
+
+    function toggleGuarnicoes(seta) {
+        const opcoes = seta.parentElement.parentElement.querySelector('.opcoes-guarnicoes');
+        opcoes.classList.toggle('hidden'); // Alterna a classe hidden
+        seta.innerHTML = opcoes.classList.contains('hidden') ? '&#9654;' : '&#9660;'; // Muda a seta
+    }
+</script>
+
+{% endblock %}

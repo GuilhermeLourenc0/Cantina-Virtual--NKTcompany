@@ -7,32 +7,32 @@
 .container-principal {
     display: flex;
     flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo */
 }
 
 .subtitle {
     margin-left: 20px;
 }
 
-.imgdiv{
+.imgdiv {
     display: flex;
-    
+    align-items: center; /* Alinha as imagens verticalmente */
 }
 
 .produto-card {
     display: flex;
-    height: 150px;
+    width: 100%; /* O card ocupa 100% da largura da div pai */
+    max-width: 600px; /* Ajuste a largura máxima conforme necessário */
+    height: auto; /* Permite que a altura se ajuste automaticamente ao conteúdo */
     align-items: center;  
-    border-bottom:1px solid rgb(180, 180, 180) ;
+    border-bottom: 1px solid rgb(180, 180, 180);
+    padding: 10px; /* Adiciona um espaçamento interno */
 }
 
-.img-produto{
-   margin-left: 20px; 
-}
-
-.produto-card img {
-    height: 110px;
-    width: 100px;
-    border-radius: 5px;
+.img-produto {
+    margin-left: 20px; 
+    max-width: 130px; /* Reduzindo a largura máxima da imagem */
+    height: auto; /* Mantém a proporção da imagem */
 }
 
 .button {
@@ -51,26 +51,26 @@
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
-.button img{
+.button img {
     height: 20px;
     width: 20px;
     display: flex;
 }
 
-.cima{
+.cima {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 8px;
+    margin-bottom: 5px; /* Espaço entre o título e a quantidade */
 }
 
-.btn-lixo{
+.btn-lixo {
     border: none;
     background: none;
     height: 10px;
 }
 
-.cima input{
+.cima input {
     width: 35px;
     border: none;
     text-align: center;
@@ -82,24 +82,24 @@ input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
-    
 }
 
-.cima input:focus{
+.cima input:focus {
     outline: none;
 }
 
-.cima button{
+.cima button {
     border: none;
     background: none;
 }
 
-.baixo{
+.baixo {
     display: flex;
     flex-direction: column;
+    margin-top: 5px; /* Espaço entre a parte de cima e a parte de baixo */
 }
 
-.baixo span{
+.baixo span {
     margin-left: 8px;
 }
 
@@ -117,55 +117,53 @@ input[type="number"]::-webkit-inner-spin-button {
     box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
 
-.finalizacao button{
+.finalizacao button {
     width: 370px;
     margin-bottom: 15px;
     height: 40px;
 }
 
-.finalizacompra{
+.finalizacompra {
     color: white;
     background-color: black;
 }
 
-.finalizacao a{
+.finalizacao a {
     color: black;
 }
 
-.preco{
+.preco {
     width: 95%;
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
 }
 
-.preco-item{
+.preco-item {
     margin-top: 34px;
     color: rgb(0, 110, 0);
 }
 
-.span3{
-    margin-bottom: 120px
+.span3 {
+    margin-bottom: 120px;
 }
 
-.desc-baixo{
+.desc-baixo {
     font-size: 10px;
+    margin-top: 5px; /* Espaço acima da descrição do produto */
 }
 
-.qnt-btn{
+.qnt-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 0px;
     background-color: #f8f8f8;
     border-radius: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 5px 10px; /* Padding uniforme */
 }
 
-.qnt-btn button{
+.qnt-btn button {
     color: red;
 }
 
@@ -173,6 +171,24 @@ input[type="number"]::-webkit-inner-spin-button {
     outline: none;
 }
 
-.obs-item{
+.obs-item {
     font-size: 10px;
+    margin-top: 5px; /* Espaço acima da observação */
+}
+
+.guarnicoes,
+.acompanhamentos {
+    margin-top: 5px; /* Espaço acima da lista de guarnições e acompanhamentos */
+}
+
+.guarnicoes strong,
+.acompanhamentos strong {
+    display: block; /* Faz o título ocupar uma linha inteira */
+    margin-bottom: 3px; /* Espaço abaixo do título */
+}
+
+.guarnicoes ul,
+.acompanhamentos ul {
+    margin-left: 20px; /* Espaço à esquerda para as listas */
+    list-style-type: disc; /* Adiciona marcadores */
 }

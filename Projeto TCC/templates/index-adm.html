@@ -43,6 +43,38 @@
           {% endfor %}
         </div>
 
+        <div class="produtos" id="marmitas-lista">
+          {% for registro in lista_marmitas %}
+          <div class="produto-item">
+            <form action="/editar_marmita" method="post">
+              <button value="{{ registro.id_marmita }}" name="btn-marmita" type="submit">
+                <div class="card-produtos">
+                  <img src="{{ registro.imagem_marmita }}" alt="">
+                  <span>{{ registro.nome_marmita }}</span>
+                  <span>R${{ registro.preco }}</span>
+                </div>
+              </button>
+            </form>
+
+            {% if registro.habilitado %}
+            <button class="btn-desabilitar-marmita" data-id="{{ registro.id_marmita }}">
+              Desabilitar
+            </button>
+            <button class="btn-habilitar-marmita" data-id="{{ registro.id_marmita }}" style="display:none;">
+              Habilitar
+            </button>
+            {% else %}
+            <button class="btn-habilitar-marmita" data-id="{{ registro.id_marmita }}">
+              Habilitar
+            </button>
+            <button class="btn-desabilitar-marmita" data-id="{{ registro.id_marmita }}" style="display:none;">
+              Desabilitar
+            </button>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+
       </div>
 
     </section>
@@ -95,8 +127,51 @@ $(document).ready(function() {
       }
     });
   });
-});
 
+  // Função para desabilitar marmitas
+  $(document).on('click', '.btn-desabilitar-marmita', function(e) {
+    e.preventDefault();
+    const idMarmita = $(this).data('id');
+
+    $.ajax({
+      url: '/desabilitar_marmita_adm',  // Verifique se essa URL está correta
+      method: 'POST',
+      data: { btn_desabilitar: idMarmita },
+      success: function(response) {
+        if (response.status === 'success') {
+          // Esconde o botão de desabilitar e mostra o de habilitar
+          $(`.btn-desabilitar-marmita[data-id="${idMarmita}"]`).hide();
+          $(`.btn-habilitar-marmita[data-id="${idMarmita}"]`).show();
+        }
+      },
+      error: function(xhr) {
+        console.error('Erro ao desabilitar marmita:', xhr.responseText);
+      }
+    });
+  });
+
+  // Função para habilitar marmitas
+  $(document).on('click', '.btn-habilitar-marmita', function(e) {
+    e.preventDefault();
+    const idMarmita = $(this).data('id');
+
+    $.ajax({
+      url: '/habilitar_marmita_adm',  // Verifique se essa URL está correta
+      method: 'POST',
+      data: { btn_habilitar: idMarmita },
+      success: function(response) {
+        if (response.status === 'success') {
+          // Esconde o botão de habilitar e mostra o de desabilitar
+          $(`.btn-habilitar-marmita[data-id="${idMarmita}"]`).hide();
+          $(`.btn-desabilitar-marmita[data-id="${idMarmita}"]`).show();
+        }
+      },
+      error: function(xhr) {
+        console.error('Erro ao habilitar marmita:', xhr.responseText);
+      }
+    });
+  });
+});
   </script>
 
 {% endblock %}
