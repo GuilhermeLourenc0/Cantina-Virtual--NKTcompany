@@ -181,3 +181,52 @@ input[type="text"], .prefix {
 input::placeholder {
     color: #7e7d7d; /* Cor do placeholder, mantenha o mesmo estilo que já está usando */
 }
+
+
+
+
+
+
+
+
+/* Estilizar o select geral */
+.choices {
+    width: 23.7rem; /* Mantém a mesma largura que os outros inputs */
+    border: 2px solid rgb(238, 238, 238);
+    border-radius: 5px;
+    background-color: rgb(245, 245, 245);
+    margin-top: 15px;
+}
+
+/* Estilizar a parte interna do select */
+.choices__inner {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    height: 56.98px; /* Altera a altura do select para ficar consistente */
+    padding: 10px; /* Ajuste o padding para ser mais similar aos outros inputs */
+    color: #000; /* Cor do texto */
+    font-size: 16px; /* Tamanho da fonte */
+    background-color: #f5f5f5;
+}
+
+/* Estilizar as opções */
+.choices__item--choice {
+    font-size: 16px; /* Tamanho da fonte das opções */
+    padding: 10px; /* Espaçamento das opções */
+    background-color: rgb(245, 245, 245); /* Mesma cor de fundo dos inputs */
+}
+
+/* Alterar a cor de fundo no hover */
+.choices__item--choice:hover {
+    background-color: #ff6347; /* Cor de fundo ao passar o mouse */
+    color: rgb(0, 0, 0); /* Cor do texto ao passar o mouse */
+}
+
+/* Cor do placeholder */
+.choices__placeholder {
+    
+    color: #000000; /* Cor do placeholder */
+}
+

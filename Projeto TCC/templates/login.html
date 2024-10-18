@@ -36,7 +36,7 @@
                     <div class="icon-circle"></div>
                     <div class="icon-fix"></div>
                 </div>
-                <span class="success-message" id="success-message">Logado com sucesso!</span>
+                <span id="success-message" class="success-message">Logado com sucesso!</span>
             </div>
         </div>
 
@@ -53,46 +53,22 @@
                     const successMessage = document.getElementById('success-message');
                     successOverlay.classList.add('visible'); // Mostra a sobreposição
 
-                    // Função para exibir a mensagem letra por letra
-                    const message = "Logado com sucesso!"; // Define a mensagem diretamente
-                    successMessage.innerText = ''; // Limpa o texto original
-
-                    let index = 0;
-                    const interval = setInterval(function () {
-                        if (index < message.length) {
-                            successMessage.innerText += message[index]; // Adiciona a próxima letra
-                            successMessage.style.opacity = 1; // Torna visível
-                            successMessage.style.transform = 'translateY(0)'; // Move para a posição original
-                            index++;
-                        } else {
-                            clearInterval(interval); // Para a animação quando todas as letras forem exibidas
-                        }
-                    }, 100); // Ajuste o intervalo conforme necessário (100ms = 0.1s por letra)
+                    // Torna a mensagem visível após um pequeno atraso
+                    setTimeout(function () {
+                        successMessage.classList.add('visible'); // Torna a mensagem visível
+                    }, 200); // Aguarda 100ms antes de mostrar a mensagem
 
                     // Após alguns segundos, redireciona para a página inicial
                     setTimeout(function () {
                         successOverlay.classList.remove('visible'); // Remove a classe antes do redirecionamento
-                        window.location.href = "/";
-                    }, 3000); // 3 segundos antes do redirecionamento
+                        window.location.href = "/"; // Redireciona
+                    }, 1750); // Aguarda 4 segundos antes do redirecionamento
                 }
             });
-
-
 
         </script>
         {% endif %}
 
-        <style>
-            .visible {
-                display: flex;
-                /* Mostra a sobreposição quando a classe 'visible' é adicionada */
-            }
-
-            .hidden {
-                display: none;
-                /* Esconde a sobreposição quando a classe 'hidden' é adicionada */
-            }
-        </style>
 
     </main>
 </body>

@@ -67,7 +67,7 @@ form input:focus{
 }
 .formulario form{
     width: 30rem;
-    height: 30rem;
+    height: 25rem;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -145,7 +145,7 @@ option{
 form a{
     margin-top: 10px;
     margin-bottom: 15px;
-    margin-left: 240px;
+    margin-left: 230px;
     color: black;
 }
 
@@ -164,24 +164,23 @@ form a:hover{
  * Modified by: Istiak Tridip
  */
  .success-checkmark-overlay {
-    position: fixed; /* Permite que ocupe toda a tela */
+    position: fixed; /* Ocupa toda a tela */
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
-    background: rgb(255, 255, 255); /* Fundo semi-transparente */
+    background: rgb(255, 255, 255); /* Fundo branco semi-transparente */
     display: none; /* Para centralizar o conteúdo */
     justify-content: center; /* Centraliza horizontalmente */
     align-items: center; /* Centraliza verticalmente */
     z-index: 9999; /* Certifica-se de que está acima de outros elementos */
-    
 }
 
- .success-checkmark {
+.success-checkmark {
     width: 80px;
     height: 115px;
     margin: 0 auto;
-    
+
     .check-icon {
         width: 80px;
         height: 80px;
@@ -332,8 +331,22 @@ form a:hover{
 }
 
 .success-message {
-    display: inline-block; /* Permite controlar a exibição das letras */
+    width: auto;
+    margin-top: 10px; /* Espaço entre o checkmark e a mensagem */
+    font-size: 1.2em; /* Tamanho da fonte */
+    text-align: center; /* Centraliza o texto */
     opacity: 0; /* Começa invisível */
-    transform: translateY(10px); /* Move para baixo um pouco */
-    transition: opacity 0.5s ease, transform 0.5s ease; /* Transições suaves */
+    transition: opacity 0.5s ease; /* Transição suave */
+}
+
+.visible {
+    display: flex; /* Mostra a sobreposição quando a classe 'visible' é adicionada */
+}
+
+.hidden {
+    display: none; /* Esconde a sobreposição quando a classe 'hidden' é adicionada */
+}
+
+.success-message.visible {
+    opacity: 1; /* Torna a mensagem visível */
 }
