@@ -1,122 +1,122 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
-    <link rel="stylesheet" href="../static/styles/historico.css">
+<link rel="stylesheet" href="../static/styles/historico.css">
 
-    <section class="container-cards">
-        <h2>Histórico de Pedidos</h2>
-        <div id="order-list">
-            <!-- O conteúdo dos pedidos será carregado aqui via AJAX -->
-        </div>
-    </section>
+<section class="container-cards">
+    <h2>Histórico de Pedidos</h2>
+    <div id="order-list">
+        <!-- O conteúdo dos pedidos será carregado aqui via AJAX -->
+    </div>
+</section>
 
-    <script>
-        function fetchOrders() {
-            fetch('/exibir_historico_ajax')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.redirect) {
-                        window.location.href = data.redirect;  // Redireciona para login, se necessário
-                    } else {
-                        renderOrders(data);
-                    }
-                })
-                .catch(error => console.error('Erro ao carregar pedidos:', error));
+<script>
+    function fetchOrders() {
+        fetch('/exibir_historico_ajax')
+            .then(response => response.json())
+            .then(data => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;  // Redireciona para login, se necessário
+                } else {
+                    renderOrders(data);
+                }
+            })
+            .catch(error => console.error('Erro ao carregar pedidos:', error));
+    }
+
+    function renderOrders(lista_historico) {
+        const orderList = document.getElementById('order-list');
+        if (!orderList) {
+            console.error("Element with ID 'order-list' not found.");
+            return;  // Não continue se o elemento não existir
         }
 
-        function renderOrders(lista_historico) {
-            const orderList = document.getElementById('order-list');
-            if (!orderList) {
-                console.error("Element with ID 'order-list' not found.");
-                return;  // Não continue se o elemento não existir
-            }
+        orderList.innerHTML = '';  // Limpa o conteúdo atual
 
-            orderList.innerHTML = '';  // Limpa o conteúdo atual
+        for (const [id_cliente, dados_cliente] of Object.entries(lista_historico)) {
+            const clientDiv = document.createElement('div');
+            clientDiv.classList.add('card-pedidos');
 
-            for (const [id_cliente, dados_cliente] of Object.entries(lista_historico)) {
-                const clientDiv = document.createElement('div');
-                clientDiv.classList.add('card-pedidos');
+            const clientName = document.createElement('h3');
+            clientName.textContent = `Cliente: ${dados_cliente.nome_cliente}`;
+            clientDiv.appendChild(clientName);
 
-                const clientName = document.createElement('h3');
-                clientName.textContent = `Cliente: ${dados_cliente.nome_cliente}`;
-                clientDiv.appendChild(clientName);
+            for (const [id_pedido, dados_pedido] of Object.entries(dados_cliente.pedidos)) {
+                const orderCard = document.createElement('div');
+                orderCard.classList.add('order-card');
 
-                for (const [id_pedido, dados_pedido] of Object.entries(dados_cliente.pedidos)) {
-                    const orderCard = document.createElement('div');
-                    orderCard.classList.add('order-card');
-
-                    // Cabeçalho do pedido
-                    const orderHeader = document.createElement('div');
-                    orderHeader.classList.add('order-header');
-                    orderHeader.innerHTML = `
+                // Cabeçalho do pedido
+                const orderHeader = document.createElement('div');
+                orderHeader.classList.add('order-header');
+                orderHeader.innerHTML = `
                         <span class="order-number">#${id_pedido}</span>
-                        <span class="order-time">${new Date(dados_pedido.data_pedido).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
+                        <span class="order-time">${new Date(dados_pedido.data_pedido).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         <span class="order-date">${new Date(dados_pedido.data_pedido).toLocaleDateString('pt-BR')}</span>
                     `;
-                    orderCard.appendChild(orderHeader);
+                orderCard.appendChild(orderHeader);
 
-                    // Detalhes dos produtos
-                    const orderDetails = document.createElement('div');
-                    orderDetails.classList.add('order-details');
-                    const productList = document.createElement('ul');
+                // Detalhes dos produtos
+                const orderDetails = document.createElement('div');
+                orderDetails.classList.add('order-details');
+                const productList = document.createElement('ul');
 
-                    // Adiciona produtos
-                    dados_pedido.produtos.forEach(produto => {
-                        console.log(produto);  // Debug: Verifique o produto
-                        const productItem = document.createElement('li');
-                        const precoProduto = typeof produto.preco === 'number' ? produto.preco : parseFloat(produto.preco) || 0; // Converte para número
-                        productItem.textContent = `${produto.quantidade}x ${produto.nome_produto} - R$ ${precoProduto.toFixed(2)}`;
-                        productList.appendChild(productItem);
-                    });
+                // Adiciona produtos
+                dados_pedido.produtos.forEach(produto => {
+                    console.log(produto);  // Debug: Verifique o produto
+                    const productItem = document.createElement('li');
+                    const precoProduto = typeof produto.preco === 'number' ? produto.preco : parseFloat(produto.preco) || 0; // Converte para número
+                    productItem.textContent = `${produto.quantidade}x ${produto.nome_produto} - R$ ${precoProduto.toFixed(2)}`;
+                    productList.appendChild(productItem);
+                });
 
-                    // Adiciona marmitas
-                    dados_pedido.marmitas.forEach(marmita => {
-                        console.log(marmita);  // Debug: Verifique a marmita
-                        const marmitaItem = document.createElement('li');
-                        const precoMarmita = typeof marmita.preco === 'number' ? marmita.preco : parseFloat(marmita.preco) || 0; // Converte para número
-                        marmitaItem.textContent = `Marmita: ${marmita.nome_marmita} - R$ ${precoMarmita.toFixed(2)}`;
-                        productList.appendChild(marmitaItem);
-                    });
+                // Adiciona marmitas
+                dados_pedido.marmitas.forEach(marmita => {
+                    console.log(marmita);  // Debug: Verifique a marmita
+                    const marmitaItem = document.createElement('li');
+                    const precoMarmita = typeof marmita.preco === 'number' ? marmita.preco : parseFloat(marmita.preco) || 0; // Converte para número
+                    marmitaItem.textContent = `Marmita: ${marmita.nome_marmita} - R$ ${precoMarmita.toFixed(2)}`;
+                    productList.appendChild(marmitaItem);
+                });
 
-                    orderDetails.appendChild(productList);
-                    orderCard.appendChild(orderDetails);
+                orderDetails.appendChild(productList);
+                orderCard.appendChild(orderDetails);
 
-                    // Adiciona guarnições, se houver
-                    if (dados_pedido.guarnicoes) {
-                        const guarnicaoDiv = document.createElement('div');
-                        guarnicaoDiv.classList.add('order-guarnicoes');
-                        guarnicaoDiv.textContent = `Guarnições: ${dados_pedido.guarnicoes}`;
-                        orderCard.appendChild(guarnicaoDiv);
-                    }
+                // Adiciona guarnições, se houver
+                if (dados_pedido.guarnicoes) {
+                    const guarnicaoDiv = document.createElement('div');
+                    guarnicaoDiv.classList.add('order-guarnicoes');
+                    guarnicaoDiv.textContent = `Guarnições: ${dados_pedido.guarnicoes}`;
+                    orderCard.appendChild(guarnicaoDiv);
+                }
 
-                    // Adiciona acompanhamentos, se houver
-                    if (dados_pedido.acompanhamentos) {
-                        const acompanhamentoDiv = document.createElement('div');
-                        acompanhamentoDiv.classList.add('order-acompanhamentos');
-                        acompanhamentoDiv.textContent = `Acompanhamentos: ${dados_pedido.acompanhamentos}`;
-                        orderCard.appendChild(acompanhamentoDiv);
-                    }
+                // Adiciona acompanhamentos, se houver
+                if (dados_pedido.acompanhamentos) {
+                    const acompanhamentoDiv = document.createElement('div');
+                    acompanhamentoDiv.classList.add('order-acompanhamentos');
+                    acompanhamentoDiv.textContent = `Acompanhamentos: ${dados_pedido.acompanhamentos}`;
+                    orderCard.appendChild(acompanhamentoDiv);
+                }
 
-                    // Status e total do pedido
-                    const orderStatus = document.createElement('div');
-                    orderStatus.classList.add('order-status');
-                    const totalPreco = typeof dados_pedido.total_preco === 'number' ? dados_pedido.total_preco : parseFloat(dados_pedido.total_preco) || 0; // Converte para número
-                    orderStatus.innerHTML = `
+                // Status e total do pedido
+                const orderStatus = document.createElement('div');
+                orderStatus.classList.add('order-status');
+                const totalPreco = typeof dados_pedido.total_preco === 'number' ? dados_pedido.total_preco : parseFloat(dados_pedido.total_preco) || 0; // Converte para número
+                orderStatus.innerHTML = `
                         <span class="order-price">R$ ${totalPreco.toFixed(2)}</span>
                         <span class="order-status-text">${dados_pedido.status}</span>
                     `;
-                    orderCard.appendChild(orderStatus);
+                orderCard.appendChild(orderStatus);
 
-                    clientDiv.appendChild(orderCard);
-                }
-
-                orderList.appendChild(clientDiv);
+                clientDiv.appendChild(orderCard);
             }
+
+            orderList.appendChild(clientDiv);
         }
+    }
 
-        // Chama a função para carregar os pedidos quando a página carrega
-        document.addEventListener('DOMContentLoaded', fetchOrders);
+    // Chama a função para carregar os pedidos quando a página carrega
+    document.addEventListener('DOMContentLoaded', fetchOrders);
 
-        // Atualiza a página a cada 2 segundos (2000 milissegundos)
-        setInterval(fetchOrders, 2000);
-    </script>
+    // Atualiza a página a cada 2 segundos (2000 milissegundos)
+    setInterval(fetchOrders, 2000);
+</script>
 {% endblock %}

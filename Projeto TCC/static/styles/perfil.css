@@ -162,6 +162,9 @@ input.dark2 {
     top: calc(100% - 151px);
 }
 
+ .toggle-button:focus, .toggle-button2:focus{
+    outline: none;
+}
 .overlay input{
 
     z-index: 1000 !important;

@@ -16,14 +16,14 @@
                 <div class="cima">
                     <div class="esq">
                         <img src="./static/img/obs.png" alt="">
-                        <span>Alguma observação?</span> 
+                        <span>Alguma observação?</span>
                     </div>
                     <div class="dir">
                         <p><span id="contador">0</span>/140</p>
                     </div>
                 </div>
                 <div class="baixo">
-                    <input type="text" id="meuInput" placeholder="Ex: Tirar o feijão" maxlength="140">   
+                    <input type="text" id="meuInput" placeholder="Ex: Tirar o feijão" maxlength="140">
                 </div>
             </div>
 
@@ -34,7 +34,7 @@
                     <input type="hidden" name="cod_produto" value="{{ registro.cod_produto }}"> <!-- ID do produto -->
                     <button type="submit">Adicionar a sacola</button>
                 </form>
-                
+
             </div>
         </section>
 
@@ -43,7 +43,7 @@
         <script>
             const input = document.getElementById('meuInput');
             const contador = document.getElementById('contador');
-        
+
             input.addEventListener('input', () => {
                 contador.textContent = input.value.length; // Atualiza o número de caracteres digitados
             });

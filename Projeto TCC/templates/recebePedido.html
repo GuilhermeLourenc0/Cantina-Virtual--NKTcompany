@@ -1,9 +1,9 @@
 {% extends "modelo-adm.html" %}
 {% block conteudo %}
-    <link rel="stylesheet" href="../static/styles/recebePedido.css">
-    <link rel="stylesheet" href="../static/styles/media/media-recebePedido.css">
+<link rel="stylesheet" href="../static/styles/recebePedido.css">
+<link rel="stylesheet" href="../static/styles/media/media-recebePedido.css">
 
-    <body>
+<body>
     <main>
         <section class="container-cards" id="order-container">
             <!-- Os pedidos serão carregados dinamicamente aqui -->
@@ -34,43 +34,43 @@
                                     <div class="order-details">
                                         <h3>Pedidos:</h3>
                                         <ul>`;
-                                
-                                // Exibe os produtos
-                                if (pedido.produtos && pedido.produtos.length > 0) {
-                                    pedido.produtos.forEach(produto => {
-                                        if (produto.nome_produto) {
-                                            cardPedidos += `<li>Produto: ${produto.nome_produto} - Quantidade: ${produto.quantidade} - Preço: R$ ${produto.preco.toFixed(2)}</li>`;
-                                        }
-                                    });
-                                }
 
-                                // Exibe as marmitas
-                                if (pedido.marmitas && pedido.marmitas.length > 0) {
-                                    pedido.marmitas.forEach(marmita => {
-                                        if (marmita.nome_marmita) {
-                                            cardPedidos += `<li>Marmita: ${marmita.nome_marmita} - Tamanho: ${marmita.tamanho} - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
-                                        }
-                                    });
-                                }
+                            // Exibe os produtos
+                            if (pedido.produtos && pedido.produtos.length > 0) {
+                                pedido.produtos.forEach(produto => {
+                                    if (produto.nome_produto) {
+                                        cardPedidos += `<li>Produto: ${produto.nome_produto} - Quantidade: ${produto.quantidade} - Preço: R$ ${produto.preco.toFixed(2)}</li>`;
+                                    }
+                                });
+                            }
 
-                                // Exibe as guarnições
-                                if (pedido.guarnicoes && pedido.guarnicoes.length > 0) {
-                                    pedido.guarnicoes.forEach(guarnicao => {
-                                        cardPedidos += `<li>Guarnição: ${guarnicao}`;
-                                    });
-                                }
+                            // Exibe as marmitas
+                            if (pedido.marmitas && pedido.marmitas.length > 0) {
+                                pedido.marmitas.forEach(marmita => {
+                                    if (marmita.nome_marmita) {
+                                        cardPedidos += `<li>Marmita: ${marmita.nome_marmita} - Tamanho: ${marmita.tamanho} - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
+                                    }
+                                });
+                            }
 
-                                // Exibe os acompanhamentos
-                                if (pedido.acompanhamentos && pedido.acompanhamentos.length > 0) {
-                                    pedido.acompanhamentos.forEach(acompanhamento => {
-                                        cardPedidos += `<li>Acompanhamento: ${acompanhamento}</li>`;
-                                    });
-                                }
+                            // Exibe as guarnições
+                            if (pedido.guarnicoes && pedido.guarnicoes.length > 0) {
+                                pedido.guarnicoes.forEach(guarnicao => {
+                                    cardPedidos += `<li>Guarnição: ${guarnicao}`;
+                                });
+                            }
 
-                                // Exibe uma mensagem caso não haja produtos, marmitas, guarnições ou acompanhamentos
-                                if (pedido.produtos.length === 0 && pedido.marmitas.length === 0 && pedido.guarnicoes.length === 0 && pedido.acompanhamentos.length === 0) {
-                                    cardPedidos += `<li>Nenhum produto, marmita, guarnição ou acompanhamento</li>`;
-                                }
+                            // Exibe os acompanhamentos
+                            if (pedido.acompanhamentos && pedido.acompanhamentos.length > 0) {
+                                pedido.acompanhamentos.forEach(acompanhamento => {
+                                    cardPedidos += `<li>Acompanhamento: ${acompanhamento}</li>`;
+                                });
+                            }
+
+                            // Exibe uma mensagem caso não haja produtos, marmitas, guarnições ou acompanhamentos
+                            if (pedido.produtos.length === 0 && pedido.marmitas.length === 0 && pedido.guarnicoes.length === 0 && pedido.acompanhamentos.length === 0) {
+                                cardPedidos += `<li>Nenhum produto, marmita, guarnição ou acompanhamento</li>`;
+                            }
 
                             cardPedidos += `</ul>
                                     </div>
@@ -113,16 +113,16 @@
                     },
                     body: `id_pedido=${idPedido}&status=${novoStatus}`
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'sucesso') {
-                        alert('Status atualizado com sucesso!');
-                        carregarPedidos();  // Atualiza a lista de pedidos na página
-                    } else {
-                        alert('Erro ao atualizar o status: ' + data.mensagem);
-                    }
-                })
-                .catch(error => console.error('Erro ao enviar a solicitação:', error));
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'sucesso') {
+                            alert('Status atualizado com sucesso!');
+                            carregarPedidos();  // Atualiza a lista de pedidos na página
+                        } else {
+                            alert('Erro ao atualizar o status: ' + data.mensagem);
+                        }
+                    })
+                    .catch(error => console.error('Erro ao enviar a solicitação:', error));
             }
 
             // Para o botão de cancelar pedido
@@ -137,19 +137,19 @@
                     },
                     body: `id_pedido=${idPedido}`
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'sucesso') {
-                        alert('Pedido cancelado com sucesso!');
-                        carregarPedidos();  // Atualiza a lista de pedidos na página
-                    } else {
-                        alert('Erro ao cancelar o pedido: ' + data.mensagem);
-                    }
-                })
-                .catch(error => console.error('Erro ao enviar a solicitação:', error));
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'sucesso') {
+                            alert('Pedido cancelado com sucesso!');
+                            carregarPedidos();  // Atualiza a lista de pedidos na página
+                        } else {
+                            alert('Erro ao cancelar o pedido: ' + data.mensagem);
+                        }
+                    })
+                    .catch(error => console.error('Erro ao enviar a solicitação:', error));
             }
         });
     </script>
 
-    </body>
+</body>
 {% endblock %}

@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="../static/styles/carrinho.css">
 
 <div class="espacamento1"></div>
+
 <body>
     <main>
 
@@ -19,10 +20,12 @@
                             <div class="cima">
                                 <span>{{ registro.nome_produto }}</span>
                                 <div class="qnt-btn">
-                                    <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
+                                    <button class="menos-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">-</button>
                                     <input type="number" id="quantidade-{{ registro.id_carrinho }}"
                                         value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
-                                    <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
+                                    <button class="mais-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">+</button>
                                 </div>
                             </div>
                             <div class="baixo">
@@ -50,10 +53,12 @@
                             <div class="cima">
                                 <span>{{ registro.nome_marmita }}</span>
                                 <div class="qnt-btn">
-                                    <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
+                                    <button class="menos-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">-</button>
                                     <input type="number" id="quantidade-{{ registro.id_carrinho }}"
                                         value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
-                                    <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
+                                    <button class="mais-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">+</button>
                                 </div>
                             </div>
                             <div class="baixo">
@@ -87,7 +92,7 @@
         </div>
         {% endfor %}
 
-        
+
 
         <div class="finalizacao">
             <div class="preco">
@@ -140,17 +145,17 @@
                     },
                     body: JSON.stringify({ id_carrinho: idCarrinho, quantidade: quantidade })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        atualizarPrecoTotal(); // Atualiza o preço total
-                    } else {
-                        alert('Erro ao atualizar quantidade');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            atualizarPrecoTotal(); // Atualiza o preço total
+                        } else {
+                            alert('Erro ao atualizar quantidade');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
             }
 
             // Função para excluir produtos do carrinho
@@ -170,22 +175,22 @@
                     },
                     body: JSON.stringify({ id_carrinho: idCarrinho })
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro na requisição: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        location.reload(); // Atualiza a página após exclusão bem-sucedida
-                    } else {
-                        alert('Erro ao excluir produto');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro na requisição: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            location.reload(); // Atualiza a página após exclusão bem-sucedida
+                        } else {
+                            alert('Erro ao excluir produto');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
             }
 
             // Função AJAX para atualizar o preço total do carrinho
@@ -193,17 +198,17 @@
                 fetch('/atualizar_preco_total', {
                     method: 'GET'
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('total-preco').innerText = `R$ ${data.total_preco}`;
-                    } else {
-                        alert('Erro ao atualizar o preço total');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('total-preco').innerText = `R$ ${data.total_preco}`;
+                        } else {
+                            alert('Erro ao atualizar o preço total');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
             }
         });
 
@@ -224,21 +229,21 @@
                 },
                 body: JSON.stringify({ itens: itensCarrinho })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro na requisição: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    window.location.href = '/'; // Redireciona para a página inicial
-                } else {
-                    alert('Erro ao enviar o carrinho');
-                }
-            })
-            .catch(error => console.error('Erro ao enviar o carrinho:', error));
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na requisição: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        window.location.href = '/'; // Redireciona para a página inicial
+                    } else {
+                        alert('Erro ao enviar o carrinho');
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar o carrinho:', error));
         }
 
     </script>

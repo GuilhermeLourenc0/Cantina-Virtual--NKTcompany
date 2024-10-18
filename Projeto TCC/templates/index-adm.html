@@ -83,95 +83,95 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-$(document).ready(function() {
-  // Função para desabilitar produtos
-  $(document).on('click', '.btn-desabilitar', function(e) {
-    e.preventDefault();
-    const idProduto = $(this).data('id');
-    
-    $.ajax({
-      url: '/desabilitar_produto_adm',
-      method: 'POST',
-      data: { btn_desabilitar: idProduto },
-      success: function(response) {
-        if (response.status === 'success') {
-          // Esconde o botão de desabilitar e mostra o de habilitar
-          $(`.btn-desabilitar[data-id="${idProduto}"]`).hide();
-          $(`.btn-habilitar[data-id="${idProduto}"]`).show();
-        }
-      },
-      error: function(xhr) {
-        console.error('Erro ao desabilitar produto:', xhr.responseText);
-      }
+    $(document).ready(function () {
+      // Função para desabilitar produtos
+      $(document).on('click', '.btn-desabilitar', function (e) {
+        e.preventDefault();
+        const idProduto = $(this).data('id');
+
+        $.ajax({
+          url: '/desabilitar_produto_adm',
+          method: 'POST',
+          data: { btn_desabilitar: idProduto },
+          success: function (response) {
+            if (response.status === 'success') {
+              // Esconde o botão de desabilitar e mostra o de habilitar
+              $(`.btn-desabilitar[data-id="${idProduto}"]`).hide();
+              $(`.btn-habilitar[data-id="${idProduto}"]`).show();
+            }
+          },
+          error: function (xhr) {
+            console.error('Erro ao desabilitar produto:', xhr.responseText);
+          }
+        });
+      });
+
+      // Função para habilitar produtos
+      $(document).on('click', '.btn-habilitar', function (e) {
+        e.preventDefault();
+        const idProduto = $(this).data('id');
+
+        $.ajax({
+          url: '/habilitar_produto_adm',
+          method: 'POST',
+          data: { btn_habilitar: idProduto },
+          success: function (response) {
+            if (response.status === 'success') {
+              // Esconde o botão de habilitar e mostra o de desabilitar
+              $(`.btn-habilitar[data-id="${idProduto}"]`).hide();
+              $(`.btn-desabilitar[data-id="${idProduto}"]`).show();
+            }
+          },
+          error: function (xhr) {
+            console.error('Erro ao habilitar produto:', xhr.responseText);
+          }
+        });
+      });
+
+      // Função para desabilitar marmitas
+      $(document).on('click', '.btn-desabilitar-marmita', function (e) {
+        e.preventDefault();
+        const idMarmita = $(this).data('id');
+
+        $.ajax({
+          url: '/desabilitar_marmita_adm',  // Verifique se essa URL está correta
+          method: 'POST',
+          data: { btn_desabilitar: idMarmita },
+          success: function (response) {
+            if (response.status === 'success') {
+              // Esconde o botão de desabilitar e mostra o de habilitar
+              $(`.btn-desabilitar-marmita[data-id="${idMarmita}"]`).hide();
+              $(`.btn-habilitar-marmita[data-id="${idMarmita}"]`).show();
+            }
+          },
+          error: function (xhr) {
+            console.error('Erro ao desabilitar marmita:', xhr.responseText);
+          }
+        });
+      });
+
+      // Função para habilitar marmitas
+      $(document).on('click', '.btn-habilitar-marmita', function (e) {
+        e.preventDefault();
+        const idMarmita = $(this).data('id');
+
+        $.ajax({
+          url: '/habilitar_marmita_adm',  // Verifique se essa URL está correta
+          method: 'POST',
+          data: { btn_habilitar: idMarmita },
+          success: function (response) {
+            if (response.status === 'success') {
+              // Esconde o botão de habilitar e mostra o de desabilitar
+              $(`.btn-habilitar-marmita[data-id="${idMarmita}"]`).hide();
+              $(`.btn-desabilitar-marmita[data-id="${idMarmita}"]`).show();
+            }
+          },
+          error: function (xhr) {
+            console.error('Erro ao habilitar marmita:', xhr.responseText);
+          }
+        });
+      });
     });
-  });
-
-  // Função para habilitar produtos
-  $(document).on('click', '.btn-habilitar', function(e) {
-    e.preventDefault();
-    const idProduto = $(this).data('id');
-    
-    $.ajax({
-      url: '/habilitar_produto_adm',
-      method: 'POST',
-      data: { btn_habilitar: idProduto },
-      success: function(response) {
-        if (response.status === 'success') {
-          // Esconde o botão de habilitar e mostra o de desabilitar
-          $(`.btn-habilitar[data-id="${idProduto}"]`).hide();
-          $(`.btn-desabilitar[data-id="${idProduto}"]`).show();
-        }
-      },
-      error: function(xhr) {
-        console.error('Erro ao habilitar produto:', xhr.responseText);
-      }
-    });
-  });
-
-  // Função para desabilitar marmitas
-  $(document).on('click', '.btn-desabilitar-marmita', function(e) {
-    e.preventDefault();
-    const idMarmita = $(this).data('id');
-
-    $.ajax({
-      url: '/desabilitar_marmita_adm',  // Verifique se essa URL está correta
-      method: 'POST',
-      data: { btn_desabilitar: idMarmita },
-      success: function(response) {
-        if (response.status === 'success') {
-          // Esconde o botão de desabilitar e mostra o de habilitar
-          $(`.btn-desabilitar-marmita[data-id="${idMarmita}"]`).hide();
-          $(`.btn-habilitar-marmita[data-id="${idMarmita}"]`).show();
-        }
-      },
-      error: function(xhr) {
-        console.error('Erro ao desabilitar marmita:', xhr.responseText);
-      }
-    });
-  });
-
-  // Função para habilitar marmitas
-  $(document).on('click', '.btn-habilitar-marmita', function(e) {
-    e.preventDefault();
-    const idMarmita = $(this).data('id');
-
-    $.ajax({
-      url: '/habilitar_marmita_adm',  // Verifique se essa URL está correta
-      method: 'POST',
-      data: { btn_habilitar: idMarmita },
-      success: function(response) {
-        if (response.status === 'success') {
-          // Esconde o botão de habilitar e mostra o de desabilitar
-          $(`.btn-habilitar-marmita[data-id="${idMarmita}"]`).hide();
-          $(`.btn-desabilitar-marmita[data-id="${idMarmita}"]`).show();
-        }
-      },
-      error: function(xhr) {
-        console.error('Erro ao habilitar marmita:', xhr.responseText);
-      }
-    });
-  });
-});
   </script>
 
-{% endblock %}
+  {% endblock %}

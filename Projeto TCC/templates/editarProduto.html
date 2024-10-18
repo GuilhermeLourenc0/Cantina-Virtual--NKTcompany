@@ -23,7 +23,7 @@
                     <td>
                         <form method="POST" action="/atualizar_produto" enctype="multipart/form-data">
                             <input type="hidden" name="id_produto" value="{{ registro.cod_produto }}">
-                            
+
                             <input type="text" name="nome" value="{{ registro.nome_produto }}" required>
                     </td>
                     <td>
@@ -33,7 +33,8 @@
                         <textarea name="descricao" required>{{ registro.descricao }}</textarea>
                     </td>
                     <td>
-                        <img src="{{ url_for('imagem_produto', cod_produto=registro.cod_produto) }}" alt="Imagem do produto {{ registro.nome_produto }}" style="width: 100px; height: auto;">
+                        <img src="{{ url_for('imagem_produto', cod_produto=registro.cod_produto) }}"
+                            alt="Imagem do produto {{ registro.nome_produto }}" style="width: 100px; height: auto;">
                     </td>
                     <td>
                         <input type="file" name="imagem" accept="image/png, image/jpeg">
