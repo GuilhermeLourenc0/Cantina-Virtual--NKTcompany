@@ -1,4 +1,3 @@
-// Função para pegar o horário de Brasília usando uma API externa
 async function obterHorarioBrasilia() {
     try {
         const response = await fetch('http://worldtimeapi.org/api/timezone/America/Sao_Paulo');
@@ -10,6 +9,17 @@ async function obterHorarioBrasilia() {
 
         // Exibindo o horário no elemento HTML
         document.getElementById('horario').textContent = "Horário de Brasília: " + horarioBrasilia;
+
+        // Verificando se o horário está dentro do intervalo permitido
+        const horaAtual = dateTime.getHours();
+        const podeFazerPedido = (horaAtual >= 7 && horaAtual < 10);
+
+        const botaoPedido = document.getElementById('getTimeButton');
+        botaoPedido.disabled = !podeFazerPedido; // Desabilita o botão se não puder fazer pedidos
+
+        if (!podeFazerPedido) {
+            alert("Os pedidos só podem ser feitos entre 7h e 10h da manhã.");
+        }
     } catch (error) {
         console.error("Erro ao obter o horário de Brasília:", error);
     }

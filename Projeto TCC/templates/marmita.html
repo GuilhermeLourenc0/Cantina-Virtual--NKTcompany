@@ -12,7 +12,7 @@
             <span class="preco-produto">R$ {{ marmita.preco }}</span>
 
             <div class="opc">
-                <form action="/inserir_carrinho" method="post" class="formulario-marmita">
+                <form id="form-marmita" class="formulario-marmita">
                     <input type="hidden" name="id_marmita" value="{{ marmita.id_marmita }}"/> <!-- ID da marmita -->
 
                     <!-- Campos para Acompanhamentos -->
@@ -68,7 +68,7 @@
                     <!-- Botões no final -->
                     <div class="sair">
                         <a href="/">Voltar</a>
-                        <button type="submit">Adicionar a sacola</button>
+                        <button type="button" id="adicionarCarrinhoBtn">Adicionar a sacola</button>
                     </div>
                 </form>
             </div>
@@ -129,6 +129,30 @@
 
         limitSelection(checkboxesAcompanhamento, maxAcompanhamentos, `Você só pode selecionar até ${maxAcompanhamentos} acompanhamentos.`);
         limitSelection(checkboxesGuarnicao, maxGuarnicoes, `Você só pode selecionar até ${maxGuarnicoes} guarnições.`);
+
+        // Lidar com o envio do formulário e a lógica do horário
+        document.getElementById('adicionarCarrinhoBtn').addEventListener('click', function() {
+            const form = document.getElementById('form-marmita');
+            const formData = new FormData(form);
+
+            fetch('/inserir_carrinho', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    // Exibe alerta com mensagem de erro (horário fora do intervalo)
+                    alert(data.error);
+                } else if (data.success) {
+                    // Exibe alerta com mensagem de sucesso
+                    alert(data.success);
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao inserir no carrinho:', error);
+            });
+        });
     });
 
     function toggleAcompanhamentos(seta) {

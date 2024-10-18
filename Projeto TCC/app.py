@@ -7,8 +7,9 @@ from adm import Adm
 import random
 from twilio.rest import Client
 import os
-
-
+import requests
+from datetime import datetime
+from dateutil import parser  # Importando dateutil para facilitar o parse de datas
 
 
 app = Flask(__name__)
@@ -613,6 +614,7 @@ def exibir_carrinho():
 
     
 
+
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
@@ -623,22 +625,35 @@ def carrinho():
             cod_produto = request.form.get('cod_produto')  # Para produtos
             id_marmita = request.form.get('id_marmita')  # Para marmitas
 
+            # Se for uma marmita, aplica a restrição de horário
+            if id_marmita:
+                # Verifica o horário atual em Brasília
+                response = requests.get('http://worldtimeapi.org/api/timezone/America/Sao_Paulo')
+                data = response.json()
+                datetime_brasilia = parser.isoparse(data['datetime'])  # Usando dateutil para parsear a string
+
+                # Extrai a hora e os minutos atuais
+                hora_atual = datetime_brasilia.hour
+                minutos_atuais = datetime_brasilia.minute
+
+                # Verifica se está no intervalo permitido (7h até 9h30)
+                if (hora_atual < 7) or (hora_atual == 9 and minutos_atuais > 30) or (hora_atual >= 10):
+                    return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 9h30 da manhã."}), 403
+
             # Captura guarnições e acompanhamentos selecionados
             guarnicoes_selecionadas = request.form.getlist('guarnicao')  # Lista de guarnições selecionadas
             acompanhamentos_selecionados = request.form.getlist('acompanhamento')  # Lista de acompanhamentos selecionados
-
-            # Debug: Imprime os dados recebidos para verificar
-            print("Guarnições recebidas:", guarnicoes_selecionadas)
-            print("Acompanhamentos recebidos:", acompanhamentos_selecionados)
 
             # Valida e insere no carrinho
             carrinho = Carrinho()
             if cod_produto or id_marmita:
                 carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente, 
                                                guarnicoes_selecionadas, acompanhamentos_selecionados)
-            return redirect("/exibir_carrinho")
 
         return redirect("/exibir_carrinho")
+
+
+
 
 
 
