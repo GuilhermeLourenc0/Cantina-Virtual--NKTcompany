@@ -485,10 +485,12 @@ def cancelar_pedido():
 def enviar_carrinho():
     # Obtém o horário atual de Brasília
     try:
-        response = requests.get('http://worldtimeapi.org/api/timezone/America/Sao_Paulo')
-        data = response.json()
-        hora_atual = datetime.fromisoformat(data['datetime']).hour
-        minutos_atuais = datetime.fromisoformat(data['datetime']).minute
+      # Obtém o horário atual de São Paulo (sem precisar de uma API externa)
+        timezone_sp = pytz.timezone('America/Sao_Paulo')
+        now = datetime.now(timezone_sp)
+        hora_atual = now.hour
+        minutos_atuais = now.minute
+        print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
 
         # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
         site_aberto = hora_atual > 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais <= 45))
