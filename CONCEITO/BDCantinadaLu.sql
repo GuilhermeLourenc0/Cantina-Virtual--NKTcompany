@@ -62,7 +62,7 @@ INSERT INTO tb_categoria (nome) VALUES
 ('Doces'),
 ('Lanches'),
 ('Gelados'),
-('Marmita');
+('Marmitex');
 
 -- Tabela de Pedidos
 CREATE TABLE tb_pedidos (
