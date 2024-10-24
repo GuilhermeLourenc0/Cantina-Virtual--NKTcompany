@@ -661,7 +661,7 @@ def exibir_carrinho():
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return jsonify({"error": "Usuário não logado"}), 403
+        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     
     id_cliente = session.get('usuario_logado')['id_cliente']
     cod_produto = request.form.get('cod_produto')  # Para produtos
@@ -1012,6 +1012,6 @@ def imagem_perfil(id_cliente):
         return redirect(url_for('static', filename='img/default-avatar.png'))
 
 
-app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
+app.run(debug=True)  # Define o host como localhost e a porta como 8080
 
 
