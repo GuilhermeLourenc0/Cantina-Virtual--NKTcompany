@@ -15,10 +15,10 @@
         <input name="nome" type="text" id="nome" placeholder="Nome do produto" required>
         <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.01" placeholder="Preço" required>
         
-        <!-- Campo para imagem da marmita -->
+        <!-- Campo para imagem do produto -->
         <input name="img" type="url" id="img" accept="image/*" class="input-image" placeholder="Url imagem" required>
         
-        <!-- Campo para descrição da marmita -->
+        <!-- Campo para descrição do produto -->
         <textarea name="descricao" id="descricao" placeholder="Descrição do produto" class="input-descricao" required></textarea>
         
         <select id="categoria" name="categoria" required onchange="exibirGuarnicoes()">
@@ -27,9 +27,9 @@
             {% endfor %}
         </select>
 
-        <!-- Campo de tamanho da marmita (inicialmente oculto) -->
+        <!-- Campo de tamanho do marmitex (inicialmente oculto) -->
         <div id="tamanhoDiv" style="display: none; margin-top: 15px;">
-            <label for="tamanho">Tamanho da Marmita:</label>
+            <label for="tamanho">Tamanho do Marmitex:</label>
             <select name="tamanho" id="tamanho">
                 <option value="">Selecione o tamanho</option>
                 <option value="Pequena">Pequena</option>
@@ -85,8 +85,8 @@
             var tamanhoDiv = document.getElementById("tamanhoDiv");
             var tamanhoSelect = document.getElementById("tamanho");
 
-            // Se a categoria selecionada for "Marmita", exibe as guarnições, acompanhamentos e o tamanho
-            if (categoriaSelect.options[categoriaSelect.selectedIndex].text === "Marmita") {
+            // Se a categoria selecionada for "Marmitex", exibe as guarnições, acompanhamentos e o tamanho
+            if (categoriaSelect.options[categoriaSelect.selectedIndex].text === "Marmitex") {
                 guarnicoesDiv.style.display = "block";
                 novaGuarnicaoDiv.style.display = "block";
                 tamanhoDiv.style.display = "block";
