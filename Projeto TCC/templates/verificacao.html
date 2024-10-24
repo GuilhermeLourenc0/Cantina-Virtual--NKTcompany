@@ -39,6 +39,19 @@
 
     </section>
 
+    <div class="success-checkmark-overlay {% if cadastro_sucesso %}visible{% else %}hidden{% endif %}"
+        id="success-overlay">
+        <div id="success-checkmark" class="success-checkmark">
+            <div class="check-icon">
+                <span class="icon-line line-tip"></span>
+                <span class="icon-line line-long"></span>
+                <div class="icon-circle"></div>
+                <div class="icon-fix"></div>
+            </div>
+            <span id="success-message" class="success-message">Cadastrado com sucesso!</span>
+        </div>
+    </div>
+
     <script>
         const digitos = document.querySelectorAll(".digito");
 
@@ -55,7 +68,33 @@
                 }
             });
         });
+
+
     </script>
+    {% if cadastro_sucesso %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var loginSucesso = "{{ cadastro_sucesso|tojson|default('false') }}";
+
+            if (loginSucesso) {
+                const successOverlay = document.getElementById('success-overlay');
+                const successMessage = document.getElementById('success-message');
+                successOverlay.classList.add('visible'); // Mostra a sobreposição
+
+                // Torna a mensagem visível após um pequeno atraso
+                setTimeout(function () {
+                    successMessage.classList.add('visible'); // Torna a mensagem visível
+                }, 200); // Aguarda 100ms antes de mostrar a mensagem
+
+                // Após alguns segundos, redireciona para a página inicial
+                setTimeout(function () {
+                    successOverlay.classList.remove('visible'); // Remove a classe antes do redirecionamento
+                    window.location.href = "/"; // Redireciona
+                }, 1750); // Aguarda 4 segundos antes do redirecionamento
+            }
+        });
+    </script>
+    {% endif %}
 </body>
 
 </html>

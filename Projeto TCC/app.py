@@ -128,7 +128,8 @@ def verificacao():
         verification_code = session.get('verification_code')
 
         if codigo_inserido == verification_code:
-            return redirect("/")  # Redireciona para a página principal após a verificação
+            session['cadastro_sucesso'] = True  # Define a flag de sucesso
+            return render_template("verificacao.html", cadastro_sucesso = True)  # Redireciona para a página principal após a verificação
         else:
             return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
 
