@@ -1,4 +1,4 @@
-{% extends "modelo.html" %} 
+{% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/marmita.css">
 
@@ -130,8 +130,9 @@
         limitSelection(checkboxesAcompanhamento, maxAcompanhamentos, `Você só pode selecionar até ${maxAcompanhamentos} acompanhamentos.`);
         limitSelection(checkboxesGuarnicao, maxGuarnicoes, `Você só pode selecionar até ${maxGuarnicoes} guarnições.`);
 
-        // Lidar com o envio do formulário e a lógica do horário
-        document.getElementById('adicionarCarrinhoBtn').addEventListener('click', function() {
+        // Evento para adicionar ao carrinho com fetch()
+        document.getElementById('adicionarCarrinhoBtn').addEventListener('click', function(event) {
+            event.preventDefault();
             const form = document.getElementById('form-marmita');
             const formData = new FormData(form);
 
@@ -142,11 +143,9 @@
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
-                    // Exibe alerta com mensagem de erro (horário fora do intervalo)
                     alert(data.error);
                 } else if (data.success) {
-                    // Exibe alerta com mensagem de sucesso
-                    alert(data.success);
+                    window.location.href = data.redirect_url;  // Redireciona para o carrinho
                 }
             })
             .catch(error => {
@@ -155,17 +154,14 @@
         });
     });
 
-    function toggleAcompanhamentos(seta) {
-        const opcoes = seta.parentElement.parentElement.querySelector('.opcoes-acompanhamentos');
-        opcoes.classList.toggle('hidden'); // Alterna a classe hidden
-        seta.innerHTML = opcoes.classList.contains('hidden') ? '&#9654;' : '&#9660;'; // Muda a seta
+    function toggleAcompanhamentos(element) {
+        const opcoes = element.closest('.acompanhamentos').querySelector('.opcoes-acompanhamentos');
+        opcoes.classList.toggle('hidden');
     }
 
-    function toggleGuarnicoes(seta) {
-        const opcoes = seta.parentElement.parentElement.querySelector('.opcoes-guarnicoes');
-        opcoes.classList.toggle('hidden'); // Alterna a classe hidden
-        seta.innerHTML = opcoes.classList.contains('hidden') ? '&#9654;' : '&#9660;'; // Muda a seta
+    function toggleGuarnicoes(element) {
+        const opcoes = element.closest('.acompanhamentos').querySelector('.opcoes-guarnicoes');
+        opcoes.classList.toggle('hidden');
     }
 </script>
-
 {% endblock %}
