@@ -678,7 +678,7 @@ def carrinho():
         minutos_atuais = now.minute
         print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
 
-        if (hora_atual < 7) or (hora_atual == 9 and minutos_atuais > 59) or (hora_atual >= 10):
+        if (hora_atual < 7) or (hora_atual == 9 and minutos_atuais > 30) or (hora_atual >= 10):
             return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 9h30 da manhã."}), 403
 
     # Captura guarnições e acompanhamentos selecionados
