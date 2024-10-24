@@ -483,9 +483,7 @@ def cancelar_pedido():
 
 @app.route("/enviar_carrinho", methods=['POST'])
 def enviar_carrinho():
-    # Obtém o horário atual de Brasília
     try:
-      # Obtém o horário atual de São Paulo (sem precisar de uma API externa)
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
         hora_atual = now.hour
@@ -496,7 +494,7 @@ def enviar_carrinho():
         site_aberto = hora_atual > 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais <= 45))
 
         if not site_aberto:
-            return "Site offline. Não é possível enviar pedidos neste horário.", 403
+            return jsonify({"error": "Site offline. Não é possível enviar pedidos neste horário."}), 403
 
         if 'usuario_logado' in session:
             id_cliente = session['usuario_logado']['id_cliente']
@@ -504,31 +502,32 @@ def enviar_carrinho():
 
             # Verifica se os dados foram enviados corretamente
             if data is None:
-                return "Erro ao obter dados do carrinho.", 400
+                return jsonify(success=False, message="Erro ao obter dados do carrinho."), 400
 
             itens = data.get('itens', [])
-
+            
             # Verifica se os itens estão vazios
             if not itens:
-                return "Carrinho está vazio.", 400
+                return jsonify(success=False, message="Carrinho está vazio."), 400
 
             try:
                 carrinho = Carrinho()
                 if carrinho.enviar_carrinho(id_cliente, itens):
                     # Chama a função para remover todo o carrinho
                     carrinho.remover_todo_carrinho(id_cliente)
-                    return "Pedido enviado com sucesso!", 200
+                    return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
                 else:
-                    return "Erro ao enviar o carrinho.", 500
+                    return jsonify(success=False, message="Erro ao enviar o carrinho."), 500
             except Exception as e:
                 print(f"Erro ao processar pedido: {e}")
-                return "Erro interno do servidor.", 500
-
-        return "Usuário não autenticado.", 401
+                return jsonify(success=False, message="Erro interno do servidor."), 500
+                
+        return jsonify(success=False, message="Usuário não autenticado."), 401
 
     except Exception as e:
         print(f"Erro ao obter horário de Brasília: {e}")
-        return "Erro ao verificar o horário de funcionamento.", 500
+        return jsonify({"error": "Erro ao verificar o horário de funcionamento."}), 500
+
 
 
 
@@ -663,7 +662,7 @@ def exibir_carrinho():
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
+        return redirect("/logar")
     
     id_cliente = session.get('usuario_logado')['id_cliente']
     cod_produto = request.form.get('cod_produto')  # Para produtos
@@ -671,15 +670,16 @@ def carrinho():
 
     # Se for uma marmita, aplica a restrição de horário
     if id_marmita:
-        # Obtém o horário atual de São Paulo (sem precisar de uma API externa)
+        # Obtém o horário atual de São Paulo
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
         hora_atual = now.hour
         minutos_atuais = now.minute
         print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
 
-        if (hora_atual < 7) or (hora_atual == 9 and minutos_atuais > 59) or (hora_atual >= 10):
-            return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 9h30 da manhã."}), 403
+        # Verifica se o pedido é entre 7h e 15h30
+        if (hora_atual < 7) or (hora_atual == 15 and minutos_atuais > 30) or (hora_atual > 15):
+            return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 15h30."}), 403
 
     # Captura guarnições e acompanhamentos selecionados
     guarnicoes_selecionadas = request.form.getlist('guarnicao')
@@ -1014,6 +1014,6 @@ def imagem_perfil(id_cliente):
         return redirect(url_for('static', filename='img/default-avatar.png'))
 
 
-app.run(debug=True)  # Define o host como localhost e a porta como 8080
+app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
 
 
