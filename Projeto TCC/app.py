@@ -991,8 +991,8 @@ def atualizar_perfil():
             flash(f'Erro ao salvar a imagem: {str(e)}', 'error')
             return redirect('/perfil')  # Redireciona se falhar ao salvar a imagem
 
-    # Atualiza nome e imagem (sem alterar a senha)
-    resultado = perfil.atualizar_perfil(id_cliente, nome, caminho_imagem)
+    # Atualiza nome e imagem (sem alterar a senha), verifica se o nome foi preenchido
+    resultado = perfil.atualizar_perfil(id_cliente, nome if nome else None, caminho_imagem)
 
     if 'error' in resultado:
         flash(resultado['error'], 'error')
@@ -1000,6 +1000,7 @@ def atualizar_perfil():
         flash('Perfil atualizado com sucesso!', 'success')
 
     return redirect('/perfil')  # Redireciona para a página de perfil após a atualização
+
 
 
 @app.route('/imagem_perfil/<int:id_cliente>')
@@ -1012,6 +1013,7 @@ def imagem_perfil(id_cliente):
     else:
         # Retorna a imagem padrão caso não exista imagem personalizada para o usuário
         return redirect(url_for('static', filename='img/default-avatar.png'))
+
 
 
 app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
