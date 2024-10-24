@@ -10,6 +10,7 @@ import os
 import requests
 from datetime import datetime
 from dateutil import parser  # Importando dateutil para facilitar o parse de datas
+import pytz
 
 
 app = Flask(__name__)
@@ -34,12 +35,13 @@ client = Client(account_sid, auth_token)
 # Rota para a página inicial
 @app.route("/")
 def principal():
-    # Obtém o horário atual de Brasília
     try:
-        response = requests.get('http://worldtimeapi.org/api/timezone/America/Sao_Paulo')
-        data = response.json()
-        hora_atual = datetime.fromisoformat(data['datetime']).hour
-        minutos_atuais = datetime.fromisoformat(data['datetime']).minute
+        # Obtém o horário atual de São Paulo (sem precisar de uma API externa)
+        timezone_sp = pytz.timezone('America/Sao_Paulo')
+        now = datetime.now(timezone_sp)
+        hora_atual = now.hour
+        minutos_atuais = now.minute
+        print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
 
         # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
         site_aberto = hora_atual >= 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais < 45))
@@ -50,13 +52,17 @@ def principal():
             lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
             lista_marmitas = sistema.exibir_marmitas()  # Obtém a lista de marmitas
             return render_template("index.html", lista_produtos=lista_produtos, lista_marmitas=lista_marmitas, site_aberto=site_aberto)
-        
-        # Retorna o template mesmo se o site estiver fechado
+
+        # Se o site estiver fechado, renderiza o template com o site_aberto=False
         return render_template("index.html", site_aberto=site_aberto)
 
     except Exception as e:
-        print(f"Erro ao obter horário de Brasília: {e}")
-        return "Erro ao verificar o horário de funcionamento."
+        print(f"Erro ao verificar o horário de funcionamento: {e}")
+    
+    # Em caso de erro, retorna uma mensagem de erro
+    return "Erro ao verificar o horário de funcionamento."
+
+# Certifique-se de instalar o pytz usando: pip install pytz
 
 
 @app.route("/produtos_json", methods=['GET'])
@@ -632,15 +638,14 @@ def exibir_carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     else:
-        carrinho = Carrinho()  # Cria uma instância da classe Sistema
+        carrinho = Carrinho()  # Cria uma instância da classe Carrinho
         id_cliente = session.get('usuario_logado')['id_cliente']  # Obtém o ID do cliente da sessão
 
         if request.method == 'POST':
             if 'btn-excluir' in request.form:
-                id_carrinho = request.form['btn-excluir']  # Obtém o ID do carrinho do produto a ser excluído
-                carrinho.remover_produto_carrinho(id_carrinho)  # Remove o produto do carrinho
+                id_carrinho = request.form['btn-excluir']
+                carrinho.remover_produto_carrinho(id_carrinho)
             else:
-                # Atualiza a quantidade dos produtos no carrinho
                 quantidades = request.form.getlist('quantidades')
                 for id_carrinho, quantidade in quantidades.items():
                     carrinho.atualizar_quantidade_produto_carrinho(id_carrinho, quantidade)
@@ -656,39 +661,36 @@ def exibir_carrinho():
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect('/logar')
-    else:
-        if request.method == 'POST':
-            id_cliente = session.get('usuario_logado')['id_cliente']
-            cod_produto = request.form.get('cod_produto')  # Para produtos
-            id_marmita = request.form.get('id_marmita')  # Para marmitas
+        return jsonify({"error": "Usuário não logado"}), 403
+    
+    id_cliente = session.get('usuario_logado')['id_cliente']
+    cod_produto = request.form.get('cod_produto')  # Para produtos
+    id_marmita = request.form.get('id_marmita')  # Para marmitas
 
-            # Se for uma marmita, aplica a restrição de horário
-            if id_marmita:
-                # Verifica o horário atual em Brasília
-                response = requests.get('http://worldtimeapi.org/api/timezone/America/Sao_Paulo')
-                data = response.json()
-                datetime_brasilia = parser.isoparse(data['datetime'])  # Usando dateutil para parsear a string
+    # Se for uma marmita, aplica a restrição de horário
+    if id_marmita:
+        # Obtém o horário atual de São Paulo (sem precisar de uma API externa)
+        timezone_sp = pytz.timezone('America/Sao_Paulo')
+        now = datetime.now(timezone_sp)
+        hora_atual = now.hour
+        minutos_atuais = now.minute
+        print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
 
-                # Extrai a hora e os minutos atuais
-                hora_atual = datetime_brasilia.hour
-                minutos_atuais = datetime_brasilia.minute
+        if (hora_atual < 7) or (hora_atual == 9 and minutos_atuais > 59) or (hora_atual >= 10):
+            return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 9h30 da manhã."}), 403
 
-                # Verifica se está no intervalo permitido (7h até 9h30)
-                if (hora_atual < 7) or (hora_atual == 9 and minutos_atuais > 30) or (hora_atual >= 10):
-                    return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 9h30 da manhã."}), 403
+    # Captura guarnições e acompanhamentos selecionados
+    guarnicoes_selecionadas = request.form.getlist('guarnicao')
+    acompanhamentos_selecionados = request.form.getlist('acompanhamento')
 
-            # Captura guarnições e acompanhamentos selecionados
-            guarnicoes_selecionadas = request.form.getlist('guarnicao')  # Lista de guarnições selecionadas
-            acompanhamentos_selecionados = request.form.getlist('acompanhamento')  # Lista de acompanhamentos selecionados
+    # Valida e insere no carrinho
+    carrinho = Carrinho()
+    if cod_produto or id_marmita:
+        carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente, 
+                                       guarnicoes_selecionadas, acompanhamentos_selecionados)
 
-            # Valida e insere no carrinho
-            carrinho = Carrinho()
-            if cod_produto or id_marmita:
-                carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente, 
-                                               guarnicoes_selecionadas, acompanhamentos_selecionados)
-
-        return redirect("/exibir_carrinho")
+    # Envia uma resposta JSON com a URL de redirecionamento
+    return jsonify({"success": True, "redirect_url": "/exibir_carrinho"})
 
 
 
@@ -1010,6 +1012,6 @@ def imagem_perfil(id_cliente):
         return redirect(url_for('static', filename='img/default-avatar.png'))
 
 
-app.run(debug=True)  # Executa o aplicativo Flask em modo de depuração
+app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
 
 
