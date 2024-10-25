@@ -298,11 +298,13 @@ form button:active {
     margin-right: 5px;
     /* Espaço entre o texto e a bolinha */
 }
-
+input[type="checkbox"]{
+    display: none;
+}
 
 
 input[type="checkbox"]+span {
-
+    
     transform: translateY(-50%);
     border: 2px solid #ff0000;
     /* Cor da bolinha */

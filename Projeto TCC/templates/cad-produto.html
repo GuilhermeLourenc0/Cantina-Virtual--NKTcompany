@@ -64,15 +64,22 @@
             <div id="lista_novos_acompanhamentos"></div>
         </div>
         
-        <!-- Seção para adicionar novas guarnições e acompanhamentos (inicialmente oculta) -->
         <div id="nova_guarnicao_acompanhamento" style="display: none; margin-top: 15px;">
             <h4>Adicionar nova guarnição ou acompanhamento:</h4>
-            <input type="text" id="nome_guarnicao" placeholder="Nome da nova guarnição">
-            <button type="button" onclick="adicionarGuarnicao()">Adicionar Guarnição</button>
-
-            <input type="text" id="nome_acompanhamento" placeholder="Nome do novo acompanhamento" style="margin-top: 10px;">
-            <button type="button" onclick="adicionarAcompanhamento()">Adicionar Acompanhamento</button>
+        
+            <!-- Guarnição -->
+            <div class="input-container">
+                <input type="text" id="nome_guarnicao" placeholder="Nome da nova guarnição">
+                <button type="button" onclick="adicionarGuarnicao()">+</button>
+            </div>
+        
+            <!-- Acompanhamento -->
+            <div class="input-container">
+                <input type="text" id="nome_acompanhamento" placeholder="Nome do novo acompanhamento">
+                <button type="button" onclick="adicionarAcompanhamento()">+</button>
+            </div>
         </div>
+        
 
         <button type="submit" class="btn-Cadastrar">Adicionar</button>
     </form>
@@ -118,7 +125,7 @@
                         var listaNovasGuarnicoesDiv = document.getElementById("lista_novas_guarnicoes");
                         var novaGuarnicaoDiv = document.createElement("div");
                         
-                        novaGuarnicaoDiv.innerHTML = `<input type="checkbox" name="guarnicoes" value="${data.id_guarnicao}" checked>
+                        novaGuarnicaoDiv.innerHTML = `<input type="checkbox" id="guarnicao_{{ guarnicao.id_guarnicao }}" name="guarnicoes" value="${data.id_guarnicao}" checked>
                             <label>${nomeGuarnicao}</label>`;
                         listaNovasGuarnicoesDiv.appendChild(novaGuarnicaoDiv);
                         

@@ -41,6 +41,8 @@ h2{
   border: 2px solid rgb(238, 238, 238);
   background-color: rgb(245, 245, 245);
   margin-top: 15px;
+  width: 351px;
+
 }
 
 input::placeholder {
@@ -234,29 +236,60 @@ select{
   /* Espaço entre o texto e a bolinha */
 }
 
-input[type="checkbox"] {
-  display: none;
-  /* Oculta o checkbox padrão */
+#acompanhamentos input[type="checkbox"],
+#guarnicoes_acompanhamentos input[type="checkbox"] {
+    margin-top: 5px;
+    position: absolute;
+    left: 325px;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px; /* Defina o tamanho da bolinha */
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ff0000;;
+    transition: background-color 0.3s, border-color 0.3s;
+    background-color: white;
 }
 
-input[type="checkbox"]+span {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  border: 2px solid #ff0000;
-  /* Cor da bolinha */
-  border-radius: 50%;
-  background-color: white;
-  /* Fundo da bolinha */
-  transition: background-color 0.3s, border-color 0.3s;
-}
-
-input[type="checkbox"]:checked+span {
+/* Estilo para o checkbox marcado */
+#acompanhamentos input[type="checkbox"]:checked,
+#guarnicoes_acompanhamentos input[type="checkbox"]:checked {
   background-color: #ff0000;
   /* Cor quando selecionado */
   border-color: #ff0000;
-  /* Cor da borda quando selecionado */
+}
+
+
+/* Define um container para cada campo de input e botão */
+.input-container {
+  position: relative;
+  width: fit-content; /* Ajusta a largura do container ao conteúdo */
+  margin-top: 10px; /* Espaço entre os containers */
+}
+
+/* Estilo do input com espaço para o botão */
+.input-container input[type="text"] {
+  padding-right: 30px; /* Espaço para o botão dentro do input */
+}
+
+/* Estilo do botão de confirmação */
+.input-container button[type="button"] {
+  position: absolute;
+  right: 0px;
+  top: 60%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: rgb(214, 214, 214); /* Cor do ícone de confirmação */
+  font-size: 30px;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 15px;
+  padding-left: 15px;
+  display: flex;
+}
+
+.input-container button[type="button"]:hover {
+  color: rgb(177, 177, 177);
 }
