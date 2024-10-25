@@ -223,7 +223,6 @@ class Sistema:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Consulta SQL para obter todos os pedidos do cliente específico com detalhes dos produtos e marmitas
         sql = """
             SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, 
                 pr.nome_produto, pr.preco AS preco_produto, pp.quantidade, 
@@ -234,7 +233,7 @@ class Sistema:
             JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
             LEFT JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
             LEFT JOIN tb_marmita m ON pp.id_marmita = m.id_marmita
-            WHERE cl.id_cliente = %s  -- Filtra pelos pedidos do cliente específico
+            WHERE cl.id_cliente = %s
             ORDER BY p.data_pedido DESC
         """
         mycursor.execute(sql, (id_cliente,))
@@ -242,7 +241,6 @@ class Sistema:
 
         pedidos = {}
 
-        # Itera sobre os resultados e organiza as informações de pedidos
         for resultado in resultados:
             id_pedido = resultado[0]
             nome_cliente = resultado[2]
@@ -255,7 +253,6 @@ class Sistema:
             data_pedido = resultado[9]
             status_pedido = resultado[10]
 
-            # Adiciona o cliente se não estiver no dicionário
             if id_cliente not in pedidos:
                 pedidos[id_cliente] = {
                     'nome_cliente': nome_cliente,
@@ -263,19 +260,17 @@ class Sistema:
                     'pedidos': {}
                 }
 
-            # Adiciona o pedido se não estiver no dicionário
             if id_pedido not in pedidos[id_cliente]['pedidos']:
                 pedidos[id_cliente]['pedidos'][id_pedido] = {
                     'data_pedido': data_pedido,
                     'status': status_pedido,
                     'produtos': [],
                     'marmitas': [],
-                    'guarnicoes': [],  # Inicializa a lista de guarnições
-                    'acompanhamentos': [],  # Inicializa a lista de acompanhamentos
-                    'total_preco': 0  # Inicializa o total do pedido
+                    'guarnicoes': [],
+                    'acompanhamentos': [],
+                    'total_preco': 0
                 }
 
-            # Adiciona o produto ao pedido, se houver
             if nome_produto:
                 total_produto = preco_produto * quantidade_produto
                 pedidos[id_cliente]['pedidos'][id_pedido]['produtos'].append({
@@ -283,19 +278,17 @@ class Sistema:
                     'preco': preco_produto,
                     'quantidade': quantidade_produto
                 })
-                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += total_produto  # Atualiza o total do pedido
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += total_produto
 
-            # Adiciona a marmita ao pedido, se houver
             if nome_marmita:
                 pedidos[id_cliente]['pedidos'][id_pedido]['marmitas'].append({
                     'nome_marmita': nome_marmita,
-                    'preco': preco_marmita
+                    'preco': preco_marmita,
+                    'quantidade': quantidade_produto
                 })
-                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita  # Atualiza o total do pedido
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita * quantidade_produto
 
-        # Buscar guarnições e acompanhamentos para cada pedido
         for id_pedido in pedidos[id_cliente]['pedidos']:
-            # Buscar guarnições
             sql_guarnicoes = """
                 SELECT g.nome_guarnicao 
                 FROM tb_guarnicoes_pedidos AS cg
@@ -304,9 +297,8 @@ class Sistema:
             """
             mycursor.execute(sql_guarnicoes, (id_pedido,))
             guarnicoes = [row[0] for row in mycursor.fetchall()]
-            pedidos[id_cliente]['pedidos'][id_pedido]['guarnicoes'] = guarnicoes  # Adiciona as guarnições ao pedido
+            pedidos[id_cliente]['pedidos'][id_pedido]['guarnicoes'] = guarnicoes
 
-            # Buscar acompanhamentos
             sql_acompanhamentos = """
                 SELECT a.nome_acompanhamento 
                 FROM tb_acompanhamentos_pedidos AS ca
@@ -315,10 +307,11 @@ class Sistema:
             """
             mycursor.execute(sql_acompanhamentos, (id_pedido,))
             acompanhamentos = [row[0] for row in mycursor.fetchall()]
-            pedidos[id_cliente]['pedidos'][id_pedido]['acompanhamentos'] = acompanhamentos  # Adiciona os acompanhamentos ao pedido
+            pedidos[id_cliente]['pedidos'][id_pedido]['acompanhamentos'] = acompanhamentos
 
         mydb.close()
         return pedidos
+
 
 
 
