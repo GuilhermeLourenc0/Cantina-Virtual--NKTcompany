@@ -20,7 +20,7 @@ CREATE TABLE tb_cliente (
     id_curso INT,
     senha VARCHAR(255),
     tipo VARCHAR(20),
-    imagem_binaria BLOB,
+    imagem_binaria MEDIUMBLOB,
     PRIMARY KEY (id_cliente),
     FOREIGN KEY (id_curso) REFERENCES tb_curso(id_curso)
 );
@@ -62,7 +62,7 @@ INSERT INTO tb_categoria (nome) VALUES
 ('Doces'),
 ('Lanches'),
 ('Gelados'),
-('Marmita');
+('Marmitex');
 
 -- Tabela de Pedidos
 CREATE TABLE tb_pedidos (

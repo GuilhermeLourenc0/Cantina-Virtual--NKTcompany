@@ -34,31 +34,32 @@ class Perfil:
             mydb.close()  # Fecha a conexão com o banco de dados
 
         
-    def atualizar_perfil(self, id_cliente, nome, caminho_imagem=None):
+    def atualizar_perfil(self, id_cliente, nome=None, caminho_imagem=None):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
         try:
-            # Atualiza apenas o nome e a imagem, sem mudar a senha
-            sql = "UPDATE tb_cliente SET nome_comp = %s"
-            valores = [nome]
+            # Inicia a query de atualização
+            sql = "UPDATE tb_cliente SET"
+            valores = []
 
-            # Verifica se o cliente já possui uma imagem
-            mycursor.execute("SELECT imagem_binaria FROM tb_cliente WHERE id_cliente = %s", (id_cliente,))
-            imagem_existente = mycursor.fetchone()
+            # Atualiza o nome apenas se ele for fornecido (não vazio)
+            if nome:
+                sql += " nome_comp = %s"
+                valores.append(nome)
 
             # Se uma nova imagem foi enviada
             if caminho_imagem:
+                if nome:
+                    sql += ","  # Adiciona uma vírgula se o nome já foi incluído
+                sql += " imagem_binaria = %s"
                 with open(caminho_imagem, 'rb') as imagem:
                     dados_imagem = imagem.read()
+                valores.append(dados_imagem)
 
-                # Atualiza a imagem binária, se existir ou adiciona a nova
-                if imagem_existente and imagem_existente[0] is not None:
-                    sql += ", imagem_binaria = %s"
-                    valores.append(dados_imagem)
-                else:
-                    sql += ", imagem_binaria = %s"
-                    valores.append(dados_imagem)
+            # Se nenhuma alteração foi feita
+            if not valores:
+                return {"message": "Nenhuma alteração feita no perfil."}
 
             # Adiciona a condição para o WHERE
             sql += " WHERE id_cliente = %s"
@@ -77,8 +78,10 @@ class Perfil:
             return {"error": f"Erro ao atualizar o perfil: {str(e)}"}
         
         finally:
-            mycursor.close()  # Fecha o cursor
-            mydb.close()  # Fecha a conexão com o banco de dados
+            mycursor.close()
+            mydb.close()
+
+
 
 
     def obter_perfil(self, id_cliente):
@@ -93,9 +96,7 @@ class Perfil:
             
             if perfil:
                 nome, imagem = perfil
-                if imagem is None:
-                    imagem = '/static/img/default-avatar.png'  # Caminho para uma imagem padrão
-                return {'nome': nome, 'imagem': imagem}  # Retorna um dicionário com nome e imagem
+                return {'nome': nome, 'imagem': imagem}  # Retorna a imagem binária ou None
             return None  # Retorna None se não houver perfil
         except Exception as e:
             print(f"Erro ao obter perfil: {e}")  # Log de erro
@@ -103,6 +104,7 @@ class Perfil:
         finally:
             mycursor.close()
             mydb.close()
+
 
 
 

@@ -92,8 +92,6 @@
         </div>
         {% endfor %}
 
-
-
         <div class="finalizacao">
             <div class="preco">
                 <span class="span1">Total:</span>
@@ -230,6 +228,10 @@
                 body: JSON.stringify({ itens: itensCarrinho })
             })
                 .then(response => {
+                    if (response.status === 403) {
+                        alert("Site offline. Não é possível enviar pedidos neste horário.");
+                        return; // Sai da função após mostrar o alert
+                    }
                     if (!response.ok) {
                         throw new Error('Erro na requisição: ' + response.status);
                     }
@@ -238,14 +240,16 @@
                 .then(data => {
                     if (data.success) {
                         alert(data.message);
-                        window.location.href = '/'; // Redireciona para a página inicial
+                        window.location.href = "/"; // Redireciona para a página inicial
                     } else {
-                        alert('Erro ao enviar o carrinho');
+                        alert(data.message || 'Erro ao enviar o carrinho');
                     }
                 })
-                .catch(error => console.error('Erro ao enviar o carrinho:', error));
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
         }
-
     </script>
+
 </body>
 {% endblock %}

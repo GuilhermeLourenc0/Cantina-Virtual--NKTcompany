@@ -9,7 +9,6 @@
     <link rel="icon" href="../static/img/logo.png" type="image/png">
     <link rel="icon" href="../static/img/logo.ico" type="image/x-icon"> 
     <link rel="stylesheet" href="../static/styles/inicial.css">
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -25,9 +24,7 @@
 
 <body>
     <header class="container-header">
-
         <nav class="cbc-cima">
-
 
             <div class="perfil-icon">
                 <a href="/perfil">
@@ -38,26 +35,22 @@
                         onerror="this.onerror=null;this.src='../static/img/default-avatar.png';">
                     {% else %}
                     <!-- Se o usuário não estiver logado, exibe uma imagem padrão -->
+
                     <img class="perfil" src="../static/img/default-avatar.png" alt="Imagem do Perfil" width="150"
                         height="150">
                     {% endif %}
                 </a>
             </div>
-
-
-
             <a class="logo-lu" href="/">
                 <figure>
-                    <img class="logo" src="../static/img/logo.png" alt="">
+                    <img class="logo" src="../static/img/logo.png" alt="Logo da Cantina Digital">
                 </figure>
             </a>
-
             <div class="menu-container" onclick="toggleMenu(this)">
                 <div class="bar1"></div>
                 <div class="bar2"></div>
                 <div class="bar3"></div>
             </div>
-
             <div id="mySidenav" class="sidenav">
                 {% if not session.get('usuario_logado') %}
                 <a href="/logar">Entrar</a>
@@ -70,8 +63,6 @@
                 {% if session.get('usuario_logado') %}
                 <a href="/historico">Pedidos</a>
                 <hr>
-                {% endif %}
-                {% if session.get('usuario_logado') %}
                 <a href="/logout">Sair</a>
                 {% endif %}
                 <div class="dark-mode">
@@ -87,7 +78,8 @@
         </div>
     </header>
 
-    <!-- o conteúdo do site será inserido abaixo -->
+
+    <!-- O conteúdo do site será inserido abaixo -->
     {% block conteudo %}
     {% endblock %}
 
@@ -98,7 +90,6 @@
 
             // Abrir ou fechar o menu lateral
             const menu = document.getElementById("mySidenav");
-            const test = document.getElementById("profile-container")
             if (menu.style.width === "100%") {
                 menu.style.width = "0";
             } else {
@@ -106,19 +97,16 @@
             }
         }
 
-        const chk = document.getElementById('chk')
-        const inputs = document.querySelectorAll('input')
+        const chk = document.getElementById('chk');
+        const inputs = document.querySelectorAll('input');
         chk.addEventListener('change', () => {
-            document.body.classList.toggle('dark')
-            document.getElementById('form').classList.toggle('dark1')
+            document.body.classList.toggle('dark');
             inputs.forEach(input => {
-                input.classList.toggle('dark2') // Adiciona ou remove a classe 'dark1' em cada input
-            })
-        })
+                input.classList.toggle('dark2');
+            });
+        });
+
     </script>
-
-
-    </main>
 
 </body>
 

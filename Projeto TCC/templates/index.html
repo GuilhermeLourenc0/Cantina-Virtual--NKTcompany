@@ -1,5 +1,10 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
+<div class="central" style="display: {% if not site_aberto %} flex {% else %} none {% endif %};">
+  <div id="horario" class="horario" style="display: {% if not site_aberto %} block {% else %} none {% endif %};">
+    <h2>Site offline.</h2>
+  </div>
+</div>
 
 <body>
   <main>
@@ -54,7 +59,7 @@
 
     <!-- Seção de Marmitas -->
     <section class="container-produtos">
-      <h2>Marmitas</h2>
+      <h2>Marmitex</h2>
       <div class="grid-produto">
         <div class="produtos" id="marmitas-list">
           {% for marmita in lista_marmitas %}

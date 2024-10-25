@@ -12,8 +12,9 @@
             <span class="preco-produto">R$ {{ marmita.preco }}</span>
 
             <div class="opc">
-                <form action="/inserir_carrinho" method="post" class="formulario-marmita">
-                    <input type="hidden" name="id_marmita" value="{{ marmita.id_marmita }}" /> <!-- ID da marmita -->
+
+                <form id="form-marmita" class="formulario-marmita">
+                    <input type="hidden" name="id_marmita" value="{{ marmita.id_marmita }}"/> <!-- ID da marmita -->
 
                     <!-- Campos para Acompanhamentos -->
                     {% if marmita.acompanhamentos and marmita.acompanhamentos|length > 0 %}
@@ -71,7 +72,7 @@
                     <!-- Botões no final -->
                     <div class="sair">
                         <a href="/">Voltar</a>
-                        <button type="submit">Adicionar a sacola</button>
+                        <button type="button" id="adicionarCarrinhoBtn">Adicionar ào Carrinho</button>
                     </div>
                 </form>
             </div>
@@ -132,19 +133,41 @@
 
         limitSelection(checkboxesAcompanhamento, maxAcompanhamentos, `Você só pode selecionar até ${maxAcompanhamentos} acompanhamentos.`);
         limitSelection(checkboxesGuarnicao, maxGuarnicoes, `Você só pode selecionar até ${maxGuarnicoes} guarnições.`);
+
+        // Evento para adicionar ao carrinho com fetch()
+        document.getElementById('adicionarCarrinhoBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            const form = document.getElementById('form-marmita');
+            const formData = new FormData(form);
+
+            fetch('/inserir_carrinho', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else if (data.success) {
+                    window.location.href = data.redirect_url;  // Redireciona para o carrinho
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao inserir no carrinho:', error);
+            });
+        });
     });
 
-    function toggleAcompanhamentos(seta) {
-        const opcoes = seta.parentElement.parentElement.querySelector('.opcoes-acompanhamentos');
-        opcoes.classList.toggle('hidden'); // Alterna a classe hidden
-        seta.innerHTML = opcoes.classList.contains('hidden') ? '&#9654;' : '&#9660;'; // Muda a seta
+    function toggleAcompanhamentos(element) {
+        const opcoes = element.closest('.acompanhamentos').querySelector('.opcoes-acompanhamentos');
+        opcoes.classList.toggle('hidden');
     }
 
-    function toggleGuarnicoes(seta) {
-        const opcoes = seta.parentElement.parentElement.querySelector('.opcoes-guarnicoes');
-        opcoes.classList.toggle('hidden'); // Alterna a classe hidden
-        seta.innerHTML = opcoes.classList.contains('hidden') ? '&#9654;' : '&#9660;'; // Muda a seta
+    function toggleGuarnicoes(element) {
+        const opcoes = element.closest('.acompanhamentos').querySelector('.opcoes-guarnicoes');
+        opcoes.classList.toggle('hidden');
     }
 </script>
 
 {% endblock %}
+
