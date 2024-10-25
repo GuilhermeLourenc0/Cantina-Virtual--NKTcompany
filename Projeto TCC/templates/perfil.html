@@ -1,6 +1,7 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/perfil.css">
+
 <body>
     <main>
         <section>
@@ -9,30 +10,59 @@
 
                 <div class="profile-container" id="profile-container">
                     <div class="profile-image">
-                        <!-- Pré-visualização da imagem do perfil -->
-                        <img id="profile-img" src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}" alt="Imagem do Perfil" width="150" height="150" onerror="this.src='../static/img/default-avatar.png';">
+                        <img id="profile-img"
+                            src="{{ url_for('imagem_perfil', id_cliente=session['usuario_logado']['id_cliente']) }}"
+                            alt="Imagem do Perfil" width="150" height="150"
+                            onerror="this.src='../static/img/default-avatar.png';">
                     </div>
-                    
                     <div class="overlay">
-                        <!-- Input para seleção da nova imagem -->
-                        <input type="file" id="file-upload" name="imagem_perfil" accept="image/png, image/jpeg" onchange="previewImage(event)">
-                        <img src="../static/img/btn-editar.png" alt="Imagem Sobreposta" class="overlay-image">
+                        <input type="file" id="file-upload" name="imagem_perfil" accept="image/png, image/jpeg"
+                            onchange="previewImage(event)">
+                        <img src="../static/img/btn-editar.png" alt="Editar Imagem" class="overlay-image">
                     </div>
                 </div>
-                
+
                 <div class="formulario">
                     <div class="form">
-                        <input placeholder="{{ perfil_usuario.nome }}" type="text" name="nome" value="{{ session['usuario_logado']['nome_comp'] }}">
+                        <!-- Nome -->
+                        <label for="nome">Nome</label>
+                        <input placeholder="{{ session['usuario_logado']['nome'] }}" type="text" name="nome"
+                            value="{{ session['usuario_logado']['nome'] }}">
 
-                        <input type="password" id="password" name="senha" placeholder="*Senha" required>
-                        <button type="button" class="toggle-button" onclick="togglePassword1(event)">
-                            <img id="toggle-icon" src="../static/img/fecheido-removebg.png" alt="Mostrar Senha" width="20" height="20">
-                        </button>
+                        <!-- Telefone -->
+                        <label for="telefone">Telefone</label>
+                        <p id="telefone">{{ session['usuario_logado']['tel'] }}</p>
 
-                        <input placeholder="*Confirmar Senha" id="passwordConfirmar" name="confirmar_senha" type="password" required>
-                        <button type="button" class="toggle-button2" onclick="togglePassword2(event)">
-                            <img id="toggle-icon2" src="../static/img/fecheido-removebg.png" alt="Mostrar Senha" width="20" height="20">
-                        </button>
+
+                        <!-- Email -->
+                        <label for="email">Email</label>
+                        <p>{{ session['usuario_logado']['email'] }}</p>
+
+                        <!-- Curso -->
+                        <label for="curso">Curso</label>
+                        <input placeholder="Curso" type="text" name="curso"
+                            value="{{ session['usuario_logado']['curso'] }}">
+
+                        <!-- Senha -->
+                        <label for="senha">Senha</label>
+                        <div class="input-senha">
+                            <input type="password" id="password" name="senha" placeholder="*Senha" required>
+                            <button type="button" class="toggle-button" onclick="togglePassword1(event)">
+                                <img id="toggle-icon" src="../static/img/fecheido-removebg.png" alt="Mostrar Senha"
+                                    width="20" height="20">
+                            </button>
+                        </div>
+
+                        <!-- Confirmar Senha -->
+                        <label for="confirmar_senha">Confirmar Senha</label>
+                        <div class="input-confirmar-senha">
+                            <input placeholder="*Confirmar Senha" id="passwordConfirmar" name="confirmar_senha"
+                                type="password" required>
+                            <button type="button" class="toggle-button2" onclick="togglePassword2(event)">
+                                <img id="toggle-icon2" src="../static/img/fecheido-removebg.png" alt="Mostrar Senha"
+                                    width="20" height="20">
+                            </button>
+                        </div>
 
                         <button class="btn-confirmar" type="submit">Confirmar Mudanças</button>
                     </div>
@@ -44,17 +74,15 @@
     <!-- Script para pré-visualizar a imagem selecionada -->
     <script>
         function previewImage(event) {
-            var input = event.target;  // O input file
+            var input = event.target;
             var reader = new FileReader();
-
-            reader.onload = function() {
-                var dataURL = reader.result;  // O resultado será o URL da imagem
-                var imgElement = document.getElementById('profile-img');  // Seleciona a tag img
-                imgElement.src = dataURL;  // Define o src da imagem como o novo URL gerado
+            reader.onload = function () {
+                var dataURL = reader.result;
+                var imgElement = document.getElementById('profile-img');
+                imgElement.src = dataURL;
             };
-
             if (input.files && input.files[0]) {
-                reader.readAsDataURL(input.files[0]);  // Lê a imagem selecionada e chama o onload
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
@@ -63,7 +91,6 @@
             event.preventDefault();
             const passwordField = document.getElementById('password');
             const toggleIcon = document.getElementById('toggle-icon');
-
             passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
             toggleIcon.src = passwordField.type === 'text' ? './static/img/abrido-removebg.png' : './static/img/fecheido-removebg.png';
             toggleIcon.alt = passwordField.type === 'text' ? 'Ocultar Senha' : 'Mostrar Senha';
@@ -73,11 +100,28 @@
             event.preventDefault();
             const passwordField = document.getElementById('passwordConfirmar');
             const toggleIcon = document.getElementById('toggle-icon2');
-
             passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
             toggleIcon.src = passwordField.type === 'text' ? './static/img/abrido-removebg.png' : './static/img/fecheido-removebg.png';
             toggleIcon.alt = passwordField.type === 'text' ? 'Ocultar Senha' : 'Mostrar Senha';
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var telefone = document.getElementById("telefone").innerText;
+
+            // Função para formatar o número de telefone
+            function formatarTelefone(numero) {
+                // Remover qualquer caractere que não seja número
+                var numeroLimpo = numero.replace(/\D/g, '');
+
+                // Adiciona a formatação desejada (+XX XX XXXXXX-XXXX)
+                var numeroFormatado = "+" + numeroLimpo.slice(0, 2) + "  (" + numeroLimpo.slice(2, 4) + ")  " + numeroLimpo.slice(4, 10) + "-" + numeroLimpo.slice(10);
+
+                return numeroFormatado;
+            }
+
+            // Aplica a formatação ao número de telefone
+            document.getElementById("telefone").innerText = formatarTelefone(telefone);
+        });
     </script>
 </body>
 {% endblock %}

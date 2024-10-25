@@ -241,9 +241,6 @@ def inserir_produtos():
 
 
 
-
-
-
 @app.route("/exibir_guarnicao")
 def exibir_guarnicao():
     adm = Adm()
