@@ -28,8 +28,8 @@
                                     <h2>Cliente: ${cliente.nome_cliente}</h2>
                                     <div class="order-header">
                                         <span class="order-number">#${id_pedido}</span>
-                                        <span class="order-time">${new Date(pedido.data_pedido).toLocaleTimeString()}</span>
-                                        <span class="order-date">${new Date(pedido.data_pedido).toLocaleDateString()}</span>
+                                        <span class="order-time">${pedido.hora}</span>
+                                        <span class="order-date">${pedido.data_pedido}</span>
                                     </div>
                                     <div class="order-details">
                                         <h3>Pedidos:</h3>
@@ -96,8 +96,9 @@
                 .catch(error => console.error('Erro ao carregar os pedidos:', error));
         }
 
+
         // Atualiza a lista de pedidos a cada 2 segundos (tempo ajustável)
-        setInterval(carregarPedidos, 1000000);
+        setInterval(carregarPedidos, 2000);
 
         // Carrega os pedidos quando a página é carregada
         window.onload = carregarPedidos;

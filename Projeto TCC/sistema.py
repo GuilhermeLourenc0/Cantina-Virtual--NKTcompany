@@ -292,7 +292,7 @@ class Sistema:
             sql_guarnicoes = """
                 SELECT g.nome_guarnicao 
                 FROM tb_guarnicoes_pedidos AS cg
-                JOIN tb_guarnicao AS g ON cg.id_guarnicao = g.id_guarnicao
+                JOIN tb_guarnicao AS g ON cg.guarnicao = g.id_guarnicao
                 WHERE cg.id_pedido = %s
             """
             mycursor.execute(sql_guarnicoes, (id_pedido,))
@@ -302,7 +302,7 @@ class Sistema:
             sql_acompanhamentos = """
                 SELECT a.nome_acompanhamento 
                 FROM tb_acompanhamentos_pedidos AS ca
-                JOIN tb_acompanhamentos AS a ON ca.id_acompanhamento = a.id_acompanhamento
+                JOIN tb_acompanhamentos AS a ON ca.acompanhamento = a.id_acompanhamento
                 WHERE ca.id_pedido = %s
             """
             mycursor.execute(sql_acompanhamentos, (id_pedido,))

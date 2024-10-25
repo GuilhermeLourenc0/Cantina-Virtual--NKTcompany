@@ -486,12 +486,11 @@ def enviar_carrinho():
     try:
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
-        hora_atual = now.hour
-        minutos_atuais = now.minute
-        print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
+        hora_atual = now.strftime("%H:%M:%S")  # Captura a hora atual no formato HH:MM:SS
+        print(f"Hora atual: {hora_atual}")
 
         # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
-        site_aberto = hora_atual > 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais <= 45))
+        site_aberto = now.hour > 7 and (now.hour < 21 or (now.hour == 21 and now.minute <= 45))
 
         if not site_aberto:
             return jsonify({"error": "Site offline. Não é possível enviar pedidos neste horário."}), 403
@@ -512,7 +511,7 @@ def enviar_carrinho():
 
             try:
                 carrinho = Carrinho()
-                if carrinho.enviar_carrinho(id_cliente, itens):
+                if carrinho.enviar_carrinho(id_cliente, itens, hora_atual):  # Passa a hora atual
                     # Chama a função para remover todo o carrinho
                     carrinho.remover_todo_carrinho(id_cliente)
                     return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
