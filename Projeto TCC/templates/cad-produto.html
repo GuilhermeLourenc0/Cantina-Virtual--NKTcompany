@@ -18,10 +18,10 @@
         <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.01" placeholder="Preço" required>
         
         <!-- Campo para imagem da marmita -->
-        <input name="img" type="url" id="img" accept="image/*" class="input-image" placeholder="Url imagem" required>
+        <input type="file" name="imagem" accept="image/png, image/jpeg">
         
         <!-- Campo para descrição da marmita -->
-        <textarea name="descricao" id="descricao" placeholder="Descrição do produto" class="input-descricao" required></textarea>
+        <textarea name="descricao" id="descricao" placeholder="Descrição do produto" class="input-descricao" ></textarea>
         
         <select id="categoria" name="categoria" required onchange="exibirGuarnicoes()">
             {% for registro in categorias %} 

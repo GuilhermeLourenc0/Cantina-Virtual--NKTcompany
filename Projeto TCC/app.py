@@ -1006,7 +1006,13 @@ def imagem_perfil(id_cliente):
         # Retorna a imagem padrão caso não exista imagem personalizada para o usuário
         return redirect(url_for('static', filename='img/default-avatar.png'))
 
+@app.route('/gerenciador_clientes')
+def gerenciador_de_clientes():
+    return render_template("gerencia-clientes.html")
 
+@app.route('/relatorio')
+def relatorio():
+    return render_template("relatorio.html")
 app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
 
 
