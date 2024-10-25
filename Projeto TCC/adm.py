@@ -74,6 +74,7 @@ class Adm:
                     'preco': preco_produto_float,
                     'quantidade': quantidade_produto
                 })
+                # Multiplica o preço do produto pela quantidade e adiciona ao total
                 pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_produto_float * quantidade_produto
 
             # Adiciona a marmita ao pedido, se houver
@@ -83,9 +84,13 @@ class Adm:
                     'nome_marmita': nome_marmita,
                     'preco': preco_marmita_float,
                     'tamanho': tamanho_marmita,
-                    'descricao': descricao_marmita
+                    'descricao': descricao_marmita,
+                    'quantidade': quantidade_produto
                 })
-                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita_float
+                # Multiplica o preço da marmita pela quantidade e adiciona ao total
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita_float * quantidade_produto
+
+
 
         # Buscar guarnições e acompanhamentos para cada pedido
         for id_cliente, dados in pedidos.items():
