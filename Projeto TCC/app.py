@@ -432,6 +432,18 @@ def obter_pedidos():
 
 
 
+@app.route('/marcar_entregue/<int:id_pedido>', methods=['POST'])
+def marcar_entregue(id_pedido):
+    try:
+        adm = Adm()  # Cria uma instância da classe Adm
+        adm.atualizar_status_pedido_entregue(id_pedido)  # Chama a função para atualizar o status
+        return jsonify({'status': 'sucesso'})  # Retorna sucesso em JSON
+    
+    except Exception as e:
+        print(f"Erro ao marcar pedido como entregue: {e}")  # Log do erro
+        return jsonify({'status': 'erro', 'mensagem': str(e)}), 500  # Retorna mensagem de erro em JSON
+
+
 
 
 

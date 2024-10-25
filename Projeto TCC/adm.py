@@ -25,6 +25,8 @@ class Adm:
             JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
             LEFT JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
             LEFT JOIN tb_marmita m ON pp.id_marmita = m.id_marmita
+            WHERE p.habilitado = 1
+
         """
         mycursor.execute(sql)
         resultados = mycursor.fetchall()
@@ -135,7 +137,28 @@ class Adm:
 
 
 
+    
+    def atualizar_status_pedido_entregue(self, id_pedido):
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()   # Cria um cursor
 
+        try:
+            # Atualiza status e habilitado em um único comando
+            mycursor.execute(
+                """
+                UPDATE tb_pedidos 
+                SET status = %s, habilitado = %s 
+                WHERE id_pedido = %s
+                """, 
+                ('entregue', False, id_pedido)
+            )
+            mydb.commit()  # Confirma as alterações no banco de dados
+        except Exception as e:
+            print(f"Erro ao atualizar o status do pedido: {e}")  # Log do erro
+            mydb.rollback()  # Reverte em caso de erro
+        finally:
+            mycursor.close()  # Fecha o cursor
+            mydb.close()  # Fecha a conexão
 
 
 

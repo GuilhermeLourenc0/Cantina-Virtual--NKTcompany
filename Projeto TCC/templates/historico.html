@@ -48,8 +48,8 @@
                     orderHeader.classList.add('order-header');
                     orderHeader.innerHTML = `
                         <span class="order-number">#${id_pedido}</span>
-                        <span class="order-time">${new Date(dados_pedido.data_pedido).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
-                        <span class="order-date">${new Date(dados_pedido.data_pedido).toLocaleDateString('pt-BR')}</span>
+                        <span class="order-time">${dados_pedido.hora}</span>
+                        <span class="order-date">${dados_pedido.data_pedido}</span>
                     `;
                     orderCard.appendChild(orderHeader);
 

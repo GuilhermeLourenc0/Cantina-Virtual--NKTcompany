@@ -110,24 +110,44 @@
                 const idPedido = e.target.getAttribute('data-pedido');
                 const novoStatus = e.target.value;
 
-                // Envia uma solicitação POST via AJAX para atualizar o status do pedido
-                fetch('/atualizar_status_pedido', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `id_pedido=${idPedido}&status=${novoStatus}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'sucesso') {
-                        alert('Status atualizado com sucesso!');
-                        carregarPedidos();  // Atualiza a lista de pedidos na página
-                    } else {
-                        alert('Erro ao atualizar o status: ' + data.mensagem);
-                    }
-                })
-                .catch(error => console.error('Erro ao enviar a solicitação:', error));
+                // Se o status for "entregue", chama a rota específica para marcar como entregue
+                if (novoStatus === 'entregue') {
+                    fetch(`/marcar_entregue/${idPedido}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'sucesso') {
+                            alert('Pedido marcado como entregue!');
+                            carregarPedidos();  // Atualiza a lista de pedidos na página
+                        } else {
+                            alert('Erro ao marcar como entregue: ' + data.mensagem);
+                        }
+                    })
+                    .catch(error => console.error('Erro ao enviar a solicitação:', error));
+                } else {
+                    // Envia uma solicitação POST via AJAX para atualizar o status do pedido
+                    fetch('/atualizar_status_pedido', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `id_pedido=${idPedido}&status=${novoStatus}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'sucesso') {
+                            alert('Status atualizado com sucesso!');
+                            carregarPedidos();  // Atualiza a lista de pedidos na página
+                        } else {
+                            alert('Erro ao atualizar o status: ' + data.mensagem);
+                        }
+                    })
+                    .catch(error => console.error('Erro ao enviar a solicitação:', error));
+                }
             }
 
             // Para o botão de cancelar pedido
