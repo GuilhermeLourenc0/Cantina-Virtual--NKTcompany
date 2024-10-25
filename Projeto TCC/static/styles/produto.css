@@ -5,23 +5,23 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
 }
 
 main {
-    max-width: 1200px; 
+    max-width: 1200px;
     background-color: #ffffff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     height: 89.5vh;
 }
 
-.descricao{
+.descricao {
     padding: 20px;
 }
 
 .ft-item {
     width: 100%;
     max-height: 350px;
+    padding: 20px;
 }
 
 /* Seção de descrição do produto */
@@ -51,36 +51,37 @@ main {
     display: block;
     font-size: 20px;
     color: #000000;
-    margin-bottom: 10px;  /* Espaçamento entre preço e estrelas */
+    margin-bottom: 10px;
+    /* Espaçamento entre preço e estrelas */
     font-weight: bold;
 }
 
 /* Seção de avaliação por estrelas */
 .rating {
-  display: inline-block;
+    display: inline-block;
 }
 
 .rating input {
-  display: none;
+    display: none;
 }
 
 .rating label {
-  float: right;
-  cursor: pointer;
-  color: #ccc;
-  transition: color 0.3s;
+    float: right;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.3s;
 }
 
 .rating label:before {
-  content: '\2605';
-  font-size: 30px;
+    content: '\2605';
+    font-size: 30px;
 }
 
-.rating input:checked ~ label,
+.rating input:checked~label,
 .rating label:hover,
-.rating label:hover ~ label {
-  color: #ffbb00;
-  transition: color 0.3s;
+.rating label:hover~label {
+    color: #ffbb00;
+    transition: color 0.3s;
 }
 
 /* Botão de adicionar ao carrinho */
@@ -105,34 +106,44 @@ form button:active {
 /* Layout responsivo */
 @media screen and (min-width: 768px) {
     main {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
+        align-content: center;
     }
-    
+
     img {
         max-width: 100%;
         height: auto;
     }
-    
-    .descricao, .form-rating {
+
+    .descricao,
+    .form-rating {
         margin-top: 0;
     }
 
-    
+    .descricao {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        background-color: rgb(255, 255, 255);
+    }
+
 }
 
-.sair{
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   position: fixed;
-   bottom: 0;
-   width: 90vw;
-   background-color: white;
+.sair {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    width: 90vw;
+    background-color: white;
+    margin-bottom: 20px;
 }
 
-.sair a{
+.sair a {
     border: 1px solid black;
     font-weight: 200;
     text-decoration: none;
@@ -145,22 +156,22 @@ form button:active {
     transition: background-color 0.3s ease;
 }
 
-.gambiarra1{
+.gambiarra1 {
     width: 100%;
     height: 30px;
     background-color: white;
 }
 
-.cima{
+.cima {
     display: flex;
     justify-content: space-between;
 }
 
-.observacao img{
+.observacao img {
     height: 25px;
 }
 
-.observacao input{
+.observacao input {
     width: 90vw;
     border: 1px solid rgb(212, 212, 212);
     padding: 10px;

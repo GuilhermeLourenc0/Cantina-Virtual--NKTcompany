@@ -12,27 +12,14 @@
             <span class="descricao-produto">{{ registro.descricao }}</span>
             <span class="preco-produto">R$ {{ registro.preco }}</span>
 
-            <div class="observacao">
-                <div class="cima">
-                    <div class="esq">
-                        <img src="./static/img/obs.png" alt="">
-                        <span>Alguma observação?</span> 
-                    </div>
-                    <div class="dir">
-                        <p><span id="contador">0</span>/140</p>
-                    </div>
-                </div>
-                <div class="baixo">
-                    <input type="text" id="meuInput" placeholder="Ex: Tirar o feijão" maxlength="140">   
-                </div>
-            </div>
+            
 
             <div class="sair">
                 <a href="/">Voltar</a>
 
                 <form action="/inserir_carrinho" method="post">
                     <input type="hidden" name="cod_produto" value="{{ registro.cod_produto }}"> <!-- ID do produto -->
-                    <button type="submit">Adicionar a sacola</button>
+                    <button type="submit">Adicionar ao carrinho</button>
                 </form>
                 
             </div>

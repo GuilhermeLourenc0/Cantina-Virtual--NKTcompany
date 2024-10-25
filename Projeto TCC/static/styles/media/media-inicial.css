@@ -1,56 +1,21 @@
-/* Media Queries para Responsividade */
-
-/* Celulares (até 600px) */
 @media (max-width: 600px) {
-    .cbc-cima {
-        grid-template-columns: repeat(2, 1fr);
+    footer {
+        position: fixed;
+        bottom: 0;
+        margin-left: 340px; /* Ajuste conforme necessário */
+        margin-bottom: 10px;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
 
-    .perfil-icon {
-        height: 50px;
-        width: 50px;
+    footer:hover {
+        transform: translate(-50px, 0px); /* Move a div 50px para a esquerda ao passar o mouse */
     }
 
-    .logo {
-        height: 50px;
-    }
-
-    .excluir img {
-        height: 10px;
-        width: 10px;
-    }
-
-    .container-produtos {
-        padding: 0 10px;
-    }
-
-    .card-produtos {
-        flex-direction: column;
-    }
-
-    .card-produtos img {
-        height: 60px;
-        width: 60px;
-    }
-
-    .produto-nome {
-        font-size: 0.8rem;
-    }
-
-    .produto-desc {
-        font-size: 0.4rem;
-    }
-
-    .produto-preco {
-        font-size: 0.8rem;
-    }
-
-    .footer {
-        height: 60px;
-    }
-
-    .footer button {
-        padding: 5px;
+    footer section {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 15px;
+        margin-bottom: 10px;
     }
 }
 
@@ -99,13 +64,19 @@
         font-size: 1.2rem;
     }
 
-    .footer {
-        height: 80px;
+    footer {
+        position: fixed;
+        bottom: 20px; /* Distância do fundo da tela */
+        right: 20px; /* Distância da direita da tela */
+        z-index: 500; /* Para garantir que fique acima de outros elementos */
+        transition: transform 0.3s ease; /* Transição suave para o efeito de hover */
     }
 
-    .footer button {
-        padding: 10px;
+    footer:hover {
+        transform: scale(1.2); /* Aumenta o ícone para 120% do tamanho original ao passar o mouse */
     }
+
+    
 }
 
 /* Desktops (acima de 1024px) */
@@ -153,11 +124,16 @@
         font-size: 1.5rem;
     }
 
-    .footer {
-        height: 100px;
+    footer {
+        position: fixed;
+        bottom: 20px; /* Distância do fundo da tela */
+        right: 20px; /* Distância da direita da tela */
+        z-index: 500; /* Para garantir que fique acima de outros elementos */
+        transition: transform 0.3s ease; /* Transição suave para o efeito de hover */
     }
 
-    .footer button {
-        padding: 15px;
+    footer:hover {
+        transform: scale(1.2); /* Aumenta o ícone para 120% do tamanho original ao passar o mouse */
     }
+
 }
