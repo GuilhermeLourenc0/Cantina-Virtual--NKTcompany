@@ -2,6 +2,14 @@
 {% block conteudo %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<!-- Incluindo CSS do Select2 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+<!-- Incluindo jQuery (necessário para o Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Incluindo JS do Select2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <link rel="stylesheet" href="../static/styles/cadastro.css">
 
 <body>
@@ -33,7 +41,7 @@
                     <input id="senha" name="senha" placeholder="Senha" type="password" required>
 
                     <div class="select">
-                        <select id="curso" name="curso" required>
+                        <select id="curso" name="curso" class="select2" required>
                             <option value="">Selecione o seu curso</option>
                             {% for registro in cursos %}
                             <option value="{{ registro.id_curso }}">{{ registro.curso }}</option>
@@ -48,7 +56,7 @@
             </div>
         </section>
 
-        
+
     </main>
 
     <script>
@@ -79,12 +87,19 @@
             telInput.value = value;
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const element = document.getElementById('curso');
-            const choices = new Choices(element, {
-                placeholder: true,
-                searchEnabled: false,
-                itemSelectText: '',
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const element = document.getElementById('curso');
+        //     const choices = new Choices(element, {
+        //         placeholder: true,
+        //         searchEnabled: false,
+        //         itemSelectText: '',
+        //     });
+        // });
+
+        $(document).ready(function () {
+            $('.select2').select2({
+                placeholder: 'Selecione o seu curso', // Placeholder
+                allowClear: true // Permite limpar a seleção
             });
         });
 

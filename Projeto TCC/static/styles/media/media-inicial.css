@@ -1,0 +1,163 @@
+/* Media Queries para Responsividade */
+
+/* Celulares (até 600px) */
+@media (max-width: 600px) {
+    .cbc-cima {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .perfil-icon {
+        height: 50px;
+        width: 50px;
+    }
+
+    .logo {
+        height: 50px;
+    }
+
+    .excluir img {
+        height: 10px;
+        width: 10px;
+    }
+
+    .container-produtos {
+        padding: 0 10px;
+    }
+
+    .card-produtos {
+        flex-direction: column;
+    }
+
+    .card-produtos img {
+        height: 60px;
+        width: 60px;
+    }
+
+    .produto-nome {
+        font-size: 0.8rem;
+    }
+
+    .produto-desc {
+        font-size: 0.4rem;
+    }
+
+    .produto-preco {
+        font-size: 0.8rem;
+    }
+
+    .footer {
+        height: 60px;
+    }
+
+    .footer button {
+        padding: 5px;
+    }
+}
+
+/* Tablets (de 601px a 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .cbc-cima {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .perfil-icon {
+        height: 60px;
+        width: 60px;
+    }
+
+    .logo {
+        height: 60px;
+    }
+
+    .excluir img {
+        height: 12px;
+        width: 12px;
+    }
+
+    .container-produtos {
+        padding: 0 20px;
+    }
+
+    .card-produtos {
+        flex-direction: row;
+    }
+
+    .card-produtos img {
+        height: 80px;
+        width: 80px;
+    }
+
+    .produto-nome {
+        font-size: 1.2rem;
+    }
+
+    .produto-desc {
+        font-size: 0.8rem;
+    }
+
+    .produto-preco {
+        font-size: 1.2rem;
+    }
+
+    .footer {
+        height: 80px;
+    }
+
+    .footer button {
+        padding: 10px;
+    }
+}
+
+/* Desktops (acima de 1024px) */
+@media (min-width: 1025px) {
+    .cbc-cima {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .perfil-icon {
+        height: 70px;
+        width: 70px;
+    }
+
+    .logo {
+        height: 70px;
+    }
+
+    .excluir img {
+        height: 15px;
+        width: 15px;
+    }
+
+    .container-produtos {
+        padding: 0 30px;
+    }
+
+    .card-produtos {
+        flex-direction: row;
+    }
+
+    .card-produtos img {
+        height: 100px;
+        width: 100px;
+    }
+
+    .produto-nome {
+        font-size: 1.5rem;
+    }
+
+    .produto-desc {
+        font-size: 1rem;
+    }
+
+    .produto-preco {
+        font-size: 1.5rem;
+    }
+
+    .footer {
+        height: 100px;
+    }
+
+    .footer button {
+        padding: 15px;
+    }
+}
