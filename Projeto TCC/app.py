@@ -177,8 +177,10 @@ def logar():
                 "tel": usuario.tel, 
                 "id_cliente": usuario.id_cliente, 
                 "tipo": usuario.tipo,
-                "senha": usuario.senha
+                "senha": usuario.senha,
+                "curso": usuario.curso  # Adicione o curso aqui
             }
+
             tipo = session.get('usuario_logado')['tipo']
             
             if tipo != 'cliente':

@@ -50,8 +50,10 @@ form input, form p {
     border-radius: 5px;
     border: 2px solid rgb(238, 238, 238);
     background-color: rgb(245, 245, 245);
-    margin-top: 15px;
     font-size: 16px; /* Tamanho do texto ajustado para mobile */
+    display: flex;
+    align-items: center;
+    font-weight: 400;
 }
 
 p {
@@ -66,6 +68,7 @@ input.dark2, p.dark2 {
     border-bottom: 1px solid rgb(255, 255, 255);
     color: white;
 }
+
 
 .form.dark1 {
     border: 1px solid rgb(255, 255, 255);
@@ -145,34 +148,46 @@ input.dark2, p.dark2 {
 }
 
 /* Estilo para os campos de senha e botão de toggle */
+/* Campos de senha e botão de toggle usando flexbox */
 .input-senha, .input-confirmar-senha {
-    position: relative;
-    width: 100%; /* Largura total */
+    display: flex;                /* Aplica flexbox ao container */
+    align-items: center;           /* Alinha os itens verticalmente ao centro */
+    justify-content: space-between;/* Distribui espaço entre o input e o botão */
+    width: 100%;                   /* Garante que o container ocupe a largura total */
+    height: 40px;                  /* Altura consistente */
+    border: 2px solid rgb(238, 238, 238);
+    border-radius: 5px;
+    background-color: rgb(245, 245, 245);
+    margin-top: 15px;
 }
 
 .input-senha input, .input-confirmar-senha input {
-    width: 100%;         /* Largura total */
-    padding-right: 40px; /* Espaço para o botão de toggle */
-    height: 40px;        /* Altura consistente */
+    flex: 1;                       /* O input ocupa o máximo de espaço disponível */
+    border: none;                  /* Remove a borda do input para não duplicar com o container */
+    background-color: transparent; /* Remove o fundo do input, já que o container tem a cor de fundo */
+    padding: 10px;                 /* Adiciona padding interno ao input */
+    font-size: 16px;               /* Texto responsivo */
 }
 
 .input-senha .toggle-button, .input-confirmar-senha .toggle-button2 {
-    position: absolute;
-    right: 10px;         /* Alinhado à direita */
-    top: 0;
-    bottom: 0;
-    margin: auto;
+    display: flex;                 /* Aplica flexbox ao botão */
+    justify-content: center;       /* Centraliza a imagem dentro do botão */
+    align-items: center;
     background: none;
     border: none;
     cursor: pointer;
+    padding: 10px;                 /* Adiciona padding ao botão para facilitar o clique */
 }
 
 .input-senha .toggle-button img, .input-confirmar-senha .toggle-button2 img {
-    width: 20px;
+    width: 20px;                   /* Tamanho da imagem do botão */
     height: 20px;
 }
 
-/* Ajustes de margem */
-.toggle-button, .toggle-button2 {
-    margin-bottom: 1rem;
+label{
+    margin-top: 1rem;
 }
+
+.toggle-button:focus, .toggle-button2:focus{
+    outline: none;
+}   
