@@ -3,20 +3,8 @@
 <link rel="stylesheet" href="../static/styles/editarProdutos.css">
 
 <body>
-
     <main>
-        <h1>Atualizar Produtos</h1>
         <table>
-            <thead>
-                <tr>
-                    <th>Produto</th>
-                    <th>Preço</th>
-                    <th>Descrição</th>
-                    <th>Imagem Atual</th>
-                    <th>Nova Imagem</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
             <tbody>
                 {% for registro in lista_prounico %}
                 <tr>
@@ -24,22 +12,38 @@
                         <form method="POST" action="/atualizar_produto" enctype="multipart/form-data">
                             <input type="hidden" name="id_produto" value="{{ registro.cod_produto }}">
                             
-                            <input type="text" name="nome" value="{{ registro.nome_produto }}" required>
+                            <div style="display: flex; flex-direction: column; align-items: center; position: relative; border: 3px solid rgb(165, 165, 165); border-radius: 12px; width: 253px;">
+                                <!-- Imagem atual do produto -->
+                                <img src="{{ registro.imagem_produto }}" 
+                                     alt="Imagem do produto {{ registro.nome_produto }}" 
+                                     style="width: 250px; height: 250px; cursor: pointer; border-radius: 8px;"
+                                     onclick="document.getElementById('inputImagem{{ registro.cod_produto }}').click();" 
+                                     id="previewImagem{{ registro.cod_produto }}">
+                            
+                                <!-- Input para selecionar nova imagem -->
+                                <input type="file" name="imagem" accept="image/png, image/jpeg" 
+                                       id="inputImagem{{ registro.cod_produto }}" style="display: none;" 
+                                       onchange="previewImagem(event, '{{ registro.cod_produto }}')">
+                            
+                                <!-- Ícone de edição -->
+                                <img src="../static/img/btn-editar.png" 
+                                     alt="Editar imagem" 
+                                     style="position: absolute; top: -13px; left: -15px; width: 30px; height: 30px; border-radius: 50%; background-color: white; padding: 5px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); cursor: pointer;"
+                                     onclick="document.getElementById('inputImagem{{ registro.cod_produto }}').click();">
+                            </div>
+                            
+                    </td>
+                    <td>
+                        <input type="text" name="nome" value="{{ registro.nome_produto }}" required>
                     </td>
                     <td>
                         <input type="text" name="preco" value="{{ registro.preco }}" required>
                     </td>
                     <td>
-                        <textarea name="descricao" required>{{ registro.descricao }}</textarea>
+                        <textarea name="descricao" required style="height: 80px;">{{ registro.descricao }}</textarea>
                     </td>
                     <td>
-                        <img src="{{ url_for('imagem_produto', cod_produto=registro.cod_produto) }}" alt="Imagem do produto {{ registro.nome_produto }}" style="width: 100px; height: auto;">
-                    </td>
-                    <td>
-                        <input type="file" name="imagem" accept="image/png, image/jpeg">
-                    </td>
-                    <td>
-                        <button type="submit">Atualizar Produto</button>
+                        <button type="submit">Atualizar</button>
                     </td>
                     </form>
                 </tr>
@@ -47,6 +51,13 @@
             </tbody>
         </table>
     </main>
+
+    <script>
+        function previewImagem(event, codProduto) {
+            var preview = document.getElementById('previewImagem' + codProduto);
+            preview.src = URL.createObjectURL(event.target.files[0]);
+        }
+    </script>
 
 </body>
 {% endblock %}
