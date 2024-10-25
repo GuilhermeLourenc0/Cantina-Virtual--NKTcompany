@@ -69,10 +69,13 @@ CREATE TABLE tb_pedidos (
     id_pedido INT AUTO_INCREMENT,
     id_cliente INT NOT NULL,
     data_pedido DATE,
+    hora_pedido TIME,
     status VARCHAR(50),
+	habilitado TINYINT(1) DEFAULT 1,
     PRIMARY KEY (id_pedido),
     FOREIGN KEY (id_cliente) REFERENCES tb_cliente(id_cliente)
 );
+
 
 -- Tabela de Marmitas
 CREATE TABLE tb_marmita (
@@ -187,9 +190,9 @@ VALUES
 
 -- Inserindo Marmitas
 INSERT INTO tb_marmita (nome_marmita, preco, tamanho, descricao, url_img, habilitado) VALUES 
-('Marmita Pequena', 12.90, 'Pequena', 'Arroz, Feijão, Frango grelhado, Salada', 'https://cms-cdn.saipos.com/assets/2023/04/26/Churrasco-marmitex---SAIPOS---Sistema-para-Restaurante-2_uid_64497c22306ef.jpg', 1),
-('Marmita Média', 15.90, 'Média', 'Arroz, Feijão, Carne de Panela, Salada, Farofa', 'https://cms-cdn.saipos.com/assets/2023/04/26/Churrasco-marmitex---SAIPOS---Sistema-para-Restaurante-2_uid_64497c22306ef.jpg', 1),
-('Marmita Grande', 18.90, 'Grande', 'Arroz, Feijão, Bife de Alcatra, Batata Frita, Salada', 'https://cms-cdn.saipos.com/assets/2023/04/26/Churrasco-marmitex---SAIPOS---Sistema-para-Restaurante-2_uid_64497c22306ef.jpg', 1);
+('Marmitex Pequena', 12.90, 'Pequena', 'Arroz, Feijão, Frango grelhado, Salada', 'https://cms-cdn.saipos.com/assets/2023/04/26/Churrasco-marmitex---SAIPOS---Sistema-para-Restaurante-2_uid_64497c22306ef.jpg', 1),
+('Marmitex Média', 15.90, 'Média', 'Arroz, Feijão, Carne de Panela, Salada, Farofa', 'https://cms-cdn.saipos.com/assets/2023/04/26/Churrasco-marmitex---SAIPOS---Sistema-para-Restaurante-2_uid_64497c22306ef.jpg', 1),
+('Marmitex Grande', 18.90, 'Grande', 'Arroz, Feijão, Bife de Alcatra, Batata Frita, Salada', 'https://cms-cdn.saipos.com/assets/2023/04/26/Churrasco-marmitex---SAIPOS---Sistema-para-Restaurante-2_uid_64497c22306ef.jpg', 1);
 
 -- Inserindo Produtos
 INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) VALUES 
