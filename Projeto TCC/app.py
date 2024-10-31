@@ -240,6 +240,10 @@ def inserir_produtos():
 
 
 
+
+
+
+
 @app.route("/exibir_guarnicao")
 def exibir_guarnicao():
     adm = Adm()
@@ -247,6 +251,7 @@ def exibir_guarnicao():
     lista_acompanhamento = adm.exibir_acompanhamento()
     categorias = adm.exibir_categorias()
     return render_template("cad-produto.html", lista_guarnicao=lista_guarnicao, lista_acompanhamento=lista_acompanhamento, categorias=categorias)
+
 
 
 @app.route('/adicionar_guarnicao', methods=['POST'])
@@ -258,6 +263,9 @@ def adicionar_guarnicao():
         return jsonify(success=sucesso, id_guarnicao=id_guarnicao)
     return jsonify(success=False)
  
+
+
+
 
 @app.route('/adicionar_acompanhamento', methods=['POST'])
 def adicionar_acompanhamento():
@@ -1017,13 +1025,7 @@ def imagem_perfil(id_cliente):
         # Retorna a imagem padrão caso não exista imagem personalizada para o usuário
         return redirect(url_for('static', filename='img/default-avatar.png'))
 
-@app.route('/gerenciador_clientes')
-def gerenciador_de_clientes():
-    return render_template("gerencia-clientes.html")
 
-@app.route('/relatorio')
-def relatorio():
-    return render_template("relatorio.html")
+
 app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
-
 
