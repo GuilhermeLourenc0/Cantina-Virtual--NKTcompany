@@ -257,7 +257,7 @@ class Carrinho:
         mydb.commit()
         mydb.close()
 
-    def enviar_carrinho(self, id_cliente, itens):
+    def enviar_carrinho(self, id_cliente, itens, hora_atual):  # Adiciona hora_atual como argumento
         try:
             # Conexão ao banco de dados
             mydb = Conexao.conectar()
@@ -273,8 +273,8 @@ class Carrinho:
                 return False  # Retorna falso se o carrinho estiver vazio
 
             # 2. Insere um novo pedido na tabela `tb_pedidos`
-            sql_pedido = "INSERT INTO tb_pedidos (id_cliente, data_pedido, status) VALUES (%s, CURDATE(), 'Pendente')"
-            mycursor.execute(sql_pedido, (id_cliente,))
+            sql_pedido = "INSERT INTO tb_pedidos (id_cliente, data_pedido, hora_pedido, status) VALUES (%s, CURDATE(), %s, 'Pendente')"  # Adiciona hora_pedido
+            mycursor.execute(sql_pedido, (id_cliente, hora_atual))  # Passa a hora_atual
             id_pedido = mycursor.lastrowid  # Obtém o ID do novo pedido
 
             # 3. Insere os produtos e marmitas do carrinho na tabela `tb_produtos_pedidos`

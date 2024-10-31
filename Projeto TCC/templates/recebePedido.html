@@ -1,9 +1,9 @@
 {% extends "modelo-adm.html" %}
 {% block conteudo %}
-<link rel="stylesheet" href="../static/styles/recebePedido.css">
-<link rel="stylesheet" href="../static/styles/media/media-recebePedido.css">
+    <link rel="stylesheet" href="../static/styles/recebePedido.css">
+    <link rel="stylesheet" href="../static/styles/media/media-recebePedido.css">
 
-<body>
+    <body>
     <main>
         <section class="container-cards" id="order-container">
             <!-- Os pedidos serão carregados dinamicamente aqui -->
@@ -28,14 +28,14 @@
                                     <h2>Cliente: ${cliente.nome_cliente}</h2>
                                     <div class="order-header">
                                         <span class="order-number">#${id_pedido}</span>
-                                        <span class="order-time">${new Date(pedido.data_pedido).toLocaleTimeString()}</span>
-                                        <span class="order-date">${new Date(pedido.data_pedido).toLocaleDateString()}</span>
+                                        <span class="order-time">${pedido.hora}</span>
+                                        <span class="order-date">${pedido.data_pedido}</span>
                                     </div>
                                     <div class="order-details">
                                         <h3>Pedidos:</h3>
                                         <ul>`;
 
-                            // Exibe os produtos
+                            // Exibe os produtos com quantidade
                             if (pedido.produtos && pedido.produtos.length > 0) {
                                 pedido.produtos.forEach(produto => {
                                     if (produto.nome_produto) {
@@ -44,30 +44,34 @@
                                 });
                             }
 
-                            // Exibe as marmitas
+                            // Exibe as marmitas com quantidade e associa guarnições e acompanhamentos
                             if (pedido.marmitas && pedido.marmitas.length > 0) {
                                 pedido.marmitas.forEach(marmita => {
                                     if (marmita.nome_marmita) {
-                                        cardPedidos += `<li>Marmita: ${marmita.nome_marmita} - Tamanho: ${marmita.tamanho} - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
+                                        cardPedidos += `<li>Marmita: ${marmita.nome_marmita} - Tamanho: ${marmita.tamanho} - Quantidade: ${marmita.quantidade} - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
+
+                                        // Guarnições associadas à marmita
+                                        if (pedido.guarnicoes && pedido.guarnicoes.length > 0) {
+                                            cardPedidos += `<ul><li><strong>Guarnições:</strong></li>`;
+                                            pedido.guarnicoes.forEach(guarnicao => {
+                                                cardPedidos += `<li>${guarnicao}</li>`;
+                                            });
+                                            cardPedidos += `</ul>`;
+                                        }
+
+                                        // Acompanhamentos associados à marmita
+                                        if (pedido.acompanhamentos && pedido.acompanhamentos.length > 0) {
+                                            cardPedidos += `<ul><li><strong>Acompanhamentos:</strong></li>`;
+                                            pedido.acompanhamentos.forEach(acompanhamento => {
+                                                cardPedidos += `<li>${acompanhamento}</li>`;
+                                            });
+                                            cardPedidos += `</ul>`;
+                                        }
                                     }
                                 });
                             }
 
-                            // Exibe as guarnições
-                            if (pedido.guarnicoes && pedido.guarnicoes.length > 0) {
-                                pedido.guarnicoes.forEach(guarnicao => {
-                                    cardPedidos += `<li>Guarnição: ${guarnicao}`;
-                                });
-                            }
-
-                            // Exibe os acompanhamentos
-                            if (pedido.acompanhamentos && pedido.acompanhamentos.length > 0) {
-                                pedido.acompanhamentos.forEach(acompanhamento => {
-                                    cardPedidos += `<li>Acompanhamento: ${acompanhamento}</li>`;
-                                });
-                            }
-
-                            // Exibe uma mensagem caso não haja produtos, marmitas, guarnições ou acompanhamentos
+                            // Mensagem caso não haja produtos, marmitas, guarnições ou acompanhamentos
                             if (pedido.produtos.length === 0 && pedido.marmitas.length === 0 && pedido.guarnicoes.length === 0 && pedido.acompanhamentos.length === 0) {
                                 cardPedidos += `<li>Nenhum produto, marmita, guarnição ou acompanhamento</li>`;
                             }
@@ -92,6 +96,7 @@
                 .catch(error => console.error('Erro ao carregar os pedidos:', error));
         }
 
+
         // Atualiza a lista de pedidos a cada 2 segundos (tempo ajustável)
         setInterval(carregarPedidos, 2000);
 
@@ -105,14 +110,33 @@
                 const idPedido = e.target.getAttribute('data-pedido');
                 const novoStatus = e.target.value;
 
-                // Envia uma solicitação POST via AJAX para atualizar o status do pedido
-                fetch('/atualizar_status_pedido', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `id_pedido=${idPedido}&status=${novoStatus}`
-                })
+                // Se o status for "entregue", chama a rota específica para marcar como entregue
+                if (novoStatus === 'entregue') {
+                    fetch(`/marcar_entregue/${idPedido}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'sucesso') {
+                            alert('Pedido marcado como entregue!');
+                            carregarPedidos();  // Atualiza a lista de pedidos na página
+                        } else {
+                            alert('Erro ao marcar como entregue: ' + data.mensagem);
+                        }
+                    })
+                    .catch(error => console.error('Erro ao enviar a solicitação:', error));
+                } else {
+                    // Envia uma solicitação POST via AJAX para atualizar o status do pedido
+                    fetch('/atualizar_status_pedido', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `id_pedido=${idPedido}&status=${novoStatus}`
+                    })
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'sucesso') {
@@ -123,6 +147,7 @@
                         }
                     })
                     .catch(error => console.error('Erro ao enviar a solicitação:', error));
+                }
             }
 
             // Para o botão de cancelar pedido
@@ -137,19 +162,19 @@
                     },
                     body: `id_pedido=${idPedido}`
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'sucesso') {
-                            alert('Pedido cancelado com sucesso!');
-                            carregarPedidos();  // Atualiza a lista de pedidos na página
-                        } else {
-                            alert('Erro ao cancelar o pedido: ' + data.mensagem);
-                        }
-                    })
-                    .catch(error => console.error('Erro ao enviar a solicitação:', error));
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'sucesso') {
+                        alert('Pedido cancelado com sucesso!');
+                        carregarPedidos();  // Atualiza a lista de pedidos na página
+                    } else {
+                        alert('Erro ao cancelar o pedido: ' + data.mensagem);
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar a solicitação:', error));
             }
         });
     </script>
 
-</body>
+    </body>
 {% endblock %}

@@ -1,6 +1,7 @@
 from conexao import Conexao
 from hashlib import sha256
 import os
+from datetime import datetime
 
 class Adm:
     def __init__(self):
@@ -18,12 +19,14 @@ class Adm:
             SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, 
                 pr.nome_produto, pr.preco AS preco_produto, pp.quantidade, 
                 m.nome_marmita, m.preco AS preco_marmita, m.tamanho, m.descricao, 
-                p.data_pedido, p.status
+                p.data_pedido, p.status, p.hora_pedido
             FROM tb_pedidos p
             JOIN tb_cliente cl ON p.id_cliente = cl.id_cliente
             JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
             LEFT JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
             LEFT JOIN tb_marmita m ON pp.id_marmita = m.id_marmita
+            WHERE p.habilitado = 1
+
         """
         mycursor.execute(sql)
         resultados = mycursor.fetchall()
@@ -43,8 +46,9 @@ class Adm:
             preco_marmita = resultado[8]
             tamanho_marmita = resultado[9]
             descricao_marmita = resultado[10]
-            data_pedido = resultado[11]
+            data_pedido = resultado[11].strftime('%d/%m/%Y') if resultado[11] else None
             status_pedido = resultado[12]
+            hora_pedido = str(resultado[13]) if resultado[13] else None  # Converte hora_pedido para string
 
             # Adiciona o cliente se não estiver no dicionário
             if id_cliente not in pedidos:
@@ -59,10 +63,11 @@ class Adm:
                 pedidos[id_cliente]['pedidos'][id_pedido] = {
                     'data_pedido': data_pedido,
                     'status': status_pedido,
+                    'hora': hora_pedido,  # Usa a hora_pedido já formatada
                     'produtos': [],
                     'marmitas': [],
-                    'guarnicoes': [],  # Inicializa a lista de guarnições
-                    'acompanhamentos': [],  # Inicializa a lista de acompanhamentos
+                    'guarnicoes': [],
+                    'acompanhamentos': [],
                     'total_preco': 0
                 }
 
@@ -83,9 +88,10 @@ class Adm:
                     'nome_marmita': nome_marmita,
                     'preco': preco_marmita_float,
                     'tamanho': tamanho_marmita,
-                    'descricao': descricao_marmita
+                    'descricao': descricao_marmita,
+                    'quantidade': quantidade_produto
                 })
-                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita_float
+                pedidos[id_cliente]['pedidos'][id_pedido]['total_preco'] += preco_marmita_float * quantidade_produto
 
         # Buscar guarnições e acompanhamentos para cada pedido
         for id_cliente, dados in pedidos.items():
@@ -94,23 +100,23 @@ class Adm:
                 sql_guarnicoes = """
                     SELECT g.nome_guarnicao 
                     FROM tb_guarnicoes_pedidos AS cg
-                    JOIN tb_guarnicao AS g ON cg.id_guarnicao = g.id_guarnicao
+                    JOIN tb_guarnicao AS g ON cg.guarnicao = g.id_guarnicao
                     WHERE cg.id_pedido = %s
                 """
                 mycursor.execute(sql_guarnicoes, (id_pedido,))
                 guarnicoes = [row[0] for row in mycursor.fetchall()]
-                pedidos[id_cliente]['pedidos'][id_pedido]['guarnicoes'] = guarnicoes  # Adiciona as guarnições ao pedido
+                pedidos[id_cliente]['pedidos'][id_pedido]['guarnicoes'] = guarnicoes
 
                 # Buscar acompanhamentos
                 sql_acompanhamentos = """
                     SELECT a.nome_acompanhamento 
                     FROM tb_acompanhamentos_pedidos AS ca
-                    JOIN tb_acompanhamentos AS a ON ca.id_acompanhamento = a.id_acompanhamento
+                    JOIN tb_acompanhamentos AS a ON ca.acompanhamento = a.id_acompanhamento
                     WHERE ca.id_pedido = %s
                 """
                 mycursor.execute(sql_acompanhamentos, (id_pedido,))
                 acompanhamentos = [row[0] for row in mycursor.fetchall()]
-                pedidos[id_cliente]['pedidos'][id_pedido]['acompanhamentos'] = acompanhamentos  # Adiciona os acompanhamentos ao pedido
+                pedidos[id_cliente]['pedidos'][id_pedido]['acompanhamentos'] = acompanhamentos
 
         mydb.close()
 
@@ -131,6 +137,28 @@ class Adm:
 
 
 
+    
+    def atualizar_status_pedido_entregue(self, id_pedido):
+        mydb = Conexao.conectar()  # Conecta ao banco de dados
+        mycursor = mydb.cursor()   # Cria um cursor
+
+        try:
+            # Atualiza status e habilitado em um único comando
+            mycursor.execute(
+                """
+                UPDATE tb_pedidos 
+                SET status = %s, habilitado = %s 
+                WHERE id_pedido = %s
+                """, 
+                ('entregue', False, id_pedido)
+            )
+            mydb.commit()  # Confirma as alterações no banco de dados
+        except Exception as e:
+            print(f"Erro ao atualizar o status do pedido: {e}")  # Log do erro
+            mydb.rollback()  # Reverte em caso de erro
+        finally:
+            mycursor.close()  # Fecha o cursor
+            mydb.close()  # Fecha a conexão
 
 
 
