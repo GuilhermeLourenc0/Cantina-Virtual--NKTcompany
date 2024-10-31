@@ -11,6 +11,7 @@ import requests
 from datetime import datetime
 from dateutil import parser  # Importando dateutil para facilitar o parse de datas
 import pytz
+from relatorio import Relatorio
 
 
 app = Flask(__name__)
@@ -480,17 +481,20 @@ def cancelar_pedido():
         return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
 
     id_pedido = request.form.get('id_pedido')
+    motivo_cancelamento = request.form.get('motivo_cancelamento')  # Obtém o motivo do cancelamento
 
-    # Verifica se o ID do pedido é válido
-    if id_pedido:
+    # Verifica se o ID do pedido e o motivo do cancelamento são válidos
+    if id_pedido and motivo_cancelamento:
         sistema = Sistema()  # Cria uma instância da classe Sistema
-        sucesso = sistema.cancelar_pedido(id_pedido)  # Função para cancelar o pedido no sistema
-        
+        sucesso = sistema.cancelar_pedido(id_pedido, motivo_cancelamento)  # Passa o motivo para a função
+
         if sucesso:
             return jsonify({'status': 'sucesso'})
         else:
             return jsonify({'status': 'erro', 'mensagem': 'Não foi possível cancelar o pedido.'})
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
+
+
 
 
 @app.route("/enviar_carrinho", methods=['POST'])
@@ -1024,6 +1028,37 @@ def imagem_perfil(id_cliente):
     else:
         # Retorna a imagem padrão caso não exista imagem personalizada para o usuário
         return redirect(url_for('static', filename='img/default-avatar.png'))
+
+
+
+
+@app.route('/relatorio', methods=['GET', 'POST'])
+def relatorio():
+    relatorio = Relatorio()
+    relatorio_dados = []
+    valor_total_geral = 0
+    total_pedidos = 0
+    cancelados_dados = []
+    valor_total_cancelado = 0
+    total_cancelados = 0
+
+    if request.method == 'POST':
+        data_inicial = request.form['data_inicial']
+        data_final = request.form['data_final']
+        relatorio_dados, valor_total_geral, total_pedidos = relatorio.exibir_relatorio_entregue(data_inicial, data_final)
+        cancelados_dados, valor_total_cancelado, total_cancelados = relatorio.exibir_relatorio_cancelado(data_inicial, data_final)
+
+    return render_template("relatorio.html", 
+                           relatorio_dados=relatorio_dados, 
+                           valor_total_geral=valor_total_geral, 
+                           total_pedidos=total_pedidos,
+                           cancelados_dados=cancelados_dados,
+                           valor_total_cancelado=valor_total_cancelado,
+                           total_cancelados=total_cancelados)
+
+
+
+
 
 
 

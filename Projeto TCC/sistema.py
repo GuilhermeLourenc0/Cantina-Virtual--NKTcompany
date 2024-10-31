@@ -338,14 +338,14 @@ class Sistema:
 
 
 
-    def cancelar_pedido(self, id_pedido):
+    def cancelar_pedido(self, id_pedido, motivo_cancelamento):
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()
 
         try:
-            # Atualiza o status do pedido para 'Cancelado'
-            sql = "UPDATE tb_pedidos SET status = 'Cancelado' WHERE id_pedido = %s"
-            mycursor.execute(sql, (id_pedido,))
+            # Atualiza o status do pedido e define habilitado como 0
+            sql = "UPDATE tb_pedidos SET status = 'Cancelado', habilitado = 0, motivo_cancelamento = %s WHERE id_pedido = %s"
+            mycursor.execute(sql, (motivo_cancelamento, id_pedido))
 
             mydb.commit()  # Confirma a alteração
             return {"message": "Pedido cancelado com sucesso!"}  # Retorna mensagem de sucesso
