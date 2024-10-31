@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Estilo do cabeçalho */
+        .navbar {
+            background-color: #333;
+            overflow-x: auto;
+            white-space: nowrap;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        /* Estilo dos itens do menu na horizontal */
+        .navbar a, .dropdown {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* Muda a cor do link ao passar o mouse */
+        .navbar a:hover, .dropdown button:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        /* Botão de dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Estilo do botão de dropdown */
+        .dropdown button {
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 14px 20px;
+        }
+
+        /* Estilo do conteúdo do dropdown */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        /* Links dentro do dropdown */
+        .dropdown-content a {
+            display: block;
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            text-align: left;
+        }
+
+        /* Mostra o conteúdo do dropdown ao passar o mouse */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Estilo para empurrar o conteúdo para baixo, por causa do cabeçalho fixo */
+        .content {
+            padding: 80px 16px;
+        }
+
+        /* Scroll horizontal no mobile */
+        .navbar {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .navbar::-webkit-scrollbar {
+            display: none;  /* Esconde a barra de rolagem no mobile */
+        }
+
+        /* Tornando os itens de menu roláveis no mobile */
+        .navbar a, .dropdown button {
+            flex: 0 0 auto;  /* Evita que os itens encolham e faz com que o menu possa rolar */
+        }
+
+        /* Muda a cor do dropdown ao passar o mouse */
+        .dropdown:hover button {
+            background-color: #ddd;
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="#home">Home</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+        <a href="#produtos">Produtos</a>
+        <a href="#servicos">Serviços</a>
+
+        <!-- Dropdown Menu -->
+        <div class="dropdown">
+            <button class="dropbtn">Mais</button>
+            <div class="dropdown-content">
+                <a href="#servico1">Serviço 1</a>
+                <a href="#servico2">Serviço 2</a>
+                <a href="#servico3">Serviço 3</a>
+            </div>
+        </div>
+
+        <a href="#blog">Blog</a>
+        <a href="#faq">FAQ</a>
+        <a href="#ajuda">Ajuda</a>
+        <a href="#contato">Contato</a>
+    </div>
+
+    <div class="content">
+        <h1>Conteúdo Principal</h1>
+        <p>Este é o conteúdo da página. Role para ver o cabeçalho fixo e arrastável.</p>
+    </div>
+
+</body>
+</html>

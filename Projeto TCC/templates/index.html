@@ -32,31 +32,36 @@
       </div>
     </section>
 
-    <!-- Seção de Produtos -->
     <section class="container-produtos">
       <h2>Nossos Produtos</h2>
-      <div class="grid-produto">
-        <div class="produtos" id="produtos-list">
-          {% for produto in lista_produtos %}
-          <form action="/produto_unico" method="post">
-            <button value="{{ produto.id_produto }}" name="btn-produto" type="submit">
-              <div class="card-produtos">
-                <div class="left-lado">
-                  <span class="produto-nome">{{ produto.nome_produto }}</span>
-                  <span class="produto-desc">{{ produto.descricao }}</span>
-                  <span class="produto-preco">R$ {{ produto.preco }}</span>
-                </div>
-                <div class="right-lado">
-                  <img src="{{ produto.imagem_produto }}" alt="{{ produto.nome_produto }}">
-                </div>
-              </div>
-            </button>
-          </form>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-
+      
+      {% set categorias = ['Salgados Assados', 'Salgados Fritos', 'Bebidas', 'Doces', 'Lanches', 'Gelados', 'Marmitex'] %}
+      
+      {% for categoria in categorias %}
+          <h3>{{ categoria }}</h3>
+          <div class="grid-produto">
+              {% for produto in lista_produtos %}
+                  {% if produto.nome_categoria == categoria %}
+                  <form action="/produto_unico" method="post">
+                      <button value="{{ produto.id_produto }}" name="btn-produto" type="submit">
+                          <div class="card-produtos">
+                              <div class="left-lado">
+                                  <span class="produto-nome">{{ produto.nome_produto }}</span>
+                                  <span class="produto-desc">{{ produto.descricao }}</span>
+                                  <span class="produto-preco">R$ {{ produto.preco }}</span>
+                              </div>
+                              <div class="right-lado">
+                                  <img src="{{ produto.imagem_produto }}" alt="{{ produto.nome_produto }}">
+                              </div>
+                          </div>
+                      </button>
+                  </form>
+                  {% endif %}
+              {% endfor %}
+          </div>
+      {% endfor %}
+  </section>
+    
     <!-- Seção de Marmitas -->
     <section class="container-produtos">
       <h2>Marmitex</h2>
@@ -94,13 +99,12 @@
   <script>
     function atualizarProdutos() {
       $.ajax({
-        url: '/produtos_json',  // URL da rota que retorna os produtos habilitados em JSON
+        url: '/produtos_json',
         method: 'GET',
         success: function (data) {
           const produtosContainer = $('#produtos-list');
-          produtosContainer.empty();  // Limpa a lista existente para evitar duplicação
+          produtosContainer.empty();
 
-          // Itera sobre cada produto retornado e o insere no HTML
           data.forEach(function (produto) {
             produtosContainer.append(`
               <form action="/produto_unico" method="post">
@@ -128,13 +132,12 @@
 
     function atualizarMarmitas() {
       $.ajax({
-        url: '/marmitas_json',  // URL da rota que retorna as marmitas habilitadas em JSON
+        url: '/marmitas_json',
         method: 'GET',
         success: function (data) {
           const marmitasContainer = $('#marmitas-list');
-          marmitasContainer.empty();  // Limpa a lista existente para evitar duplicação
+          marmitasContainer.empty();
 
-          // Itera sobre cada marmita retornada e a insere no HTML
           data.forEach(function (marmita) {
             marmitasContainer.append(`
               <form action="/marmita_unica" method="post">
@@ -160,16 +163,13 @@
       });
     }
 
-    // Atualiza a lista de produtos a cada 2 segundos (2000 ms)
     setInterval(atualizarProdutos, 2000);
-    // Atualiza a lista de marmitas a cada 2 segundos (2000 ms)
     setInterval(atualizarMarmitas, 2000);
 
-    // Chama as funções na primeira carga da página
     $(document).ready(function () {
       atualizarProdutos();
       atualizarMarmitas();
     });
   </script>
 
-  {% endblock %}
+{% endblock %}

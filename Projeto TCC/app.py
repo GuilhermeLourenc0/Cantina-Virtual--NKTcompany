@@ -36,21 +36,28 @@ client = Client(account_sid, auth_token)
 @app.route("/")
 def principal():
     try:
-        # Obtém o horário atual de São Paulo (sem precisar de uma API externa)
+        # Obtém o horário atual de São Paulo
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
         hora_atual = now.hour
         minutos_atuais = now.minute
-        print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
 
         # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
         site_aberto = hora_atual >= 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais < 45))
 
+        # Cria uma instância da classe Sistema
+        sistema = Sistema()
+
+        # Obtém a lista de produtos e marmitas, se o site estiver aberto
         if site_aberto:
-            # Se estiver no horário de funcionamento, exibe o conteúdo normalmente
-            sistema = Sistema()  # Cria uma instância da classe Sistema
-            lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
-            lista_marmitas = sistema.exibir_marmitas()  # Obtém a lista de marmitas
+            try:
+                lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
+                lista_marmitas = sistema.exibir_marmitas()  # Obtém a lista de marmitas
+            except Exception as e:
+                print(f"Erro ao obter produtos ou marmitas: {e}")
+                return render_template("index.html", site_aberto=site_aberto, error_message="Erro ao carregar os produtos.")
+
+            # Renderiza o template com os produtos e marmitas
             return render_template("index.html", lista_produtos=lista_produtos, lista_marmitas=lista_marmitas, site_aberto=site_aberto)
 
         # Se o site estiver fechado, renderiza o template com o site_aberto=False
@@ -58,9 +65,10 @@ def principal():
 
     except Exception as e:
         print(f"Erro ao verificar o horário de funcionamento: {e}")
-    
+
     # Em caso de erro, retorna uma mensagem de erro
     return "Erro ao verificar o horário de funcionamento."
+
 
 # Certifique-se de instalar o pytz usando: pip install pytz
 
@@ -240,10 +248,6 @@ def inserir_produtos():
 
 
 
-
-
-
-
 @app.route("/exibir_guarnicao")
 def exibir_guarnicao():
     adm = Adm()
@@ -251,7 +255,6 @@ def exibir_guarnicao():
     lista_acompanhamento = adm.exibir_acompanhamento()
     categorias = adm.exibir_categorias()
     return render_template("cad-produto.html", lista_guarnicao=lista_guarnicao, lista_acompanhamento=lista_acompanhamento, categorias=categorias)
-
 
 
 @app.route('/adicionar_guarnicao', methods=['POST'])
@@ -263,9 +266,6 @@ def adicionar_guarnicao():
         return jsonify(success=sucesso, id_guarnicao=id_guarnicao)
     return jsonify(success=False)
  
-
-
-
 
 @app.route('/adicionar_acompanhamento', methods=['POST'])
 def adicionar_acompanhamento():
@@ -432,18 +432,6 @@ def obter_pedidos():
 
 
 
-@app.route('/marcar_entregue/<int:id_pedido>', methods=['POST'])
-def marcar_entregue(id_pedido):
-    try:
-        adm = Adm()  # Cria uma instância da classe Adm
-        adm.atualizar_status_pedido_entregue(id_pedido)  # Chama a função para atualizar o status
-        return jsonify({'status': 'sucesso'})  # Retorna sucesso em JSON
-    
-    except Exception as e:
-        print(f"Erro ao marcar pedido como entregue: {e}")  # Log do erro
-        return jsonify({'status': 'erro', 'mensagem': str(e)}), 500  # Retorna mensagem de erro em JSON
-
-
 
 
 
@@ -498,11 +486,12 @@ def enviar_carrinho():
     try:
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
-        hora_atual = now.strftime("%H:%M:%S")  # Captura a hora atual no formato HH:MM:SS
-        print(f"Hora atual: {hora_atual}")
+        hora_atual = now.hour
+        minutos_atuais = now.minute
+        print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
 
         # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
-        site_aberto = now.hour > 7 and (now.hour < 21 or (now.hour == 21 and now.minute <= 45))
+        site_aberto = hora_atual > 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais <= 45))
 
         if not site_aberto:
             return jsonify({"error": "Site offline. Não é possível enviar pedidos neste horário."}), 403
@@ -523,7 +512,7 @@ def enviar_carrinho():
 
             try:
                 carrinho = Carrinho()
-                if carrinho.enviar_carrinho(id_cliente, itens, hora_atual):  # Passa a hora atual
+                if carrinho.enviar_carrinho(id_cliente, itens):
                     # Chama a função para remover todo o carrinho
                     carrinho.remover_todo_carrinho(id_cliente)
                     return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
@@ -1025,8 +1014,13 @@ def imagem_perfil(id_cliente):
         # Retorna a imagem padrão caso não exista imagem personalizada para o usuário
         return redirect(url_for('static', filename='img/default-avatar.png'))
 
+@app.route('/gerenciador_clientes')
+def gerenciador_de_clientes():
+    return render_template("gerencia-clientes.html")
 
-
+@app.route('/relatorio')
+def relatorio():
+    return render_template("relatorio.html")
 app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
 
 

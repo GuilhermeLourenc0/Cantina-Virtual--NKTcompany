@@ -37,25 +37,41 @@ class Sistema:
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()   # Cria um cursor para executar queries
 
-        # Consulta SQL para selecionar apenas produtos habilitados (assumindo coluna 'habilitado')
-        sql = "SELECT * FROM tb_produto WHERE habilitado = 1"
-        mycursor.execute(sql)      # Executa a consulta
-        resultado = mycursor.fetchall()  # Obtém todos os resultados
+        try:
+            # Consulta SQL com INNER JOIN para obter o nome da categoria
+            sql = """
+            SELECT p.*, c.nome AS nome_categoria
+            FROM tb_produto p
+            INNER JOIN tb_categoria c ON p.id_categoria = c.id_categoria
+            WHERE p.habilitado = 1
+            """
+            mycursor.execute(sql)  # Executa a consulta
+            resultado = mycursor.fetchall()  # Obtém todos os resultados
 
-        lista_produtos = []
+            print(f"Resultado da consulta: {resultado}")  # Debug: Mostra o resultado
 
-        # Itera sobre os resultados e adiciona cada produto à lista
-        for produto in resultado:
-            lista_produtos.append({
-                'nome_produto': produto[1],
-                'preco': produto[2],
-                'imagem_produto': produto[3],
-                'categoria': produto[5],
-                'descricao': produto[4],
-                'id_produto': produto[0]
-            })
-        mydb.close()  # Fecha a conexão com o banco de dados
-        return lista_produtos if lista_produtos else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+            lista_produtos = []
+
+            # Itera sobre os resultados e adiciona cada produto à lista
+            for produto in resultado:
+                lista_produtos.append({
+                    'nome_produto': produto[1],  # Nome do produto
+                    'preco': produto[2],          # Preço do produto
+                    'imagem_produto': produto[3], # URL da imagem do produto
+                    'descricao': produto[4],       # Descrição do produto
+                    'id_produto': produto[0],      # ID do produto
+                    'categoria': produto[5]        # Nome da categoria (agora obtido do JOIN)
+                })
+            
+            print(f"Lista de produtos: {lista_produtos}")  # Debug: Mostra a lista de produtos
+
+            return lista_produtos if lista_produtos else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+
+        except Exception as e:
+            print(f"Erro ao executar a consulta: {e}")
+            return []  # Retorna uma lista vazia em caso de erro
+        finally:
+            mydb.close()  # Fecha a conexão com o banco de dados
 
 
     # Método para exibir um único produto com base no ID
