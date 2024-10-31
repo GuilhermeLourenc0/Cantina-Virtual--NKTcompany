@@ -50,9 +50,9 @@ def principal():
         if site_aberto:
             # Se estiver no horário de funcionamento, exibe o conteúdo normalmente
             sistema = Sistema()  # Cria uma instância da classe Sistema
-            lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
+            produtos_por_categoria = sistema.exibir_produtos()  # Obtém a lista de produtos agrupados
             lista_marmitas = sistema.exibir_marmitas()  # Obtém a lista de marmitas
-            return render_template("index.html", lista_produtos=lista_produtos, lista_marmitas=lista_marmitas, site_aberto=site_aberto)
+            return render_template("index.html", produtos_por_categoria=produtos_por_categoria, lista_marmitas=lista_marmitas, site_aberto=site_aberto)
 
         # Se o site estiver fechado, renderiza o template com o site_aberto=False
         return render_template("index.html", site_aberto=site_aberto)
@@ -63,14 +63,23 @@ def principal():
     # Em caso de erro, retorna uma mensagem de erro
     return "Erro ao verificar o horário de funcionamento."
 
-# Certifique-se de instalar o pytz usando: pip install pytz
 
 
 @app.route("/produtos_json", methods=['GET'])
 def produtos():
     sistema = Sistema()  # Cria uma instância da classe Sistema
-    lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
-    return jsonify(lista_produtos)  # Retorna os produtos em formato JSON
+    produtos_por_categoria = sistema.exibir_produtos()  # Obtém a lista de produtos agrupados
+    
+    # Cria uma lista para armazenar todos os produtos
+    lista_produtos = []
+    
+    # Itera sobre as categorias e adiciona os produtos à lista
+    for categoria in produtos_por_categoria.values():
+        for produto in categoria['produtos']:
+            lista_produtos.append(produto)
+
+    return jsonify(lista_produtos)  # Retorna a lista de produtos em formato JSON
+
 
 
 @app.route("/marmitas_json", methods=['GET'])
