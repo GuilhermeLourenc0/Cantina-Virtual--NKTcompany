@@ -70,15 +70,24 @@ def produtos():
     sistema = Sistema()  # Cria uma instância da classe Sistema
     produtos_por_categoria = sistema.exibir_produtos()  # Obtém a lista de produtos agrupados
     
-    # Cria uma lista para armazenar todos os produtos
+    # Cria uma lista para armazenar todos os produtos com a categoria associada
     lista_produtos = []
     
     # Itera sobre as categorias e adiciona os produtos à lista
     for categoria in produtos_por_categoria.values():
         for produto in categoria['produtos']:
-            lista_produtos.append(produto)
+            produto_com_categoria = {
+                'id_produto': produto['id_produto'],
+                'nome_produto': produto['nome_produto'],
+                'preco': produto['preco'],
+                'imagem_produto': produto['imagem_produto'],
+                'descricao': produto['descricao'],
+                'nome_categoria': categoria['nome_categoria']  # Inclui o nome da categoria
+            }
+            lista_produtos.append(produto_com_categoria)
 
     return jsonify(lista_produtos)  # Retorna a lista de produtos em formato JSON
+
 
 
 
