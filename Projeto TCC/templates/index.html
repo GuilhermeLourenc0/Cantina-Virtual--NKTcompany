@@ -163,6 +163,13 @@
       });
     }
 
+
+    // Atualiza a lista de produtos a cada 2 segundos (2000 ms)
+    setInterval(atualizarProdutos, 2000);
+    // Atualiza a lista de marmitas a cada 2 segundos (2000 ms)
+    setInterval(atualizarMarmitas, 2000);
+
+
     // Chama as funções na primeira carga da página
     $(document).ready(function () {
       atualizarProdutos();
