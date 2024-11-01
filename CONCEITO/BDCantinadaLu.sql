@@ -71,7 +71,8 @@ CREATE TABLE tb_pedidos (
     data_pedido DATE,
     hora_pedido TIME,
     status VARCHAR(50),
-	habilitado TINYINT(1) DEFAULT 1,
+    motivo_cancelamento VARCHAR(255),  -- Nova coluna adicionada
+    habilitado TINYINT(1) DEFAULT 1,
     PRIMARY KEY (id_pedido),
     FOREIGN KEY (id_cliente) REFERENCES tb_cliente(id_cliente)
 );
