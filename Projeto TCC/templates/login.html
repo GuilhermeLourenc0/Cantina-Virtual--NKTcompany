@@ -2,38 +2,65 @@
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/login.css">
 
+{% if erro %}
+<div class="popup-container" style="display: flex;">
+    <div class="popup alert-popup">
+        <div class="popup-icon alert-icon">
+            <svg class="alert-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd"></path>
+            </svg>
+        </div>
+        <div class="alert-message">Login ou senha inválidos!</div>
+    </div>
+</div>
+{% endif %}
+
 <body>
+
     <main>
         <div class="btn-voltar">
-            <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
+            <button onclick="window.history.back()"><img
+                    src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
         </div>
 
         <div class="titulo">
             <h2>Olá! Logue agora para Começar</h2>
         </div>
         <section class="container-principal">
-            
+
             <div class="formulario">
 
-            <form action="" method="post">
-                <input name="email" id="email" placeholder="*E-mail"  type="text">
-                <input name="senha" id="senha" placeholder="*Senha"  type="password">
-                <a href="/trocar_senha"><span>Esqueceu sua senha</span></a>
-                <button type="submit">Entrar</button>
-            </form>
+                <form action="" method="post">
+                    <input name="email" id="email" placeholder="*E-mail" type="text" required>
+                    <input name="senha" id="senha" placeholder="*Senha" type="password" required>
+                    <a href="/trocar_senha"><span>Esqueceu sua senha</span></a>
+                    <button type="submit">Entrar</button>
+                </form>
 
-        </div>
+            </div>
 
-        <span class="semConta">Ainda não tem conta?<a href="/cadastro"> Crie Aqui!</a></span>
-        
-    </section>
-    
-    {% endblock %}
+            <span class="semConta">Ainda não tem conta?<a href="/cadastro"> Crie Aqui!</a></span>
 
-                
+        </section>
+
+        {% endblock %}
+
     </main>
 
-
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Certifique-se de que o jQuery está sendo carregado -->
+<script>
+    $(document).ready(function () {
+        // Se o popup for exibido, defina um temporizador para escondê-lo após 3 segundos
+        if ($('.popup-container').is(':visible')) {
+            setTimeout(function () {
+                $('.popup-container').fadeOut(); // Usamos fadeOut para uma transição suave
+            }, 3000); // Esconde após 3000ms (3 segundos)
+        }
+    });
+</script>
 
 </html>

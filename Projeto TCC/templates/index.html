@@ -6,105 +6,127 @@
   </div>
 </div>
 
-<body>
-  <main>
-    <section class="carrossel">
-      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img class="d-block w-100" src="/static/img/test.png" alt="Primeiro Slide">
-          </div>
-          <div class="carousel-item">
-            <img class="d-block w-100" src="/static/img/test2.png" alt="Segundo Slide">
-          </div>
-          <div class="carousel-item">
-            <img class="d-block w-100" src="/static/img/test3.png" alt="Terceiro Slide">
-          </div>
-        </div>
-        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="sr-only">Anterior</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="sr-only">Próximo</span>
-        </a>
-      </div>
-    </section>
+<div class="popup-container" style="display: {% if success %} block {% else %} none {% endif %};">
+  <div class="popup success-popup">
+    <div class="popup-icon success-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="success-svg">
+        <path fill-rule="evenodd"
+          d="m12 1c-6.075 0-11 4.925-11 11s4.925 11 11 11 11-4.925 11-11-4.925-11-11-11zm4.768 9.14c.0878-.1004.1546-.21726.1966-.34383.0419-.12657.0581-.26026.0477-.39319-.0105-.13293-.0475-.26242-.1087-.38085-.0613-.11844-.1456-.22342-.2481-.30879-.1024-.08536-.2209-.14938-.3484-.18828s-.2616-.0519-.3942-.03823c-.1327.01366-.2612.05372-.3782.1178-.1169.06409-.2198.15091-.3027.25537l-4.3 5.159-2.225-2.226c-.1886-.1822-.4412-.283-.7034-.2807s-.51301.1075-.69842.2929-.29058.4362-.29285.6984c-.00228.2622.09851.5148.28067.7034l3 3c.0983.0982.2159.1748.3454.2251.1295.0502.2681.0729.4069.0665.1387-.0063.2747-.0414.3991-.1032.1244-.0617.2347-.1487.3236-.2554z"
+          clip-rule="evenodd"></path>
+      </svg>
+    </div>
+    <div class="success-message">Login realizado com sucesso!</div>
+  </div>
+</div>
 
-    <!-- Seção de Produtos -->
-    <section class="container-produtos">
-      <h2>Nossos Produtos</h2>
-      <div class="grid-produto">
-        <div class="produtos" id="produtos-list">
-          <!-- Produtos renderizados dinamicamente aqui -->
+<main>
+  <section class="carrossel">
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img class="d-block w-100" src="/static/img/test.png" alt="Primeiro Slide">
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" src="/static/img/test2.png" alt="Segundo Slide">
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" src="/static/img/test3.png" alt="Terceiro Slide">
         </div>
       </div>
-    </section>
+      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Anterior</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Próximo</span>
+      </a>
+    </div>
+  </section>
 
-    <!-- Seção de Marmitas -->
-    <section class="container-produtos">
-      <h2>Marmitex</h2>
-      <div class="grid-produto">
-        <div class="produtos" id="marmitas-list">
-          {% for marmita in lista_marmitas %}
-          <form action="/marmita_unica" method="post">
-            <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
-              <div class="card-produtos">
-                <div class="left-lado">
-                  <span class="produto-nome">{{ marmita.nome_marmita }}</span>
-                  <span class="produto-desc">{{ marmita.descricao }}</span>
-                  <span class="produto-preco">R$ {{ marmita.preco }}</span>
-                </div>
-                <div class="right-lado">
-                  <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
-                </div>
+  <!-- Seção de Produtos -->
+  <section class="container-produtos">
+    <h2>Nossos Produtos</h2>
+    <div class="grid-produto">
+      <div class="produtos" id="produtos-list">
+        <!-- Produtos renderizados dinamicamente aqui -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção de Marmitas -->
+  <section class="container-produtos">
+    <h2>Marmitex</h2>
+    <div class="grid-produto">
+      <div class="produtos" id="marmitas-list">
+        {% for marmita in lista_marmitas %}
+        <form action="/marmita_unica" method="post">
+          <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
+            <div class="card-produtos">
+              <div class="left-lado">
+                <span class="produto-nome">{{ marmita.nome_marmita }}</span>
+                <span class="produto-desc">{{ marmita.descricao }}</span>
+                <span class="produto-preco">R$ {{ marmita.preco }}</span>
               </div>
-            </button>
-          </form>
-          {% endfor %}
-        </div>
+              <div class="right-lado">
+                <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
+              </div>
+            </div>
+          </button>
+        </form>
+        {% endfor %}
       </div>
-    </section>
+    </div>
+  </section>
 
-  </main>
+</main>
 
-  <footer>
-    <a href="/exibir_carrinho" class="car-icon">
-      <img src="https://cdn-icons-png.flaticon.com/512/4/4295.png" alt="">
-    </a>
-  </footer>
+<footer>
+  <a href="/exibir_carrinho" class="car-icon">
+    <img src="https://cdn-icons-png.flaticon.com/512/4/4295.png" alt="">
+  </a>
+</footer>
 
-  <!-- Scripts do jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    function atualizarProdutos() {
-      $.ajax({
-        url: '/produtos_json',  // URL da rota que retorna os produtos habilitados em JSON
-        method: 'GET',
-        success: function (data) {
-          const produtosContainer = $('#produtos-list');
-          produtosContainer.empty();  // Limpa a lista existente para evitar duplicação
 
-          // Cria um objeto para agrupar produtos por categoria
-          const produtosPorCategoria = {};
+<!-- Scripts do jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Se o popup for exibido, defina um temporizador para escondê-lo após 3 segundos
+    if ($('.popup-container').is(':visible')) {
+      setTimeout(function () {
+        $('.popup-container').fadeOut();
+      }, 3000); // Esconde após 3000ms (3 segundos)
+    }
+  });
 
-          // Organiza os produtos por categoria
-          data.forEach(function (produto) {
-            const categoria = produto.nome_categoria;
+  function atualizarProdutos() {
+    $.ajax({
+      url: '/produtos_json',  // URL da rota que retorna os produtos habilitados em JSON
+      method: 'GET',
+      success: function (data) {
+        const produtosContainer = $('#produtos-list');
+        produtosContainer.empty();  // Limpa a lista existente para evitar duplicação
 
-            if (!produtosPorCategoria[categoria]) {
-              produtosPorCategoria[categoria] = [];
-            }
-            produtosPorCategoria[categoria].push(produto);
-          });
+        // Cria um objeto para agrupar produtos por categoria
+        const produtosPorCategoria = {};
 
-          // Itera sobre as categorias e insere os produtos agrupados
-          Object.keys(produtosPorCategoria).forEach(function (categoria) {
-            produtosContainer.append(`<h3>${categoria}</h3>`);
+        // Organiza os produtos por categoria
+        data.forEach(function (produto) {
+          const categoria = produto.nome_categoria;
 
-            produtosPorCategoria[categoria].forEach(function (produto) {
-              produtosContainer.append(`
+          if (!produtosPorCategoria[categoria]) {
+            produtosPorCategoria[categoria] = [];
+          }
+          produtosPorCategoria[categoria].push(produto);
+        });
+
+        // Itera sobre as categorias e insere os produtos agrupados
+        Object.keys(produtosPorCategoria).forEach(function (categoria) {
+          produtosContainer.append(`<h3>${categoria}</h3>`);
+
+          produtosPorCategoria[categoria].forEach(function (produto) {
+            produtosContainer.append(`
                 <form action="/produto_unico" method="post">
                   <button value="${produto.id_produto}" name="btn-produto" type="submit">
                     <div class="card-produtos">
@@ -120,26 +142,26 @@
                   </button>
                 </form>
               `);
-            });
           });
-        },
-        error: function (error) {
-          console.error("Erro ao carregar produtos:", error);
-        }
-      });
-    }
+        });
+      },
+      error: function (error) {
+        console.error("Erro ao carregar produtos:", error);
+      }
+    });
+  }
 
-    function atualizarMarmitas() {
-      $.ajax({
-        url: '/marmitas_json',  // URL da rota que retorna as marmitas habilitadas em JSON
-        method: 'GET',
-        success: function (data) {
-          const marmitasContainer = $('#marmitas-list');
-          marmitasContainer.empty();  // Limpa a lista existente para evitar duplicação
+  function atualizarMarmitas() {
+    $.ajax({
+      url: '/marmitas_json',  // URL da rota que retorna as marmitas habilitadas em JSON
+      method: 'GET',
+      success: function (data) {
+        const marmitasContainer = $('#marmitas-list');
+        marmitasContainer.empty();  // Limpa a lista existente para evitar duplicação
 
-          // Itera sobre cada marmita retornada e a insere no HTML
-          data.forEach(function (marmita) {
-            marmitasContainer.append(`
+        // Itera sobre cada marmita retornada e a insere no HTML
+        data.forEach(function (marmita) {
+          marmitasContainer.append(`
               <form action="/marmita_unica" method="post">
                 <button value="${marmita.id_marmita}" name="btn-produto" type="submit">
                   <div class="card-produtos">
@@ -155,25 +177,25 @@
                 </button>
               </form>
             `);
-          });
-        },
-        error: function (error) {
-          console.error("Erro ao carregar marmitas:", error);
-        }
-      });
-    }
-
-
-    // Atualiza a lista de produtos a cada 2 segundos (2000 ms)
-    setInterval(atualizarProdutos, 2000);
-    // Atualiza a lista de marmitas a cada 2 segundos (2000 ms)
-    setInterval(atualizarMarmitas, 2000);
-
-
-    // Chama as funções na primeira carga da página
-    $(document).ready(function () {
-      atualizarProdutos();
-      atualizarMarmitas();
+        });
+      },
+      error: function (error) {
+        console.error("Erro ao carregar marmitas:", error);
+      }
     });
-  </script>
-  {% endblock %}
+  }
+
+
+  // Atualiza a lista de produtos a cada 2 segundos (2000 ms)
+  setInterval(atualizarProdutos, 2000);
+  // Atualiza a lista de marmitas a cada 2 segundos (2000 ms)
+  setInterval(atualizarMarmitas, 2000);
+
+
+  // Chama as funções na primeira carga da página
+  $(document).ready(function () {
+    atualizarProdutos();
+    atualizarMarmitas();
+  });
+</script>
+{% endblock %}

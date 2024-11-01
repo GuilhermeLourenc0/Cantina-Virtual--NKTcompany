@@ -157,3 +157,16 @@ form a:hover{
 .semConta{
     margin-top: 15px;
 }
+
+
+.popup-container {
+    position: fixed;        /* Fixa o elemento na tela */
+    top: 30px !important;             /* Distância do topo da tela */
+    left: 50%;             /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Ajusta a posição para o centro */
+    z-index: 1000;         /* Garante que fique sobre os outros elementos */
+    display: flex;
+    justify-content: center;
+    opacity: 0;            /* Inicialmente invisível */
+    animation: slideIn 0.5s forwards; /* Adiciona animação ao aparecer */
+}

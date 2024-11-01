@@ -35,31 +35,27 @@ client = Client(account_sid, auth_token)
 @app.route("/")
 def principal():
     try:
-        # Obtém o horário atual de São Paulo (sem precisar de uma API externa)
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
         hora_atual = now.hour
         minutos_atuais = now.minute
-        print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
-
-        # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
         site_aberto = hora_atual >= 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais < 45))
 
-        if site_aberto:
-            # Se estiver no horário de funcionamento, exibe o conteúdo normalmente
-            sistema = Sistema()  # Cria uma instância da classe Sistema
-            produtos_por_categoria = sistema.exibir_produtos()  # Obtém a lista de produtos agrupados
-            lista_marmitas = sistema.exibir_marmitas()  # Obtém a lista de marmitas
-            return render_template("index.html", produtos_por_categoria=produtos_por_categoria, lista_marmitas=lista_marmitas, site_aberto=site_aberto)
+        # Obter o status de login bem-sucedido para exibir o alerta e removê-lo da sessão
+        success = session.pop('login_sucesso', False)
 
-        # Se o site estiver fechado, renderiza o template com o site_aberto=False
-        return render_template("index.html", site_aberto=site_aberto)
+        if site_aberto:
+            sistema = Sistema()
+            produtos_por_categoria = sistema.exibir_produtos()
+            lista_marmitas = sistema.exibir_marmitas()
+            return render_template("index.html", produtos_por_categoria=produtos_por_categoria, lista_marmitas=lista_marmitas, site_aberto=site_aberto, success=success)
+
+        return render_template("index.html", site_aberto=site_aberto, success=success)
 
     except Exception as e:
         print(f"Erro ao verificar o horário de funcionamento: {e}")
-    
-    # Em caso de erro, retorna uma mensagem de erro
-    return "Erro ao verificar o horário de funcionamento."
+        return "Erro ao verificar o horário de funcionamento."
+
 
 
 
@@ -195,42 +191,47 @@ def verificacao():
             return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
 
 
-# Rota para login de usuários
-@app.route('/logar', methods=['GET', 'POST'])
+@app.route("/logar", methods=['GET', 'POST'])
 def logar():
     if request.method == 'GET':
-        return render_template('login.html')
-    else:
-        senha = request.form['senha']
-        email = request.form['email']
-        usuario = Usuario()
-        usuario.logar(email, senha)
+        # Remove a variável de erro da sessão e passa para o template
+        erro = session.pop('login_erro', False)
+        return render_template('login.html', success=False, erro=erro)
+    
+    # Se for um método POST
+    senha = request.form['senha']
+    email = request.form['email']
+    usuario = Usuario()
+    usuario.logar(email, senha)
+    
+    if usuario.logado:
+        session['usuario_logado'] = {
+            "nome": usuario.nome, 
+            "email": usuario.email, 
+            "tel": usuario.tel, 
+            "id_cliente": usuario.id_cliente, 
+            "tipo": usuario.tipo,
+            "senha": usuario.senha,
+            "primeiro_login": usuario.primeiro_login
+        }
         
-        if usuario.logado:
-            # Define os dados do usuário logado na sessão
-            session['usuario_logado'] = {
-                "nome": usuario.nome, 
-                "email": usuario.email, 
-                "tel": usuario.tel, 
-                "id_cliente": usuario.id_cliente, 
-                "tipo": usuario.tipo,
-                "senha": usuario.senha,
-                "primeiro_login": usuario.primeiro_login
-            }
-            
-            # Verifica se é o primeiro login de um administrador
-            if usuario.tipo != 'cliente' and usuario.primeiro_login:
-                return redirect("/atualizar_dados_iniciais")
-            
-            # Redireciona conforme o tipo de usuário
-            if usuario.tipo != 'cliente':
-                return redirect("/inicialadm")
-            else:
-                return redirect("/")
+        if usuario.tipo != 'cliente' and usuario.primeiro_login:
+            return redirect("/atualizar_dados_iniciais")
         
-        # Se não foi possível logar, limpa a sessão e redireciona para login
-        session.clear()
-        return redirect("/logar")
+        # Define a variável de sessão para exibir o alerta de sucesso
+        session['login_sucesso'] = True
+        
+        return redirect("/")
+    
+    # Define a variável de sessão para exibir o alerta de erro
+    session['login_erro'] = True
+    return redirect("/logar")
+
+
+
+
+
+
 
 @app.route("/atualizar_dados_iniciais", methods=["GET", "POST"])
 def atualizar_dados_iniciais():
