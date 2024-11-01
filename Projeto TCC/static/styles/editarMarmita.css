@@ -97,6 +97,7 @@ select{
 /* Estilos para o container das opções */
 .acompanhamento-container, .guarnicao-container {
     display: flex;
+    align-items: flex-start;
     flex-direction: column;
     gap: 10px;
     padding: 10px;
@@ -104,6 +105,7 @@ select{
     border-radius: 8px;
     background-color: #f9f9f9;
     max-width: 97%;
+    margin-left: 5.5px;
 }
 
 /* Estilo individual para os labels dos checkboxes */
@@ -119,7 +121,7 @@ select{
 /* Estilo para o checkbox */
 .acompanhamento-container input[type="checkbox"], .guarnicao-container input[type="checkbox"] {
     margin-right: 10px;
-    accent-color: #4CAF50; /* Cor personalizada do checkbox */
+    accent-color: #ff0000; /* Cor personalizada do checkbox */
     width: 18px;
     height: 18px;
     cursor: pointer;
@@ -127,7 +129,7 @@ select{
 
 /* Efeito de hover para realçar o item */
 .acompanhamento-container label:hover, .guarnicao-container label:hover {
-    background-color: #e6f7e6;
+    background-color: #f7e6e6;
 }
 
 /* Estilo do texto do label */
@@ -140,5 +142,9 @@ select{
 .acompanhamento-container input[type="checkbox"]:checked + span,
 .guarnicao-container input[type="checkbox"]:checked + span {
     font-weight: bold;
-    color: #4CAF50;
+}
+
+.nomeguaracomp{
+    font-weight: bolder;
+    font-size: 20px;
 }
