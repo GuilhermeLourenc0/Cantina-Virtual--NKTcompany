@@ -205,11 +205,33 @@ class Usuario:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        sql = f"SELECT * FROM tb_cliente WHERE id_cliente = {id_cliente}"
+        # Modifica a consulta SQL para incluir o INNER JOIN com tb_curso
+        sql = f"""
+            SELECT c.id_cliente, c.nome_comp, c.telefone, c.email, c.tipo, cu.curso 
+            FROM tb_cliente c 
+            INNER JOIN tb_curso cu ON c.id_curso = cu.id_curso 
+            WHERE c.id_cliente = {id_cliente}
+        """
+        
         mycursor.execute(sql)
 
         resultado = mycursor.fetchone()  # Use fetchone para obter um único registro
 
+        # Cria um dicionário com os dados do cliente e o nome do curso
+        if resultado:
+            cliente_dict = {
+                "id_cliente": resultado[0],
+                "nome_comp": resultado[1],
+                "telefone": resultado[2],
+                "email": resultado[3],
+                "tipo": resultado[4],
+                "nome_curso": resultado[5]  # Adiciona o nome do curso ao dicionário
+            }
+        else:
+            cliente_dict = None
+
         mydb.close()  # Fecha a conexão
 
-        return resultado  # Retorna os dados do cliente, que podem ser usados no template
+        return cliente_dict  # Retorna o dicionário com os dados do cliente e o nome do curso
+
+
