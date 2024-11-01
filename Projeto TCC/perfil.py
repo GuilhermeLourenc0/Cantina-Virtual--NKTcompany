@@ -87,16 +87,19 @@ class Perfil:
     def obter_perfil(self, id_cliente):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
-        
+
         try:
             print(f"Buscando perfil para id_cliente: {id_cliente}")  # Log do ID do cliente
-            sql = "SELECT nome_comp, imagem_binaria FROM tb_cliente WHERE id_cliente = %s"
+            sql = """SELECT c.nome_comp, c.imagem_binaria, curso.curso 
+                    FROM tb_cliente c 
+                    INNER JOIN tb_curso curso ON c.id_curso = curso.id_curso 
+                    WHERE c.id_cliente = %s;"""
             mycursor.execute(sql, (id_cliente,))
             perfil = mycursor.fetchone()
-            
+
             if perfil:
-                nome, imagem = perfil
-                return {'nome': nome, 'imagem': imagem}  # Retorna a imagem binária ou None
+                nome, imagem, curso = perfil
+                return {'nome': nome, 'imagem': imagem, 'curso': curso}  # Retorna o nome, imagem e curso
             return None  # Retorna None se não houver perfil
         except Exception as e:
             print(f"Erro ao obter perfil: {e}")  # Log de erro
@@ -104,6 +107,7 @@ class Perfil:
         finally:
             mycursor.close()
             mydb.close()
+
 
 
 

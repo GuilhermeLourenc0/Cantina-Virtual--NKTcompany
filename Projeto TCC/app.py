@@ -196,8 +196,10 @@ def logar():
                 "tel": usuario.tel, 
                 "id_cliente": usuario.id_cliente, 
                 "tipo": usuario.tipo,
-                "senha": usuario.senha
+                "senha": usuario.senha,
+                "curso": usuario.curso  # Adicione o curso aqui
             }
+
             tipo = session.get('usuario_logado')['tipo']
             
             if tipo != 'cliente':
@@ -256,9 +258,6 @@ def inserir_produtos():
         sucesso = adm.inserir_produto(nome, preco, img, descricao, categoria, novas_guarnicoes)
 
     return redirect('/inicialadm')  # Redireciona para a página inicial ou outra página desejada
-
-
-
 
 
 
