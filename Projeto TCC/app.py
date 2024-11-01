@@ -115,7 +115,7 @@ def inicialadm():
 
 @app.route("/adm")
 def principal_adm():
-        # Verifica se o usuário está logado e possui um ID de cliente válido
+    # Verifica se o usuário está logado e possui um ID de cliente válido
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
     
@@ -1132,6 +1132,13 @@ def imagem_perfil(id_cliente):
 
 @app.route('/relatorio', methods=['GET', 'POST'])
 def relatorio():
+    # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
     relatorio = Relatorio()
     relatorio_dados = []
     valor_total_geral = 0
