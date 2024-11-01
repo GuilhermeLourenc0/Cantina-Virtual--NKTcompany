@@ -224,7 +224,6 @@ class Usuario:
                 "nome_comp": resultado[1],
                 "telefone": resultado[2],
                 "email": resultado[3],
-                "tipo": resultado[4],
                 "nome_curso": resultado[5]  # Adiciona o nome do curso ao dicionário
             }
         else:

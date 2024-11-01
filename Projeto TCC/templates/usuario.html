@@ -2,11 +2,9 @@
 {% block conteudo %}
 <h2>Detalhes do Cliente</h2>
 {% if cliente %}
-    <p>ID: {{ cliente.id_cliente }}</p>
     <p>Nome: {{ cliente.nome_comp }}</p>
     <p>Telefone: {{ cliente.telefone }}</p>
     <p>Email: {{ cliente.email }}</p>
-    <p>Tipo: {{ cliente.tipo }}</p>
     <p>Curso: {{ cliente.nome_curso }}</p>  <!-- Exibe o nome do curso -->
 {% else %}
     <p>Cliente não encontrado.</p>
