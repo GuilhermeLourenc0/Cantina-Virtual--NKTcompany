@@ -40,7 +40,7 @@
         <div class="gambiarra1"></div>
 
         <script>
-            document.getElementById('carrinhoForm').addEventListener('submit', async function(event) {
+            document.getElementById('carrinhoForm').addEventListener('submit', async function (event) {
                 event.preventDefault(); // Impede o envio padrão do formulário
 
                 // Cria um objeto FormData com os dados do formulário
@@ -59,13 +59,19 @@
                         // Redireciona para a página do carrinho se o pedido for bem-sucedido
                         window.location.href = result.redirect_url;
                     } else {
-                        alert(result.error || 'Erro ao adicionar ao carrinho.');
+                        if (response.status === 401) {
+                            // Redireciona para a página de login se não estiver logado
+                            window.location.href = "/logar";
+                        } else {
+                            alert(result.error || 'Erro ao adicionar ao carrinho.');
+                        }
                     }
                 } catch (error) {
                     console.error('Erro ao enviar o formulário:', error);
                     alert('Ocorreu um erro ao tentar adicionar ao carrinho.');
                 }
             });
+
 
             const input = document.getElementById('meuInput');
             const contador = document.getElementById('contador');
@@ -76,4 +82,4 @@
         </script>
         {% endfor %}
     </main>
-{% endblock %}
+    {% endblock %}

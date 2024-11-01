@@ -697,8 +697,8 @@ def exibir_carrinho():
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect("/logar")
-    
+        return jsonify({"success": False, "error": "Usuário não logado."}), 401  # Código 401 para não autorizado
+
     id_cliente = session.get('usuario_logado')['id_cliente']
     cod_produto = request.form.get('cod_produto')  # Para produtos
     id_marmita = request.form.get('id_marmita')  # Para marmitas
@@ -1086,7 +1086,10 @@ def usuario(id_cliente):
         return redirect('/logar')  # Redireciona se o usuário não estiver logado
     
     usuario = Usuario()
-    return usuario.tela_usuario(id_cliente)
+    dados_cliente = usuario.tela_usuario(id_cliente)
+    
+    return render_template('usuario.html', cliente=dados_cliente)  # Renderiza o template com os dados do cliente
+
 
 
 

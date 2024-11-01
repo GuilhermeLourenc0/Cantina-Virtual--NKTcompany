@@ -208,8 +208,8 @@ class Usuario:
         sql = f"SELECT * FROM tb_cliente WHERE id_cliente = {id_cliente}"
         mycursor.execute(sql)
 
-        resultado = mycursor.fetchall()
+        resultado = mycursor.fetchone()  # Use fetchone para obter um único registro
 
         mydb.close()  # Fecha a conexão
 
-        return resultado is not None  # Retorna True se o usuário existir, False caso contrário
+        return resultado  # Retorna os dados do cliente, que podem ser usados no template

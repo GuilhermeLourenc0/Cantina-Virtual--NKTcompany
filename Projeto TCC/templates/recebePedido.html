@@ -46,7 +46,7 @@
                         for (const [id_pedido, pedido] of Object.entries(cliente.pedidos)) {
                             cardPedidos += `
                         <div class="order-card">
-                            <h2>Cliente: <a href="/usuario/{{ pedido.id_cliente }}">{{ cliente.nome_cliente }}</a></h2>
+                            <h2>Cliente: <a href="/usuario/${id_cliente}">${cliente.nome_cliente}</a></h2>
                             <div class="order-header">
                                 <span class="order-number">#${id_pedido}</span>
                                 <span class="order-time">${pedido.hora}</span>
