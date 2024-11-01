@@ -51,7 +51,7 @@ input::placeholder {
     margin-bottom: 40px;
 }
 
-.container-principal button{
+.container-principal .btn-registrar{
     padding: 15px;
     background-color: rgb(161, 23, 23);
     width: 23.7rem;
@@ -180,4 +180,35 @@ input[type="text"], .prefix {
 
 input::placeholder {
     color: #7e7d7d; /* Cor do placeholder, mantenha o mesmo estilo que já está usando */
+}
+
+.input-senha {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 23.7rem; /* Mesma largura do input */
+}
+
+.input-senha input {
+    flex: 1; /* Faz o input ocupar o restante do espaço */
+    padding-right: 40px; /* Dá espaço para o ícone de olho */
+}
+
+.toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 45px;
+    transform: translateY(-50%); /* Centraliza verticalmente o ícone */
+}
+
+.toggle-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.toggle-button:focus{
+    outline: none;
 }

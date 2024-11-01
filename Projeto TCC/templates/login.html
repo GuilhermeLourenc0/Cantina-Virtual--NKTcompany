@@ -14,7 +14,6 @@
         <section class="container-principal">
             
             <div class="formulario">
-
                 <form action="" method="post" class="form">
                     <input name="email" id="email" placeholder="*E-mail" type="text">
                     
@@ -25,24 +24,33 @@
                         </button>
                     </div>
                     
-                    
                     <a href="/trocar_senha"><span>Esqueceu sua senha</span></a>
                     <button type="submit" class="button-cadastrar">Entrar</button>
                 </form>
-                
+            </div>
 
-        </div>
-
-        <span class="semConta">Ainda não tem conta?<a href="/cadastro"> Crie Aqui!</a></span>
-        
-    </section>
-    
-    {% endblock %}
-
-                
+            <span class="semConta">Ainda não tem conta?<a href="/cadastro"> Crie Aqui!</a></span>
+        </section>
     </main>
 
-
+    <!-- Mova o script para o final do body -->
+    <script>
+        function togglePassword1(event) {
+            event.preventDefault();
+            const passwordField = document.getElementById('senha'); // Altera para o ID correto
+            const toggleIcon = document.getElementById('toggle-icon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = '../static/img/olho.png'; // Caminho para o ícone de "mostrar"
+                toggleIcon.alt = 'Ocultar Senha';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = '../static/img/olho-fechado.png'; // Caminho para o ícone de "esconder"
+                toggleIcon.alt = 'Mostrar Senha';
+            }
+        }
+    </script>
+{% endblock %}
 </body>
-
 </html>
