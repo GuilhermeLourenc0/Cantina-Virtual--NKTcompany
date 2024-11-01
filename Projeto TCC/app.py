@@ -524,7 +524,7 @@ def enviar_carrinho():
         print(f"Hora atual: {hora_atual}")
 
         # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
-        site_aberto = now.hour > 7 and (now.hour < 21 or (now.hour == 21 and now.minute <= 45))
+        site_aberto = (now.hour > 7 or (now.hour == 7 and now.minute >= 0)) and (now.hour < 21 or (now.hour == 21 and now.minute <= 45))
 
         if not site_aberto:
             return jsonify({"error": "Site offline. Não é possível enviar pedidos neste horário."}), 403
