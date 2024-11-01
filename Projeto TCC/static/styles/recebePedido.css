@@ -36,17 +36,25 @@ body {
 .order-filter select:hover {
     border-color: #888;
 }
+
 .card-pedidos {
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+
+    margin: 20px 0; /* Adiciona margem superior e inferior */
     padding: 16px;
-    transition: transform 0.3s;
+    
 }
 
-.card-pedidos:hover {
+
+.order-card {
+    border: 1px solid #e0e0e0; /* Borda para o card do pedido */
+    border-radius: 8px; /* Bordas arredondadas para o card do pedido */
+    padding: 12px; /* Espaçamento interno do card */
+    margin-bottom: 15px; /* Margem inferior para separar os pedidos */
+    background-color: #f1f1f1; /* Fundo claro para o card do pedido */
+}
+
+.order-card:hover {
+    transition: transform 0.3s;
     transform: translateY(-5px);
 }
 
@@ -66,14 +74,14 @@ body {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
-    font-size: 14px;
+    font-size: 18px;
     color: #555;
 }
 
 .order-details {
     margin-top: 10px;
     padding: 10px;
-    background-color: #ffffff;
+    background-color: #f1f1f1; /* Fundo claro para os detalhes do pedido */
     border-radius: 8px;
 }
 
@@ -86,12 +94,13 @@ body {
 .order-details ul {
     margin: 0;
     padding-left: 20px;
-    list-style-type: disc;
+    list-style-type: none;
     color: #666;
+    padding: 0;
 }
 
 .order-status {
-    margin-top: 12px;
+    margin: 12px 0 0 12px;
     font-size: 16px;
     font-weight: bold;
     color: #333;
@@ -101,10 +110,11 @@ body {
     margin-top: 15px;
     display: flex;
     gap: 10px;
+    justify-content: center;
 }
 
 .status-btn, .cancel-btn {
-    padding: 8px 16px;
+    padding: 12px 23px;
     border-radius: 6px;
     border: none;
     font-size: 14px;
@@ -132,4 +142,74 @@ body {
 
 .status-btn:active, .cancel-btn:active {
     transform: scale(0.95);
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .order-filter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .order-filter label {
+        margin-bottom: 10px; /* Espaçamento inferior nos rótulos */
+    }
+
+    .order-filter select {
+        width: 100%; /* Largura total em telas pequenas */
+        margin-bottom: 10px; /* Espaço inferior para o seletor */
+    }
+
+    .card-pedidos {
+        padding: 12px; /* Menos padding nos cards */
+    }
+
+    .order-card h2 {
+        font-size: 20px; /* Reduzir tamanho do título */
+    }
+
+    .order-header {
+        flex-direction: column; /* Colocar os elementos em coluna */
+        align-items: flex-start; /* Alinhar à esquerda */
+        margin-top: 8px; /* Menos margem superior */
+    }
+
+    .order-details h3 {
+        font-size: 16px; /* Tamanho menor para detalhes */
+    }
+
+    .order-status {
+        font-size: 14px; /* Tamanho menor para status */
+    }
+
+    .status-btn, .cancel-btn {
+        padding: 12px 24px;
+        font-size: 12px; /* Tamanho menor para os botões */
+    }
+}
+
+@media (max-width: 480px) {
+    .order-filter label {
+        font-size: 1em; /* Menor tamanho em telas muito pequenas */
+    }
+
+    .order-filter select {
+        font-size: 1em; /* Menor tamanho para o seletor */
+    }
+
+    .order-card h2 {
+        font-size: 18px; /* Tamanho menor do título */
+    }
+
+    .order-header {
+        font-size: 12px; /* Reduzir ainda mais o tamanho */
+    }
+
+    .order-details h3 {
+        font-size: 14px; /* Tamanho menor para detalhes */
+    }
+
+    .order-status {
+        font-size: 12px; /* Tamanho menor para status */
+    }
 }
