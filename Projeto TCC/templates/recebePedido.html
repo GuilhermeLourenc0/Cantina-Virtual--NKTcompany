@@ -55,7 +55,7 @@
                             if (pedido.produtos && pedido.produtos.length > 0) {
                                 pedido.produtos.forEach(produto => {
                                     if (produto.nome_produto) {
-                                        cardPedidos += `<li>Produto: ${produto.nome_produto} - Quantidade: ${produto.quantidade} - Preço: R$ ${produto.preco.toFixed(2)}</li>`;
+                                        cardPedidos += `<li>- Produto: ${produto.nome_produto} - Quantidade: ${produto.quantidade} - Preço: R$ ${produto.preco.toFixed(2)}</li>`;
                                     }
                                 });
                             }
@@ -64,7 +64,7 @@
                             if (pedido.marmitas && pedido.marmitas.length > 0) {
                                 pedido.marmitas.forEach(marmita => {
                                     if (marmita.nome_marmita) {
-                                        cardPedidos += `<li>Marmita: ${marmita.nome_marmita} - Tamanho: ${marmita.tamanho} - Quantidade: ${marmita.quantidade} - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
+                                        cardPedidos += `<li>- Marmita: ${marmita.nome_marmita} - Tamanho: ${marmita.tamanho} - Quantidade: ${marmita.quantidade} - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
 
                                         // Guarnições associadas à marmita
                                         if (pedido.guarnicoes && pedido.guarnicoes.length > 0) {
@@ -98,10 +98,10 @@
                                 <span class="order-price">Total: R$ ${pedido.total_preco.toFixed(2)}</span>
                             </div>
                             <div class="btn-cancelar">
-                                <button class="status-btn" data-pedido="${id_pedido}" value="preparando">Preparando</button>
-                                <button class="status-btn" data-pedido="${id_pedido}" value="feito">Pronto</button>
-                                <button class="status-btn" data-pedido="${id_pedido}" value="entregue">Entregue</button>
-                                <button class="cancel-btn" data-pedido="${id_pedido}">Cancelar</button>
+                                <button class="status-btn preparando" data-pedido="${id_pedido}" value="preparando">Preparando</button>
+                                <button class="status-btn pronto" data-pedido="${id_pedido}" value="feito">Pronto</button>
+                                <button class="status-btn entregue" data-pedido="${id_pedido}" value="entregue">Entregue</button>
+                                <button class="cancel-btn cancelar" data-pedido="${id_pedido}">Cancelar</button>
                             </div>
                         </div>`;
                         }

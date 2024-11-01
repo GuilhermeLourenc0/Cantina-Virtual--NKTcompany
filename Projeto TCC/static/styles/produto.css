@@ -9,51 +9,117 @@ body {
 }
 
 main {
-    max-width: 1200px; 
+    max-width: 100vw; 
     background-color: #ffffff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    height: 89.5vh;
+    height: 89vh;
 }
 
-.descricao{
+.posicao-produto {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    padding-top: 100px;
+}
+
+.produto {
+    display: flex;
+    flex-direction: column; /* Coloca a imagem acima da descrição */
+    align-items: center; /* Centraliza horizontalmente */
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    max-width: 600px; /* Largura máxima do container */
+    
+}
+
+.foto-produto {
+    margin-bottom: 20px; /* Espaço abaixo da imagem */
 }
 
 .ft-item {
-    width: 100%;
-    max-height: 350px;
+    max-width: 100%; /* A imagem ocupa 100% da largura do container */
+    height: auto; /* Mantém a proporção da imagem */
+    border-radius: 12px; /* Bordas arredondadas para a imagem */
 }
 
-/* Seção de descrição do produto */
 .descricao {
-    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    background-color: rgb(255, 255, 255);
+    text-align: center; /* Centraliza o texto da descrição */
 }
 
 .nome-produto {
-    display: block;
-    font-size: 24px;
+    font-size: 2rem; /* Tamanho grande para o nome do produto */
     font-weight: bold;
-    margin-bottom: 10px;
+    color: #333;
+    
 }
 
 .descricao-produto {
-    display: block;
-    font-size: 16px;
+    font-size: 1rem;
     color: #666;
-    margin-bottom: 10px;
+    
 }
 
 .preco-produto {
-    display: block;
-    font-size: 20px;
-    color: #000000;
-    margin-bottom: 10px;  /* Espaçamento entre preço e estrelas */
+    font-size: 1.5rem;
     font-weight: bold;
+    color: #28a745; /* Verde para o preço */
+    margin-bottom: 20px;
 }
+.sair {
+    display: flex;
+    justify-content: center; /* Alinha os botões horizontalmente */
+    align-items: center; /* Centraliza os elementos dentro da div sair */
+    gap: 20px; /* Espaçamento entre os botões */
+}
+
+a {
+    text-decoration: none !important;
+}
+.btn-voltar {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    color: red; /* Cor do texto */
+    background-color: transparent; /* Fundo transparente */
+    border: 2px solid red; /* Borda vermelha */
+    border-radius: 5px; /* Bordas arredondadas */
+    padding: 10px 20px; /* Espaçamento interno */
+    cursor: pointer;
+    flex-wrap: wrap;
+    height: 60px;
+    transition: background-color 0.3s, color 0.3s; /* Transição suave */
+}
+
+.btn-voltar:hover {
+    color: red;
+}
+
+.btn-adicionar {
+    display: flex;
+    background-color: red; /* Fundo vermelho */
+    color: white; /* Texto branco */
+    border: none; /* Sem borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    padding: 10px 20px; /* Espaçamento interno */
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transição suave */
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 60px;
+}
+
+.btn-adicionar:hover {
+    background-color: #c82333; /* Cor mais escura ao passar o mouse */
+}
+
 
 /* Seção de avaliação por estrelas */
 .rating {
@@ -102,52 +168,12 @@ form button:active {
     border: none;
 }
 
-/* Layout responsivo */
-@media screen and (min-width: 768px) {
-    main {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-    }
-    
-    img {
-        max-width: 100%;
-        height: auto;
-    }
-    
-    .descricao, .form-rating {
-        margin-top: 0;
-    }
 
-    
-}
 
-.sair{
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   position: fixed;
-   bottom: 0;
-   width: 90vw;
-   background-color: white;
-}
 
-.sair a{
-    border: 1px solid black;
-    font-weight: 200;
-    text-decoration: none;
-    color: #000000;
-    padding: 10px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.gambiarra1{
+.espacamento{
     width: 100%;
-    height: 30px;
+    height: 50px;
     background-color: white;
 }
 

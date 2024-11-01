@@ -48,7 +48,7 @@ body {
 .order-card {
     border: 1px solid #e0e0e0; /* Borda para o card do pedido */
     border-radius: 8px; /* Bordas arredondadas para o card do pedido */
-    padding: 12px; /* Espaçamento interno do card */
+    padding: 20px; /* Espaçamento interno do card */
     margin-bottom: 15px; /* Margem inferior para separar os pedidos */
     background-color: #f1f1f1; /* Fundo claro para o card do pedido */
 }
@@ -80,7 +80,7 @@ body {
 
 .order-details {
     margin-top: 10px;
-    padding: 10px;
+    /* padding: 10px; */
     background-color: #f1f1f1; /* Fundo claro para os detalhes do pedido */
     border-radius: 8px;
 }
@@ -95,12 +95,18 @@ body {
     margin: 0;
     padding-left: 20px;
     list-style-type: none;
-    color: #666;
+    color: #797979;
     padding: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.order-details li {
+    padding-bottom: 10px;
 }
 
 .order-status {
-    margin: 12px 0 0 12px;
+    margin: 12px 0 0 0;
     font-size: 16px;
     font-weight: bold;
     color: #333;
@@ -110,14 +116,19 @@ body {
     margin-top: 15px;
     display: flex;
     gap: 10px;
-    justify-content: center;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    
 }
 
 .status-btn, .cancel-btn {
     padding: 12px 23px;
     border-radius: 6px;
     border: none;
-    font-size: 14px;
+    font-weight: bold;
+    font-size: 18px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
 }
@@ -142,6 +153,47 @@ body {
 
 .status-btn:active, .cancel-btn:active {
     transform: scale(0.95);
+}
+
+.preparando {
+    color: #c1c40c; /* Amarelo */
+    background-color: #f6ffa6;
+}
+
+.pronto {
+    color: #3498db; /* Azul */
+    background-color: #d9edf7;
+}
+
+.entregue {
+    color: #248b51; /* Verde bem escuro */
+    background-color: #c1d6ae; /* Verde muito suave quase branco */
+}
+
+.cancelado {
+    color: #e74c3c; /* Vermelho */
+    background-color: #f5c6cb;
+}
+
+
+.preparando:hover {
+    color: #f6ffa6; /* Amarelo */
+    background-color: #c1c40c;
+}
+
+.pronto:hover {
+    color: #d9edf7; /* Azul */
+    background-color: #3498db;
+}
+
+.entregue:hover {
+    color: #c1d6ae; /* Verde bem escuro */
+    background-color: #248b51; /* Verde muito suave quase branco */
+}
+
+.cancelado:hover {
+    color: #e74c3c; /* Vermelho */
+    background-color: #f5c6cb;
 }
 
 /* Media Queries para Responsividade */
@@ -198,18 +250,22 @@ body {
     }
 
     .order-card h2 {
-        font-size: 18px; /* Tamanho menor do título */
+        font-size: 23px; /* Tamanho menor do título */
     }
 
     .order-header {
-        font-size: 12px; /* Reduzir ainda mais o tamanho */
+        display: flex;
+        flex-direction: row;
+        font-size: 18px; /* Reduzir ainda mais o tamanho */
+        font-weight: bold;
     }
 
     .order-details h3 {
-        font-size: 14px; /* Tamanho menor para detalhes */
+        font-size: 23px; /* Tamanho menor para detalhes */
+        font-weight: bold;
     }
 
     .order-status {
-        font-size: 12px; /* Tamanho menor para status */
+        font-size: 20px; /* Tamanho menor para status */
     }
 }

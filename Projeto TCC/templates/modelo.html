@@ -68,8 +68,8 @@
                 </div>
             </div>
         </nav>
-        <div class="gambiarra">
-            <span>desculpa kk</span>
+        <div class="espacamento">
+            <span></span>
         </div>
     </header>
 
@@ -85,21 +85,13 @@
 
             // Abrir ou fechar o menu lateral
             const menu = document.getElementById("mySidenav");
-            if (menu.style.width === "100%") {
+            if (menu.style.width === "25%") {
                 menu.style.width = "0";
             } else {
-                menu.style.width = "100%";
+                menu.style.width = "25%";
             }
         }
 
-        const chk = document.getElementById('chk');
-        const inputs = document.querySelectorAll('input');
-        chk.addEventListener('change', () => {
-            document.body.classList.toggle('dark');
-            inputs.forEach(input => {
-                input.classList.toggle('dark2');
-            });
-        });
 
     </script>
 </body>
