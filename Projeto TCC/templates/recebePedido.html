@@ -15,19 +15,18 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Selecionar motivo de cancelamento</h2>
-
+            
             <!-- Motivo de cancelamento (seleção) -->
             <select id="cancelReason">
                 <option value="">Selecione um motivo</option>
                 <option value="Pedido em atraso">Pedido em atraso</option>
                 <option value="Cliente desistiu">Cliente desistiu</option>
                 <option value="Erro no pedido">Erro no pedido</option>
-                <option value="Outro">Outro</option>
             </select>
-
+            
             <!-- Motivo de cancelamento (texto adicional) -->
             <textarea id="cancelDescription" placeholder="Descreva o motivo do cancelamento (opcional)"></textarea>
-
+            
             <button id="confirmCancelBtn">Confirmar Cancelamento</button>
         </div>
     </div>
@@ -57,7 +56,6 @@
                                 <h3>Pedidos:</h3>
                                 <ul>`;
 
-                            // Exibe os produtos com quantidade
                             if (pedido.produtos && pedido.produtos.length > 0) {
                                 pedido.produtos.forEach(produto => {
                                     if (produto.nome_produto) {
@@ -66,13 +64,11 @@
                                 });
                             }
 
-                            // Exibe as marmitas com quantidade e associa guarnições e acompanhamentos
                             if (pedido.marmitas && pedido.marmitas.length > 0) {
                                 pedido.marmitas.forEach(marmita => {
                                     if (marmita.nome_marmita) {
                                         cardPedidos += `<li>Marmita: ${marmita.nome_marmita} - Tamanho: ${marmita.tamanho} - Quantidade: ${marmita.quantidade} - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
 
-                                        // Guarnições associadas à marmita
                                         if (pedido.guarnicoes && pedido.guarnicoes.length > 0) {
                                             cardPedidos += `<ul><li><strong>Guarnições:</strong></li>`;
                                             pedido.guarnicoes.forEach(guarnicao => {
@@ -81,7 +77,6 @@
                                             cardPedidos += `</ul>`;
                                         }
 
-                                        // Acompanhamentos associados à marmita
                                         if (pedido.acompanhamentos && pedido.acompanhamentos.length > 0) {
                                             cardPedidos += `<ul><li><strong>Acompanhamentos:</strong></li>`;
                                             pedido.acompanhamentos.forEach(acompanhamento => {
@@ -93,7 +88,6 @@
                                 });
                             }
 
-                            // Mensagem caso não haja produtos, marmitas, guarnições ou acompanhamentos
                             if (pedido.produtos.length === 0 && pedido.marmitas.length === 0 && pedido.guarnicoes.length === 0 && pedido.acompanhamentos.length === 0) {
                                 cardPedidos += `<li>Nenhum produto, marmita, guarnição ou acompanhamento</li>`;
                             }
@@ -112,21 +106,16 @@
                         </div>`;
                         }
                         cardPedidos += `</div>`;
-                        orderContainer.innerHTML += cardPedidos; // Adiciona os pedidos na página
+                        orderContainer.innerHTML += cardPedidos;
                     }
                 })
                 .catch(error => console.error('Erro ao carregar os pedidos:', error));
         }
 
-        // Atualiza a lista de pedidos a cada 2 segundos (tempo ajustável)
         setInterval(carregarPedidos, 2000);
-
-        // Carrega os pedidos quando a página é carregada
         window.onload = carregarPedidos;
 
-        // Função para lidar com cliques nos botões de status e cancelar
         document.addEventListener('click', function (e) {
-            // Para os botões de status
             if (e.target.classList.contains('status-btn')) {
                 const idPedido = e.target.getAttribute('data-pedido');
                 const novoStatus = e.target.value;
@@ -169,7 +158,6 @@
                 }
             }
 
-            // Para o botão de cancelar pedido
             if (e.target.classList.contains('cancel-btn')) {
                 const idPedido = e.target.getAttribute('data-pedido');
                 document.getElementById('cancelModal').style.display = 'block';
@@ -177,19 +165,46 @@
             }
         });
 
-        // Função para fechar o modal
         document.querySelector('.close').onclick = function () {
             document.getElementById('cancelModal').style.display = 'none';
+            resetCancelFields();
         };
 
-        // Confirmar cancelamento
+        // Bloqueio de campos entre o select e a textarea
+        document.getElementById('cancelReason').addEventListener('change', function () {
+            const descricao = document.getElementById('cancelDescription');
+            if (this.value) {
+                descricao.disabled = true;
+                descricao.value = '';
+            } else {
+                descricao.disabled = false;
+            }
+        });
+
+        document.getElementById('cancelDescription').addEventListener('input', function () {
+            const motivo = document.getElementById('cancelReason');
+            if (this.value) {
+                motivo.disabled = true;
+                motivo.value = '';
+            } else {
+                motivo.disabled = false;
+            }
+        });
+
+        function resetCancelFields() {
+            document.getElementById('cancelReason').value = '';
+            document.getElementById('cancelReason').disabled = false;
+            document.getElementById('cancelDescription').value = '';
+            document.getElementById('cancelDescription').disabled = false;
+        }
+
         document.getElementById('confirmCancelBtn').onclick = function () {
             const idPedido = this.getAttribute('data-pedido');
             const motivoCancelamento = document.getElementById('cancelReason').value;
             const descricaoCancelamento = document.getElementById('cancelDescription').value;
 
-            if (!motivoCancelamento) {
-                alert('Por favor, selecione um motivo para o cancelamento.');
+            if (!motivoCancelamento && !descricaoCancelamento) {
+                alert('Por favor, selecione um motivo ou descreva o motivo do cancelamento.');
                 return;
             }
 
@@ -208,9 +223,12 @@
                     } else {
                         alert('Erro ao cancelar o pedido: ' + data.mensagem);
                     }
-                    document.getElementById('cancelModal').style.display = 'none';
                 })
                 .catch(error => console.error('Erro ao enviar a solicitação:', error));
+
+            document.getElementById('cancelModal').style.display = 'none';
+            resetCancelFields();
         };
     </script>
-    {% endblock %}
+</body>
+{% endblock %}

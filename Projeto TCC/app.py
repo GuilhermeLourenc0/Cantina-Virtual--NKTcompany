@@ -492,25 +492,27 @@ def atualizar_status_pedido():
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
 
 
-# Rota para cancelar um pedido
 @app.route("/cancelar_pedido", methods=['POST'])
 def cancelar_pedido():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
 
     id_pedido = request.form.get('id_pedido')
-    motivo_cancelamento = request.form.get('motivo_cancelamento')  # Obtém o motivo do cancelamento
+    motivo_cancelamento = request.form.get('motivo_cancelamento')  # Obtém o motivo do cancelamento (select)
+    descricao_cancelamento = request.form.get('descricao_cancelamento')  # Obtém a descrição do cancelamento (textarea)
 
-    # Verifica se o ID do pedido e o motivo do cancelamento são válidos
-    if id_pedido and motivo_cancelamento:
+    # Verifica se o ID do pedido e pelo menos um motivo ou descrição do cancelamento foram fornecidos
+    if id_pedido and (motivo_cancelamento or descricao_cancelamento):
         sistema = Sistema()  # Cria uma instância da classe Sistema
-        sucesso = sistema.cancelar_pedido(id_pedido, motivo_cancelamento)  # Passa o motivo para a função
+        motivo_final = motivo_cancelamento if motivo_cancelamento else descricao_cancelamento  # Usa o motivo ou a descrição
+        sucesso = sistema.cancelar_pedido(id_pedido, motivo_final)  # Passa o motivo para a função
 
         if sucesso:
             return jsonify({'status': 'sucesso'})
         else:
             return jsonify({'status': 'erro', 'mensagem': 'Não foi possível cancelar o pedido.'})
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
+
 
 
 
