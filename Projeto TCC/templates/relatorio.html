@@ -1,10 +1,8 @@
 {% extends "modelo-adm.html" %}
 {% block conteudo %}
-
-<div class="relatorio-vendas">
+<link rel="stylesheet" href="../static/styles/relatorio.css">
+<section class="filtro-relatorio">
     <h2>Relatório de Vendas</h2>
-
-    <section class="filtro-relatorio">
         <h3>Filtrar por Período</h3>
         <form method="POST" action="{{ url_for('relatorio') }}">
             <label class="label-data-inicial" for="data-inicial">Data Inicial:</label>
@@ -17,18 +15,19 @@
         </form>
     </section>
 
+<div class="relatorio-vendas">
+
     <section class="resumo-relatorio">
-        <h3>Resumo de Pedidos Entregues</h3>
+        <h3>Pedidos Entregues</h3>
     
         {% if relatorio_dados %}
             <table>
                 <thead>
                     <tr>
-                        <th>ID Pedido</th>
-                        <th>Data do Pedido</th>
-                        <th>Hora do Pedido</th>
-                        <th>Status</th>
-                        <th>Valor Total</th>
+                        <th>ID</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th>Valor</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,7 +36,6 @@
                             <td>{{ pedido[0] }}</td>
                             <td>{{ pedido[1] }}</td>
                             <td>{{ pedido[2] }}</td>
-                            <td>{{ pedido[3] }}</td>
                             <td>{{ pedido[4] }}</td>
                         </tr>
                     {% endfor %}
@@ -52,7 +50,7 @@
     </section>
 
     <section class="resumo-cancelados">
-        <h3>Resumo de Pedidos Cancelados</h3>
+        <h3>Pedidos Cancelados</h3>
         
         {% if cancelados_dados %}
             <table>
