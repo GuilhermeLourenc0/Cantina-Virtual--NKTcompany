@@ -42,8 +42,8 @@
             </tbody>
         </table>
         <div class="spanpontilhado">
-            <span>Valor Total Geral: R$ {{ valor_total_geral }}</span> <br>
-            <span>Total de Pedidos Entregues: {{ total_pedidos }}</span>
+            <span>Valor Total: R$ {{ valor_total_geral }}</span> <br>
+            <span>Pedidos Entregues: {{ total_pedidos }}</span>
         </div>
 
         {% else %}
@@ -58,12 +58,10 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID Pedido</th>
-                    <th>Data do Pedido</th>
-                    <th>Hora do Pedido</th>
-                    <th>Status</th>
-                    <th>Motivo Cancelamento</th>
-                    <th>Valor Total</th>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Valor</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,16 +70,21 @@
                     <td>{{ pedido[0] }}</td>
                     <td>{{ pedido[1] }}</td>
                     <td>{{ pedido[2] }}</td>
-                    <td>{{ pedido[3] }}</td>
-                    <td>{{ pedido[4] }}</td>
                     <td>{{ pedido[5] }}</td>
                 </tr>
+                <tr>
+                    <td colspan="4" style="text-align: center; font-weight: bolder;" >{{ pedido[4] }}</td>      
+                </tr>
+                
+                
                 {% endfor %}
             </tbody>
         </table>
-
-        <h4>Valor Total de Pedidos Cancelados: R$ {{ valor_total_cancelado }}</h4>
-        <h4>Total de Pedidos Cancelados: {{ total_cancelados }}</h4>
+        <div class="spanpontilhado">
+            <span>Valor Cancelado: R$ {{ valor_total_cancelado }}</span> <br>
+            <span>Pedidos Cancelados: {{ total_cancelados }}</span>
+        </div>
+        
         {% else %}
         <p>Nenhum pedido cancelado no período selecionado.</p>
         {% endif %}
