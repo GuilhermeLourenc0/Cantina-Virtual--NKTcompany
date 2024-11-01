@@ -331,6 +331,13 @@ def inserir_produtos():
 
 @app.route("/exibir_guarnicao")
 def exibir_guarnicao():
+    # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
     adm = Adm()
     lista_guarnicao = adm.exibir_guarnicao()
     lista_acompanhamento = adm.exibir_acompanhamento()
