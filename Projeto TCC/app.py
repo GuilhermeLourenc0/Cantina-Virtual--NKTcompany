@@ -181,33 +181,74 @@ def verificacao():
 @app.route('/logar', methods=['GET', 'POST'])
 def logar():
     if request.method == 'GET':
-        return render_template('login.html')  # Exibe o formulário de login
+        return render_template('login.html')
     else:
-        # Coleta os dados do formulário de login
         senha = request.form['senha']
         email = request.form['email']
-        usuario = Usuario()  # Cria uma instância da classe Usuario
-        usuario.logar(email, senha)  # Tenta fazer o login
+        usuario = Usuario()
+        usuario.logar(email, senha)
+        
         if usuario.logado:
-            # Se o login for bem-sucedido, armazena os dados do usuário na sessão
+            # Define os dados do usuário logado na sessão
             session['usuario_logado'] = {
                 "nome": usuario.nome, 
                 "email": usuario.email, 
                 "tel": usuario.tel, 
                 "id_cliente": usuario.id_cliente, 
                 "tipo": usuario.tipo,
-                "senha": usuario.senha
+                "senha": usuario.senha,
+                "primeiro_login": usuario.primeiro_login
             }
-            tipo = session.get('usuario_logado')['tipo']
             
-            if tipo != 'cliente':
-                return redirect("/inicialadm")  # Redireciona para a página inicial do adm
+            # Verifica se é o primeiro login de um administrador
+            if usuario.tipo != 'cliente' and usuario.primeiro_login:
+                return redirect("/atualizar_dados_iniciais")
+            
+            # Redireciona conforme o tipo de usuário
+            if usuario.tipo != 'cliente':
+                return redirect("/inicialadm")
             else:
-                return redirect("/")  # Redireciona para a página inicial
+                return redirect("/")
+        
+        # Se não foi possível logar, limpa a sessão e redireciona para login
+        session.clear()
+        return redirect("/logar")
 
-        else:
-            session.clear()  # Limpa a sessão em caso de falha no login
-            return redirect("/logar")  # Redireciona para a página de login
+@app.route("/atualizar_dados_iniciais", methods=["GET", "POST"])
+def atualizar_dados_iniciais():
+    if request.method == 'GET':
+        return render_template("atualizar_dados_iniciais.html")
+
+    # Processa o formulário quando enviado via POST
+    telefone = request.form['telefone']
+    email = request.form['email']
+    senha = request.form['senha']
+
+    # Atualiza os dados do administrador
+    usuario = Usuario()
+    id_cliente = session['usuario_logado']['id_cliente']
+    atualizacao_sucesso = usuario.atualizar_dados(id_cliente, telefone, email, senha)
+
+    if not atualizacao_sucesso:
+        return render_template("atualizar_dados_iniciais.html", error="Erro ao atualizar dados. Tente novamente.")
+
+    # Gera e envia o código de verificação
+    verification_code = str(random.randint(1000, 9999)).zfill(4)
+    session['verification_code'] = verification_code
+    session['telefone_verificacao'] = telefone
+
+    # Envia mensagem de verificação
+    message = client.messages.create(
+        to=telefone,
+        from_="+13195190041",
+        body=f'Seu código é: {verification_code}'
+    )
+    print("Código de verificação enviado:", message.sid)
+
+    # Redireciona para a rota de verificação
+    return redirect("/verificacao")
+
+
 
 
 

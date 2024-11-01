@@ -94,6 +94,7 @@ class Usuario:
         return lista_cursos
     
 
+
     def logar(self, email, senha):
         """
         Realiza o login de um usuário verificando o email e a senha criptografada no banco de dados.
@@ -111,24 +112,80 @@ class Usuario:
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()
 
-        # Query SQL para verificar se o email e a senha correspondem a um registro no banco de dados
-        sql = f"SELECT * FROM tb_cliente WHERE email='{email}' AND senha='{senha}'"
-        mycursor.execute(sql)
+        try:
+            # Query SQL para verificar se o email e a senha correspondem a um registro no banco de dados
+            sql = "SELECT * FROM tb_cliente WHERE email = %s AND senha = %s"
+            mycursor.execute(sql, (email, senha))
 
-        # Busca um único registro (se houver)
-        resultado = mycursor.fetchone()
+            # Busca um único registro (se houver)
+            resultado = mycursor.fetchone()
+
+            # Se um registro for encontrado, atualiza os atributos do usuário
+            if resultado:
+                self.logado = True
+                self.id_cliente = resultado[0]
+                self.nome = resultado[1]
+                self.tel = resultado[2]
+                self.email = resultado[3]
+                self.senha = resultado[5]
+                self.tipo = resultado[6]
+                self.primeiro_login = bool(resultado[8])  # Converte para bool
+            else:
+                self.logado = False
+        finally:
+            # Fecha o cursor e a conexão para liberar recursos
+            mycursor.close()
+            mydb.close()
+
+
+
+    def atualizar_dados(self, id_cliente, telefone, email, senha):
+        """
+        Atualiza o telefone, email e senha do administrador e define 'primeiro_login' como False.
         
-        # Se um registro for encontrado, atualiza os atributos do usuário
-        if resultado:
-            self.logado = True
-            self.id_cliente = resultado[0]
-            self.nome = resultado[1]
-            self.tel = resultado[2]
-            self.senha = resultado[5]
-            self.tipo = resultado[6]
-            self.email = resultado[3]
-        else:
-            self.logado = False
+        Parâmetros:
+        - id_cliente: ID do cliente (administrador) a ser atualizado
+        - telefone: Novo número de telefone
+        - email: Novo email
+        - senha: Nova senha em texto puro que será criptografada para o banco de dados
+        
+        Retorno:
+        - True se a atualização for bem-sucedida, False caso contrário
+        """
+        # Hash da senha antes de armazenar no banco
+        hashed_password = sha256(senha.encode()).hexdigest()
+        
+        # Conecta ao banco de dados
+        mydb = Conexao.conectar()  
+        mycursor = mydb.cursor()
+
+        try:
+            # Query para atualizar os dados do administrador e marcar `primeiro_login` como `False`
+            sql = """
+                UPDATE tb_cliente
+                SET telefone = %s, email = %s, senha = %s, primeiro_login = %s
+                WHERE id_cliente = %s
+            """
+            valores = (telefone, email, hashed_password, False, id_cliente)
+
+            # Executa a query
+            mycursor.execute(sql, valores)
+            mydb.commit()
+            
+            # Atualiza o atributo `primeiro_login` localmente
+            self.primeiro_login = False
+            return True
+        except Exception as e:
+            print("Erro ao atualizar dados do administrador:", e)
+            mydb.rollback()
+            return False
+        finally:
+            # Fecha o cursor e a conexão
+            mycursor.close()
+            mydb.close()
+
+
+
 
     def logout(self, id_cliente):
         """
