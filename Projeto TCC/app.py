@@ -7,9 +7,7 @@ from adm import Adm
 import random
 from twilio.rest import Client
 import os
-import requests
 from datetime import datetime
-from dateutil import parser  # Importando dateutil para facilitar o parse de datas
 import pytz
 from relatorio import Relatorio
 
@@ -98,13 +96,33 @@ def marmitas():
     return jsonify(lista_marmitas)  # Retorna os produtos em formato JSON
 
 
+
 @app.route("/inicialadm")
 def inicialadm():
-    return render_template("inicialAdm.html") 
+    # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
+    
+    # Renderiza a página inicialAdm.html se o usuário não for 'adm'
+    return render_template("inicialAdm.html")
+
+
 
 
 @app.route("/adm")
 def principal_adm():
+        # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
+    
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos_adm()  # Obtém a lista de produtos
     lista_marmitas = sistema.exibir_marmitas_adm()
@@ -265,6 +283,13 @@ def logout():
 
 @app.route('/inserir_produtos', methods=['POST'])
 def inserir_produtos():
+    # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
     nome = request.form['nome']
     preco = request.form['preco']
     img = request.form['img']
@@ -458,8 +483,13 @@ def habilitar_marmita_adm():
 
 @app.route("/exibir_pedidos", methods=['GET'])
 def exibir_pedidos_route():
+    # Verifica se o usuário está logado e possui um ID de cliente válido
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
 
     try:
         adm = Adm()  # Cria uma instância da classe Adm
