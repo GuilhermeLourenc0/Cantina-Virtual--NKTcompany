@@ -199,3 +199,17 @@ class Usuario:
         mydb.close()  # Fecha a conexão
         
         return mycursor.rowcount > 0  # Retorna True se a senha foi atualizada, False caso contrário
+    
+
+    def tela_usuario(self, id_cliente):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+
+        sql = f"SELECT * FROM tb_cliente WHERE id_cliente = {id_cliente}"
+        mycursor.execute(sql)
+
+        resultado = mycursor.fetchall()
+
+        mydb.close()  # Fecha a conexão
+
+        return resultado is not None  # Retorna True se o usuário existir, False caso contrário

@@ -1080,6 +1080,15 @@ def relatorio():
 
 
 
+@app.route('/usuario/<int:id_cliente>', methods=['GET'])
+def usuario(id_cliente):
+    if 'usuario_logado' not in session:
+        return redirect('/logar')  # Redireciona se o usuário não estiver logado
+    
+    usuario = Usuario()
+    return usuario.tela_usuario(id_cliente)
+
+
 
 
 app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
