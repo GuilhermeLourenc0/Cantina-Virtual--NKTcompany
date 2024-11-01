@@ -41,13 +41,14 @@ class Relatorio:
                     WHEN pp.id_marmita IS NOT NULL THEN m.preco
                     ELSE 0
                 END) AS valor_total_geral,
-                COUNT(p.id_pedido) AS total_pedidos
+                COUNT(DISTINCT p.id_pedido) AS total_pedidos  -- Contagem distinta dos pedidos
             FROM tb_pedidos p
             LEFT JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
             LEFT JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
             LEFT JOIN tb_marmita m ON pp.id_marmita = m.id_marmita
             WHERE p.data_pedido BETWEEN %s AND %s AND p.status = 'entregue'
         """
+
 
         # Executa a consulta principal para os pedidos
         mycursor.execute(sql, (data_inicial, data_final))
@@ -107,13 +108,14 @@ class Relatorio:
                     WHEN pp.id_marmita IS NOT NULL THEN m.preco
                     ELSE 0
                 END) AS valor_total_cancelado,
-                COUNT(p.id_pedido) AS total_cancelados
+                COUNT(DISTINCT p.id_pedido) AS total_cancelados  -- Contagem distinta dos pedidos
             FROM tb_pedidos p
             LEFT JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
             LEFT JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
             LEFT JOIN tb_marmita m ON pp.id_marmita = m.id_marmita
             WHERE p.data_pedido BETWEEN %s AND %s AND p.status = 'cancelado'
         """
+
 
         # Executa a consulta principal para os pedidos cancelados
         mycursor.execute(sql, (data_inicial, data_final))
