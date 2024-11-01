@@ -15,12 +15,21 @@
             
             <div class="formulario">
 
-            <form action="" method="post">
-                <input name="email" id="email" placeholder="*E-mail"  type="text">
-                <input name="senha" id="senha" placeholder="*Senha"  type="password">
-                <a href="/trocar_senha"><span>Esqueceu sua senha</span></a>
-                <button type="submit">Entrar</button>
-            </form>
+                <form action="" method="post" class="form">
+                    <input name="email" id="email" placeholder="*E-mail" type="text">
+                    
+                    <div class="input-senha">
+                        <input name="senha" id="senha" placeholder="*Senha" type="password">
+                        <button type="button" class="toggle-button" onclick="togglePassword1(event)">
+                            <img id="toggle-icon" src="../static/img/olho-fechado.png" alt="Mostrar Senha" width="20" height="20">
+                        </button>
+                    </div>
+                    
+                    
+                    <a href="/trocar_senha"><span>Esqueceu sua senha</span></a>
+                    <button type="submit" class="button-cadastrar">Entrar</button>
+                </form>
+                
 
         </div>
 
