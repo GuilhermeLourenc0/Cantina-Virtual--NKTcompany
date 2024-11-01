@@ -14,9 +14,9 @@
     <div id="cancelModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Selecionar motivo de cancelamento</h2>
+            <h2>Razão do Cancelamento</h2>
             <select id="cancelReason">
-                <option value="">Selecione um motivo</option>
+                <option value="" disabled selected>Selecione um motivo</option>
                 <option value="Pedido em atraso">Pedido em atraso</option>
                 <option value="Cliente desistiu">Cliente desistiu</option>
                 <option value="Erro no pedido">Erro no pedido</option>
@@ -40,16 +40,16 @@
 
                         for (const [id_pedido, pedido] of Object.entries(cliente.pedidos)) {
                             cardPedidos += `
-                        <div class="order-card">
-                            <h2>Cliente: <a href="/">${cliente.nome_cliente}</a></h2>
-                            <div class="order-header">
-                                <span class="order-number">#${id_pedido}</span>
-                                <span class="order-time">${pedido.hora}</span>
-                                <span class="order-date">${pedido.data_pedido}</span>
-                            </div>
-                            <div class="order-details">
-                                <h3>Pedidos:</h3>
-                                <ul>`;
+                            <div class="order-card">
+                                <h2>Cliente: <a href="/">${cliente.nome_cliente}</a></h2>
+                                <div class="order-header">
+                                    <span class="order-number">#${id_pedido}</span>
+                                    <span class="order-time">${pedido.hora}</span>
+                                    <span class="order-date">${pedido.data_pedido}</span>
+                                </div>
+                                <div class="order-details">
+                                    <h3>Pedidos:</h3>
+                                    <ul>`;
 
                             // Exibe os produtos com quantidade
                             if (pedido.produtos && pedido.produtos.length > 0) {
@@ -93,17 +93,17 @@
                             }
 
                             cardPedidos += `</ul>
-                            </div>
-                            <div class="order-status">
-                                <span class="order-price">Total: R$ ${pedido.total_preco.toFixed(2)}</span>
-                            </div>
-                            <div class="btn-cancelar">
-                                <button class="status-btn" data-pedido="${id_pedido}" value="preparando">Preparando</button>
-                                <button class="status-btn" data-pedido="${id_pedido}" value="feito">Pronto</button>
-                                <button class="status-btn" data-pedido="${id_pedido}" value="entregue">Entregue</button>
-                                <button class="cancel-btn" data-pedido="${id_pedido}">Cancelar</button>
-                            </div>
-                        </div>`;
+                                </div>
+                                <div class="order-status">
+                                    <span class="order-price">Total: R$ ${pedido.total_preco.toFixed(2)}</span>
+                                </div>
+                                <div class="btn-cancelar">
+                                    <button class="status-btn" data-pedido="${id_pedido}" value="preparando">Preparando</button>
+                                    <button class="status-btn" data-pedido="${id_pedido}" value="feito">Pronto</button>
+                                    <button class="status-btn" data-pedido="${id_pedido}" value="entregue">Entregue</button>
+                                    <button class="cancel-btn" data-pedido="${id_pedido}">Cancelar</button>
+                                </div>
+                            </div>`;
                         }
                         cardPedidos += `</div>`;
                         orderContainer.innerHTML += cardPedidos; // Adiciona os pedidos na página
@@ -170,7 +170,7 @@
                 const idPedido = e.target.getAttribute('data-pedido');
 
                 // Abre o modal de cancelamento
-                document.getElementById('cancelModal').style.display = 'block';
+                document.getElementById('cancelModal').style.display = 'flex'; // Mudança para flex
                 document.getElementById('confirmCancelBtn').setAttribute('data-pedido', idPedido);
             }
         });
@@ -211,4 +211,5 @@
                 .catch(error => console.error('Erro ao enviar a solicitação:', error));
         };
     </script>
+
     {% endblock %}

@@ -115,7 +115,7 @@ h2 {
 
 .card-produtos {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     text-align: left;
 }
 
@@ -484,3 +484,9 @@ h3 {
     margin-bottom: 1rem !important;
     font-size: 1.75rem;
 }
+
+.card-produtos span{
+    margin-left: 10px;
+}
+
+
