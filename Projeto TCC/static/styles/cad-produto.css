@@ -41,6 +41,8 @@ h2{
   border: 2px solid rgb(238, 238, 238);
   background-color: rgb(245, 245, 245);
   margin-top: 15px;
+  width: 351px;
+
 }
 
 input::placeholder {
@@ -52,9 +54,7 @@ input::placeholder {
 }
 .input-descricao{
   height: 50px;
-  padding-left: 27px;
   padding-right: 30px;
-  padding-top: 13px;
   border-radius: 5px;
   border: 2px solid rgb(238, 238, 238);
   background-color: rgb(245, 245, 245);
@@ -62,11 +62,13 @@ input::placeholder {
 }
 
 .btn-Cadastrar {
+  margin-top: 15px;
   padding: 15px;
   background-color: rgb(161, 23, 23);
   border-radius: 6px;
   border: none;
   color: white;
+  margin-bottom: 5px;
 }
 
 
@@ -124,13 +126,13 @@ pointer-events: none;
 
 select{
   height: 60px;
-  display: flex;
-  text-align: center;
+  width: 351px;
   border: 2px solid rgb(238, 238, 238);
   background-color: rgb(245, 245, 245);
   margin-top: 15px;
   border-radius: 5px;
-  margin-bottom: 15px;
+  padding-left: 23px;
+  color: #6e6e6e;
 }
 
 .btn-voltar img{
@@ -180,4 +182,115 @@ select{
 #guarnicoes label {
   font-size: 16px;
   color: #333;
+}
+
+
+
+
+.acompanhamento {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid rgb(233, 231, 231);
+}
+
+.acompanhamento img {
+  width: 40px;
+  /* Tamanho da imagem */
+  height: 40px;
+  margin-left: 11px;
+  margin-right: 10px;
+  /* Espaço entre imagem e texto */
+  border-radius: 5px;
+  border: 0.5px solid red;
+}
+
+.acompanhamento label {
+  position: relative;
+  /* Para alinhar a bolinha à direita */
+  cursor: pointer;
+  /* Espaço entre o texto e a bolinha */
+  z-index: 1;
+  margin-top: 10px;
+}
+
+.acompanhamento label span {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ff0000;
+  /* Cor da bolinha */
+  border-radius: 50%;
+  background-color: white;
+  /* Fundo da bolinha */
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.acompanhamento span {
+  flex-grow: 1;
+  font-size: 18px;
+  /* Tamanho do texto do acompanhamento */
+  margin-right: 5px;
+  /* Espaço entre o texto e a bolinha */
+}
+
+#acompanhamentos input[type="checkbox"],
+#guarnicoes_acompanhamentos input[type="checkbox"] {
+    margin-top: 5px;
+    position: absolute;
+    left: 325px;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px; /* Defina o tamanho da bolinha */
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ff0000;;
+    transition: background-color 0.3s, border-color 0.3s;
+    background-color: white;
+}
+
+/* Estilo para o checkbox marcado */
+#acompanhamentos input[type="checkbox"]:checked,
+#guarnicoes_acompanhamentos input[type="checkbox"]:checked {
+  background-color: #ff0000;
+  /* Cor quando selecionado */
+  border-color: #ff0000;
+}
+
+
+/* Define um container para cada campo de input e botão */
+.input-container {
+  position: relative;
+  width: fit-content; /* Ajusta a largura do container ao conteúdo */
+  margin-top: 10px; /* Espaço entre os containers */
+}
+
+/* Estilo do input com espaço para o botão */
+.input-container input[type="text"] {
+  padding-right: 30px; /* Espaço para o botão dentro do input */
+}
+
+/* Estilo do botão de confirmação */
+.input-container button[type="button"] {
+  position: absolute;
+  right: 0px;
+  top: 60%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: rgb(214, 214, 214); /* Cor do ícone de confirmação */
+  font-size: 30px;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 15px;
+  padding-left: 15px;
+  display: flex;
+}
+
+.input-container button[type="button"]:hover {
+  color: rgb(177, 177, 177);
 }

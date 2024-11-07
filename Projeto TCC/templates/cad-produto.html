@@ -4,77 +4,93 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 </style>
 <link rel="stylesheet" href="../static/styles/cad-produto.css">
+
 <body>
     <main>
-    <form action="/inserir_produtos" method="post">
-        <div class="btn-voltar">
-            <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
-        </div>
-        <h2>Certo! Adicione um produto Agora!</h2>
+        <form action="/inserir_produtos" method="post">
+            <div class="btn-voltar">
+                <button onclick="window.history.back()"><img
+                        src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt=""></button>
+            </div>
+            <h2>Certo! Adicione um produto Agora!</h2>
+            <input name="nome" type="text" id="nome" placeholder="Nome do produto" required>
+            <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.01" placeholder="Preço"
+                required>
 
-        <input name="nome" type="text" id="nome" placeholder="Nome do produto" required>
-        <input name="preco" type="number" id="preco" min="0.00" max="1000.00" step="0.01" placeholder="Preço" required>
-        
-        <!-- Campo para imagem do produto -->
-        <input name="img" type="url" id="img" accept="image/*" class="input-image" placeholder="Url imagem" required>
-        
-        <!-- Campo para descrição do produto -->
-        <textarea name="descricao" id="descricao" placeholder="Descrição do produto" class="input-descricao" required></textarea>
-        
-        <select id="categoria" name="categoria" required onchange="exibirGuarnicoes()">
-            {% for registro in categorias %} 
-            <option value="{{ registro.id_categoria }}">{{ registro.nome }}</option>
-            {% endfor %}
-        </select>
+            <!-- Campo para imagem da marmita -->
+            <input name="img" type="url" id="img" accept="image/*" class="input-image" placeholder="Url imagem"
+                required>
 
-        <!-- Campo de tamanho do marmitex (inicialmente oculto) -->
-        <div id="tamanhoDiv" style="display: none; margin-top: 15px;">
-            <label for="tamanho">Tamanho do Marmitex:</label>
-            <select name="tamanho" id="tamanho">
-                <option value="">Selecione o tamanho</option>
-                <option value="Pequena">Pequena</option>
-                <option value="Média">Média</option>
-                <option value="Grande">Grande</option>
+            <!-- Campo para descrição da marmita -->
+            <input name="descricao" id="descricao" placeholder="Descrição do produto" class="input-descricao"
+                required></input>
+
+            <select id="categoria" name="categoria" required onchange="exibirGuarnicoes()">
+                {% for registro in categorias %}
+                <option value="{{ registro.id_categoria }}">{{ registro.nome }}</option>
+                {% endfor %}
             </select>
-        </div>
 
-        <!-- Guarnições e Acompanhamentos (inicialmente ocultos) -->
-        <div id="guarnicoes_acompanhamentos" style="display: none; margin-top: 15px;">
-            <h4>Escolha as guarnições e acompanhamentos:</h4>
+            <!-- Campo de tamanho da marmita (inicialmente oculto) -->
+            <div id="tamanhoDiv" style="display: none;">
 
-            <!-- Guarnições -->
-            <h5>Guarnições:</h5>
-            {% for guarnicao in lista_guarnicao %}
-            <div>
-                <input type="checkbox" id="guarnicao_{{ guarnicao.id_guarnicao }}" name="guarnicoes" value="{{ guarnicao.id_guarnicao }}">
-                <label for="guarnicao_{{ guarnicao.id_guarnicao }}">{{ guarnicao.nome_guarnicao }}</label>
+                <select name="tamanho" id="tamanho">
+                    <option value="" disabled selected>Selecione um tamanho</option> <!-- Placeholder -->
+                    <option value="Pequena">Pequena</option>
+                    <option value="Média">Média</option>
+                    <option value="Grande">Grande</option>
+                </select>
             </div>
-            {% endfor %}
-            <div id="lista_novas_guarnicoes"></div>
 
-            <!-- Acompanhamentos -->
-            <h5>Acompanhamentos:</h5>
-            {% for acompanhamento in lista_acompanhamento %}
-            <div>
-                <input type="checkbox" id="acompanhamento_{{ acompanhamento.id_acompanhamento }}" name="acompanhamentos" value="{{ acompanhamento.id_acompanhamento }}">
-                <label for="acompanhamento_{{ acompanhamento.id_acompanhamento }}">{{ acompanhamento.nome_acompanhamento }}</label>
+            <!-- Guarnições e Acompanhamentos (inicialmente ocultos) -->
+            <div id="guarnicoes_acompanhamentos" style="display: none; margin-top: 15px;">
+
+
+                <!-- Guarnições -->
+                <h5>Guarnições:</h5>
+                {% for guarnicao in lista_guarnicao %}
+                <div class="acompanhamento">
+                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="">
+                    <label for="guarnicao_{{ guarnicao.id_guarnicao }}">{{ guarnicao.nome_guarnicao }}</label>
+                    <input type="checkbox" id="guarnicao_{{ guarnicao.id_guarnicao }}" name="guarnicoes"
+                        value="{{ guarnicao.id_guarnicao }}">
+                </div>
+                {% endfor %}
+                <div id="lista_novas_guarnicoes"></div>
+
+                <!-- Acompanhamentos -->
+                <h5>Acompanhamentos:</h5>
+                {% for acompanhamento in lista_acompanhamento %}
+                <div class="acompanhamento">
+                    <img src="https://pedido.anota.ai/assets/item_no_image-a8c57261.png" alt="">
+                    <label for="acompanhamento_{{ acompanhamento.id_acompanhamento }}">{{
+                        acompanhamento.nome_acompanhamento }}</label>
+                    <input type="checkbox" id="acompanhamento_{{ acompanhamento.id_acompanhamento }}"
+                        name="acompanhamentos" value="{{ acompanhamento.id_acompanhamento }}">
+                </div>
+                {% endfor %}
+                <div id="lista_novos_acompanhamentos"></div>
             </div>
-            {% endfor %}
-            <div id="lista_novos_acompanhamentos"></div>
-        </div>
-        
-        <!-- Seção para adicionar novas guarnições e acompanhamentos (inicialmente oculta) -->
-        <div id="nova_guarnicao_acompanhamento" style="display: none; margin-top: 15px;">
-            <h4>Adicionar nova guarnição ou acompanhamento:</h4>
-            <input type="text" id="nome_guarnicao" placeholder="Nome da nova guarnição">
-            <button type="button" onclick="adicionarGuarnicao()">Adicionar Guarnição</button>
 
-            <input type="text" id="nome_acompanhamento" placeholder="Nome do novo acompanhamento" style="margin-top: 10px;">
-            <button type="button" onclick="adicionarAcompanhamento()">Adicionar Acompanhamento</button>
-        </div>
+            <div id="nova_guarnicao_acompanhamento" style="display: none; margin-top: 15px;">
+                <h4>Adicionar nova guarnição ou acompanhamento:</h4>
 
-        <button type="submit" class="btn-Cadastrar">Adicionar</button>
-    </form>
+                <!-- Guarnição -->
+                <div class="input-container">
+                    <input type="text" id="nome_guarnicao" placeholder="Nome da nova guarnição">
+                    <button type="button" onclick="adicionarGuarnicao()">+</button>
+                </div>
+
+                <!-- Acompanhamento -->
+                <div class="input-container">
+                    <input type="text" id="nome_acompanhamento" placeholder="Nome do novo acompanhamento">
+                    <button type="button" onclick="adicionarAcompanhamento()">+</button>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn-Cadastrar">Adicionar</button>
+        </form>
     </main>
 
     <script>
@@ -90,13 +106,13 @@
                 guarnicoesDiv.style.display = "block";
                 novaGuarnicaoDiv.style.display = "block";
                 tamanhoDiv.style.display = "block";
-                tamanhoSelect.setAttribute('required', 'required'); 
+                tamanhoSelect.setAttribute('required', 'required');
             } else {
                 guarnicoesDiv.style.display = "none";
-                novaGuarnicaoDiv.style.display = "none"; 
-                tamanhoDiv.style.display = "none"; 
-                tamanhoSelect.removeAttribute('required'); 
-                tamanhoSelect.value = ""; 
+                novaGuarnicaoDiv.style.display = "none";
+                tamanhoDiv.style.display = "none";
+                tamanhoSelect.removeAttribute('required');
+                tamanhoSelect.value = "";
             }
         }
 
@@ -110,24 +126,47 @@
                     },
                     body: 'nome_guarnicao=' + encodeURIComponent(nomeGuarnicao)
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Adiciona a nova guarnição na lista de guarnições, não nos acompanhamentos
-                        var listaNovasGuarnicoesDiv = document.getElementById("lista_novas_guarnicoes");
-                        var novaGuarnicaoDiv = document.createElement("div");
-                        
-                        novaGuarnicaoDiv.innerHTML = `<input type="checkbox" name="guarnicoes" value="${data.id_guarnicao}" checked>
-                            <label>${nomeGuarnicao}</label>`;
-                        listaNovasGuarnicoesDiv.appendChild(novaGuarnicaoDiv);
-                        
-                        document.getElementById("nome_guarnicao").value = ""; // Limpa o campo de texto
-                    } else {
-                        alert("Erro ao adicionar a guarnição.");
-                    }
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Adiciona a nova guarnição na lista de guarnições
+                            var listaNovasGuarnicoesDiv = document.getElementById("lista_novas_guarnicoes");
+
+                            var novaGuarnicaoDiv = document.createElement("div");
+                            novaGuarnicaoDiv.classList.add("acompanhamento");
+
+                            // Cria o elemento de imagem
+                            var imagem = document.createElement("img");
+                            imagem.src = "https://pedido.anota.ai/assets/item_no_image-a8c57261.png";
+                            imagem.alt = "Imagem de guarnição";
+
+                            // Cria o input de checkbox
+                            var checkbox = document.createElement("input");
+                            checkbox.type = "checkbox";
+                            checkbox.name = "guarnicoes";
+                            checkbox.value = data.id_guarnicao;
+                            checkbox.checked = true;
+
+                            // Cria o label para a guarnição
+                            var label = document.createElement("label");
+                            label.textContent = nomeGuarnicao;
+
+                            // Anexa a imagem, checkbox e label à div de guarnição
+                            novaGuarnicaoDiv.appendChild(imagem);
+                            novaGuarnicaoDiv.appendChild(checkbox);
+                            novaGuarnicaoDiv.appendChild(label);
+
+                            // Adiciona a nova div à lista de guarnições
+                            listaNovasGuarnicoesDiv.appendChild(novaGuarnicaoDiv);
+
+                            document.getElementById("nome_guarnicao").value = ""; // Limpa o campo de texto
+                        } else {
+                            alert("Erro ao adicionar a guarnição.");
+                        }
+                    });
             }
         }
+
 
         function adicionarAcompanhamento() {
             var nomeAcompanhamento = document.getElementById("nome_acompanhamento").value.trim();
@@ -139,24 +178,46 @@
                     },
                     body: 'nome_acompanhamento=' + encodeURIComponent(nomeAcompanhamento)
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Adiciona o novo acompanhamento na lista de acompanhamentos
-                        var listaNovosAcompanhamentosDiv = document.getElementById("lista_novos_acompanhamentos");
-                        var novoAcompanhamentoDiv = document.createElement("div");
-                        
-                        novoAcompanhamentoDiv.innerHTML = `<input type="checkbox" name="acompanhamentos" value="${data.id_acompanhamento}" checked>
-                            <label>${nomeAcompanhamento}</label>`;
-                        listaNovosAcompanhamentosDiv.appendChild(novoAcompanhamentoDiv);
-                        
-                        document.getElementById("nome_acompanhamento").value = ""; // Limpa o campo de texto
-                    } else {
-                        alert("Erro ao adicionar o acompanhamento.");
-                    }
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Adiciona o novo acompanhamento na lista de acompanhamentos
+                            var listaNovosAcompanhamentosDiv = document.getElementById("lista_novos_acompanhamentos");
+                            var novoAcompanhamentoDiv = document.createElement("div");
+                            novoAcompanhamentoDiv.classList.add("acompanhamento");
+
+                            // Cria o elemento de imagem
+                            var imagem = document.createElement("img");
+                            imagem.src = "https://pedido.anota.ai/assets/item_no_image-a8c57261.png";
+                            imagem.alt = "Imagem de acompanhamento";
+
+                            // Cria o input de checkbox
+                            var checkbox = document.createElement("input");
+                            checkbox.type = "checkbox";
+                            checkbox.name = "acompanhamentos";
+                            checkbox.value = data.id_acompanhamento;
+                            checkbox.checked = true;
+
+                            // Cria o label para o acompanhamento
+                            var label = document.createElement("label");
+                            label.textContent = nomeAcompanhamento;
+
+                            // Anexa a imagem, checkbox e label à div de acompanhamento
+                            novoAcompanhamentoDiv.appendChild(imagem);
+                            novoAcompanhamentoDiv.appendChild(checkbox);
+                            novoAcompanhamentoDiv.appendChild(label);
+
+                            // Adiciona a nova div à lista de acompanhamentos
+                            listaNovosAcompanhamentosDiv.appendChild(novoAcompanhamentoDiv);
+
+                            document.getElementById("nome_acompanhamento").value = ""; // Limpa o campo de texto
+                        } else {
+                            alert("Erro ao adicionar o acompanhamento.");
+                        }
+                    });
             }
         }
+
 
     </script>
 </body>

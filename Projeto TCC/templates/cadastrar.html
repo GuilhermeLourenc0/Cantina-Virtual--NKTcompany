@@ -30,7 +30,7 @@
         
                     <div class="select">
                         <select id="curso" name="curso" required>
-                            <option value="">Selecione o seu curso</option>
+                            <option value="" disabled selected>Selecione o seu curso</option>
                             {% for registro in cursos %}
                                 <option value="{{ registro.id_curso }}">{{ registro.curso }}</option>
                             {% endfor %}

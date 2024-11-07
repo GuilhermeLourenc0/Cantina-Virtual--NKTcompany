@@ -867,7 +867,7 @@ def atualizar_produto():
     adm.atualizar_produto(id_produto, nome, preco, descricao, imagem)
 
     flash('Produto atualizado com sucesso!', 'success')
-    return redirect('/inicialadm')  # Ou para uma página de detalhes do produto
+    return redirect('/editar_produto')  # Ou para uma página de detalhes do produto
 
 
 @app.route('/imagem_produto/<int:cod_produto>')
