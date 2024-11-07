@@ -258,9 +258,13 @@ def verificacao():
         if id_cliente:  # Verifique se o id_cliente existe
             usuario = Usuario()
             usuario.atualizar_dados(id_cliente, telefone=None, email=email, senha=senha)
+            
+            # Atualiza a sessão com os novos dados
+            session['usuario_logado']['email'] = email
+            session['usuario_logado']['senha'] = senha
 
         session.pop('em_verificacao', None)  # Remove a flag de verificação
-        return redirect("/")
+        return redirect("/")  # Redireciona para a página inicial após a atualização bem-sucedida
 
     else:
         # Se o código de verificação estiver errado, reseta o primeiro_login
@@ -272,6 +276,7 @@ def verificacao():
 
         session.pop('em_verificacao', None)  # Remove a flag de verificação
         return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
+
 
 
 
