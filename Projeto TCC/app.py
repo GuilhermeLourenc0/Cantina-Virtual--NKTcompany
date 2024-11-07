@@ -140,11 +140,14 @@ def cadastro():
         tipo = "cliente"
 
         usuario = Usuario()
-        if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
-            # Gerar um código de verificação aleatório com 4 dígitos, incluindo zeros à esquerda
-            verification_code = str(random.randint(90, 9999)).zfill(4)
+        
+        # Verificação se o e-mail já está cadastrado
+        if usuario.verificar_email_existente(email):
+            flash("E-mail já utilizado. Por favor, use um e-mail diferente.", "error")
+            return redirect("/cadastro")
 
-            # Enviar o código de verificação via SMS
+        if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
+            verification_code = str(random.randint(90, 9999)).zfill(4)
             message = client.messages.create(
                 to=telefone,
                 from_="+13195190041",
@@ -152,12 +155,10 @@ def cadastro():
             )
             print(message.sid)
 
-            # Armazenar o telefone e o código de verificação na sessão
             session['telefone_verificacao'] = telefone
             session['verification_code'] = verification_code
             usuario.logar(email, senha)
             if usuario.logado:
-                # Se o login for bem-sucedido, armazena os dados do usuário na sessão
                 session['usuario_logado'] = {
                     "nome": usuario.nome, 
                     "email": usuario.email, 
@@ -166,7 +167,6 @@ def cadastro():
                     "tipo": usuario.tipo,
                     "senha": usuario.senha
                 }
-            # Redireciona para a tela de verificação
             return redirect("/verificacao")
         else:
             return redirect("/cadastro")

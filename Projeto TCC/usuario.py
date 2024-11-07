@@ -70,6 +70,25 @@ class Usuario:
             print(f"Ocorreu um erro: {e}")  # Exibe uma mensagem de erro em caso de falha
             return False
 
+
+    # Método na classe Usuario para verificar se o e-mail já existe
+    def verificar_email_existente(self, email):
+        """
+        Verifica se o e-mail já está cadastrado no banco de dados.
+        Retorna True se o e-mail existir, False caso contrário.
+        """
+        try:
+            mydb = Conexao.conectar()
+            mycursor = mydb.cursor()
+            mycursor.execute("SELECT email FROM tb_cliente WHERE email = %s", (email,))
+            resultado = mycursor.fetchone()
+            mydb.close()
+            return resultado is not None
+        except Exception as e:
+            print(f"Erro ao verificar e-mail: {e}")
+            return False
+
+
     def exibir_cursos(self):
         """
         Retorna uma lista com todos os cursos disponíveis no sistema, consultando a tabela `tb_curso`.
