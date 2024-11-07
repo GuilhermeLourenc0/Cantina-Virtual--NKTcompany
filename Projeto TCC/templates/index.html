@@ -44,40 +44,42 @@
     </div>
   </section>
 
-  <!-- Seção de Produtos -->
-  <section class="container-produtos">
-    <h2>Nossos Produtos</h2>
-    <div class="grid-produto">
-      <div class="produtos" id="produtos-list">
-        <!-- Produtos renderizados dinamicamente aqui -->
-      </div>
-    </div>
-  </section>
 
-  <!-- Seção de Marmitas -->
-  <section class="container-produtos">
-    <h2>Marmitex</h2>
-    <div class="grid-produto">
-      <div class="produtos" id="marmitas-list">
-        {% for marmita in lista_marmitas %}
-        <form action="/marmita_unica" method="post">
-          <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
-            <div class="card-produtos">
-              <div class="left-lado">
-                <span class="produto-nome">{{ marmita.nome_marmita }}</span>
-                <span class="produto-desc">{{ marmita.descricao }}</span>
-                <span class="produto-preco">R$ {{ marmita.preco }}</span>
-              </div>
-              <div class="right-lado">
-                <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
-              </div>
-            </div>
-          </button>
-        </form>
-        {% endfor %}
+    <!-- Seção de Produtos -->
+    <h2>Nossos Produtos</h2>
+    <section class="container-produtos">
+      
+      <div class="grid-produto">
+        <div class="produtos" id="produtos-list">
+          <!-- Produtos renderizados dinamicamente aqui -->
+        </div>
       </div>
+    </section>
+
+<!-- Seção de Marmitas -->
+<section class="container-produtos">
+  <h3>Marmitex</h3>
+  <div class="grid-produto">
+    <div class="produtos" id="marmitas-list">
+      {% for marmita in lista_marmitas %}
+      <form action="/marmita_unica" method="post">
+        <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
+          <div class="card-produtos">
+            <div class="left-lado">
+              <span class="produto-nome">{{ marmita.nome_marmita }}</span>
+              <span class="produto-desc">{{ marmita.descricao }}</span>
+              <span class="produto-preco">R$ {{ marmita.preco }}</span>
+            </div>
+            <div class="right-lado">
+              <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
+            </div>
+          </div>
+        </button>
+      </form>
+      {% endfor %}
     </div>
-  </section>
+  </div>
+</section>
 
 </main>
 

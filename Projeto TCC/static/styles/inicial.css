@@ -63,7 +63,7 @@ html {
 }
 
 
-.gambiarra {
+.espacamento {
     height: 70px;
 }
 
@@ -96,26 +96,26 @@ html {
 
 h2 {
     color: #333;
-    font-size: 1.8rem;
+    font-size: 2rem !important;
     /* Tamanho ajustado para mobile */
     text-align: center;
-    margin-bottom: 30px;
-    margin-top: 10px;
-    font-weight: 600;
+    margin-bottom: 30px ;
+    margin-top: 20px !important;
+    font-weight: 600 !important;
 }
 
 .container-produtos {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-top: 1rem;
+    align-items: flex-start;
+    
     padding: 0 20px;
     /* Espaço lateral para mobile */
 }
 
 .card-produtos {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     text-align: left;
 }
 
@@ -127,7 +127,6 @@ h2 {
     display: flex;
     flex-direction: column;
     /* Exibição em coluna */
-    margin-top: 20px;
     width: 100%;
 }
 
@@ -479,6 +478,19 @@ input:checked+.slider:before {
     justify-content: center;
     align-items: center;
 }
+
+h3 {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+    font-size: 1.75rem;
+}
+
+.card-produtos span{
+    margin-left: 10px;
+}
+
+
+
 
 
 /* From Uiverse.io by revanth-004 */
