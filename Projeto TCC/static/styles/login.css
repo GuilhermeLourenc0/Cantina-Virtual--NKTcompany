@@ -5,6 +5,11 @@
 }
 
 
+.espacamento{
+
+    display: none !important;
+}
+
 .titulo{
     margin-top: 2.5rem;
     display: flex;
