@@ -17,7 +17,7 @@
           <div class="produto-item">
             <form action="/editar_produto" method="post">
               <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
-                <div class="card-produtos">
+                <div class="card-produtos" style="justify-content: flex-start;">
                   <img src="{{ registro.imagem_produto }}" alt="">
                   <span>{{ registro.nome_produto }}</span>
                   <div class="icone-container">
@@ -42,7 +42,7 @@
           <div class="produto-item">
             <form action="/editar_marmita" method="post">
               <button value="{{ registro.id_marmita }}" name="btn-marmita" type="submit">
-                <div class="card-produtos">
+                <div class="card-produtos" style="justify-content: flex-start;">
                   <img src="{{ registro.imagem_marmita }}" alt="">
                   <span>{{ registro.nome_marmita }}</span>
                 </div>

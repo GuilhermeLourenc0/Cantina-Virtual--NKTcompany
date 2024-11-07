@@ -50,6 +50,7 @@ main {
     font-size: 20px;
     color: #000000;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
 /* Seção de avaliação por estrelas */
@@ -83,10 +84,10 @@ main {
 /* Botão de adicionar ao carrinho */
 form button {
     display: inline-block;
-    padding: 10px 30px;
+    padding: 12px 25px;
     background-color: #ff0000;
     color: #fff;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
     border: none;
     border-radius: 5px;
