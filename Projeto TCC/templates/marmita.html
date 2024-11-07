@@ -14,7 +14,7 @@
             <div class="opc">
 
                 <form id="form-marmita" class="formulario-marmita">
-                    <input type="hidden" name="id_marmita" value="{{ marmita.id_marmita }}"/> <!-- ID da marmita -->
+                    <input type="hidden" name="id_marmita" value="{{ marmita.id_marmita }}" /> <!-- ID da marmita -->
 
                     <!-- Campos para Acompanhamentos -->
                     {% if marmita.acompanhamentos and marmita.acompanhamentos|length > 0 %}
@@ -135,7 +135,7 @@
         limitSelection(checkboxesGuarnicao, maxGuarnicoes, `Você só pode selecionar até ${maxGuarnicoes} guarnições.`);
 
         // Evento para adicionar ao carrinho com fetch()
-        document.getElementById('adicionarCarrinhoBtn').addEventListener('click', function(event) {
+        document.getElementById('adicionarCarrinhoBtn').addEventListener('click', function (event) {
             event.preventDefault();
             const form = document.getElementById('form-marmita');
             const formData = new FormData(form);
@@ -144,19 +144,26 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                } else if (data.success) {
-                    window.location.href = data.redirect_url;  // Redireciona para o carrinho
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao inserir no carrinho:', error);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        if (!data.is_logged_in) {
+                            // Redireciona para a página de login se o usuário não estiver logado
+                            window.location.href = "/logar";
+                        } else if (data.error) {
+                            alert(data.error); // Exibe um alerta se houver outro tipo de erro
+                        }
+                    } else {
+                        // Se a adição ao carrinho foi bem-sucedida, redireciona para o carrinho
+                        window.location.href = data.redirect_url;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao inserir no carrinho:', error);
+                });
         });
     });
+
 
     function toggleAcompanhamentos(element) {
         const opcoes = element.closest('.acompanhamentos').querySelector('.opcoes-acompanhamentos');
@@ -168,6 +175,4 @@
         opcoes.classList.toggle('hidden');
     }
 </script>
-
 {% endblock %}
-

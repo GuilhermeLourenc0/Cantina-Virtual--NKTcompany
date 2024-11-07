@@ -37,25 +37,42 @@ class Sistema:
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()   # Cria um cursor para executar queries
 
-        # Consulta SQL para selecionar apenas produtos habilitados (assumindo coluna 'habilitado')
-        sql = "SELECT * FROM tb_produto WHERE habilitado = 1"
+        # Consulta SQL com JOIN para obter o nome e o ID da categoria
+        sql = """
+        SELECT p.cod_produto, p.nome_produto, p.preco, p.url_img, p.descricao, c.id_categoria, c.nome
+        FROM tb_produto p
+        JOIN tb_categoria c ON p.id_categoria = c.id_categoria
+        WHERE p.habilitado = 1
+        """
         mycursor.execute(sql)      # Executa a consulta
         resultado = mycursor.fetchall()  # Obtém todos os resultados
 
-        lista_produtos = []
+        produtos_por_categoria = {}
 
-        # Itera sobre os resultados e adiciona cada produto à lista
+        # Itera sobre os resultados e agrupa os produtos por categoria
         for produto in resultado:
-            lista_produtos.append({
+            categoria_id = produto[5]
+            categoria_nome = produto[6]
+
+            if categoria_id not in produtos_por_categoria:
+                produtos_por_categoria[categoria_id] = {
+                    'nome_categoria': categoria_nome,  # Armazena o nome da categoria
+                    'produtos': []
+                }
+
+            produtos_por_categoria[categoria_id]['produtos'].append({
+                'id_produto': produto[0],
                 'nome_produto': produto[1],
                 'preco': produto[2],
                 'imagem_produto': produto[3],
-                'categoria': produto[5],
-                'descricao': produto[4],
-                'id_produto': produto[0]
+                'descricao': produto[4]
             })
+
         mydb.close()  # Fecha a conexão com o banco de dados
-        return lista_produtos if lista_produtos else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+        return produtos_por_categoria if produtos_por_categoria else {}  # Retorna os produtos agrupados ou um dicionário vazio
+
+
+
 
 
     # Método para exibir um único produto com base no ID
@@ -338,14 +355,14 @@ class Sistema:
 
 
 
-    def cancelar_pedido(self, id_pedido):
+    def cancelar_pedido(self, id_pedido, motivo_cancelamento):
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()
 
         try:
-            # Atualiza o status do pedido para 'Cancelado'
-            sql = "UPDATE tb_pedidos SET status = 'Cancelado' WHERE id_pedido = %s"
-            mycursor.execute(sql, (id_pedido,))
+            # Atualiza o status do pedido e define habilitado como 0
+            sql = "UPDATE tb_pedidos SET status = 'Cancelado', habilitado = 0, motivo_cancelamento = %s WHERE id_pedido = %s"
+            mycursor.execute(sql, (motivo_cancelamento, id_pedido))
 
             mydb.commit()  # Confirma a alteração
             return {"message": "Pedido cancelado com sucesso!"}  # Retorna mensagem de sucesso

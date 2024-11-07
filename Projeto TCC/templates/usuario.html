@@ -1,0 +1,12 @@
+{% extends "modelo-adm.html" %}
+{% block conteudo %}
+<h2>Detalhes do Cliente</h2>
+{% if cliente %}
+    <p>Nome: {{ cliente.nome_comp }}</p>
+    <p>Telefone: {{ cliente.telefone }}</p>
+    <p>Email: {{ cliente.email }}</p>
+    <p>Curso: {{ cliente.nome_curso }}</p>  <!-- Exibe o nome do curso -->
+{% else %}
+    <p>Cliente não encontrado.</p>
+{% endif %}
+{% endblock %}

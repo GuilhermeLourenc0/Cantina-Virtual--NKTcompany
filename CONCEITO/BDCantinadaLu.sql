@@ -21,6 +21,7 @@ CREATE TABLE tb_cliente (
     senha VARCHAR(255),
     tipo VARCHAR(20),
     imagem_binaria MEDIUMBLOB,
+    primeiro_login BOOLEAN DEFAULT TRUE,
     PRIMARY KEY (id_cliente),
     FOREIGN KEY (id_curso) REFERENCES tb_curso(id_curso)
 );
@@ -71,7 +72,8 @@ CREATE TABLE tb_pedidos (
     data_pedido DATE,
     hora_pedido TIME,
     status VARCHAR(50),
-	habilitado TINYINT(1) DEFAULT 1,
+    motivo_cancelamento VARCHAR(255),  -- Nova coluna adicionada
+    habilitado TINYINT(1) DEFAULT 1,
     PRIMARY KEY (id_pedido),
     FOREIGN KEY (id_cliente) REFERENCES tb_cliente(id_cliente)
 );
@@ -452,3 +454,6 @@ INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 
 INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
 VALUES ('Administrador', '123456789', 'adm@adm.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'adm');
+
+INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
+VALUES ('Cliente', '123456789', 'cliente@cliente.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'cliente');

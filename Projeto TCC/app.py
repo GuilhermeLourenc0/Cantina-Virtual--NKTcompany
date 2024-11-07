@@ -7,10 +7,9 @@ from adm import Adm
 import random
 from twilio.rest import Client
 import os
-import requests
 from datetime import datetime
-from dateutil import parser  # Importando dateutil para facilitar o parse de datas
 import pytz
+from relatorio import Relatorio
 
 
 app = Flask(__name__)
@@ -36,40 +35,54 @@ client = Client(account_sid, auth_token)
 @app.route("/")
 def principal():
     try:
-        # Obtém o horário atual de São Paulo (sem precisar de uma API externa)
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
         hora_atual = now.hour
         minutos_atuais = now.minute
-        print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
-
-        # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
         site_aberto = hora_atual >= 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais < 45))
 
-        if site_aberto:
-            # Se estiver no horário de funcionamento, exibe o conteúdo normalmente
-            sistema = Sistema()  # Cria uma instância da classe Sistema
-            lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
-            lista_marmitas = sistema.exibir_marmitas()  # Obtém a lista de marmitas
-            return render_template("index.html", lista_produtos=lista_produtos, lista_marmitas=lista_marmitas, site_aberto=site_aberto)
+        # Obter o status de login bem-sucedido para exibir o alerta e removê-lo da sessão
+        success = session.pop('login_sucesso', False)
 
-        # Se o site estiver fechado, renderiza o template com o site_aberto=False
-        return render_template("index.html", site_aberto=site_aberto)
+        if site_aberto:
+            sistema = Sistema()
+            produtos_por_categoria = sistema.exibir_produtos()
+            lista_marmitas = sistema.exibir_marmitas()
+            return render_template("index.html", produtos_por_categoria=produtos_por_categoria, lista_marmitas=lista_marmitas, site_aberto=site_aberto, success=success)
+
+        return render_template("index.html", site_aberto=site_aberto, success=success)
 
     except Exception as e:
         print(f"Erro ao verificar o horário de funcionamento: {e}")
-    
-    # Em caso de erro, retorna uma mensagem de erro
-    return "Erro ao verificar o horário de funcionamento."
+        return "Erro ao verificar o horário de funcionamento."
 
-# Certifique-se de instalar o pytz usando: pip install pytz
+
 
 
 @app.route("/produtos_json", methods=['GET'])
 def produtos():
     sistema = Sistema()  # Cria uma instância da classe Sistema
-    lista_produtos = sistema.exibir_produtos()  # Obtém a lista de produtos
-    return jsonify(lista_produtos)  # Retorna os produtos em formato JSON
+    produtos_por_categoria = sistema.exibir_produtos()  # Obtém a lista de produtos agrupados
+    
+    # Cria uma lista para armazenar todos os produtos com a categoria associada
+    lista_produtos = []
+    
+    # Itera sobre as categorias e adiciona os produtos à lista
+    for categoria in produtos_por_categoria.values():
+        for produto in categoria['produtos']:
+            produto_com_categoria = {
+                'id_produto': produto['id_produto'],
+                'nome_produto': produto['nome_produto'],
+                'preco': produto['preco'],
+                'imagem_produto': produto['imagem_produto'],
+                'descricao': produto['descricao'],
+                'nome_categoria': categoria['nome_categoria']  # Inclui o nome da categoria
+            }
+            lista_produtos.append(produto_com_categoria)
+
+    return jsonify(lista_produtos)  # Retorna a lista de produtos em formato JSON
+
+
 
 
 @app.route("/marmitas_json", methods=['GET'])
@@ -79,13 +92,33 @@ def marmitas():
     return jsonify(lista_marmitas)  # Retorna os produtos em formato JSON
 
 
+
 @app.route("/inicialadm")
 def inicialadm():
-    return render_template("inicialAdm.html") 
+    # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
+    
+    # Renderiza a página inicialAdm.html se o usuário não for 'adm'
+    return render_template("inicialAdm.html")
+
+
 
 
 @app.route("/adm")
 def principal_adm():
+    # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
+    
     sistema = Sistema()  # Cria uma instância da classe Sistema
     lista_produtos = sistema.exibir_produtos_adm()  # Obtém a lista de produtos
     lista_marmitas = sistema.exibir_marmitas_adm()
@@ -158,37 +191,83 @@ def verificacao():
             return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
 
 
-# Rota para login de usuários
-@app.route('/logar', methods=['GET', 'POST'])
+@app.route("/logar", methods=['GET', 'POST'])
 def logar():
     if request.method == 'GET':
-        return render_template('login.html')  # Exibe o formulário de login
-    else:
-        # Coleta os dados do formulário de login
-        senha = request.form['senha']
-        email = request.form['email']
-        usuario = Usuario()  # Cria uma instância da classe Usuario
-        usuario.logar(email, senha)  # Tenta fazer o login
-        if usuario.logado:
-            # Se o login for bem-sucedido, armazena os dados do usuário na sessão
-            session['usuario_logado'] = {
-                "nome": usuario.nome, 
-                "email": usuario.email, 
-                "tel": usuario.tel, 
-                "id_cliente": usuario.id_cliente, 
-                "tipo": usuario.tipo,
-                "senha": usuario.senha
-            }
-            tipo = session.get('usuario_logado')['tipo']
-            
-            if tipo != 'cliente':
-                return redirect("/inicialadm")  # Redireciona para a página inicial do adm
-            else:
-                return redirect("/")  # Redireciona para a página inicial
+        # Remove a variável de erro da sessão e passa para o template
+        erro = session.pop('login_erro', False)
+        return render_template('login.html', success=False, erro=erro)
+    
+    # Se for um método POST
+    senha = request.form['senha']
+    email = request.form['email']
+    usuario = Usuario()
+    usuario.logar(email, senha)
+    
+    if usuario.logado:
+        session['usuario_logado'] = {
+            "nome": usuario.nome, 
+            "email": usuario.email, 
+            "tel": usuario.tel, 
+            "id_cliente": usuario.id_cliente, 
+            "tipo": usuario.tipo,
+            "senha": usuario.senha,
+            "primeiro_login": usuario.primeiro_login
+        }
+        
+        if usuario.tipo != 'cliente' and usuario.primeiro_login:
+            return redirect("/atualizar_dados_iniciais")
+        
+        # Define a variável de sessão para exibir o alerta de sucesso
+        session['login_sucesso'] = True
+        
+        return redirect("/")
+    
+    # Define a variável de sessão para exibir o alerta de erro
+    session['login_erro'] = True
+    return redirect("/logar")
 
-        else:
-            session.clear()  # Limpa a sessão em caso de falha no login
-            return redirect("/logar")  # Redireciona para a página de login
+
+
+
+
+
+
+@app.route("/atualizar_dados_iniciais", methods=["GET", "POST"])
+def atualizar_dados_iniciais():
+    if request.method == 'GET':
+        return render_template("atualizar_dados_iniciais.html")
+
+    # Processa o formulário quando enviado via POST
+    telefone = request.form['telefone']
+    email = request.form['email']
+    senha = request.form['senha']
+
+    # Atualiza os dados do administrador
+    usuario = Usuario()
+    id_cliente = session['usuario_logado']['id_cliente']
+    atualizacao_sucesso = usuario.atualizar_dados(id_cliente, telefone, email, senha)
+
+    if not atualizacao_sucesso:
+        return render_template("atualizar_dados_iniciais.html", error="Erro ao atualizar dados. Tente novamente.")
+
+    # Gera e envia o código de verificação
+    verification_code = str(random.randint(1000, 9999)).zfill(4)
+    session['verification_code'] = verification_code
+    session['telefone_verificacao'] = telefone
+
+    # Envia mensagem de verificação
+    message = client.messages.create(
+        to=telefone,
+        from_="+13195190041",
+        body=f'Seu código é: {verification_code}'
+    )
+    print("Código de verificação enviado:", message.sid)
+
+    # Redireciona para a rota de verificação
+    return redirect("/verificacao")
+
+
 
 
 
@@ -205,6 +284,13 @@ def logout():
 
 @app.route('/inserir_produtos', methods=['POST'])
 def inserir_produtos():
+    # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
     nome = request.form['nome']
     preco = request.form['preco']
     img = request.form['img']
@@ -246,6 +332,13 @@ def inserir_produtos():
 
 @app.route("/exibir_guarnicao")
 def exibir_guarnicao():
+    # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
     adm = Adm()
     lista_guarnicao = adm.exibir_guarnicao()
     lista_acompanhamento = adm.exibir_acompanhamento()
@@ -398,8 +491,13 @@ def habilitar_marmita_adm():
 
 @app.route("/exibir_pedidos", methods=['GET'])
 def exibir_pedidos_route():
+    # Verifica se o usuário está logado e possui um ID de cliente válido
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
 
     try:
         adm = Adm()  # Cria uma instância da classe Adm
@@ -473,24 +571,29 @@ def atualizar_status_pedido():
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
 
 
-# Rota para cancelar um pedido
 @app.route("/cancelar_pedido", methods=['POST'])
 def cancelar_pedido():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return jsonify({'redirect': '/logar'})  # Redireciona se não estiver logado
 
     id_pedido = request.form.get('id_pedido')
+    motivo_cancelamento = request.form.get('motivo_cancelamento')  # Obtém o motivo do cancelamento (select)
+    descricao_cancelamento = request.form.get('descricao_cancelamento')  # Obtém a descrição do cancelamento (textarea)
 
-    # Verifica se o ID do pedido é válido
-    if id_pedido:
+    # Verifica se o ID do pedido e pelo menos um motivo ou descrição do cancelamento foram fornecidos
+    if id_pedido and (motivo_cancelamento or descricao_cancelamento):
         sistema = Sistema()  # Cria uma instância da classe Sistema
-        sucesso = sistema.cancelar_pedido(id_pedido)  # Função para cancelar o pedido no sistema
-        
+        motivo_final = motivo_cancelamento if motivo_cancelamento else descricao_cancelamento  # Usa o motivo ou a descrição
+        sucesso = sistema.cancelar_pedido(id_pedido, motivo_final)  # Passa o motivo para a função
+
         if sucesso:
             return jsonify({'status': 'sucesso'})
         else:
             return jsonify({'status': 'erro', 'mensagem': 'Não foi possível cancelar o pedido.'})
     return jsonify({'status': 'erro', 'mensagem': 'Dados inválidos.'})
+
+
+
 
 
 @app.route("/enviar_carrinho", methods=['POST'])
@@ -502,7 +605,7 @@ def enviar_carrinho():
         print(f"Hora atual: {hora_atual}")
 
         # Verifica se está dentro do horário de funcionamento (entre 7h00 e 21h45)
-        site_aberto = now.hour > 7 and (now.hour < 21 or (now.hour == 21 and now.minute <= 45))
+        site_aberto = (now.hour > 7 or (now.hour == 7 and now.minute >= 0)) and (now.hour < 21 or (now.hour == 21 and now.minute <= 45))
 
         if not site_aberto:
             return jsonify({"error": "Site offline. Não é possível enviar pedidos neste horário."}), 403
@@ -673,8 +776,8 @@ def exibir_carrinho():
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return redirect("/logar")
-    
+        return jsonify({"success": False, "error": "Usuário não logado."}), 401  # Código 401 para não autorizado
+
     id_cliente = session.get('usuario_logado')['id_cliente']
     cod_produto = request.form.get('cod_produto')  # Para produtos
     id_marmita = request.form.get('id_marmita')  # Para marmitas
@@ -764,7 +867,7 @@ def atualizar_produto():
     adm.atualizar_produto(id_produto, nome, preco, descricao, imagem)
 
     flash('Produto atualizado com sucesso!', 'success')
-    return redirect('/inicialadm')  # Ou para uma página de detalhes do produto
+    return redirect('/editar_produto')  # Ou para uma página de detalhes do produto
 
 
 @app.route('/imagem_produto/<int:cod_produto>')
@@ -1026,5 +1129,53 @@ def imagem_perfil(id_cliente):
         return redirect(url_for('static', filename='img/default-avatar.png'))
 
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8080)  # Define o host como localhost e a porta como 8080
+@app.route('/relatorio', methods=['GET', 'POST'])
+def relatorio():
+    # Verifica se o usuário está logado e possui um ID de cliente válido
+    if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
+        return redirect('/logar')  # Redireciona para a página de login
+    
+    # Verifica se o tipo do usuário é 'adm'
+    if session['usuario_logado']['tipo'] == "cliente":
+        return redirect("/")  # Redireciona para a rota "/"
+    relatorio = Relatorio()
+    relatorio_dados = []
+    valor_total_geral = 0
+    total_pedidos = 0
+    cancelados_dados = []
+    valor_total_cancelado = 0
+    total_cancelados = 0
+
+    if request.method == 'POST':
+        data_inicial = request.form['data_inicial']
+        data_final = request.form['data_final']
+        relatorio_dados, valor_total_geral, total_pedidos = relatorio.exibir_relatorio_entregue(data_inicial, data_final)
+        cancelados_dados, valor_total_cancelado, total_cancelados = relatorio.exibir_relatorio_cancelado(data_inicial, data_final)
+
+    return render_template("relatorio.html", 
+                           relatorio_dados=relatorio_dados, 
+                           valor_total_geral=valor_total_geral, 
+                           total_pedidos=total_pedidos,
+                           cancelados_dados=cancelados_dados,
+                           valor_total_cancelado=valor_total_cancelado,
+                           total_cancelados=total_cancelados)
+
+
+
+
+
+@app.route('/usuario/<int:id_cliente>', methods=['GET'])
+def usuario(id_cliente):
+    if 'usuario_logado' not in session:
+        return redirect('/logar')  # Redireciona se o usuário não estiver logado
+    
+    usuario = Usuario()
+    dados_cliente = usuario.tela_usuario(id_cliente)
+    
+    return render_template('usuario.html', cliente=dados_cliente)  # Renderiza o template com os dados do cliente
+
+
+
+
+
+app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080

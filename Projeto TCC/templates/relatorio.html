@@ -5,8 +5,96 @@
 
 {% extends "modelo-adm.html" %}
 {% block conteudo %}
+<link rel="stylesheet" href="../static/styles/relatorio.css">
+<section class="filtro-relatorio">
+    <h2>Relatório de Vendas</h2>
+    <h3>Filtrar por Período</h3>
+    <form method="POST" action="{{ url_for('relatorio') }}">
+        <label class="label-data-inicial" for="data-inicial">Data Inicial:</label>
+        <input type="date" class="data-inicial" name="data_inicial" required>
 
+        <label class="label-data-final" for="data-final">Data Final:</label>
+        <input type="date" class="data-final" name="data_final" required>
 
+        <button type="submit" class="botao-gerar-relatorio">Gerar Relatório</button>
+    </form>
+</section>
+
+<div class="relatorio-vendas">
+
+    <section class="resumo-relatorio">
+        <h3>Pedidos Entregues</h3>
+
+        {% if relatorio_dados %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in relatorio_dados %}
+                <tr>
+                    <td>{{ pedido[0] }}</td>
+                    <td>{{ pedido[1] }}</td>
+                    <td>{{ pedido[2] }}</td>
+                    <td>{{ pedido[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="spanpontilhado">
+            <span>Valor Total: R$ {{ valor_total_geral }}</span> <br>
+            <span>Pedidos Entregues: {{ total_pedidos }}</span>
+        </div>
+
+        {% else %}
+        <p>Nenhum relatório disponível. Por favor, insira um período.</p>
+        {% endif %}
+    </section>
+
+    <section class="resumo-cancelados">
+        <h3>Pedidos Cancelados</h3>
+
+        {% if cancelados_dados %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in cancelados_dados %}
+                <tr>
+                    <td>{{ pedido[0] }}</td>
+                    <td>{{ pedido[1] }}</td>
+                    <td>{{ pedido[2] }}</td>
+                    <td>{{ pedido[5] }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: center; font-weight: bolder;" >{{ pedido[4] }}</td>      
+                </tr>
+                
+                
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="spanpontilhado">
+            <span>Valor Cancelado: R$ {{ valor_total_cancelado }}</span> <br>
+            <span>Pedidos Cancelados: {{ total_cancelados }}</span>
+        </div>
+        
+        {% else %}
+        <p>Nenhum pedido cancelado no período selecionado.</p>
+        {% endif %}
+    </section>
+</div>
 
 
 {% endblock %}

@@ -1,6 +1,7 @@
 {% extends "modelo-adm.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/inicial.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <body>
 
@@ -16,63 +17,48 @@
           <div class="produto-item">
             <form action="/editar_produto" method="post">
               <button value="{{ registro.id_produto }}" name="btn-produto" type="submit">
-                <div class="card-produtos">
+                <div class="card-produtos" style="justify-content: flex-start;">
                   <img src="{{ registro.imagem_produto }}" alt="">
                   <span>{{ registro.nome_produto }}</span>
-                  <span>R${{ registro.preco }}</span>
+                  <div class="icone-container">
                 </div>
+                </div>
+                {% if registro.habilitado %}
+                      <i class="fa fa-check btn-desabilitar" data-id="{{ registro.id_produto }}" title="Desabilitar" style="font-size: 40px; color: rgb(0, 109, 0);"></i>
+                      <i class="fa fa-times btn-habilitar" data-id="{{ registro.id_produto }}" style="display:none; font-size: 40px; color: rgb(187, 0, 0);" title="Habilitar"></i>
+                    {% else %}
+                    <i class="fa fa-times btn-habilitar" data-id="{{ registro.id_produto }}" title="Habilitar" style="font-size: 40px; color: rgb(187, 0, 0);"></i>
+                    <i class="fa fa-check btn-desabilitar" data-id="{{ registro.id_produto }}" style="display:none; font-size: 40px; color: rgb(0, 109, 0);" title="Desabilitar"></i>                    
+                    {% endif %}
               </button>
             </form>
-
-            {% if registro.habilitado %}
-            <button class="btn-desabilitar" data-id="{{ registro.id_produto }}">
-              Desabilitar
-            </button>
-            <button class="btn-habilitar" data-id="{{ registro.id_produto }}" style="display:none;">
-              Habilitar
-            </button>
-            {% else %}
-            <button class="btn-habilitar" data-id="{{ registro.id_produto }}">
-              Habilitar
-            </button>
-            <button class="btn-desabilitar" data-id="{{ registro.id_produto }}" style="display:none;">
-              Desabilitar
-            </button>
-            {% endif %}
           </div>
           {% endfor %}
         </div>
+        
 
         <div class="produtos" id="marmitas-lista">
           {% for registro in lista_marmitas %}
           <div class="produto-item">
             <form action="/editar_marmita" method="post">
               <button value="{{ registro.id_marmita }}" name="btn-marmita" type="submit">
-                <div class="card-produtos">
+                <div class="card-produtos" style="justify-content: flex-start;">
                   <img src="{{ registro.imagem_marmita }}" alt="">
                   <span>{{ registro.nome_marmita }}</span>
-                  <span>R${{ registro.preco }}</span>
                 </div>
+                {% if registro.habilitado %}
+              <i class="fa fa-check btn-desabilitar-marmita" data-id="{{ registro.id_marmita }}" title="Desabilitar" style="font-size: 40px; color: rgb(0, 109, 0);"></i>
+              <i class="fa fa-times  btn-habilitar-marmita" data-id="{{ registro.id_marmita }}" style="display:none; font-size: 40px; color: rgb(187, 0, 0);" title="Habilitar"></i>
+            {% else %}
+              <i class="fa fa-times btn-habilitar-marmita" data-id="{{ registro.id_marmita }}" title="Habilitar" style="font-size: 40px; color: rgb(187, 0, 0);"></i>
+              <i class="fa fa-check btn-desabilitar-marmita" data-id="{{ registro.id_marmita }}" style="display:none; font-size: 40px; color: rgb(0, 109, 0);" title="Desabilitar"></i>
+            {% endif %}
+          {% endfor %}
               </button>
+              
             </form>
 
-            {% if registro.habilitado %}
-            <button class="btn-desabilitar-marmita" data-id="{{ registro.id_marmita }}">
-              Desabilitar
-            </button>
-            <button class="btn-habilitar-marmita" data-id="{{ registro.id_marmita }}" style="display:none;">
-              Habilitar
-            </button>
-            {% else %}
-            <button class="btn-habilitar-marmita" data-id="{{ registro.id_marmita }}">
-              Habilitar
-            </button>
-            <button class="btn-desabilitar-marmita" data-id="{{ registro.id_marmita }}" style="display:none;">
-              Desabilitar
-            </button>
-            {% endif %}
-          </div>
-          {% endfor %}
+            
         </div>
 
       </div>

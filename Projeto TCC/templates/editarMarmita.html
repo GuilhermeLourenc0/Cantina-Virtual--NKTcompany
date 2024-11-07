@@ -4,77 +4,74 @@
 
 <body>
     <main>
-        <h1>Atualizar Marmitas</h1>
         <table>
-            <thead>
-                <tr>
-                    <th>Marmita</th>
-                    <th>Preço</th>
-                    <th>Descrição</th>
-                    <th>Imagem Atual</th>
-                    <th>Nova Imagem</th>
-                    <th>Tamanho</th>
-                    <th>Acompanhamentos</th>
-                    <th>Guarnições</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
             <tbody>
                 {% for marmita in lista_marunica %}
                 <tr>
-                    <form id="form-marmita-{{ marmita.id_marmita }}" enctype="multipart/form-data" onsubmit="atualizarMarmita(event, {{ marmita.id_marmita }})>
-                        <input type= " hidden" name="id_marmita" value="{{ marmita.id_marmita }}">
+                    <td>
+                        <form id="form-marmita-{{ marmita.id_marmita }}" enctype="multipart/form-data" onsubmit="atualizarMarmita(event, {{ marmita.id_marmita }})">
+                            <input type="hidden" name="id_marmita" value="{{ marmita.id_marmita }}">
+                            
+                            <div style="display: flex; flex-direction: column; align-items: center; position: relative; border: 3px solid rgb(165, 165, 165); border-radius: 12px; width: 253px;">
+                                <!-- Imagem atual da marmita -->
+                                <img src="{{ marmita.imagem_marmita }}" 
+                                     alt="Imagem da Marmita {{ marmita.nome_marmita }}" 
+                                     style="width: 250px; height: 250px; cursor: pointer; border-radius: 8px;"
+                                     onclick="document.getElementById('inputImagem{{ marmita.id_marmita }}').click();" 
+                                     id="previewImagem{{ marmita.id_marmita }}">
 
-                        <td>
-                            <input type="text" name="nome" value="{{ marmita.nome_marmita }}" required>
-                        </td>
-                        <td>
-                            <input type="text" name="preco" value="{{ marmita.preco }}" required>
-                        </td>
-                        <td>
-                            <textarea name="descricao" required>{{ marmita.descricao }}</textarea>
-                        </td>
-                        <td>
-                            <img id="imagem-atual-{{ marmita.id_marmita }}" src="{{ marmita.url_img }}"
-                                alt="Imagem da Marmita {{ marmita.nome_marmita }}" style="width: 100px; height: auto;">
-                        </td>
-                        <td>
-                            <input type="file" name="imagem" accept="image/png, image/jpeg">
-                        </td>
-                        <td>
-                            <select name="tamanho" required>
-                                <option value="Pequena" {% if marmita.tamanho=='Pequena' %}selected{% endif %}>Pequena
-                                </option>
-                                <option value="Média" {% if marmita.tamanho=='Média' %}selected{% endif %}>Média
-                                </option>
-                                <option value="Grande" {% if marmita.tamanho=='Grande' %}selected{% endif %}>Grande
-                                </option>
-                            </select>
-                        </td>
+                                <!-- Input para selecionar nova imagem -->
+                                <input type="file" name="imagem" accept="image/png, image/jpeg" 
+                                       id="inputImagem{{ marmita.id_marmita }}" style="display: none;" 
+                                       onchange="previewImagem(event, '{{ marmita.id_marmita }}')">
 
-                        <td>
-                            {% for acompanhamento in todos_acompanhamentos %}
-                            <label>
-                                <input type="checkbox" name="acompanhamentos[]" value="{{ acompanhamento.id }}" {% if
-                                    acompanhamento.id in marmita.acompanhamentos %}checked{% endif %}>
-                                {{ acompanhamento.nome }}
-                            </label><br>
-                            {% endfor %}
-                        </td>
-                        <td>
-                            {% for guarnicao in todas_guarnicoes %}
-                            <label>
-                                <input type="checkbox" name="guarnicoes[]" value="{{ guarnicao.id }}" {% if guarnicao.id
-                                    in marmita.guarnicoes %}checked{% endif %}>
-                                {{ guarnicao.nome }}
-                            </label><br>
-                            {% endfor %}
-                        </td>
-
-
-                        <td>
-                            <button type="submit">Atualizar Marmita</button>
-                        </td>
+                                <!-- Ícone de edição -->
+                                <img src="../static/img/btn-editar.png" 
+                                     alt="Editar imagem" 
+                                     style="position: absolute; top: -13px; left: -15px; width: 30px; height: 30px; border-radius: 50%; background-color: white; padding: 5px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); cursor: pointer;"
+                                     onclick="document.getElementById('inputImagem{{ marmita.id_marmita }}').click();">
+                            </div>
+                    </td>
+                    <td>
+                        <input type="text" name="nome" value="{{ marmita.nome_marmita }}" required>
+                    </td>
+                    <td>
+                        <input type="text" name="preco" value="{{ marmita.preco }}" required>
+                    </td>
+                    <td>
+                        <textarea name="descricao" required>{{ marmita.descricao }}</textarea>
+                    </td>
+                    <td>
+                        <select name="tamanho" required>
+                            <option value="Pequena" {% if marmita.tamanho == 'Pequena' %}selected{% endif %}>Pequena</option>
+                            <option value="Média" {% if marmita.tamanho == 'Média' %}selected{% endif %}>Média</option>
+                            <option value="Grande" {% if marmita.tamanho == 'Grande' %}selected{% endif %}>Grande</option>
+                        </select>
+                    </td>
+                    <td class="acompanhamento-container">
+                        <span class="nomeguaracomp">Acompanhamentos</span>
+                        {% for acompanhamento in todos_acompanhamentos %}
+                        
+                        <label>
+                            <input type="checkbox" name="acompanhamentos[]" value="{{ acompanhamento.id }}" {% if acompanhamento.id in marmita.acompanhamentos %}checked{% endif %}>
+                            <span>{{ acompanhamento.nome }}</span>
+                        </label>
+                        {% endfor %}
+                    </td>
+                    
+                    <td class="guarnicao-container">
+                        <span class="nomeguaracomp">Guarnições</span>
+                        {% for guarnicao in todas_guarnicoes %}
+                        
+                        <label>
+                            <input type="checkbox" name="guarnicoes[]" value="{{ guarnicao.id }}" {% if guarnicao.id in marmita.guarnicoes %}checked{% endif %}>
+                            <span>{{ guarnicao.nome }}</span>
+                        </label>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <button type="submit">Atualizar Marmita</button>
+                    </td>
                     </form>
                 </tr>
                 {% endfor %}
@@ -112,6 +109,12 @@
                 alert('Erro ao tentar atualizar a marmita.');
             });
     }
+
+function previewImagem(event, codProduto) {
+            var preview = document.getElementById('previewImagem' + codProduto);
+            preview.src = URL.createObjectURL(event.target.files[0]);
+        }
+
 </script>
 
 {% endblock %}
