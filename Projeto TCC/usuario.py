@@ -89,6 +89,8 @@ class Usuario:
             return False
 
 
+
+
     def exibir_cursos(self):
         """
         Retorna uma lista com todos os cursos disponíveis no sistema, consultando a tabela `tb_curso`.
@@ -158,39 +160,56 @@ class Usuario:
 
 
 
-    def atualizar_dados(self, id_cliente, telefone, email, senha):
+    def atualizar_dados(self, id_cliente, telefone=None, email=None, senha=None):
         """
         Atualiza o telefone, email e senha do administrador e define 'primeiro_login' como False.
-        
+
         Parâmetros:
         - id_cliente: ID do cliente (administrador) a ser atualizado
         - telefone: Novo número de telefone
         - email: Novo email
         - senha: Nova senha em texto puro que será criptografada para o banco de dados
-        
+
         Retorno:
         - True se a atualização for bem-sucedida, False caso contrário
         """
-        # Hash da senha antes de armazenar no banco
-        hashed_password = sha256(senha.encode()).hexdigest()
-        
         # Conecta ao banco de dados
-        mydb = Conexao.conectar()  
+        mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
         try:
-            # Query para atualizar os dados do administrador e marcar `primeiro_login` como `False`
-            sql = """
-                UPDATE tb_cliente
-                SET telefone = %s, email = %s, senha = %s, primeiro_login = %s
-                WHERE id_cliente = %s
-            """
-            valores = (telefone, email, hashed_password, False, id_cliente)
+            # Inicializa a lista de campos para atualizar e valores correspondentes
+            campos = []
+            valores = []
 
+            # Adiciona os campos a serem atualizados dinamicamente
+            if telefone is not None:
+                campos.append("telefone = %s")
+                valores.append(telefone)
+
+            if email is not None:
+                campos.append("email = %s")
+                valores.append(email)
+
+            if senha is not None:
+                hashed_password = sha256(senha.encode()).hexdigest()
+                campos.append("senha = %s")
+                valores.append(hashed_password)
+
+            # Define `primeiro_login` como False para cada atualização
+            campos.append("primeiro_login = %s")
+            valores.append(False)
+
+            # Adiciona o ID do cliente no final dos valores
+            valores.append(id_cliente)
+
+            # Monta a query SQL dinâmica
+            sql = f"UPDATE tb_cliente SET {', '.join(campos)} WHERE id_cliente = %s"
+            
             # Executa a query
             mycursor.execute(sql, valores)
             mydb.commit()
-            
+
             # Atualiza o atributo `primeiro_login` localmente
             self.primeiro_login = False
             return True
@@ -204,6 +223,36 @@ class Usuario:
             mydb.close()
 
 
+    def resetar_primeiro_login(self, id_cliente):
+            """
+            Reseta a flag 'primeiro_login' do usuário para 1 no banco de dados.
+            
+            Parâmetros:
+            - id_cliente: ID do cliente a ser atualizado
+            
+            Retorno:
+            - True se a atualização for bem-sucedida, False caso contrário
+            """
+            try:
+                mydb = Conexao.conectar()
+                mycursor = mydb.cursor()
+
+                # Query para atualizar o campo 'primeiro_login' para 1
+                sql = "UPDATE tb_cliente SET primeiro_login = 1 WHERE id_cliente = %s"
+                mycursor.execute(sql, (id_cliente,))
+                mydb.commit()
+
+                print(f"primeiro_login do cliente {id_cliente} foi atualizado para 1.")
+                return True
+
+            except Exception as e:
+                print("Erro ao atualizar o primeiro_login:", e)
+                mydb.rollback()
+                return False
+
+            finally:
+                mycursor.close()
+                mydb.close()
 
 
     def logout(self, id_cliente):

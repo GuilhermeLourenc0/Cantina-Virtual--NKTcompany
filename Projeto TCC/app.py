@@ -140,14 +140,11 @@ def cadastro():
         tipo = "cliente"
 
         usuario = Usuario()
-        
-        # Verificação se o e-mail já está cadastrado
-        if usuario.verificar_email_existente(email):
-            flash("E-mail já utilizado. Por favor, use um e-mail diferente.", "error")
-            return redirect("/cadastro")
-
         if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
+            # Gerar um código de verificação aleatório com 4 dígitos, incluindo zeros à esquerda
             verification_code = str(random.randint(90, 9999)).zfill(4)
+
+            # Enviar o código de verificação via SMS
             message = client.messages.create(
                 to=telefone,
                 from_="+13195190041",
@@ -155,10 +152,12 @@ def cadastro():
             )
             print(message.sid)
 
+            # Armazenar o telefone e o código de verificação na sessão
             session['telefone_verificacao'] = telefone
             session['verification_code'] = verification_code
             usuario.logar(email, senha)
             if usuario.logado:
+                # Se o login for bem-sucedido, armazena os dados do usuário na sessão
                 session['usuario_logado'] = {
                     "nome": usuario.nome, 
                     "email": usuario.email, 
@@ -167,38 +166,20 @@ def cadastro():
                     "tipo": usuario.tipo,
                     "senha": usuario.senha
                 }
+            # Redireciona para a tela de verificação
             return redirect("/verificacao")
         else:
             return redirect("/cadastro")
 
 
-# Rota para a tela de verificação
-@app.route("/verificacao", methods=["GET", "POST"])
-def verificacao():
-    if request.method == 'GET':
-        return render_template("verificacao.html")  # Renderiza a página onde o usuário insere o código
-    else:
-        codigo1 = request.form["codigo1"]
-        codigo2 = request.form["codigo2"]
-        codigo3 = request.form["codigo3"]
-        codigo4 = request.form["codigo4"]
-        codigo_inserido = codigo1 + codigo2 + codigo3 + codigo4
-        verification_code = session.get('verification_code')
-
-        if codigo_inserido == verification_code:
-            return redirect("/")  # Redireciona para a página principal após a verificação
-        else:
-            return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
 
 
 @app.route("/logar", methods=['GET', 'POST'])
 def logar():
     if request.method == 'GET':
-        # Remove a variável de erro da sessão e passa para o template
         erro = session.pop('login_erro', False)
         return render_template('login.html', success=False, erro=erro)
     
-    # Se for um método POST
     senha = request.form['senha']
     email = request.form['email']
     usuario = Usuario()
@@ -218,19 +199,11 @@ def logar():
         if usuario.tipo != 'cliente' and usuario.primeiro_login:
             return redirect("/atualizar_dados_iniciais")
         
-        # Define a variável de sessão para exibir o alerta de sucesso
         session['login_sucesso'] = True
-        
         return redirect("/")
     
-    # Define a variável de sessão para exibir o alerta de erro
     session['login_erro'] = True
     return redirect("/logar")
-
-
-
-
-
 
 
 @app.route("/atualizar_dados_iniciais", methods=["GET", "POST"])
@@ -238,34 +211,88 @@ def atualizar_dados_iniciais():
     if request.method == 'GET':
         return render_template("atualizar_dados_iniciais.html")
 
-    # Processa o formulário quando enviado via POST
     telefone = request.form['telefone']
     email = request.form['email']
     senha = request.form['senha']
-
-    # Atualiza os dados do administrador
     usuario = Usuario()
     id_cliente = session['usuario_logado']['id_cliente']
-    atualizacao_sucesso = usuario.atualizar_dados(id_cliente, telefone, email, senha)
 
-    if not atualizacao_sucesso:
-        return render_template("atualizar_dados_iniciais.html", error="Erro ao atualizar dados. Tente novamente.")
-
-    # Gera e envia o código de verificação
+    usuario.atualizar_dados(id_cliente, telefone=telefone, email=None, senha=None)
+    
+    session['dados_pendentes'] = {"email": email, "senha": senha}
     verification_code = str(random.randint(1000, 9999)).zfill(4)
     session['verification_code'] = verification_code
     session['telefone_verificacao'] = telefone
-
-    # Envia mensagem de verificação
+    session['em_verificacao'] = True  # Marca o status de verificação
+    
     message = client.messages.create(
         to=telefone,
         from_="+13195190041",
         body=f'Seu código é: {verification_code}'
     )
     print("Código de verificação enviado:", message.sid)
-
-    # Redireciona para a rota de verificação
+    
     return redirect("/verificacao")
+
+
+@app.route("/verificacao", methods=["GET", "POST"])
+def verificacao():
+    # Garantir que o usuário está logado antes de continuar
+    if 'usuario_logado' not in session:
+        return redirect("/logar")
+    
+    if request.method == 'GET':
+        if not session.get('em_verificacao'):
+            return redirect("/logar")
+        return render_template("verificacao.html")
+
+    codigo_inserido = request.form["codigo1"] + request.form["codigo2"] + request.form["codigo3"] + request.form["codigo4"]
+    verification_code = session.get('verification_code')
+
+    if codigo_inserido == verification_code:
+        dados_pendentes = session.pop('dados_pendentes', {})
+        email = dados_pendentes.get('email')
+        senha = dados_pendentes.get('senha')
+        id_cliente = session['usuario_logado']['id_cliente']
+
+        if id_cliente:  # Verifique se o id_cliente existe
+            usuario = Usuario()
+            usuario.atualizar_dados(id_cliente, telefone=None, email=email, senha=senha)
+
+        session.pop('em_verificacao', None)  # Remove a flag de verificação
+        return redirect("/")
+
+    else:
+        # Se o código de verificação estiver errado, reseta o primeiro_login
+        id_cliente = session.get('usuario_logado', {}).get('id_cliente')
+
+        if id_cliente:  # Só reseta se o id_cliente existir
+            usuario = Usuario()
+            usuario.resetar_primeiro_login(id_cliente)  # Reseta o primeiro_login no banco de dados
+
+        session.pop('em_verificacao', None)  # Remove a flag de verificação
+        return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
+
+
+
+
+
+@app.before_request
+def check_verification_status():
+    # Não remove a sessão enquanto o usuário estiver nas páginas de verificação ou atualização de dados
+    if 'em_verificacao' in session:
+        if request.endpoint not in ['verificacao', 'atualizar_dados_iniciais', 'logar']:
+            # Somente remove a chave 'usuario_logado' quando o usuário não estiver em processo de verificação
+            session.pop('usuario_logado', None)  # Remove o login do usuário
+            session.pop('em_verificacao', None)  # Limpa a flag de verificação
+
+
+
+
+
+
+
+
 
 
 
