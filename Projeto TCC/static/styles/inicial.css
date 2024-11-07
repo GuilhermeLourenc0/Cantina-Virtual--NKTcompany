@@ -175,14 +175,13 @@ h2 {
 }
 
 .produto-nome {
-    font-size: 1rem;
-    /* Ajustado para mobile */
+    font-size: 1.2rem; 
     font-weight: 500;
     color: #333;
 }
 
 .produto-desc {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
 }
 
 .produto-preco {

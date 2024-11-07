@@ -15,9 +15,9 @@
 }
 
 h2{
-    font-weight: bolder;
+    font-weight: bolder !important;
     text-align: left;
-    font-size: 30px;
+    font-size: 30px !important;
 }
 
 .container-principal{
@@ -158,4 +158,8 @@ form a:hover{
 
 .semConta{
     margin-top: 15px;
+}
+
+.espacamento{
+    display: none;
 }

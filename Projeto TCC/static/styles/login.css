@@ -14,7 +14,7 @@
 }
 
 h2{
-    font-weight: bolder;
+    font-weight: bolder !important;
     text-align: left;
 }
 
@@ -169,4 +169,8 @@ form a:hover{
     justify-content: center;
     opacity: 0;            /* Inicialmente invisível */
     animation: slideIn 0.5s forwards; /* Adiciona animação ao aparecer */
+}
+
+.espacamento{
+    display: none;
 }
