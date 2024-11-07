@@ -237,7 +237,6 @@ def atualizar_dados_iniciais():
 
 @app.route("/verificacao", methods=["GET", "POST"])
 def verificacao():
-    # Garantir que o usuário está logado antes de continuar
     if 'usuario_logado' not in session:
         return redirect("/logar")
     
@@ -246,6 +245,7 @@ def verificacao():
             return redirect("/logar")
         return render_template("verificacao.html")
 
+    # Verifica o código inserido
     codigo_inserido = request.form["codigo1"] + request.form["codigo2"] + request.form["codigo3"] + request.form["codigo4"]
     verification_code = session.get('verification_code')
 
@@ -255,7 +255,7 @@ def verificacao():
         senha = dados_pendentes.get('senha')
         id_cliente = session['usuario_logado']['id_cliente']
 
-        if id_cliente:  # Verifique se o id_cliente existe
+        if id_cliente:
             usuario = Usuario()
             usuario.atualizar_dados(id_cliente, telefone=None, email=email, senha=senha)
             
@@ -263,18 +263,17 @@ def verificacao():
             session['usuario_logado']['email'] = email
             session['usuario_logado']['senha'] = senha
 
-        session.pop('em_verificacao', None)  # Remove a flag de verificação
-        return redirect("/")  # Redireciona para a página inicial após a atualização bem-sucedida
+        session.pop('em_verificacao', None)
+        return redirect("/")  # Redireciona após a verificação bem-sucedida
 
     else:
-        # Se o código de verificação estiver errado, reseta o primeiro_login
+        # Código incorreto, redefinir primeiro_login
         id_cliente = session.get('usuario_logado', {}).get('id_cliente')
-
-        if id_cliente:  # Só reseta se o id_cliente existir
+        if id_cliente:
             usuario = Usuario()
-            usuario.resetar_primeiro_login(id_cliente)  # Reseta o primeiro_login no banco de dados
-
-        session.pop('em_verificacao', None)  # Remove a flag de verificação
+            usuario.resetar_primeiro_login(id_cliente)
+        
+        session.pop('em_verificacao', None)
         return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
 
 
@@ -284,12 +283,13 @@ def verificacao():
 
 @app.before_request
 def check_verification_status():
-    # Não remove a sessão enquanto o usuário estiver nas páginas de verificação ou atualização de dados
-    if 'em_verificacao' in session:
+    # Verifica se a verificação está em andamento
+    if session.get('em_verificacao'):
+        # Evita redefinir a sessão enquanto o usuário está nas páginas de verificação ou atualização de dados
         if request.endpoint not in ['verificacao', 'atualizar_dados_iniciais', 'logar']:
-            # Somente remove a chave 'usuario_logado' quando o usuário não estiver em processo de verificação
             session.pop('usuario_logado', None)  # Remove o login do usuário
             session.pop('em_verificacao', None)  # Limpa a flag de verificação
+
 
 
 

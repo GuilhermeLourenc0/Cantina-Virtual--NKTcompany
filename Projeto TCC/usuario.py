@@ -163,26 +163,14 @@ class Usuario:
     def atualizar_dados(self, id_cliente, telefone=None, email=None, senha=None):
         """
         Atualiza o telefone, email e senha do administrador e define 'primeiro_login' como False.
-
-        Parâmetros:
-        - id_cliente: ID do cliente (administrador) a ser atualizado
-        - telefone: Novo número de telefone
-        - email: Novo email
-        - senha: Nova senha em texto puro que será criptografada para o banco de dados
-
-        Retorno:
-        - True se a atualização for bem-sucedida, False caso contrário
         """
-        # Conecta ao banco de dados
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
         try:
-            # Inicializa a lista de campos para atualizar e valores correspondentes
             campos = []
             valores = []
 
-            # Adiciona os campos a serem atualizados dinamicamente
             if telefone is not None:
                 campos.append("telefone = %s")
                 valores.append(telefone)
@@ -196,21 +184,16 @@ class Usuario:
                 campos.append("senha = %s")
                 valores.append(hashed_password)
 
-            # Define `primeiro_login` como False para cada atualização
             campos.append("primeiro_login = %s")
             valores.append(False)
-
-            # Adiciona o ID do cliente no final dos valores
             valores.append(id_cliente)
 
-            # Monta a query SQL dinâmica
             sql = f"UPDATE tb_cliente SET {', '.join(campos)} WHERE id_cliente = %s"
             
-            # Executa a query
             mycursor.execute(sql, valores)
             mydb.commit()
 
-            # Atualiza o atributo `primeiro_login` localmente
+            # Atualiza o atributo localmente
             self.primeiro_login = False
             return True
         except Exception as e:
@@ -218,9 +201,9 @@ class Usuario:
             mydb.rollback()
             return False
         finally:
-            # Fecha o cursor e a conexão
             mycursor.close()
             mydb.close()
+
 
 
     def resetar_primeiro_login(self, id_cliente):
