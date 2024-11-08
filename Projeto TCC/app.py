@@ -1268,11 +1268,13 @@ def usuario(id_cliente):
     if 'usuario_logado' not in session:
         return redirect('/logar')  # Redireciona se o usuário não estiver logado
     
-    usuario = Usuario()
-    dados_cliente = usuario.tela_usuario(id_cliente)
+    usuario = Usuario()  # Supondo que 'Usuario' seja uma classe que manipula os dados do cliente
+    dados_cliente = usuario.tela_usuario(id_cliente)  # Método que retorna os dados do cliente
     
-    return render_template('usuario.html', cliente=dados_cliente)  # Renderiza o template com os dados do cliente
-
+    # Adiciona a URL da imagem de perfil no contexto
+    imagem_perfil_url = url_for('imagem_perfil', id_cliente=id_cliente)
+    
+    return render_template('usuario.html', cliente=dados_cliente, imagem_perfil_url=imagem_perfil_url)
 
 
  
