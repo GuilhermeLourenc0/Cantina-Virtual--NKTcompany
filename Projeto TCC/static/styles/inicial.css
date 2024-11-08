@@ -60,6 +60,7 @@ html {
     /* Alinha os itens verticalmente ao centro */
     background-color: rgba(207, 34, 38, 1);
     /* Cor de fundo */
+    
 }
 
 
@@ -423,6 +424,10 @@ input:checked+.slider:before {
 .carousel-item img {
     height: 600px;
     margin-bottom: 20px;
+}
+
+.carrossel {
+    padding-top: 70px;
 }
 
 .dark-mode {
