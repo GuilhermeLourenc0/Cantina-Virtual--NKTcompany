@@ -1177,5 +1177,3 @@ def usuario(id_cliente):
 
 
 app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
-
-
