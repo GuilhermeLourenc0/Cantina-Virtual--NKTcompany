@@ -11,7 +11,7 @@
 <div class="perfil-info">
     <span class="nome">{{ cliente.nome_comp }}</span><br>
     <span class="curso">{{ cliente.nome_curso }}</span><br>
-    <a href="https://api.whatsapp.com/send/?phone={{ cliente.telefone }}&text&type=phone_number&app_absent=0" target="_blank">
+    <a href="https://wa.me/{{ cliente.telefone }}">
         <span class="dados-pessoais">{{ cliente.telefone }}</span>
     </a>
 
@@ -22,7 +22,57 @@
     <section class="resumo-relatorio">
         <h3>Últimos Pedidos</h3>
 
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Item</th>
+                </tr>
+            </thead>
+            <tbody>
+  
+                <tr>
+                    <td>23/12/2024</td>
+                    <td>19,90</td>
+                    <td>
+                        <ul>
+                            <li>1x Bolinha de Frango c/ Catupiry</li>
+                            <li>1x Suco de Laranja</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>23/12/2024</td>
+                    <td>23,90</td>
+                    <td>
+                        <ul>
+                            <li>3x Trento Chocolate Branco</li>
+                            <li>1x Trident Melancia</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>23/12/2024</td>
+                    <td>14,90</td>
+                    <td>
+                        <ul>
+                            <li>1x Hamburguinho c/ cheddar</li>
+                            <li>1x Coca-Cola</li>
+                        </ul>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <div class="spanpontilhado">
+            <span>Valor Total: R$: 58,90</span> <br>
+            <span>Pedidos Entregues: 3</span>
+        </div>
+
+        
     </section>
 </div>
 {% endblock %}
-
