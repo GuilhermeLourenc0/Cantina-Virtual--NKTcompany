@@ -206,12 +206,10 @@ def verificacao():
         return render_template("verificacao.html")
 
     # Recupera o código inserido pelo usuário
-    codigo_inserido = "".join([
-        request.form["codigo1"], 
-        request.form["codigo2"], 
-        request.form["codigo3"], 
-        request.form["codigo4"]
-    ])
+    codigo_inserido = "".join([request.form["codigo1"], 
+                               request.form["codigo2"], 
+                               request.form["codigo3"], 
+                               request.form["codigo4"]])
     verification_code = session['dados_cadastro'].get('verification_code')
     tipo_verificacao = session.get('tipo_verificacao')
 
@@ -232,10 +230,24 @@ def verificacao():
                     dados_cadastro["tipo"]
                 )
 
+                # Realiza o login após o cadastro bem-sucedido
+                usuario.logar(dados_cadastro["email"], dados_cadastro["senha"])
+                if usuario.logado:
+                    # Se o login for bem-sucedido, armazena os dados do usuário na sessão
+                    session['usuario_logado'] = {
+                        "nome": usuario.nome, 
+                        "email": usuario.email, 
+                        "tel": usuario.tel, 
+                        "id_cliente": usuario.id_cliente, 
+                        "tipo": usuario.tipo,
+                        "senha": usuario.senha
+                    }
+
             # Limpa os dados de verificação relacionados ao cadastro
             session.pop('verification_code', None)
             session.pop('tipo_verificacao', None)
             return redirect("/")
+
         elif tipo_verificacao == "atualizar_dados_iniciais":
             usuario = Usuario()
             id_cliente = session['usuario_logado']['id_cliente']
@@ -251,6 +263,7 @@ def verificacao():
         session.pop('usuario_logado', None)
         session.pop('verificacao_incompleta', None)
         return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
+
 
 
 
