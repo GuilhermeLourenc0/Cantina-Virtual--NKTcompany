@@ -1,0 +1,75 @@
+    /* Definições globais */
+/* Definições globais */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos da área de cabeçalho (imagem de fundo) */
+.header {
+    position: relative;
+    width: 100%;
+    height: 150px; /* Ajuste a altura conforme necessário */
+    background-image: url('https://br.web.img2.acsta.net/r_654_368/img/12/ce/12ceb64b011a2a629879b4d3b0a256af.png');  /* Coloque o caminho da sua imagem de fundo */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Imagem de perfil */
+.img-perfil {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;  /* Tamanho da imagem de perfil */
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid white;  /* Borda branca */
+    z-index: 1;  /* Garante que a imagem de perfil fique sobreposta à imagem de fundo */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);  /* Sombra leve para destacar a imagem */
+}
+
+/* Conteúdo abaixo da imagem de perfil */
+.perfil-info {
+    text-align: center;
+    margin-top: 80px;  /* Ajuste o valor para colocar o conteúdo corretamente abaixo da imagem de perfil */
+}
+
+/* Nome e curso do cliente */
+.perfil-info .nome {
+    font-size: 24px;
+    font-weight: bold;
+
+}
+
+.perfil-info .curso {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Subtítulo "Informações Pessoais" */
+.informacoes-pessoais {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+/* Estilo dos dados (telefone e email) */
+.dados-pessoais {
+    font-size: 16px;
+    color: #444;
+}
+
+.relatorio-vendas {
+    width: 300px; /* Largura do recibo */
+    margin: auto;
+    padding: 10px;
+    background: url('../img/fundoNotafiscal.jpg'); /* Fundo branco com transparência */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+}
