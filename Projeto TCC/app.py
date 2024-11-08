@@ -113,6 +113,8 @@ def marmitas():
 
 @app.route("/inicialadm")
 def inicialadm():
+    # Verifica e limpa a sessão se necessário
+    verificar_sessao()
     # Verifica se o usuário está logado e possui um ID de cliente válido
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
@@ -129,6 +131,8 @@ def inicialadm():
 
 @app.route("/adm")
 def principal_adm():
+    # Verifica e limpa a sessão se necessário
+    verificar_sessao()
     # Verifica se o usuário está logado e possui um ID de cliente válido
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
@@ -146,6 +150,8 @@ def principal_adm():
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
     if request.method == 'GET':
+        # Verifica e limpa a sessão se necessário
+        verificar_sessao()
         usuario = Usuario()
         cursos = usuario.exibir_cursos()
         return render_template("cadastrar.html", cursos=cursos)
@@ -192,6 +198,8 @@ def cadastro():
 @app.route("/logar", methods=['GET', 'POST'])
 def logar():
     if request.method == 'GET':
+        # Verifica e limpa a sessão se necessário
+        verificar_sessao()
         erro = session.pop('login_erro', False)
         return render_template('login.html', success=False, erro=erro)
     
@@ -238,6 +246,8 @@ def atualizar_dados_iniciais():
         return redirect("/logar")  # Se não há usuário ou verificação incompleta, vai para o login
 
     if request.method == 'GET':
+        # Verifica e limpa a sessão se necessário
+        verificar_sessao()
         return render_template("atualizar_dados_iniciais.html")
 
     # Se for POST, obtém dados do formulário
