@@ -185,6 +185,39 @@ class Usuario:
             mydb.close()
 
 
+    def atualizar_telefone(self, id_cliente, telefone):
+        """
+        Atualiza o telefone do cliente no banco de dados.
+
+        Parâmetros:
+        - id_cliente: ID do cliente que terá o telefone atualizado
+        - telefone: Novo número de telefone a ser salvo
+
+        Retorno:
+        - True se a atualização for bem-sucedida, False caso contrário
+        """
+        # Conectar ao banco de dados
+        mydb = Conexao.conectar()  
+        mycursor = mydb.cursor()
+
+        try:
+            # Comando SQL para atualizar o telefone
+            sql = "UPDATE tb_cliente SET telefone = %s WHERE id_cliente = %s"
+            valores = (telefone, id_cliente)
+
+            # Executa a atualização
+            mycursor.execute(sql, valores)
+            mydb.commit()
+            print("Telefone atualizado com sucesso!")
+            return True
+        except Exception as e:
+            print("Erro ao atualizar o telefone:", e)
+            mydb.rollback()
+            return False
+        finally:
+            # Fecha o cursor e a conexão com o banco
+            mycursor.close()
+            mydb.close()
 
 
     def logout(self, id_cliente):
