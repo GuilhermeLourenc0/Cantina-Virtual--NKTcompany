@@ -170,13 +170,16 @@ h2 {
     font-size: 1.4rem; /* Ajustado para mobile */
     font-weight: 500;
     color: #333;
+    text-align: left;
 }
 
 .produto-desc {
+    text-align: left;
     font-size: 0.9rem;
 }
 
 .produto-preco {
+    text-align: left;
     font-size: 1.2rem;
     font-weight: 700;
     color: #727272 ;
@@ -588,3 +591,28 @@ input:checked+.slider:before {
 .info-message {
     color: #1d4ed8;
 }
+
+
+/* Estiliza a barra de rolagem para navegadores baseados no WebKit (Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 12px; /* Define a largura da barra de rolagem */
+    height: 12px; /* Define a altura para rolagem horizontal, se aplicável */
+  }
+  
+  /* Estiliza o trilho da barra de rolagem */
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0); /* Trilho transparente */
+  }
+  
+  /* Estiliza o "thumb" (parte rolável da barra de rolagem) */
+  ::-webkit-scrollbar-thumb {
+    background-color: #cf2226; /* Cor de fundo do thumb */
+    border: 1px solid yellow; /* Borda amarela ao redor do thumb */
+    border-radius: 10px; /* Borda arredondada para o thumb */
+  }
+  
+  /* Estiliza o "thumb" quando o usuário passa o mouse sobre ele */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #cf2226; /* Cor de fundo alterada para um vermelho mais escuro no hover */
+  }
+  
