@@ -48,21 +48,14 @@ def verificar_sessao():
 @app.route("/")
 def principal():
     try:
-        # Verifica e limpa a sessão se necessário
-        verificar_sessao()
-
-        # Verifica se o usuário está logado antes de tentar acessar os dados
-        if 'usuario_logado' not in session:
-            return redirect('/logar')  # Redireciona para login se o usuário não estiver logado
-
-        # Se o usuário estiver logado, prossegue com o resto do código
+        # Verifica se o site está aberto, sem a necessidade de login
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
         hora_atual = now.hour
         minutos_atuais = now.minute
         site_aberto = hora_atual >= 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais < 45))
 
-        # Obter o status de login bem-sucedido para exibir o alerta e removê-lo da sessão
+        # Obter o status de login bem-sucedido para exibir o alerta
         success = session.pop('login_sucesso', False)
 
         if site_aberto:
@@ -76,6 +69,7 @@ def principal():
     except Exception as e:
         print(f"Erro ao verificar o horário de funcionamento: {e}")
         return "Erro ao verificar o horário de funcionamento."
+
 
 
 
@@ -355,71 +349,7 @@ def atualizar_dados_iniciais():
     return redirect("/verificacao")
 
 
-# Rota de verificação
-app.route("/verificacao", methods=["GET", "POST"])
-def verificacao():
-    # Verifica se existe `dados_cadastro` ou `verification_code`; se ausente, desloga o usuário
-    if 'dados_cadastro' not in session or 'verification_code' not in session['dados_cadastro']:
-        session.pop('usuario_logado', None)  # Apaga a sessão de usuário logado
-        session.pop('verificacao_incompleta', None)  # Limpa a flag de verificação
-        return redirect("/logar")
 
-    if request.method == 'GET':
-        return render_template("verificacao.html")
-
-    # Recupera o código inserido pelo usuário
-    codigo_inserido = "".join([
-        request.form["codigo1"], 
-        request.form["codigo2"], 
-        request.form["codigo3"], 
-        request.form["codigo4"]
-    ])
-    verification_code = session['dados_cadastro'].get('verification_code')
-    tipo_verificacao = session.get('tipo_verificacao')
-
-    # Verifica o código inserido
-    if codigo_inserido == verification_code:
-        session.pop('verificacao_incompleta', None)  # Remove flag de verificação incompleta
-        if tipo_verificacao == "cadastro":
-            # Cadastra o usuário no banco de dados após a verificação bem-sucedida
-            dados_cadastro = session.pop('dados_cadastro', None)
-            if dados_cadastro:
-                usuario = Usuario()
-                usuario.cadastrar(
-                    dados_cadastro["nome"],
-                    dados_cadastro["telefone"],
-                    dados_cadastro["email"],
-                    dados_cadastro["senha"],
-                    dados_cadastro["curso"],
-                    dados_cadastro["tipo"]
-                )
-
-                # Autentica o usuário colocando-o na sessão
-                session['usuario_logado'] = {
-                    "nome": dados_cadastro["nome"],
-                    "email": dados_cadastro["email"],
-                    "tipo": dados_cadastro["tipo"]
-                }
-
-            # Limpa os dados de verificação relacionados ao cadastro
-            session.pop('verification_code', None)
-            session.pop('tipo_verificacao', None)
-            return redirect("/")
-        elif tipo_verificacao == "atualizar_dados_iniciais":
-            usuario = Usuario()
-            id_cliente = session['usuario_logado']['id_cliente']
-            email = session.pop('email_pendente')
-            senha = session.pop('senha_pendente')
-            usuario.atualizar_dados(id_cliente, None, email, senha)
-
-            session.pop('verification_code', None)
-            session.pop('tipo_verificacao', None)
-            return redirect("/inicialadm")
-    else:
-        # Limpa a sessão de usuário se o código não for correto ou a verificação for incompleta
-        session.pop('usuario_logado', None)
-        session.pop('verificacao_incompleta', None)
-        return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
 
 
 
