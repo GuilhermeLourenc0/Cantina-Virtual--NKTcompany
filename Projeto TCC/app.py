@@ -1270,14 +1270,16 @@ def usuario(id_cliente):
     
     usuario = Usuario()  # Supondo que 'Usuario' seja uma classe que manipula os dados do cliente
     dados_cliente = usuario.tela_usuario(id_cliente)  # Método que retorna os dados do cliente
+    pedidos_cliente = usuario.obter_pedidos(id_cliente)  # Método que retorna os pedidos do cliente
     
     # Adiciona a URL da imagem de perfil no contexto
     imagem_perfil_url = url_for('imagem_perfil', id_cliente=id_cliente)
     
-    return render_template('usuario.html', cliente=dados_cliente, imagem_perfil_url=imagem_perfil_url)
+    return render_template('usuario.html', cliente=dados_cliente, pedidos=pedidos_cliente, imagem_perfil_url=imagem_perfil_url)
 
 
- 
+
+
 
 app.run(debug=True, host="127.0.0.1", port=8080)  # Define o host como localhost e a porta como 8080
 

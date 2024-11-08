@@ -1,5 +1,4 @@
 {% extends "modelo-adm.html" %}
-
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/perfilVisaoAdm.css">
 <!-- Imagem de fundo e imagem de perfil -->
@@ -14,14 +13,13 @@
     <a href="https://wa.me/{{ cliente.telefone }}">
         <span class="dados-pessoais">{{ cliente.telefone }}</span>
     </a>
-
 </div>
 
 <div class="relatorio-vendas">
-
     <section class="resumo-relatorio">
         <h3>Últimos Pedidos</h3>
 
+        {% if pedidos %}
         <table>
             <thead>
                 <tr>
@@ -31,48 +29,28 @@
                 </tr>
             </thead>
             <tbody>
-  
+                {% for pedido in pedidos %}
                 <tr>
-                    <td>23/12/2024</td>
-                    <td>19,90</td>
+                    <td>{{ pedido.data }}</td>
+                    <td>{{ pedido.valor }}</td>
                     <td>
                         <ul>
-                            <li>1x Bolinha de Frango c/ Catupiry</li>
-                            <li>1x Suco de Laranja</li>
+                            {% for item in pedido.itens %}
+                            <li>{{ item }}</li>
+                            {% endfor %}
                         </ul>
                     </td>
                 </tr>
-
-                <tr>
-                    <td>23/12/2024</td>
-                    <td>23,90</td>
-                    <td>
-                        <ul>
-                            <li>3x Trento Chocolate Branco</li>
-                            <li>1x Trident Melancia</li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>23/12/2024</td>
-                    <td>14,90</td>
-                    <td>
-                        <ul>
-                            <li>1x Hamburguinho c/ cheddar</li>
-                            <li>1x Coca-Cola</li>
-                        </ul>
-                    </td>
-                </tr>
-
+                {% endfor %}
             </tbody>
         </table>
         <div class="spanpontilhado">
-            <span>Valor Total: R$: 58,90</span> <br>
-            <span>Pedidos Entregues: 3</span>
+            <span>Valor Total: R$: {{ total_valor }}</span> <br>
+            <span>Pedidos Entregues: {{ pedidos_entregues }}</span>
         </div>
-
-        
+        {% else %}
+        <p>Este cliente ainda não fez pedidos.</p>
+        {% endif %}
     </section>
 </div>
 {% endblock %}
