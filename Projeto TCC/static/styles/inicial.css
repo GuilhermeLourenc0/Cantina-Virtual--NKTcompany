@@ -60,10 +60,11 @@ html {
     /* Alinha os itens verticalmente ao centro */
     background-color: rgba(207, 34, 38, 1);
     /* Cor de fundo */
+    
 }
 
 
-.espacamento {
+.espacamento1 {
     height: 70px;
 }
 
@@ -94,29 +95,23 @@ html {
 
 }
 
-h2 {
-    color: #333;
-    font-size: 2rem !important;
-    /* Tamanho ajustado para mobile */
-    text-align: center;
-    margin-bottom: 30px ;
-    margin-top: 20px !important;
-    font-weight: 600 !important;
-}
-
+/* ========================================================= */
+/* =========================================================*/
 .container-produtos {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 0 20px;
-    /* Espaço lateral para mobile */
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0 20px; /* Espaço lateral para mobile */
 }
 
-.card-produtos {
-    display: flex;
-    justify-content: space-between;
-    text-align: left;align-items: center;
-    width: 100%;
+h2 {
+    color: #333;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    font-weight: 600;
 }
 
 .grid-produto {
@@ -125,8 +120,8 @@ h2 {
 
 .produtos {
     display: flex;
-    flex-direction: column;
-    /* Exibição em coluna */
+    flex-direction: column; /* Exibição em coluna */
+    margin-top: 20px;
     width: 100%;
 }
 
@@ -135,11 +130,9 @@ h2 {
     border: none;
     border-top: 1px solid rgb(210, 210, 210);
     border-bottom: 1px solid rgb(210, 210, 210);
-    width: 100%;
-    /* O botão ocupa toda a largura da tela */
+    width: 100%; /* O botão ocupa toda a largura da tela */
     display: flex;
-    align-items: center;
-    /* Centraliza verticalmente */
+    align-items: center; /* Centraliza verticalmente */
     padding: 10px;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
@@ -152,43 +145,45 @@ h2 {
     transform: scale(1.02);
 }
 
+.card-produtos {
+    display: flex;
+    align-items: center; /* Alinha imagem e texto verticalmente */
+    width: 100%;
+}
+
 .left-lado {
     display: flex;
     flex-direction: column;
     align-items: baseline;
+    font-size: 60px;
+    flex: 1; /* Permite que o texto ocupe espaço disponível */
 }
 
 .card-produtos img {
-    height: 90px;
-    /* Tamanho da imagem */
-    width: 90px;
-    /* Tamanho da imagem */
-    border-radius: 12px;
-    /* Bordas arredondadas */
+    height: 90px; /* Tamanho da imagem */
+    width: 90px; /* Tamanho da imagem */
+    border-radius: 12px; /* Bordas arredondadas */
     object-fit: cover;
 }
 
-.card-produtos .info {
-    display: flex;
-    flex-direction: column;
-    /* Nome e preço em coluna */
-}
-
 .produto-nome {
-    font-size: 1.2rem; 
+    font-size: 1.4rem; /* Ajustado para mobile */
     font-weight: 500;
     color: #333;
 }
 
 .produto-desc {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
 }
 
 .produto-preco {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    color: #727272;
+    color: #727272 ;
 }
+
+/* ====================================================== */
+/* ====================================================== */
 
 .footer {
     background-color: rgba(207, 34, 38, 255);
@@ -438,7 +433,7 @@ input:checked+.slider:before {
     align-items: flex-end;
 }
 
-.horario {
+.horario {  
     width: 95%;
     height: 1.5rem;
     background-color: rgb(255, 154, 154);
@@ -470,13 +465,6 @@ input:checked+.slider:before {
     justify-content: center;
     align-items: center;
 }
-
-.card-produtos span{
-    margin-left: 10px;
-}
-
-
-
 
 
 /* From Uiverse.io by revanth-004 */
