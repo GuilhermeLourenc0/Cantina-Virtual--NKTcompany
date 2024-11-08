@@ -18,6 +18,9 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+    <script src="https://kit.fontawesome.com/ded267d5dc.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -48,24 +51,21 @@
             </div>
             <div id="mySidenav" class="sidenav">
                 {% if not session.get('usuario_logado') %}
-                <a href="/logar">Entrar</a>
+                <a href="/logar" class="nav-button"><i class="fa-solid fa-right-to-bracket" style="color: #FFD43B;"></i>Entrar</a>
                 <hr>
                 {% endif %}
-                <a href="/exibir_carrinho">Carrinho</a>
+                <a href="/" class="nav-button"><i class="fa-solid fa-house" style="color: #FFD43B;"></i>Início</a>
                 <hr>
-                <a href="/perfil">Perfil</a>
+                <a href="/perfil" class="nav-button"><i class="fa-solid fa-user" style="color: #FFD43B;"></i>Perfil</a>
+                <hr>
+                
+                <a href="/exibir_carrinho" class="nav-button"><i class="fa-solid fa-cart-shopping" style="color: #FFD43B;"></i>Carrinho</a>
                 <hr>
                 {% if session.get('usuario_logado') %}
-                <a href="/historico">Pedidos</a>
+                <a href="/historico" class="nav-button"><i class="fa-solid fa-clock-rotate-left" style="color: #FFD43B;"></i>Pedidos</a>
                 <hr>
-                <a href="/logout">Sair</a>
+                <a href="/logout" class="nav-button"><i class="fa-solid fa-arrow-right-from-bracket" style="color: #FFD43B;"></i>Sair</a>
                 {% endif %}
-                <div class="dark-mode">
-                    <label class="switch" for="chk">
-                        <input type="checkbox" id="chk">
-                        <span class="slider"></span>
-                    </label>
-                </div>
             </div>
         </nav>
         <div class="espacamento">
