@@ -277,41 +277,50 @@ h2 {
 
 .sidenav {
     height: 100%;
-    width: 0;
+    width: 250px; /* Define a largura da sidenav */
     position: fixed;
     z-index: 2;
     top: 0;
     right: 0;
-    background-color: rgb(209, 31, 31);
-    overflow-x: hidden;
-    transition: 0.5s;
+    background-color: #D11F1F;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra suave */
+    transition: 0.5s ease;
     padding-top: 60px;
+    border-top-left-radius: 20px; /* Arredonda os cantos superiores */
+    border-bottom-left-radius: 20px;
 }
 
 .sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: rgb(255, 255, 255);
-    display: block;
-    transition: 0.3s;
+    padding: 15px 32px; /* Aumenta o padding interno para mais espaço */
+    font-size: 20px;
+    color: #FFFFFF;
     display: flex;
-    justify-content: flex-start;
-    align-items: baseline;
-    gap: 2rem;
+    align-items: center;
+    gap: 1rem; /* Espaçamento entre o ícone e o texto */
+    border-radius: 10px; /* Arredonda os cantos dos links */
+    transition: background-color 0.3s, color 0.3s; /* Transição suave para hover */
+}
+
+.sidenav a i {
+    font-size: 22px; /* Ajusta o tamanho dos ícones */
+    color: #FFD43B;
 }
 
 .sidenav a:hover {
-    color: #bbbbbb;
-    text-decoration: none;
+    background-color: #FFD43B; /* Cor de fundo no hover */
+    color: #D11F1F; /* Muda a cor do texto no hover */
+}
+
+.sidenav hr {
+    border: 0.5px solid #ffffff66; /* Linhas divisórias mais suaves */
+    width: 80%;
+    margin: 10px auto;
 }
 
 .sidenav .closebtn {
     position: absolute;
     top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
+    right:
 }
 
 .nav-button{

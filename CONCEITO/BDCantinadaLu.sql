@@ -199,6 +199,16 @@ INSERT INTO tb_marmita (nome_marmita, preco, tamanho, descricao, url_img, habili
 -- Inserindo Produtos
 INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) VALUES 
 ('Coxinha de Frango', 5.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLigfyds3_5OSm0C4_VTYXDa5g6e32kV9h7g&s', 'Coxinha de frango crocante', 2),
+('Bolinha de Queijo', 4.00, 'https://www.mistersabor.com/wp-content/uploads/2013/04/KG-Bolinha-de-Queijo.jpg', 'Bolinha de queijo crocante e saborosa', 2),
+('Espeto de Frango', 8.00, 'https://acdn.mitiendanube.com/stores/001/282/481/products/dsc_94161-8cb07d95ff5818082015959733790534-640-0.jpg', 'Espeto de frango grelhado no ponto', 2),
+('Esfiha de Carne', 6.00, 'https://receitatodahora.com.br/wp-content/uploads/2022/02/esfiha-fechada.jpg', 'Esfiha de carne suculenta e temperada', 1),
+('Lanche Natural de Frango', 7.00, 'https://assets.unileversolutions.com/recipes-v2/99461.jpg', 'Lanche natural com frango desfiado e vegetais', 5),
+('Lanche Natural de Presunto', 7.00, 'https://as2.ftcdn.net/v2/jpg/04/85/82/35/1000_F_485823598_BMiaQaKxsBtyej6j3xjuIK8O6GVRUl9Z.jpg', 'Lanche natural com presunto e queijo', 5),
+('Energético Furioso', 6.00, 'https://www.hpplasticos.com.br/img/products/energetico-furioso-250ml-tradicional_1_650.webp', 'Energético Furioso 250ml', 3),
+('Energético Monster', 10.00, 'https://drogariasp.vteximg.com.br/arquivos/ids/435164-1000-1000/641693---energetico-monster-energy-473ml-spal.jpg?v=637496168469870000', 'Energético Monster 473ml', 3),
+('H2O Limão', 4.50, 'https://supermercadobomdemais.com.br/wp-content/uploads/2021/01/H2O-Limao.jpg', 'H2O Limão 500ml', 3),
+('Pepsi Black', 4.00, 'https://boa.vtexassets.com/arquivos/ids/584650/Pepsi-Zero-Acucar-Lata-350ml.jpg?v=638621790078430000', 'Pepsi Black zero açúcar, lata 350ml', 3),
+('Hamburguinho', 7.50, 'https://grupodocedoce.com.br/storage/produtos/46/panutti-hamburgao-1582201571.JPG', 'Mini hambúrguer com carne e queijo', 1),
 ('Suco Natural de Laranja', 6.50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg7d8e8lFMBd04BSdGzf3FaB2yUNbcISqjqQ&s', 'Suco natural de laranja 300ml', 3),
 ('Pão de Queijo', 3.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtErpNOUfP6-yJLahND5XkZQpF_hPvas8-7g&s', 'Pão de queijo mineiro tradicional', 1);
 
@@ -456,4 +466,4 @@ INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
 VALUES ('Administrador', '123456789', 'adm@adm.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'adm');
 
 INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
-VALUES ('Cliente', '123456789', 'cliente@cliente.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'cliente');
+VALUES ('Cliente Teste', '123456789', 'cliente@cliente.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'cliente');

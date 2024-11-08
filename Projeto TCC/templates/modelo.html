@@ -51,22 +51,22 @@
             </div>
             <div id="mySidenav" class="sidenav">
                 {% if not session.get('usuario_logado') %}
-                <a href="/logar" class="nav-button"><i class="fa-solid fa-right-to-bracket" style="color: #FFD43B;"></i>Entrar</a>
+                <a href="/logar" class="nav-button"><i class="fa-solid fa-right-to-bracket"></i>Entrar</a>
                 <hr>
                 {% endif %}
-                <a href="/" class="nav-button"><i class="fa-solid fa-house" style="color: #FFD43B;"></i>Início</a>
+                <a href="/" class="nav-button"><i class="fa-solid fa-house"></i>Início</a>
                 <hr>
-                <a href="/perfil" class="nav-button"><i class="fa-solid fa-user" style="color: #FFD43B;"></i>Perfil</a>
+                <a href="/perfil" class="nav-button"><i class="fa-solid fa-user"></i>Perfil</a>
                 <hr>
-                
-                <a href="/exibir_carrinho" class="nav-button"><i class="fa-solid fa-cart-shopping" style="color: #FFD43B;"></i>Carrinho</a>
+                <a href="/exibir_carrinho" class="nav-button"><i class="fa-solid fa-cart-shopping"></i>Carrinho</a>
                 <hr>
                 {% if session.get('usuario_logado') %}
-                <a href="/historico" class="nav-button"><i class="fa-solid fa-clock-rotate-left" style="color: #FFD43B;"></i>Pedidos</a>
+                <a href="/historico" class="nav-button"><i class="fa-solid fa-clock-rotate-left"></i>Pedidos</a>
                 <hr>
-                <a href="/logout" class="nav-button"><i class="fa-solid fa-arrow-right-from-bracket" style="color: #FFD43B;"></i>Sair</a>
+                <a href="/logout" class="nav-button"><i class="fa-solid fa-arrow-right-from-bracket"></i>Sair</a>
                 {% endif %}
             </div>
+            
         </nav>
         <div class="espacamento">
            
@@ -85,10 +85,10 @@
 
             // Abrir ou fechar o menu lateral
             const menu = document.getElementById("mySidenav");
-            if (menu.style.width === "100%") {
+            if (menu.style.width === "400px") {
                 menu.style.width = "0";
             } else {
-                menu.style.width = "100%";
+                menu.style.width = "400px";
             }
         }
 
