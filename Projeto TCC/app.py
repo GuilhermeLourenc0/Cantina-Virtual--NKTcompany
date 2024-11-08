@@ -232,13 +232,6 @@ def verificacao():
                     dados_cadastro["tipo"]
                 )
 
-                # Autentica o usuário colocando-o na sessão
-                session['usuario_logado'] = {
-                    "nome": dados_cadastro["nome"],
-                    "email": dados_cadastro["email"],
-                    "tipo": dados_cadastro["tipo"]
-                }
-
             # Limpa os dados de verificação relacionados ao cadastro
             session.pop('verification_code', None)
             session.pop('tipo_verificacao', None)
@@ -258,6 +251,7 @@ def verificacao():
         session.pop('usuario_logado', None)
         session.pop('verificacao_incompleta', None)
         return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
+
 
 
 
