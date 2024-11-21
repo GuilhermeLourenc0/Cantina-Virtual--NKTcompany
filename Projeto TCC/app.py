@@ -1126,13 +1126,11 @@ def trocar_senha():
         email = request.form['email']
         telefone = request.form['telefone']
         
-        # Verifique se o usuário existe (você deve implementar isso na classe Usuario)
         usuario = Usuario()
-        if usuario.verificar_usuario(email, telefone):  # Supondo que exista uma função para verificar o usuário
-            # Gerar um código de verificação aleatório com 4 dígitos, incluindo zeros à esquerda
+        if usuario.verificar_usuario(email, telefone):  # Verifica se o usuário existe
             verification_code = str(random.randint(1000, 9999)).zfill(4)
 
-            # Enviar o código de verificação via SMS
+            # Envia o código via SMS
             message = client.messages.create(
                 to=telefone,
                 from_="+13195190041",
@@ -1140,12 +1138,12 @@ def trocar_senha():
             )
             print(message.sid)
 
-            # Armazenar o telefone e o código de verificação na sessão
+            # Armazena informações na sessão
             session['telefone_verificacao'] = telefone
             session['verification_code'] = verification_code
-            session['email_usuario'] = email  # Armazena o email do usuário na sessão
+            session['email_usuario'] = email
             
-            return redirect("/verificacao_troca_senha")  # Redireciona para a tela de verificação
+            return redirect("/verificacao_troca_senha")  # Redireciona para a verificação
         else:
             flash("Usuário não encontrado. Verifique as informações.", "error")
             return redirect("/trocar_senha")
@@ -1154,8 +1152,12 @@ def trocar_senha():
 # Rota para verificação do código de troca de senha
 @app.route("/verificacao_troca_senha", methods=['GET', 'POST'])
 def verificacao_troca_senha():
+    if 'verification_code' not in session:  # Verifica se o código está na sessão
+        flash("Sessão expirada. Solicite a troca de senha novamente.", "error")
+        return redirect("/trocar_senha")
+
     if request.method == 'GET':
-        return render_template("verificacao-troca-senha.html")  # Renderiza a página onde o usuário insere o código
+        return render_template("verificacao-troca-senha.html")
     else:
         codigo1 = request.form["codigo1"]
         codigo2 = request.form["codigo2"]
@@ -1165,35 +1167,37 @@ def verificacao_troca_senha():
         verification_code = session.get('verification_code')
 
         if codigo_inserido == verification_code:
-            return redirect("/nova_senha")  # Redireciona para a página para criar uma nova senha
+            session.pop('verification_code')  # Remove o código da sessão após validação
+            session['verificado'] = True  # Marca que o usuário foi verificado
+            return redirect("/nova_senha")
         else:
             return render_template("verificacao-troca-senha.html", erro="Código incorreto. Tente novamente.")
 
 
+# Rota para definir uma nova senha
 @app.route("/nova_senha", methods=['GET', 'POST'])
 def nova_senha():
+    if 'email_usuario' not in session or not session.get('verificado'):  # Verifica se passou pela verificação
+        flash("Acesso inválido. Solicite a troca de senha novamente.", "error")
+        return redirect("/trocar_senha")
+
     if request.method == 'GET':
-        return render_template("nova-senha.html")  # Renderiza a página para inserir nova senha
+        return render_template("nova-senha.html")
     
     nova_senha = request.form['nova_senha']
     nova_senha_confirma = request.form['nova_senha_confirma']
     email_usuario = session.get('email_usuario')
 
-    if not email_usuario:
-        flash("Sessão expirada. Faça login novamente para alterar a senha.", "error")
-        return redirect("/logar")
-
     if nova_senha != nova_senha_confirma:
         flash("As senhas não coincidem. Tente novamente.", "error")
         return redirect("/nova_senha")
 
-    # Atualiza a senha do usuário (implementação na classe Usuario)
     usuario = Usuario()
     try:
-        if usuario.atualizar_senha(email_usuario, nova_senha):  # Implementar essa função na classe Usuario
+        if usuario.atualizar_senha(email_usuario, nova_senha):
             flash("Senha atualizada com sucesso!", "success")
             session.clear()  # Limpa a sessão após a troca de senha
-            return redirect("/logar")  # Redireciona para a página de login
+            return redirect("/logar")
         else:
             flash("Erro ao atualizar a senha. Tente novamente.", "error")
     except Exception as e:
