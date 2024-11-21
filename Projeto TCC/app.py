@@ -1170,24 +1170,37 @@ def verificacao_troca_senha():
             return render_template("verificacao-troca-senha.html", erro="Código incorreto. Tente novamente.")
 
 
-# Rota para definir uma nova senha
 @app.route("/nova_senha", methods=['GET', 'POST'])
 def nova_senha():
     if request.method == 'GET':
         return render_template("nova-senha.html")  # Renderiza a página para inserir nova senha
-    else:
-        nova_senha = request.form['nova_senha']
-        email_usuario = session.get('email_usuario')
+    
+    nova_senha = request.form['nova_senha']
+    nova_senha_confirma = request.form['nova_senha_confirma']
+    email_usuario = session.get('email_usuario')
 
-        # Atualiza a senha do usuário (você deve implementar isso na classe Usuario)
-        usuario = Usuario()
+    if not email_usuario:
+        flash("Sessão expirada. Faça login novamente para alterar a senha.", "error")
+        return redirect("/logar")
+
+    if nova_senha != nova_senha_confirma:
+        flash("As senhas não coincidem. Tente novamente.", "error")
+        return redirect("/nova_senha")
+
+    # Atualiza a senha do usuário (implementação na classe Usuario)
+    usuario = Usuario()
+    try:
         if usuario.atualizar_senha(email_usuario, nova_senha):  # Implementar essa função na classe Usuario
             flash("Senha atualizada com sucesso!", "success")
             session.clear()  # Limpa a sessão após a troca de senha
             return redirect("/logar")  # Redireciona para a página de login
         else:
             flash("Erro ao atualizar a senha. Tente novamente.", "error")
-            return redirect("/nova-senha")
+    except Exception as e:
+        flash(f"Ocorreu um erro: {str(e)}", "error")
+
+    return redirect("/nova_senha")
+
 
 
 # ================ PERFIL ================

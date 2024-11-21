@@ -2,6 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;    
 }
 
 
@@ -18,6 +19,7 @@ h2{
     font-weight: bolder !important;
     text-align: left;
     font-size: 30px !important;
+
 }
 
 .container-principal{
@@ -59,7 +61,7 @@ input::placeholder {
     width: 23.7rem;
     border-radius: 6px;
     border: none;
-    
+    font-size: 15px;
     margin-top: 50px;
     color: white;
 }
