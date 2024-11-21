@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="../static/styles/carrinho.css">
 
 <div class="espacamento1"></div>
+
 <body>
     <main>
 
@@ -19,10 +20,12 @@
                             <div class="cima">
                                 <span>{{ registro.nome_produto }}</span>
                                 <div class="qnt-btn">
-                                    <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
+                                    <button class="menos-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">-</button>
                                     <input type="number" id="quantidade-{{ registro.id_carrinho }}"
                                         value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
-                                    <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
+                                    <button class="mais-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">+</button>
                                 </div>
                             </div>
                             <div class="baixo">
@@ -50,10 +53,12 @@
                             <div class="cima">
                                 <span>{{ registro.nome_marmita }}</span>
                                 <div class="qnt-btn">
-                                    <button class="menos-btn" type="button" data-id="{{ registro.id_carrinho }}">-</button>
+                                    <button class="menos-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">-</button>
                                     <input type="number" id="quantidade-{{ registro.id_carrinho }}"
                                         value="{{ registro.quantidade }}" data-id="{{ registro.id_carrinho }}" min="1">
-                                    <button class="mais-btn" type="button" data-id="{{ registro.id_carrinho }}">+</button>
+                                    <button class="mais-btn" type="button"
+                                        data-id="{{ registro.id_carrinho }}">+</button>
                                 </div>
                             </div>
                             <div class="baixo">
@@ -98,6 +103,18 @@
         </div>
     </main>
 
+    
+    <div id="modal-confirmacao" class="modal" style="display: none;">
+        <div class="modal-conteudo">
+            <p>Tem certeza desse pedido? Não será possível o cancelamento.</p>
+            <div class="botoes-modal">
+                <button id="confirmar-envio" class="button-confirmar">Confirmar</button>
+                <button id="cancelar-envio" class="button-cancelar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Função para atualizar a quantidade de produtos
@@ -136,17 +153,17 @@
                     },
                     body: JSON.stringify({ id_carrinho: idCarrinho, quantidade: quantidade })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        atualizarPrecoTotal(); // Atualiza o preço total
-                    } else {
-                        alert('Erro ao atualizar quantidade');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            atualizarPrecoTotal(); // Atualiza o preço total
+                        } else {
+                            alert('Erro ao atualizar quantidade');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
             }
 
             // Função para excluir produtos do carrinho
@@ -166,22 +183,22 @@
                     },
                     body: JSON.stringify({ id_carrinho: idCarrinho })
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro na requisição: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        location.reload(); // Atualiza a página após exclusão bem-sucedida
-                    } else {
-                        alert('Erro ao excluir produto');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro na requisição: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            location.reload(); // Atualiza a página após exclusão bem-sucedida
+                        } else {
+                            alert('Erro ao excluir produto');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
             }
 
             // Função AJAX para atualizar o preço total do carrinho
@@ -189,60 +206,72 @@
                 fetch('/atualizar_preco_total', {
                     method: 'GET'
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('total-preco').innerText = `R$ ${data.total_preco}`;
-                    } else {
-                        alert('Erro ao atualizar o preço total');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('total-preco').innerText = `R$ ${data.total_preco}`;
+                        } else {
+                            alert('Erro ao atualizar o preço total');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
             }
         });
 
         // Função para enviar o carrinho via AJAX
         function enviarCarrinho() {
-            // Coletando os itens do carrinho
-            const itensCarrinho = [];
-            document.querySelectorAll('.produto-card').forEach(produto => {
-                const idCarrinho = produto.querySelector('input[type="number"]').getAttribute('data-id');
-                const quantidade = produto.querySelector('input[type="number"]').value;
-                itensCarrinho.push({ id_carrinho: idCarrinho, quantidade: quantidade });
-            });
+            const modal = document.getElementById('modal-confirmacao');
+            modal.style.display = 'flex'; // Exibe o modal
 
-            fetch('/enviar_carrinho', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ itens: itensCarrinho })
-            })
-            .then(response => {
-                if (response.status === 403) {
-                    alert("Site offline. Não é possível enviar pedidos neste horário.");
-                    return; // Sai da função após mostrar o alert
-                }
-                if (!response.ok) {
-                    throw new Error('Erro na requisição: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    window.location.href = "/"; // Redireciona para a página inicial
-                } else {
-                    alert(data.message || 'Erro ao enviar o carrinho');
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-            });
+            // Botão para confirmar o envio
+            document.getElementById('confirmar-envio').onclick = function () {
+                modal.style.display = 'none'; // Oculta o modal após a confirmação
+
+                // Coletando os itens do carrinho
+                const itensCarrinho = [];
+                document.querySelectorAll('.produto-card').forEach(produto => {
+                    const idCarrinho = produto.querySelector('input[type="number"]').getAttribute('data-id');
+                    const quantidade = produto.querySelector('input[type="number"]').value;
+                    itensCarrinho.push({ id_carrinho: idCarrinho, quantidade: quantidade });
+                });
+
+                fetch('/enviar_carrinho', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ itens: itensCarrinho })
+                })
+                    .then(response => {
+                        if (response.status === 403) {
+                            alert("Site offline. Não é possível enviar pedidos neste horário.");
+                            return;
+                        }
+                        if (!response.ok) {
+                            throw new Error('Erro na requisição: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            window.location.href = "/"; // Redireciona para a página inicial
+                        } else {
+                            alert(data.message || 'Erro ao enviar o carrinho');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
+            };
+
+            // Botão para cancelar o envio
+            document.getElementById('cancelar-envio').onclick = function () {
+                modal.style.display = 'none'; // Oculta o modal
+            };
         }
     </script>
-
 </body>
 {% endblock %}
