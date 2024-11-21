@@ -49,6 +49,11 @@ def verificar_sessao():
 def principal():
     try:
         verificar_sessao()
+
+        # Redirecionar para a página inicial do administrador se o tipo for 'adm'
+        if 'usuario_logado' in session and session['usuario_logado'].get('tipo') == 'adm':
+            return redirect("/inicialadm")
+
         # Verifica se o site está aberto, sem a necessidade de login
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
@@ -63,13 +68,20 @@ def principal():
             sistema = Sistema()
             produtos_por_categoria = sistema.exibir_produtos()
             lista_marmitas = sistema.exibir_marmitas()
-            return render_template("index.html", produtos_por_categoria=produtos_por_categoria, lista_marmitas=lista_marmitas, site_aberto=site_aberto, success=success)
+            return render_template(
+                "index.html",
+                produtos_por_categoria=produtos_por_categoria,
+                lista_marmitas=lista_marmitas,
+                site_aberto=site_aberto,
+                success=success,
+            )
 
         return render_template("index.html", site_aberto=site_aberto, success=success)
 
     except Exception as e:
         print(f"Erro ao verificar o horário de funcionamento: {e}")
         return "Erro ao verificar o horário de funcionamento."
+
 
 
 
@@ -148,6 +160,11 @@ def principal_adm():
 # Rota de cadastro
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
+
+    # Redireciona para "/" se o usuário já estiver logado
+    if 'usuario_logado' in session:
+        return redirect("/")
+
     if request.method == 'GET':
         verificar_sessao()
         usuario = Usuario()
@@ -243,14 +260,23 @@ def verificacao():
 
         elif tipo_verificacao == "atualizar_dados_iniciais":
             id_cliente = session['usuario_logado']['id_cliente']
+            telefone = session['telefone']
             email = session.pop('email_pendente')
             senha = session.pop('senha_pendente')
+
+            # Atualiza o telefone
             usuario = Usuario()
-            usuario.atualizar_dados(id_cliente, None, email, senha)
+            usuario.atualizar_telefone(id_cliente, telefone)  # Atualiza o telefone no banco
+
+            # Agora atualiza os dados (email e senha)
+            usuario.atualizar_dados(id_cliente, telefone, email, senha)  # Atualiza o email e senha, mas telefone já foi atualizado
 
             session.pop('verification_code', None)
             session.pop('tipo_verificacao', None)
+            session.pop('verificacao_incompleta', None)
+
             return redirect("/inicialadm")
+
 
     else:
         return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
@@ -266,17 +292,28 @@ def verificacao():
 @app.route("/logar", methods=['GET', 'POST'])
 def logar():
     if request.method == 'GET':
-        # Verifica e limpa a sessão se necessário
-        verificar_sessao()
+        # Verifica se o usuário já está logado
+        if 'usuario_logado' in session:
+            usuario = session['usuario_logado']
+            # Redireciona conforme o tipo do usuário
+            if usuario.get('tipo') == 'adm':
+                return redirect("/inicialadm")
+            else:
+                return redirect("/")
+            
+        
+        # Renderiza a página de login para usuários não logados
         erro = session.pop('login_erro', False)
         return render_template('login.html', success=False, erro=erro)
     
+    # Processa o formulário de login
     senha = request.form['senha']
     email = request.form['email']
     usuario = Usuario()
     usuario.logar(email, senha)
     
     if usuario.logado:
+        # Define os dados do usuário na sessão
         session['usuario_logado'] = {
             "nome": usuario.nome, 
             "email": usuario.email, 
@@ -289,7 +326,7 @@ def logar():
         
         print("Sessão após login:", session)  # Verificação de sessão
         
-        # Se o tipo não for 'cliente' e não for o primeiro login, redireciona para /inicialadm
+        # Redireciona com base no tipo e status do login
         if usuario.tipo != 'cliente' and not usuario.primeiro_login:
             return redirect("/inicialadm")
         
@@ -300,20 +337,26 @@ def logar():
         session['login_sucesso'] = True
         return redirect("/")
     
+    # Define erro de login na sessão e redireciona para login
     session['login_erro'] = True
     return redirect("/logar")
 
 
 
+
 @app.route("/atualizar_dados_iniciais", methods=["GET", "POST"])
 def atualizar_dados_iniciais():
-    if 'usuario_logado' not in session or not session.get('verificacao_incompleta'):
-        session.pop('usuario_logado', None)
+    # Verifica se o usuário está logado e se a verificação está pendente
+    if 'usuario_logado' not in session:
         return redirect("/logar")
-
+    
+    if not session.get('verificacao_incompleta'):
+        return redirect("/")
+    
     if request.method == 'GET':
         return render_template("atualizar_dados_iniciais.html")
 
+    # Processa a atualização dos dados
     telefone = request.form.get('telefone')
     email = request.form.get('email')
     senha = request.form.get('senha')
@@ -325,6 +368,8 @@ def atualizar_dados_iniciais():
     usuario = Usuario()
     usuario.atualizar_telefone(id_cliente, telefone)
 
+    # Salva os dados pendentes na sessão
+    session['telefone'] = telefone
     session['email_pendente'] = email
     session['senha_pendente'] = senha
     session['verification_code'] = str(random.randint(1000, 9999)).zfill(4)
@@ -338,6 +383,7 @@ def atualizar_dados_iniciais():
     )
     session['verificacao_incompleta'] = True
     return redirect("/verificacao")
+
 
 
 
@@ -911,6 +957,9 @@ def editar_produto():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     
+    if session['usuario_logado'].get('tipo') == 'cliente':
+        return redirect('/')  # Redireciona clientes para a página inicial
+
     if request.method == 'POST':
         btn_produto = request.form.get('btn-produto')  # Obtém o ID do produto selecionado
         session['id'] = {'id_produto': btn_produto}  # Armazena o ID na sessão
@@ -937,6 +986,9 @@ def editar_produto():
 def atualizar_produto():
     if 'usuario_logado' not in session:
         return redirect('/logar')
+
+    if session['usuario_logado'].get('tipo') == 'cliente':
+        return redirect('/')  # Redireciona clientes para a página inicial
 
     adm = Adm()  # Cria uma instância da classe Sistema
     id_produto = request.form.get('id_produto')
@@ -972,6 +1024,10 @@ def editar_marmita():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     
+    if session['usuario_logado'].get('tipo') == 'cliente':
+        return redirect('/')  # Redireciona clientes para a página inicial
+
+
     if request.method == 'POST':
         btn_marmita = request.form.get('btn-marmita')  # Obtém o ID do produto selecionado
         session['id'] = {'id_marmita': btn_marmita}  # Armazena o ID na sessão
@@ -1010,6 +1066,10 @@ def editar_marmita():
 def atualizar_marmita():
     if 'usuario_logado' not in session:
         return jsonify({'status': 'error', 'message': 'Você precisa estar logado para realizar esta ação.'}), 401
+    
+
+    if session['usuario_logado'].get('tipo') == 'cliente':
+        return redirect('/')  # Redireciona clientes para a página inicial
     
     adm = Adm()
     id_marmita = request.form['id_marmita']
