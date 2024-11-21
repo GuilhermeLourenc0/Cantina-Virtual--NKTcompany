@@ -677,7 +677,6 @@ def marcar_entregue(id_pedido):
 
 
 
-# Rota para atualizar o status do pedido
 @app.route("/atualizar_status_pedido", methods=['POST'])
 def atualizar_status_pedido():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
@@ -689,10 +688,29 @@ def atualizar_status_pedido():
 
     # Verifica se o ID do pedido e o status são válidos
     if id_pedido and novo_status:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
+        sistema = Sistema()  # Instância da classe Sistema
         sucesso = sistema.atualizar_status_pedido(id_pedido, novo_status)  # Atualiza o status do pedido no sistema
         
         if sucesso:
+            # Se o status for "pronto", envia uma mensagem para o cliente
+            if novo_status.lower() == "feito":
+                try:
+                    # Obtém os dados do cliente pelo ID do pedido
+                    cliente = sistema.obter_dados_cliente_por_pedido(id_pedido)
+                    telefone_cliente = cliente.get('telefone')
+                    nome_cliente = cliente.get('nome')
+                    
+                    if telefone_cliente:
+                        mensagem = f"Olá {nome_cliente}, seu pedido está pronto! Pode retirar ou aguardar a entrega."
+                        message = client.messages.create(
+                            body=mensagem,
+                            from_="+13195190041",
+                            to=telefone_cliente
+                        )
+                        print(f"Mensagem enviada com sucesso: {message.sid}")
+                except Exception as e:
+                    print(f"Erro ao enviar mensagem: {e}")
+            
             return jsonify({'status': 'sucesso'})
         else:
             return jsonify({'status': 'erro', 'mensagem': 'Não foi possível atualizar o status.'})

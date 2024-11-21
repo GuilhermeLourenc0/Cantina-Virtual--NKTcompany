@@ -371,3 +371,79 @@ class Sistema:
             return {"error": f"Erro ao cancelar o pedido: {str(e)}"}
         finally:
             mydb.close()  # Fecha a conexão com o banco de dados
+
+
+
+    def obter_dados_cliente_por_pedido(self, id_pedido):
+        """
+        Obtém os dados do cliente associados a um pedido específico.
+        
+        :param id_pedido: ID do pedido para o qual os dados do cliente serão buscados.
+        :return: Um dicionário com o telefone e nome do cliente, ou None se não for encontrado.
+        """
+        try:
+            # Query para buscar os dados do cliente associados ao pedido
+            query = """
+            SELECT c.telefone, c.nome_comp
+            FROM tb_cliente c
+            JOIN tb_pedidos p ON c.id_cliente = p.id_cliente
+            WHERE p.id_pedido = %s
+            """
+            # Executa a query passando o ID do pedido como parâmetro
+            dados = self.executar_query(query, (id_pedido,), fetch=True)
+            
+            # Verifica se algum dado foi retornado
+            if dados:
+                # Retorna o primeiro resultado encontrado
+                return {'telefone': dados[0]['telefone'], 'nome': dados[0]['nome_comp']}
+            
+            # Caso nenhum dado seja encontrado, retorna None
+            return None
+        
+        except Exception as e:
+            # Loga o erro para depuração
+            print(f"Erro ao obter dados do cliente: {e}")
+            return None
+
+
+    def executar_query(self, query, params=None, fetch=False):
+        """
+        Executa uma query no banco de dados.
+        
+        :param query: A string SQL a ser executada.
+        :param params: Uma tupla com os parâmetros para a query.
+        :param fetch: Define se a função deve retornar os resultados (True) ou não (False).
+        :return: Os resultados da query se fetch=True, ou None caso contrário.
+        """
+        try:
+            # Conecta ao banco de dados
+            conn = Conexao.conectar()  # Certifique-se de que esse método está implementado
+            cursor = conn.cursor(dictionary=True)  # Retorna resultados como dicionários
+            
+            # Executa a query com os parâmetros
+            cursor.execute(query, params)
+            
+            # Se fetch=True, retorna os resultados da query
+            if fetch:
+                result = cursor.fetchall()
+                return result
+            
+            # Confirma alterações no banco (para operações como INSERT/UPDATE/DELETE)
+            conn.commit()
+        
+        except mysql.connector.Error as e:
+            # Loga o erro específico do banco
+            print(f"Erro ao executar a query: {e}")
+            return None
+        
+        except Exception as e:
+            # Loga outros erros genéricos
+            print(f"Erro inesperado ao executar a query: {e}")
+            return None
+        
+        finally:
+            # Fecha o cursor e a conexão
+            if 'cursor' in locals() and cursor:
+                cursor.close()
+            if 'conn' in locals() and conn:
+                conn.close()
