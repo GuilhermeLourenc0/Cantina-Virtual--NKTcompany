@@ -1,5 +1,6 @@
 from conexao import Conexao
 from hashlib import sha256
+import base64
 
 class Sistema:
     def __init__(self):
@@ -7,6 +8,10 @@ class Sistema:
         self.tel = None
         self.id_produto = None
 
+
+
+
+    import base64
 
     def exibir_produtos_adm(self):
         mydb = Conexao.conectar()  # Conecta ao banco de dados
@@ -21,17 +26,33 @@ class Sistema:
 
         # Itera sobre os resultados e adiciona cada produto à lista
         for produto in resultado:
+            imagem_blob = produto[7]  # Blob da imagem (posição 7)
+            imagem_url = produto[3]   # URL da imagem (posição 3)
+
+            if imagem_blob:  # Caso o blob esteja presente
+                # Converte o blob para uma string Base64
+                imagem_base64 = base64.b64encode(imagem_blob).decode('utf-8')
+                # Cria o URL de dados para a imagem
+                imagem_produto = f"data:image/jpeg;base64,{imagem_base64}"
+            elif imagem_url:  # Caso o blob não exista, mas o URL esteja presente
+                imagem_produto = imagem_url  # Usa o URL diretamente
+            else:  # Caso não exista nem blob nem URL
+                imagem_produto = None
+
             lista_produtos.append({
                 'nome_produto': produto[1],
                 'preco': produto[2],
-                'imagem_produto': produto[3],
+                'imagem_produto': imagem_produto,  # Base64 ou URL
                 'categoria': produto[5],
                 'descricao': produto[4],
                 'id_produto': produto[0],
-                'habilitado': produto[6]  # Certifique-se de que este índice corresponde ao campo 'habilitado'
+                'habilitado': produto[6]
             })
+
         mydb.close()  # Fecha a conexão com o banco de dados
         return lista_produtos if lista_produtos else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+
+
 
     def exibir_produtos(self):
         mydb = Conexao.conectar()  # Conecta ao banco de dados

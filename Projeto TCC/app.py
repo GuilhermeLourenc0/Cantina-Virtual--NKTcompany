@@ -415,42 +415,39 @@ def inserir_produtos():
     # Verifica se o usuário está logado e possui um ID de cliente válido
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
-    
+
     # Verifica se o tipo do usuário é 'adm'
     if session['usuario_logado']['tipo'] == "cliente":
         return redirect("/")  # Redireciona para a rota "/"
+
     nome = request.form['nome']
     preco = request.form['preco']
-    img = request.form['img']
     descricao = request.form['descricao']
     categoria = request.form['categoria']
-    
-    # Captura o tamanho da marmita (campo exibido apenas quando marmita for selecionada)
-    tamanho = request.form.get('tamanho')
+    tamanho = request.form.get('tamanho')  # Tamanho da marmita (opcional)
 
-    # Captura as guarnições existentes (selecionadas via checkbox)
+    # Captura guarnições e acompanhamentos
     guarnicoes_existentes = request.form.getlist('guarnicoes')
-
-    # Captura os acompanhamentos existentes (selecionados via checkbox)
     acompanhamentos_existentes = request.form.getlist('acompanhamentos')
-
-    # Captura as novas guarnições
     novas_guarnicoes = request.form.getlist('nova_guarnicoes')
+
+    # Upload da imagem
+    imagem = request.files['img']
+    imagem_binaria = imagem.read() if imagem else None
 
     # Cria uma instância do objeto que contém o método de inserção
     adm = Adm()  # Substitua pelo seu objeto real
 
     # Verifica se a categoria selecionada é "Marmita"
     id_categoria_marmita = 7  # Substitua pelo ID real da categoria "Marmita"
-    
-    if int(categoria) == id_categoria_marmita:
-        # Insere uma marmita e associa guarnições e acompanhamentos
-        sucesso = adm.inserir_marmita(nome, preco, img, descricao, tamanho, guarnicoes_existentes, novas_guarnicoes, acompanhamentos_existentes)
-    else:
-        # Insere um produto normal
-        sucesso = adm.inserir_produto(nome, preco, img, descricao, categoria, novas_guarnicoes)
 
-    return redirect('/inicialadm')  # Redireciona para a página inicial ou outra página desejada
+    if int(categoria) == id_categoria_marmita:
+        sucesso = adm.inserir_marmita(nome, preco, imagem_binaria, descricao, tamanho, guarnicoes_existentes, novas_guarnicoes, acompanhamentos_existentes)
+    else:
+        sucesso = adm.inserir_produto(nome, preco, imagem_binaria, descricao, categoria, novas_guarnicoes)
+
+    return redirect('/inicialadm')
+
 
 
 

@@ -35,7 +35,7 @@ CREATE TABLE tb_produto (
     descricao TEXT,
     id_categoria INT,
     habilitado TINYINT(1) DEFAULT 1,
-    imagem_binaria LONGBLOB,
+    imagem_blob LONGBLOB,
     PRIMARY KEY (cod_produto)
 );
 
@@ -456,4 +456,4 @@ INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
 VALUES ('Administrador', '123456789', 'adm@adm.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'adm');
 
 INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
-VALUES ('Cliente', '123456789', 'cliente@cliente', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'cliente');
+VALUES ('Cliente', '123456789', 'cliente@cliente.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'cliente');
