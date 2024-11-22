@@ -45,6 +45,7 @@ html {
 .cbc-cima {
     justify-items: center;
     position: fixed;
+    margin: auto 0;
     /* Fixa a posição no topo da página */
     z-index: 1000;
     /* Garante que fique acima de outros elementos */

@@ -60,7 +60,7 @@ class Sistema:
 
         # Consulta SQL com JOIN para obter o nome e o ID da categoria
         sql = """
-        SELECT p.cod_produto, p.nome_produto, p.preco, p.url_img, p.descricao, c.id_categoria, c.nome
+        SELECT p.cod_produto, p.nome_produto, p.preco, p.url_img, p.descricao, c.id_categoria, c.nome, p.imagem_blob
         FROM tb_produto p
         JOIN tb_categoria c ON p.id_categoria = c.id_categoria
         WHERE p.habilitado = 1
@@ -74,7 +74,19 @@ class Sistema:
         for produto in resultado:
             categoria_id = produto[5]
             categoria_nome = produto[6]
+            url_img = produto[3]  # URL da imagem
+            blob_imagem = produto[7]  # Blob da imagem
 
+            # Lógica para determinar a imagem do produto
+            if url_img:  # Se a URL estiver disponível
+                imagem_produto = url_img
+            elif blob_imagem:  # Se o blob estiver disponível
+                imagem_base64 = base64.b64encode(blob_imagem).decode('utf-8')
+                imagem_produto = f"data:image/jpeg;base64,{imagem_base64}"
+            else:  # Se nenhuma imagem estiver disponível
+                imagem_produto = None
+
+            # Agrupa os produtos por categoria
             if categoria_id not in produtos_por_categoria:
                 produtos_por_categoria[categoria_id] = {
                     'nome_categoria': categoria_nome,  # Armazena o nome da categoria
@@ -85,7 +97,7 @@ class Sistema:
                 'id_produto': produto[0],
                 'nome_produto': produto[1],
                 'preco': produto[2],
-                'imagem_produto': produto[3],
+                'imagem_produto': imagem_produto,  # URL ou Base64
                 'descricao': produto[4]
             })
 
@@ -106,11 +118,27 @@ class Sistema:
         mycursor.execute(sql, (id,))
         resultado = mycursor.fetchone()  # Obtém o resultado único
 
+        if not resultado:
+            return None  # Retorna None caso o produto não seja encontrado
+
+        # Recupera as informações do produto
+        imagem_url = resultado[3]  # URL da imagem (posição 3)
+        imagem_blob = resultado[7]  # Blob da imagem (posição 7)
+
+        # Lógica para definir a imagem do produto
+        if imagem_url:  # Se o URL da imagem estiver disponível
+            imagem_produto = imagem_url
+        elif imagem_blob:  # Se o blob estiver disponível
+            imagem_base64 = base64.b64encode(imagem_blob).decode('utf-8')
+            imagem_produto = f"data:image/jpeg;base64,{imagem_base64}"
+        else:  # Se nenhum estiver disponível
+            imagem_produto = None
+
         # Cria um dicionário para o produto
         dicionario_produto = {
             'nome_produto': resultado[1],
             'preco': resultado[2],
-            'imagem_produto': resultado[3],
+            'imagem_produto': imagem_produto,  # Base64 ou URL
             'descricao': resultado[4],
             'cod_produto': resultado[0]
         }
