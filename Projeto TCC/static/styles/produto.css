@@ -58,7 +58,7 @@ main {
     display: flex;
     flex-direction: column;
     text-align: center; /* Centraliza o texto da descrição */
-    align-items: flex-start;
+    align-items: center;
 }
 
 .nome-produto {
@@ -81,6 +81,7 @@ main {
     margin-bottom: 40px;
     
 }
+
 .sair {
     display: flex;
     justify-content: center; /* Alinha os botões horizontalmente */
@@ -91,6 +92,7 @@ main {
 a {
     text-decoration: none !important;
 }
+
 .btn-voltar {
     display: flex;
     align-content: center;
