@@ -912,10 +912,6 @@ def exibir_carrinho():
         return render_template("carrinho.html", lista_carrinho=lista_carrinho)  # Renderiza a página do carrinho com a lista de produtos
 
 
-
-    
-
-
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:

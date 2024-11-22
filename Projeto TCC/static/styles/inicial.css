@@ -277,41 +277,61 @@ h2 {
 
 .sidenav {
     height: 100%;
-    width: 0;
+    width: 0; /* O menu inicia fechado */
     position: fixed;
     z-index: 2;
     top: 0;
     right: 0;
-    background-color: rgb(209, 31, 31);
-    overflow-x: hidden;
-    transition: 0.5s;
+    background-color: #D11F1F;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+    transition: 0.5s ease;
     padding-top: 60px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
 }
 
+
 .sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: rgb(255, 255, 255);
-    display: block;
-    transition: 0.3s;
+    padding: 15px 32px; /* Aumenta o padding interno para mais espaço */
+    font-size: 20px;
+    color: #FFFFFF;
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 2rem; /* Espaçamento entre o ícone e o texto */
+    border-radius: 10px; /* Arredonda os cantos dos links */
+    transition: background-color 0.3s, color 0.3s; /* Transição suave para hover */
+    
+}
+
+.sidenav a i {
+    font-size: 22px; /* Ajusta o tamanho dos ícones */
+    color: #FFD43B;
 }
 
 .sidenav a:hover {
-    color: #bbbbbb;
+    background-color: #dd3939; /* Cor de fundo no hover */
+    color: #FFD43B; /* Muda a cor do texto no hover */
     text-decoration: none;
+}
+
+.sidenav hr {
+    border: 0.5px solid #ffffff66; /* Linhas divisórias mais suaves */
+    width: 80%;
+    margin: 10px auto;
 }
 
 .sidenav .closebtn {
     position: absolute;
     top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
+}
+
+.nav-button{
+    display: flex;
+    justify-content: space-between;
 }
 
 hr {
-
     background-color: rgb(255, 255, 255);
 }
 
@@ -358,60 +378,6 @@ footer section {
     justify-content: flex-end;
     margin-right: 15px;
     margin-bottom: 10px;
-}
-
-/* Modo Escuro */
-
-/* The switch - the box around the slider */
-.switch {
-    display: block;
-    --width-of-switch: 3.5em;
-    --height-of-switch: 2em;
-    /* size of sliding icon -- sun and moon */
-    --size-of-icon: 1.4em;
-    /* it is like a inline-padding of switch */
-    --slider-offset: 0.3em;
-    position: relative;
-    width: var(--width-of-switch);
-    height: var(--height-of-switch);
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-/* The slider */
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #f4f4f5;
-    transition: .4s;
-    border-radius: 30px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: var(--size-of-icon, 1.4em);
-    width: var(--size-of-icon, 1.4em);
-    border-radius: 20px;
-    left: var(--slider-offset, 0.3em);
-    top: 50%;
-    transform: translateY(-50%);
-    background: linear-gradient(40deg, #ff0080, #ff8c00 70%);
-    ;
-    transition: .4s;
-}
-
-input:checked+.slider {
-    background-color: #303136;
 }
 
 input:checked+.slider:before {
