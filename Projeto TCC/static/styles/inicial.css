@@ -301,6 +301,7 @@ h2 {
     gap: 2rem; /* Espaçamento entre o ícone e o texto */
     border-radius: 10px; /* Arredonda os cantos dos links */
     transition: background-color 0.3s, color 0.3s; /* Transição suave para hover */
+    
 }
 
 .sidenav a i {
@@ -309,8 +310,9 @@ h2 {
 }
 
 .sidenav a:hover {
-    background-color: #ff3b3b; /* Cor de fundo no hover */
-    color: #D11F1F; /* Muda a cor do texto no hover */
+    background-color: #dd3939; /* Cor de fundo no hover */
+    color: #FFD43B; /* Muda a cor do texto no hover */
+    text-decoration: none;
 }
 
 .sidenav hr {
@@ -322,7 +324,6 @@ h2 {
 .sidenav .closebtn {
     position: absolute;
     top: 0;
-    right:
 }
 
 .nav-button{
@@ -378,9 +379,6 @@ footer section {
     margin-right: 15px;
     margin-bottom: 10px;
 }
-
-
-
 
 input:checked+.slider:before {
     left: calc(100% - (var(--size-of-icon, 1.4em) + var(--slider-offset, 0.3em)));
