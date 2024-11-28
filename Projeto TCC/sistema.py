@@ -159,7 +159,8 @@ class Sistema:
         SELECT 
             m.id_marmita, m.nome_marmita, m.preco, m.tamanho, m.descricao, m.url_img,
             GROUP_CONCAT(DISTINCT CONCAT(g.id_guarnicao, ':', g.nome_guarnicao) SEPARATOR ', ') AS guarnicoes,
-            GROUP_CONCAT(DISTINCT CONCAT(a.id_acompanhamento, ':', a.nome_acompanhamento) SEPARATOR ', ') AS acompanhamentos
+            GROUP_CONCAT(DISTINCT CONCAT(a.id_acompanhamento, ':', a.nome_acompanhamento) SEPARATOR ', ') AS acompanhamentos,
+             m.imagem_binaria
         FROM 
             tb_marmita AS m
         LEFT JOIN tb_marmita_guarnicao AS mg ON m.id_marmita = mg.id_marmita
@@ -200,6 +201,25 @@ class Sistema:
         mycursor.execute(sql_todos_acompanhamentos)
         todos_acompanhamentos = [{'id': str(row[0]), 'nome': row[1]} for row in mycursor.fetchall()]
 
+        # Função para converter imagem binária em base64
+        def converter_imagem_binaria(img_binaria):
+            imagem_base64 = base64.b64encode(img_binaria).decode('utf-8')
+            imagem_marmita = f"data:image/jpeg;base64,{imagem_base64}"
+            return imagem_marmita
+        # Define a imagem da marmita (binária ou URL)
+        imagem_marmita = None
+
+        if resultado[8]:  # Verifica se há conteúdo binário
+            try:
+                # Tenta converter a imagem binária para base64
+                imagem_marmita = converter_imagem_binaria(resultado[8])
+            except Exception as e:
+                print(f"Erro ao converter imagem binária: {e}")
+                imagem_marmita = resultado[5]  # Fallback para a URL da imagem
+        else:
+            imagem_marmita = resultado[5]  # Se não houver binário, utiliza a URL
+
+
         # Organiza os dados da marmita
         dados_marmita = {
             'id_marmita': resultado[0],  # ID da marmita
@@ -207,7 +227,7 @@ class Sistema:
             'preco': resultado[2],  # Preço
             'tamanho': resultado[3],  # Tamanho
             'descricao': resultado[4],  # Descrição
-            'imagem_marmita': resultado[5],  # Imagem
+            'imagem_marmita': imagem_marmita,  # Imagem (binária ou URL)
             'guarnicoes': guarnicoes_associadas,  # Guarnições associadas à marmita
             'acompanhamentos': acompanhamentos_associados,  # Acompanhamentos associados à marmita
             'todas_guarnicoes': todas_guarnicoes,  # Todas as guarnições disponíveis
@@ -235,25 +255,53 @@ class Sistema:
         mydb = Conexao.conectar()  # Conecta ao banco de dados
         mycursor = mydb.cursor()   # Cria um cursor para executar queries
 
-        # Consulta SQL para selecionar apenas produtos habilitados (assumindo coluna 'habilitado')
-        sql = "SELECT * FROM tb_marmita WHERE habilitado = 1"
-        mycursor.execute(sql)      # Executa a consulta
+        # Consulta SQL para selecionar marmitas habilitadas
+        sql = """
+        SELECT m.id_marmita, m.nome_marmita, m.preco, m.tamanho, m.descricao, 
+            m.url_img, m.imagem_binaria, m.habilitado
+        FROM tb_marmita m
+        WHERE m.habilitado = 1
+        """
+        mycursor.execute(sql)  # Executa a consulta
         resultado = mycursor.fetchall()  # Obtém todos os resultados
 
-        lista_marmitas = []
+        marmitas_por_tamanho = {}
 
-        # Itera sobre os resultados e adiciona cada produto à lista
-        for produto in resultado:
-            lista_marmitas.append({
-                'nome_marmita': produto[1],
-                'preco': produto[2],
-                'imagem_marmita': produto[5],
-                'tamanho': produto[3],
-                'descricao': produto[4],
-                'id_marmita': produto[0]
+        # Itera sobre os resultados e agrupa as marmitas por tamanho
+        for marmita in resultado:
+            tamanho = marmita[3]  # Obtém o tamanho da marmita (Pequena, Média, Grande)
+            url_img = marmita[5]  # URL da imagem
+            blob_imagem = marmita[6]  # Blob da imagem
+
+            # Lógica para determinar a imagem da marmita
+            if url_img:  # Se a URL estiver disponível
+                imagem_marmita = url_img
+            elif blob_imagem:  # Se o blob estiver disponível
+                imagem_base64 = base64.b64encode(blob_imagem).decode('utf-8')
+                imagem_marmita = f"data:image/jpeg;base64,{imagem_base64}"
+            else:  # Se nenhuma imagem estiver disponível
+                imagem_marmita = None
+
+            # Agrupa as marmitas por tamanho
+            if tamanho not in marmitas_por_tamanho:
+                marmitas_por_tamanho[tamanho] = {
+                    'tamanho': tamanho,  # Armazena o tamanho da marmita
+                    'marmitas': []
+                }
+
+            marmitas_por_tamanho[tamanho]['marmitas'].append({
+                'id_marmita': marmita[0],
+                'nome_marmita': marmita[1],
+                'preco': marmita[2],
+                'imagem_marmita': imagem_marmita,  # URL ou Base64
+                'descricao': marmita[4]
             })
+
         mydb.close()  # Fecha a conexão com o banco de dados
-        return lista_marmitas if lista_marmitas else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+        return marmitas_por_tamanho if marmitas_por_tamanho else {}  # Retorna as marmitas agrupadas ou um dicionário vazio
+
+
+
     
     def exibir_marmitas_adm(self):
         mydb = Conexao.conectar()  # Conecta ao banco de dados

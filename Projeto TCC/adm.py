@@ -283,7 +283,7 @@ class Adm:
 
         # Inserir marmita na tabela `tb_marmita`
         sql = f"""
-        INSERT INTO tb_marmita (nome_marmita, preco, url_img, descricao, tamanho)
+        INSERT INTO tb_marmita (nome_marmita, preco, imagem_binaria, descricao, tamanho)
         VALUES (%s, %s, %s, %s, %s)
         """
         mycursor.execute(sql, (nomeP, preco, imagem, descricao, tamanho))

@@ -45,43 +45,47 @@
   </section>
 
 
-    <!-- Seção de Produtos -->
-    <section class="container-produtos">
-      
-      <div class="grid-produto">
-        <div class="produtos" id="produtos-list">
-          <!-- Produtos renderizados dinamicamente aqui -->
-        </div>
-      </div>
-    </section>
+  <!-- Seção de Produtos -->
+  <section class="container-produtos">
 
-<!-- Seção de Marmitas -->
-<section class="container-produtos">
-  <h3 style="margin-top: 1rem !important;
-  margin-bottom: 1rem !important;
-  font-size: 1.75rem;">Marmitex</h3>
-  
-  <div class="grid-produto">
-    <div class="produtos" id="marmitas-list">
-      {% for marmita in lista_marmitas %}
-      <form action="/marmita_unica" method="post">
-        <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
-          <div class="card-produtos">
-            <div class="left-lado">
-              <span class="produto-nome">{{ marmita.nome_marmita }}</span>
-              <span class="produto-desc">{{ marmita.descricao }}</span>
-              <span class="produto-preco">R$ {{ marmita.preco }}</span>
-            </div>
-            <div class="right-lado">
-              <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
-            </div>
-          </div>
-        </button>
-      </form>
-      {% endfor %}
+    <div class="grid-produto">
+      <div class="produtos" id="produtos-list">
+        <!-- Produtos renderizados dinamicamente aqui -->
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- Seção de Marmitas -->
+  <section class="container-produtos">
+    <h3 style="margin-top: 1rem !important; margin-bottom: 1rem !important; font-size: 1.75rem;">Marmitex</h3>
+
+    <div class="grid-produto">
+      <div class="produtos" id="marmitas-list">
+        {% for marmita in lista_marmitas %}
+        <form action="/marmita_unica" method="post">
+          <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
+            <div class="card-produtos">
+              <div class="left-lado">
+                <span class="produto-nome">{{ marmita.nome_marmita }}</span>
+                <span class="produto-desc">{{ marmita.descricao }}</span>
+                <span class="produto-preco">R$ {{ marmita.preco }}</span>
+              </div>
+              <div class="right-lado">
+                {% if marmita.img_marmita is string %}
+                <!-- Se for base64, insere diretamente -->
+                <img src="data:image/jpeg;base64,{{ marmita.img_marmita }}" alt="{{ marmita.nome_marmita }}">
+                {% else %}
+                <!-- Se for URL, insere a URL da imagem -->
+                <img src="{{ marmita.img_marmita }}" alt="{{ marmita.nome_marmita }}">
+                {% endif %}
+              </div>
+            </div>
+          </button>
+        </form>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 
 </main>
 
@@ -163,25 +167,35 @@
         const marmitasContainer = $('#marmitas-list');
         marmitasContainer.empty();  // Limpa a lista existente para evitar duplicação
 
-        // Itera sobre cada marmita retornada e a insere no HTML
-        data.forEach(function (marmita) {
-          marmitasContainer.append(`
-              <form action="/marmita_unica" method="post">
-                <button value="${marmita.id_marmita}" name="btn-produto" type="submit">
-                  <div class="card-produtos">
-                    <div class="left-lado">
-                      <span class="produto-nome">${marmita.nome_marmita}</span>
-                      <span class="produto-desc">${marmita.descricao}</span>
-                      <span class="produto-preco">R$ ${marmita.preco}</span>
-                    </div>
-                    <div class="right-lado">
-                      <img src="${marmita.imagem_marmita}" alt="${marmita.nome_marmita}">
-                    </div>
-                  </div>
-                </button>
-              </form>
-            `);
-        });
+        if (data && typeof data === 'object') {
+          // Itera sobre os tamanhos e adiciona marmitas de cada tamanho
+          Object.keys(data).forEach(function (tamanho) {
+            const marmitas = data[tamanho].marmitas;
+            if (Array.isArray(marmitas)) {
+              marmitasContainer.append(`<h3>${tamanho}</h3>`);
+              marmitas.forEach(function (marmita) {
+                marmitasContainer.append(`
+                  <form action="/marmita_unica" method="post">
+                    <button value="${marmita.id_marmita}" name="btn-produto" type="submit">
+                      <div class="card-produtos">
+                        <div class="left-lado">
+                          <span class="produto-nome">${marmita.nome_marmita}</span>
+                          <span class="produto-desc">${marmita.descricao}</span>
+                          <span class="produto-preco">R$ ${marmita.preco}</span>
+                        </div>
+                        <div class="right-lado">
+                          <img src="${marmita.imagem_marmita}" alt="${marmita.nome_marmita}">
+                        </div>
+                      </div>
+                    </button>
+                  </form>
+                `);
+              });
+            }
+          });
+        } else {
+          console.error("Erro: Dados não são um objeto esperado.", data);
+        }
       },
       error: function (error) {
         console.error("Erro ao carregar marmitas:", error);
@@ -190,10 +204,6 @@
   }
 
 
-  // Atualiza a lista de produtos a cada 2 segundos (2000 ms)
-  setInterval(atualizarProdutos, 2000);
-  // Atualiza a lista de marmitas a cada 2 segundos (2000 ms)
-  setInterval(atualizarMarmitas, 2000);
 
 
   // Chama as funções na primeira carga da página
