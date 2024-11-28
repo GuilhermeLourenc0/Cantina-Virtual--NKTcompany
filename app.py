@@ -31,30 +31,59 @@ auth_token = '54f807df630fa436c0b2820b5482939f'
 client = Client(account_sid, auth_token)
 
 
-# Rota para a página inicial
+
+def verificar_sessao():
+    """
+    Função genérica para verificar o estado da sessão do usuário.
+    Se o usuário estiver no meio do processo de verificação incompleta,
+    a sessão será limpa.
+    """
+    if 'usuario_logado' in session and session.get('verificacao_incompleta'):
+        # Limpa a sessão de usuário e a flag de verificação incompleta
+        session.pop('usuario_logado', None)
+        session.pop('verificacao_incompleta', None)
+
+
+
 @app.route("/")
 def principal():
     try:
+        verificar_sessao()
+
+        # Redirecionar para a página inicial do administrador se o tipo for 'adm'
+        if 'usuario_logado' in session and session['usuario_logado'].get('tipo') == 'adm':
+            return redirect("/inicialadm")
+
+        # Verifica se o site está aberto, sem a necessidade de login
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
         hora_atual = now.hour
         minutos_atuais = now.minute
         site_aberto = hora_atual >= 7 and (hora_atual < 21 or (hora_atual == 21 and minutos_atuais < 45))
 
-        # Obter o status de login bem-sucedido para exibir o alerta e removê-lo da sessão
+        # Obter o status de login bem-sucedido para exibir o alerta
         success = session.pop('login_sucesso', False)
 
         if site_aberto:
             sistema = Sistema()
             produtos_por_categoria = sistema.exibir_produtos()
             lista_marmitas = sistema.exibir_marmitas()
-            return render_template("index.html", produtos_por_categoria=produtos_por_categoria, lista_marmitas=lista_marmitas, site_aberto=site_aberto, success=success)
+            return render_template(
+                "index.html",
+                produtos_por_categoria=produtos_por_categoria,
+                lista_marmitas=lista_marmitas,
+                site_aberto=site_aberto,
+                success=success,
+            )
 
         return render_template("index.html", site_aberto=site_aberto, success=success)
 
     except Exception as e:
         print(f"Erro ao verificar o horário de funcionamento: {e}")
         return "Erro ao verificar o horário de funcionamento."
+
+
+
 
 
 
@@ -95,6 +124,8 @@ def marmitas():
 
 @app.route("/inicialadm")
 def inicialadm():
+    # Verifica e limpa a sessão se necessário
+    verificar_sessao()
     # Verifica se o usuário está logado e possui um ID de cliente válido
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
@@ -111,6 +142,8 @@ def inicialadm():
 
 @app.route("/adm")
 def principal_adm():
+    # Verifica e limpa a sessão se necessário
+    verificar_sessao()
     # Verifica se o usuário está logado e possui um ID de cliente válido
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
@@ -124,14 +157,21 @@ def principal_adm():
     lista_marmitas = sistema.exibir_marmitas_adm()
     return render_template("index-adm.html", lista_produtos=lista_produtos, lista_marmitas = lista_marmitas)  # Renderiza a página inicial com a lista de produtos
 
-# Define a rota de cadastro
+# Rota de cadastro
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
+
+    # Redireciona para "/" se o usuário já estiver logado
+    if 'usuario_logado' in session:
+        return redirect("/")
+
     if request.method == 'GET':
+        verificar_sessao()
         usuario = Usuario()
         cursos = usuario.exibir_cursos()
         return render_template("cadastrar.html", cursos=cursos)
     else:
+        # Recebe os dados do formulário
         nome = request.form["nome"]
         telefone = request.form["tel"]
         email = request.form["email"]
@@ -140,71 +180,140 @@ def cadastro():
         tipo = "cliente"
 
         usuario = Usuario()
-        if usuario.cadastrar(nome, telefone, email, senha, curso, tipo):
-            # Gerar um código de verificação aleatório com 4 dígitos, incluindo zeros à esquerda
-            verification_code = str(random.randint(90, 9999)).zfill(4)
 
-            # Enviar o código de verificação via SMS
-            message = client.messages.create(
-                to=telefone,
-                from_="+13195190041",
-                body=f'Seu código é: {verification_code}'
-            )
-            print(message.sid)
-
-            # Armazenar o telefone e o código de verificação na sessão
-            session['telefone_verificacao'] = telefone
-            session['verification_code'] = verification_code
-            usuario.logar(email, senha)
-            if usuario.logado:
-                # Se o login for bem-sucedido, armazena os dados do usuário na sessão
-                session['usuario_logado'] = {
-                    "nome": usuario.nome, 
-                    "email": usuario.email, 
-                    "tel": usuario.tel, 
-                    "id_cliente": usuario.id_cliente, 
-                    "tipo": usuario.tipo,
-                    "senha": usuario.senha
-                }
-            # Redireciona para a tela de verificação
-            return redirect("/verificacao")
-        else:
+        # Verifica se o email ou telefone já estão cadastrados
+        if usuario.verificar_duplicidade(email, telefone):
+            flash("Email ou telefone já cadastrado.")
             return redirect("/cadastro")
 
+        # Gera o código de verificação e o envia
+        verification_code = str(random.randint(1000, 9999)).zfill(4)
+        message = client.messages.create(
+            to=telefone,
+            from_="+13195190041",
+            body=f'Seu código é: {verification_code}'
+        )
+        print(message.sid)
 
-# Rota para a tela de verificação
+        # Armazena dados temporários na sessão para realizar o cadastro após a verificação
+        session['dados_cadastro'] = {
+            "nome": nome,
+            "telefone": telefone,
+            "email": email,
+            "senha": senha,
+            "curso": curso,
+            "tipo": tipo,
+            "verification_code": verification_code
+        }
+        session['tipo_verificacao'] = "cadastro"  # Define o tipo de verificação como cadastro
+
+        # Redireciona para a página de verificação
+        return redirect("/verificacao")
+
+
 @app.route("/verificacao", methods=["GET", "POST"])
 def verificacao():
-    if request.method == 'GET':
-        return render_template("verificacao.html")  # Renderiza a página onde o usuário insere o código
-    else:
-        codigo1 = request.form["codigo1"]
-        codigo2 = request.form["codigo2"]
-        codigo3 = request.form["codigo3"]
-        codigo4 = request.form["codigo4"]
-        codigo_inserido = codigo1 + codigo2 + codigo3 + codigo4
-        verification_code = session.get('verification_code')
+    if 'dados_cadastro' not in session and 'email_pendente' not in session:
+        # Redireciona para login se faltar informações
+        session.pop('usuario_logado', None)
+        return redirect("/logar")
 
-        if codigo_inserido == verification_code:
-            return redirect("/")  # Redireciona para a página principal após a verificação
-        else:
-            return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
+    if request.method == 'GET':
+        return render_template("verificacao.html")
+
+    # Código inserido pelo usuário
+    codigo_inserido = "".join([request.form["codigo1"], 
+                               request.form["codigo2"], 
+                               request.form["codigo3"], 
+                               request.form["codigo4"]])
+    verification_code = session.get('verification_code')
+    tipo_verificacao = session.get('tipo_verificacao')
+
+    if codigo_inserido == verification_code:
+        # Verificação bem-sucedida
+        if tipo_verificacao == "cadastro":
+            dados_cadastro = session.pop('dados_cadastro', None)
+            if dados_cadastro:
+                usuario = Usuario()
+                usuario.cadastrar(
+                    dados_cadastro["nome"],
+                    dados_cadastro["telefone"],
+                    dados_cadastro["email"],
+                    dados_cadastro["senha"],
+                    dados_cadastro["curso"],
+                    dados_cadastro["tipo"]
+                )
+
+                # Login automático após o cadastro
+                usuario.logar(dados_cadastro["email"], dados_cadastro["senha"])
+                if usuario.logado:
+                    session['usuario_logado'] = {
+                        "nome": usuario.nome, 
+                        "email": usuario.email, 
+                        "tel": usuario.tel, 
+                        "id_cliente": usuario.id_cliente, 
+                        "tipo": usuario.tipo
+                    }
+            session.pop('verification_code', None)
+            session.pop('tipo_verificacao', None)
+            return redirect("/")
+
+        elif tipo_verificacao == "atualizar_dados_iniciais":
+            id_cliente = session['usuario_logado']['id_cliente']
+            telefone = session['telefone']
+            email = session.pop('email_pendente')
+            senha = session.pop('senha_pendente')
+
+            # Atualiza o telefone
+            usuario = Usuario()
+            usuario.atualizar_telefone(id_cliente, telefone)  # Atualiza o telefone no banco
+
+            # Agora atualiza os dados (email e senha)
+            usuario.atualizar_dados(id_cliente, telefone, email, senha)  # Atualiza o email e senha, mas telefone já foi atualizado
+
+            session.pop('verification_code', None)
+            session.pop('tipo_verificacao', None)
+            session.pop('verificacao_incompleta', None)
+
+            return redirect("/inicialadm")
+
+
+    else:
+        return render_template("verificacao.html", erro="Código incorreto. Tente novamente.")
+
+
+
+
+
+
+
 
 
 @app.route("/logar", methods=['GET', 'POST'])
 def logar():
     if request.method == 'GET':
-        # Remove a variável de erro da sessão e passa para o template
+        # Verifica se o usuário já está logado
+        if 'usuario_logado' in session:
+            usuario = session['usuario_logado']
+            # Redireciona conforme o tipo do usuário
+            if usuario.get('tipo') == 'adm':
+                return redirect("/inicialadm")
+            else:
+                return redirect("/")
+            
+        
+        # Renderiza a página de login para usuários não logados
         erro = session.pop('login_erro', False)
         return render_template('login.html', success=False, erro=erro)
     
-    # Se for um método POST
+    # Processa o formulário de login
     senha = request.form['senha']
     email = request.form['email']
     usuario = Usuario()
     usuario.logar(email, senha)
     
     if usuario.logado:
+        # Define os dados do usuário na sessão
         session['usuario_logado'] = {
             "nome": usuario.nome, 
             "email": usuario.email, 
@@ -215,57 +324,76 @@ def logar():
             "primeiro_login": usuario.primeiro_login
         }
         
+        print("Sessão após login:", session)  # Verificação de sessão
+        
+        # Redireciona com base no tipo e status do login
+        if usuario.tipo != 'cliente' and not usuario.primeiro_login:
+            return redirect("/inicialadm")
+        
         if usuario.tipo != 'cliente' and usuario.primeiro_login:
-            return redirect("/atualizar_dados_iniciais")
+            session['verificacao_incompleta'] = True  # Marca a sessão para verificação incompleta
+            return redirect("/atualizar_dados_iniciais")  # Redireciona para a atualização de dados
         
-        # Define a variável de sessão para exibir o alerta de sucesso
         session['login_sucesso'] = True
-        
         return redirect("/")
     
-    # Define a variável de sessão para exibir o alerta de erro
+    # Define erro de login na sessão e redireciona para login
     session['login_erro'] = True
     return redirect("/logar")
 
 
 
 
-
-
-
 @app.route("/atualizar_dados_iniciais", methods=["GET", "POST"])
 def atualizar_dados_iniciais():
+    # Verifica se o usuário está logado e se a verificação está pendente
+    if 'usuario_logado' not in session:
+        return redirect("/logar")
+    
+    if not session.get('verificacao_incompleta'):
+        return redirect("/")
+    
     if request.method == 'GET':
         return render_template("atualizar_dados_iniciais.html")
 
-    # Processa o formulário quando enviado via POST
-    telefone = request.form['telefone']
-    email = request.form['email']
-    senha = request.form['senha']
+    # Processa a atualização dos dados
+    telefone = request.form.get('telefone')
+    email = request.form.get('email')
+    senha = request.form.get('senha')
 
-    # Atualiza os dados do administrador
-    usuario = Usuario()
+    if not telefone or not email or not senha:
+        return render_template("atualizar_dados_iniciais.html", erro="Preencha todos os campos.")
+
     id_cliente = session['usuario_logado']['id_cliente']
-    atualizacao_sucesso = usuario.atualizar_dados(id_cliente, telefone, email, senha)
+    usuario = Usuario()
+    usuario.atualizar_telefone(id_cliente, telefone)
 
-    if not atualizacao_sucesso:
-        return render_template("atualizar_dados_iniciais.html", error="Erro ao atualizar dados. Tente novamente.")
+    # Salva os dados pendentes na sessão
+    session['telefone'] = telefone
+    session['email_pendente'] = email
+    session['senha_pendente'] = senha
+    session['verification_code'] = str(random.randint(1000, 9999)).zfill(4)
+    session['tipo_verificacao'] = "atualizar_dados_iniciais"
 
-    # Gera e envia o código de verificação
-    verification_code = str(random.randint(1000, 9999)).zfill(4)
-    session['verification_code'] = verification_code
-    session['telefone_verificacao'] = telefone
-
-    # Envia mensagem de verificação
+    # Envia o código de verificação
     message = client.messages.create(
         to=telefone,
         from_="+13195190041",
-        body=f'Seu código é: {verification_code}'
+        body=f'Seu código é: {session["verification_code"]}'
     )
-    print("Código de verificação enviado:", message.sid)
-
-    # Redireciona para a rota de verificação
+    session['verificacao_incompleta'] = True
     return redirect("/verificacao")
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -287,42 +415,39 @@ def inserir_produtos():
     # Verifica se o usuário está logado e possui um ID de cliente válido
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login
-    
+
     # Verifica se o tipo do usuário é 'adm'
     if session['usuario_logado']['tipo'] == "cliente":
         return redirect("/")  # Redireciona para a rota "/"
+
     nome = request.form['nome']
     preco = request.form['preco']
-    img = request.form['img']
     descricao = request.form['descricao']
     categoria = request.form['categoria']
-    
-    # Captura o tamanho da marmita (campo exibido apenas quando marmita for selecionada)
-    tamanho = request.form.get('tamanho')
+    tamanho = request.form.get('tamanho')  # Tamanho da marmita (opcional)
 
-    # Captura as guarnições existentes (selecionadas via checkbox)
+    # Captura guarnições e acompanhamentos
     guarnicoes_existentes = request.form.getlist('guarnicoes')
-
-    # Captura os acompanhamentos existentes (selecionados via checkbox)
     acompanhamentos_existentes = request.form.getlist('acompanhamentos')
-
-    # Captura as novas guarnições
     novas_guarnicoes = request.form.getlist('nova_guarnicoes')
+
+    # Upload da imagem
+    imagem = request.files['img']
+    imagem_binaria = imagem.read() if imagem else None
 
     # Cria uma instância do objeto que contém o método de inserção
     adm = Adm()  # Substitua pelo seu objeto real
 
     # Verifica se a categoria selecionada é "Marmita"
     id_categoria_marmita = 7  # Substitua pelo ID real da categoria "Marmita"
-    
-    if int(categoria) == id_categoria_marmita:
-        # Insere uma marmita e associa guarnições e acompanhamentos
-        sucesso = adm.inserir_marmita(nome, preco, img, descricao, tamanho, guarnicoes_existentes, novas_guarnicoes, acompanhamentos_existentes)
-    else:
-        # Insere um produto normal
-        sucesso = adm.inserir_produto(nome, preco, img, descricao, categoria, novas_guarnicoes)
 
-    return redirect('/inicialadm')  # Redireciona para a página inicial ou outra página desejada
+    if int(categoria) == id_categoria_marmita:
+        sucesso = adm.inserir_marmita(nome, preco, imagem_binaria, descricao, tamanho, guarnicoes_existentes, novas_guarnicoes, acompanhamentos_existentes)
+    else:
+        sucesso = adm.inserir_produto(nome, preco, imagem_binaria, descricao, categoria, novas_guarnicoes)
+
+    return redirect('/inicialadm')
+
 
 
 
@@ -549,7 +674,6 @@ def marcar_entregue(id_pedido):
 
 
 
-# Rota para atualizar o status do pedido
 @app.route("/atualizar_status_pedido", methods=['POST'])
 def atualizar_status_pedido():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
@@ -561,10 +685,29 @@ def atualizar_status_pedido():
 
     # Verifica se o ID do pedido e o status são válidos
     if id_pedido and novo_status:
-        sistema = Sistema()  # Cria uma instância da classe Sistema
+        sistema = Sistema()  # Instância da classe Sistema
         sucesso = sistema.atualizar_status_pedido(id_pedido, novo_status)  # Atualiza o status do pedido no sistema
         
         if sucesso:
+            # Se o status for "pronto", envia uma mensagem para o cliente
+            if novo_status.lower() == "feito":
+                try:
+                    # Obtém os dados do cliente pelo ID do pedido
+                    cliente = sistema.obter_dados_cliente_por_pedido(id_pedido)
+                    telefone_cliente = cliente.get('telefone')
+                    nome_cliente = cliente.get('nome')
+                    
+                    if telefone_cliente:
+                        mensagem = f"Olá {nome_cliente}, seu pedido está pronto! Pode retirar ou aguardar a entrega."
+                        message = client.messages.create(
+                            body=mensagem,
+                            from_="+13195190041",
+                            to=telefone_cliente
+                        )
+                        print(f"Mensagem enviada com sucesso: {message.sid}")
+                except Exception as e:
+                    print(f"Erro ao enviar mensagem: {e}")
+            
             return jsonify({'status': 'sucesso'})
         else:
             return jsonify({'status': 'erro', 'mensagem': 'Não foi possível atualizar o status.'})
@@ -769,10 +912,6 @@ def exibir_carrinho():
         return render_template("carrinho.html", lista_carrinho=lista_carrinho)  # Renderiza a página do carrinho com a lista de produtos
 
 
-
-    
-
-
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
@@ -829,6 +968,9 @@ def editar_produto():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     
+    if session['usuario_logado'].get('tipo') == 'cliente':
+        return redirect('/')  # Redireciona clientes para a página inicial
+
     if request.method == 'POST':
         btn_produto = request.form.get('btn-produto')  # Obtém o ID do produto selecionado
         session['id'] = {'id_produto': btn_produto}  # Armazena o ID na sessão
@@ -855,6 +997,9 @@ def editar_produto():
 def atualizar_produto():
     if 'usuario_logado' not in session:
         return redirect('/logar')
+
+    if session['usuario_logado'].get('tipo') == 'cliente':
+        return redirect('/')  # Redireciona clientes para a página inicial
 
     adm = Adm()  # Cria uma instância da classe Sistema
     id_produto = request.form.get('id_produto')
@@ -890,6 +1035,10 @@ def editar_marmita():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
         return redirect('/logar')  # Redireciona para a página de login se o usuário não estiver autenticado
     
+    if session['usuario_logado'].get('tipo') == 'cliente':
+        return redirect('/')  # Redireciona clientes para a página inicial
+
+
     if request.method == 'POST':
         btn_marmita = request.form.get('btn-marmita')  # Obtém o ID do produto selecionado
         session['id'] = {'id_marmita': btn_marmita}  # Armazena o ID na sessão
@@ -928,6 +1077,10 @@ def editar_marmita():
 def atualizar_marmita():
     if 'usuario_logado' not in session:
         return jsonify({'status': 'error', 'message': 'Você precisa estar logado para realizar esta ação.'}), 401
+    
+
+    if session['usuario_logado'].get('tipo') == 'cliente':
+        return redirect('/')  # Redireciona clientes para a página inicial
     
     adm = Adm()
     id_marmita = request.form['id_marmita']
@@ -984,13 +1137,11 @@ def trocar_senha():
         email = request.form['email']
         telefone = request.form['telefone']
         
-        # Verifique se o usuário existe (você deve implementar isso na classe Usuario)
         usuario = Usuario()
-        if usuario.verificar_usuario(email, telefone):  # Supondo que exista uma função para verificar o usuário
-            # Gerar um código de verificação aleatório com 4 dígitos, incluindo zeros à esquerda
+        if usuario.verificar_usuario(email, telefone):  # Verifica se o usuário existe
             verification_code = str(random.randint(1000, 9999)).zfill(4)
 
-            # Enviar o código de verificação via SMS
+            # Envia o código via SMS
             message = client.messages.create(
                 to=telefone,
                 from_="+13195190041",
@@ -998,12 +1149,12 @@ def trocar_senha():
             )
             print(message.sid)
 
-            # Armazenar o telefone e o código de verificação na sessão
+            # Armazena informações na sessão
             session['telefone_verificacao'] = telefone
             session['verification_code'] = verification_code
-            session['email_usuario'] = email  # Armazena o email do usuário na sessão
+            session['email_usuario'] = email
             
-            return redirect("/verificacao_troca_senha")  # Redireciona para a tela de verificação
+            return redirect("/verificacao_troca_senha")  # Redireciona para a verificação
         else:
             flash("Usuário não encontrado. Verifique as informações.", "error")
             return redirect("/trocar_senha")
@@ -1012,8 +1163,12 @@ def trocar_senha():
 # Rota para verificação do código de troca de senha
 @app.route("/verificacao_troca_senha", methods=['GET', 'POST'])
 def verificacao_troca_senha():
+    if 'verification_code' not in session:  # Verifica se o código está na sessão
+        flash("Sessão expirada. Solicite a troca de senha novamente.", "error")
+        return redirect("/trocar_senha")
+
     if request.method == 'GET':
-        return render_template("verificacao-troca-senha.html")  # Renderiza a página onde o usuário insere o código
+        return render_template("verificacao-troca-senha.html")
     else:
         codigo1 = request.form["codigo1"]
         codigo2 = request.form["codigo2"]
@@ -1023,7 +1178,9 @@ def verificacao_troca_senha():
         verification_code = session.get('verification_code')
 
         if codigo_inserido == verification_code:
-            return redirect("/nova_senha")  # Redireciona para a página para criar uma nova senha
+            session.pop('verification_code')  # Remove o código da sessão após validação
+            session['verificado'] = True  # Marca que o usuário foi verificado
+            return redirect("/nova_senha")
         else:
             return render_template("verificacao-troca-senha.html", erro="Código incorreto. Tente novamente.")
 
@@ -1031,21 +1188,34 @@ def verificacao_troca_senha():
 # Rota para definir uma nova senha
 @app.route("/nova_senha", methods=['GET', 'POST'])
 def nova_senha():
-    if request.method == 'GET':
-        return render_template("nova-senha.html")  # Renderiza a página para inserir nova senha
-    else:
-        nova_senha = request.form['nova_senha']
-        email_usuario = session.get('email_usuario')
+    if 'email_usuario' not in session or not session.get('verificado'):  # Verifica se passou pela verificação
+        flash("Acesso inválido. Solicite a troca de senha novamente.", "error")
+        return redirect("/trocar_senha")
 
-        # Atualiza a senha do usuário (você deve implementar isso na classe Usuario)
-        usuario = Usuario()
-        if usuario.atualizar_senha(email_usuario, nova_senha):  # Implementar essa função na classe Usuario
+    if request.method == 'GET':
+        return render_template("nova-senha.html")
+    
+    nova_senha = request.form['nova_senha']
+    nova_senha_confirma = request.form['nova_senha_confirma']
+    email_usuario = session.get('email_usuario')
+
+    if nova_senha != nova_senha_confirma:
+        flash("As senhas não coincidem. Tente novamente.", "error")
+        return redirect("/nova_senha")
+
+    usuario = Usuario()
+    try:
+        if usuario.atualizar_senha(email_usuario, nova_senha):
             flash("Senha atualizada com sucesso!", "success")
             session.clear()  # Limpa a sessão após a troca de senha
-            return redirect("/logar")  # Redireciona para a página de login
+            return redirect("/logar")
         else:
             flash("Erro ao atualizar a senha. Tente novamente.", "error")
-            return redirect("/nova-senha")
+    except Exception as e:
+        flash(f"Ocorreu um erro: {str(e)}", "error")
+
+    return redirect("/nova_senha")
+
 
 
 # ================ PERFIL ================
@@ -1169,10 +1339,14 @@ def usuario(id_cliente):
     if 'usuario_logado' not in session:
         return redirect('/logar')  # Redireciona se o usuário não estiver logado
     
-    usuario = Usuario()
-    dados_cliente = usuario.tela_usuario(id_cliente)
+    usuario = Usuario()  # Supondo que 'Usuario' seja uma classe que manipula os dados do cliente
+    dados_cliente = usuario.tela_usuario(id_cliente)  # Método que retorna os dados do cliente
+    pedidos_cliente = usuario.obter_pedidos(id_cliente)  # Método que retorna os pedidos do cliente
     
-    return render_template('usuario.html', cliente=dados_cliente)  # Renderiza o template com os dados do cliente
+    # Adiciona a URL da imagem de perfil no contexto
+    imagem_perfil_url = url_for('imagem_perfil', id_cliente=id_cliente)
+    
+    return render_template('usuario.html', cliente=dados_cliente, pedidos=pedidos_cliente, imagem_perfil_url=imagem_perfil_url)
 
 
 

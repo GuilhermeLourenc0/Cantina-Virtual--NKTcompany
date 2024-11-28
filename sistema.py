@@ -1,5 +1,6 @@
 from conexao import Conexao
 from hashlib import sha256
+import base64
 
 class Sistema:
     def __init__(self):
@@ -7,6 +8,10 @@ class Sistema:
         self.tel = None
         self.id_produto = None
 
+
+
+
+    import base64
 
     def exibir_produtos_adm(self):
         mydb = Conexao.conectar()  # Conecta ao banco de dados
@@ -21,17 +26,33 @@ class Sistema:
 
         # Itera sobre os resultados e adiciona cada produto à lista
         for produto in resultado:
+            imagem_blob = produto[7]  # Blob da imagem (posição 7)
+            imagem_url = produto[3]   # URL da imagem (posição 3)
+
+            if imagem_blob:  # Caso o blob esteja presente
+                # Converte o blob para uma string Base64
+                imagem_base64 = base64.b64encode(imagem_blob).decode('utf-8')
+                # Cria o URL de dados para a imagem
+                imagem_produto = f"data:image/jpeg;base64,{imagem_base64}"
+            elif imagem_url:  # Caso o blob não exista, mas o URL esteja presente
+                imagem_produto = imagem_url  # Usa o URL diretamente
+            else:  # Caso não exista nem blob nem URL
+                imagem_produto = None
+
             lista_produtos.append({
                 'nome_produto': produto[1],
                 'preco': produto[2],
-                'imagem_produto': produto[3],
+                'imagem_produto': imagem_produto,  # Base64 ou URL
                 'categoria': produto[5],
                 'descricao': produto[4],
                 'id_produto': produto[0],
-                'habilitado': produto[6]  # Certifique-se de que este índice corresponde ao campo 'habilitado'
+                'habilitado': produto[6]
             })
+
         mydb.close()  # Fecha a conexão com o banco de dados
         return lista_produtos if lista_produtos else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+
+
 
     def exibir_produtos(self):
         mydb = Conexao.conectar()  # Conecta ao banco de dados
@@ -39,7 +60,7 @@ class Sistema:
 
         # Consulta SQL com JOIN para obter o nome e o ID da categoria
         sql = """
-        SELECT p.cod_produto, p.nome_produto, p.preco, p.url_img, p.descricao, c.id_categoria, c.nome
+        SELECT p.cod_produto, p.nome_produto, p.preco, p.url_img, p.descricao, c.id_categoria, c.nome, p.imagem_blob
         FROM tb_produto p
         JOIN tb_categoria c ON p.id_categoria = c.id_categoria
         WHERE p.habilitado = 1
@@ -53,7 +74,19 @@ class Sistema:
         for produto in resultado:
             categoria_id = produto[5]
             categoria_nome = produto[6]
+            url_img = produto[3]  # URL da imagem
+            blob_imagem = produto[7]  # Blob da imagem
 
+            # Lógica para determinar a imagem do produto
+            if url_img:  # Se a URL estiver disponível
+                imagem_produto = url_img
+            elif blob_imagem:  # Se o blob estiver disponível
+                imagem_base64 = base64.b64encode(blob_imagem).decode('utf-8')
+                imagem_produto = f"data:image/jpeg;base64,{imagem_base64}"
+            else:  # Se nenhuma imagem estiver disponível
+                imagem_produto = None
+
+            # Agrupa os produtos por categoria
             if categoria_id not in produtos_por_categoria:
                 produtos_por_categoria[categoria_id] = {
                     'nome_categoria': categoria_nome,  # Armazena o nome da categoria
@@ -64,7 +97,7 @@ class Sistema:
                 'id_produto': produto[0],
                 'nome_produto': produto[1],
                 'preco': produto[2],
-                'imagem_produto': produto[3],
+                'imagem_produto': imagem_produto,  # URL ou Base64
                 'descricao': produto[4]
             })
 
@@ -85,11 +118,27 @@ class Sistema:
         mycursor.execute(sql, (id,))
         resultado = mycursor.fetchone()  # Obtém o resultado único
 
+        if not resultado:
+            return None  # Retorna None caso o produto não seja encontrado
+
+        # Recupera as informações do produto
+        imagem_url = resultado[3]  # URL da imagem (posição 3)
+        imagem_blob = resultado[7]  # Blob da imagem (posição 7)
+
+        # Lógica para definir a imagem do produto
+        if imagem_url:  # Se o URL da imagem estiver disponível
+            imagem_produto = imagem_url
+        elif imagem_blob:  # Se o blob estiver disponível
+            imagem_base64 = base64.b64encode(imagem_blob).decode('utf-8')
+            imagem_produto = f"data:image/jpeg;base64,{imagem_base64}"
+        else:  # Se nenhum estiver disponível
+            imagem_produto = None
+
         # Cria um dicionário para o produto
         dicionario_produto = {
             'nome_produto': resultado[1],
             'preco': resultado[2],
-            'imagem_produto': resultado[3],
+            'imagem_produto': imagem_produto,  # Base64 ou URL
             'descricao': resultado[4],
             'cod_produto': resultado[0]
         }
@@ -371,3 +420,79 @@ class Sistema:
             return {"error": f"Erro ao cancelar o pedido: {str(e)}"}
         finally:
             mydb.close()  # Fecha a conexão com o banco de dados
+
+
+
+    def obter_dados_cliente_por_pedido(self, id_pedido):
+        """
+        Obtém os dados do cliente associados a um pedido específico.
+        
+        :param id_pedido: ID do pedido para o qual os dados do cliente serão buscados.
+        :return: Um dicionário com o telefone e nome do cliente, ou None se não for encontrado.
+        """
+        try:
+            # Query para buscar os dados do cliente associados ao pedido
+            query = """
+            SELECT c.telefone, c.nome_comp
+            FROM tb_cliente c
+            JOIN tb_pedidos p ON c.id_cliente = p.id_cliente
+            WHERE p.id_pedido = %s
+            """
+            # Executa a query passando o ID do pedido como parâmetro
+            dados = self.executar_query(query, (id_pedido,), fetch=True)
+            
+            # Verifica se algum dado foi retornado
+            if dados:
+                # Retorna o primeiro resultado encontrado
+                return {'telefone': dados[0]['telefone'], 'nome': dados[0]['nome_comp']}
+            
+            # Caso nenhum dado seja encontrado, retorna None
+            return None
+        
+        except Exception as e:
+            # Loga o erro para depuração
+            print(f"Erro ao obter dados do cliente: {e}")
+            return None
+
+
+    def executar_query(self, query, params=None, fetch=False):
+        """
+        Executa uma query no banco de dados.
+        
+        :param query: A string SQL a ser executada.
+        :param params: Uma tupla com os parâmetros para a query.
+        :param fetch: Define se a função deve retornar os resultados (True) ou não (False).
+        :return: Os resultados da query se fetch=True, ou None caso contrário.
+        """
+        try:
+            # Conecta ao banco de dados
+            conn = Conexao.conectar()  # Certifique-se de que esse método está implementado
+            cursor = conn.cursor(dictionary=True)  # Retorna resultados como dicionários
+            
+            # Executa a query com os parâmetros
+            cursor.execute(query, params)
+            
+            # Se fetch=True, retorna os resultados da query
+            if fetch:
+                result = cursor.fetchall()
+                return result
+            
+            # Confirma alterações no banco (para operações como INSERT/UPDATE/DELETE)
+            conn.commit()
+        
+        except mysql.connector.Error as e:
+            # Loga o erro específico do banco
+            print(f"Erro ao executar a query: {e}")
+            return None
+        
+        except Exception as e:
+            # Loga outros erros genéricos
+            print(f"Erro inesperado ao executar a query: {e}")
+            return None
+        
+        finally:
+            # Fecha o cursor e a conexão
+            if 'cursor' in locals() and cursor:
+                cursor.close()
+            if 'conn' in locals() and conn:
+                conn.close()

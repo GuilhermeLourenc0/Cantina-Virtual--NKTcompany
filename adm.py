@@ -235,28 +235,28 @@ class Adm:
 
 
     # ====================== Inserir Produtos =========================
-    def inserir_produto(self, nomeP, preco, imagem, descricao, categoria, guarnicoes_novas=[]):
-        mydb = Conexao.conectar()  # Conecta ao banco de dados
+    def inserir_produto(self, nomeP, preco, imagem_blob, descricao, categoria, guarnicoes_novas=[]):
+        mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Query SQL para inserir o produto na tabela `tb_produto`
-        sql = f"INSERT INTO tb_produto (nome_produto, preco, url_img, descricao, id_categoria) VALUES ('{nomeP}', {preco}, '{imagem}', '{descricao}', {categoria})"
-        mycursor.execute(sql)
+        # Query SQL para inserir o produto
+        sql = "INSERT INTO tb_produto (nome_produto, preco, imagem_blob, descricao, id_categoria) VALUES (%s, %s, %s, %s, %s)"
+        valores = (nomeP, preco, imagem_blob, descricao, categoria)
+        mycursor.execute(sql, valores)
 
         # Captura o ID do produto recém-inserido para associar guarnições
         id_produto = mycursor.lastrowid
 
-        # Inserir novas guarnições se existirem
+        # Inserir novas guarnições e associá-las ao produto
         for nova_guarnicao in guarnicoes_novas:
             self.inserir_guarnicao(nova_guarnicao)
-
-            # Associar a nova guarnição ao produto
             sql_associacao = "INSERT INTO tb_produto_guarnicao (id_produto, id_guarnicao) VALUES (%s, %s)"
             mycursor.execute(sql_associacao, (id_produto, nova_guarnicao))
 
-        mydb.commit()  # Confirma as alterações no banco de dados
-        mydb.close()  # Fecha a conexão
+        mydb.commit()
+        mydb.close()
         return True
+
 
     
     def inserir_marmita(self, nomeP, preco, imagem, descricao, tamanho, guarnicoes_existentes=[], guarnicoes_novas=[], acompanhamentos_existentes=[], acompanhamentos_novos=[]):

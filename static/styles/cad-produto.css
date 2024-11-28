@@ -9,7 +9,6 @@ main{
   width: 100vw;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 form {
@@ -139,6 +138,7 @@ select{
 }
 
 .btn-voltar button{
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,4 +291,8 @@ select{
 
 .input-container button[type="button"]:hover {
   color: rgb(177, 177, 177);
+}
+
+.espacamento1{
+  height: 3rem;
 }

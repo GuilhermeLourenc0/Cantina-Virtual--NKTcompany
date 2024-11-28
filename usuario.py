@@ -27,30 +27,26 @@ class Usuario:
         self.tipo = None
         self.logado = False
 
+    # Função de cadastro do usuário
     def cadastrar(self, nome, telefone, email, senha, curso, tipo):
-        """
-        Cadastra um novo usuário no sistema, recebendo as informações de nome, telefone, email, senha (criptografada),
-        curso e tipo de usuário. Insere esses dados na tabela `tb_cliente` e, se a operação for bem-sucedida, 
-        atualiza os atributos da classe e marca o usuário como logado.
-        
-        Parâmetros:
-        - nome: nome completo do usuário.
-        - telefone: número de telefone do usuário.
-        - email: endereço de email do usuário.
-        - senha: senha do usuário, que será criptografada.
-        - curso: ID do curso selecionado pelo usuário.
-        - tipo: tipo de usuário (cliente, administrador, etc.).
-        
-        Retorno:
-        - Retorna True se o cadastro for realizado com sucesso; caso contrário, retorna False.
-        """
         senha = sha256(senha.encode()).hexdigest()  # Criptografa a senha usando o algoritmo sha256
         
         try:
             mydb = Conexao.conectar()  # Conecta ao banco de dados
             mycursor = mydb.cursor()
+
+            # Verifica se o email ou telefone já estão cadastrados
+            mycursor.execute(
+                "SELECT id_cliente FROM tb_cliente WHERE email = %s OR telefone = %s",
+                (email, telefone)
+            )
+            existing_user = mycursor.fetchone()
             
-            # Query SQL para inserir os dados do novo usuário
+            if existing_user:
+                # Retorna False para indicar que o cadastro foi impedido por duplicidade
+                return False
+
+            # Insere o novo usuário caso não haja duplicidade
             sql = "INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo) VALUES (%s, %s, %s, %s, %s, %s)"
             mycursor.execute(sql, (nome, telefone, email, curso, senha, tipo))
             
@@ -69,6 +65,16 @@ class Usuario:
         except Exception as e:
             print(f"Ocorreu um erro: {e}")  # Exibe uma mensagem de erro em caso de falha
             return False
+
+    def verificar_duplicidade(self, email, telefone):
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor()
+        mycursor.execute(
+            "SELECT id_cliente FROM tb_cliente WHERE email = %s OR telefone = %s",
+            (email, telefone)
+        )
+        return bool(mycursor.fetchone())
+
 
     def exibir_cursos(self):
         """
@@ -185,6 +191,39 @@ class Usuario:
             mydb.close()
 
 
+    def atualizar_telefone(self, id_cliente, telefone):
+        """
+        Atualiza o telefone do cliente no banco de dados.
+
+        Parâmetros:
+        - id_cliente: ID do cliente que terá o telefone atualizado
+        - telefone: Novo número de telefone a ser salvo
+
+        Retorno:
+        - True se a atualização for bem-sucedida, False caso contrário
+        """
+        # Conectar ao banco de dados
+        mydb = Conexao.conectar()  
+        mycursor = mydb.cursor()
+
+        try:
+            # Comando SQL para atualizar o telefone
+            sql = "UPDATE tb_cliente SET telefone = %s WHERE id_cliente = %s"
+            valores = (telefone, id_cliente)
+
+            # Executa a atualização
+            mycursor.execute(sql, valores)
+            mydb.commit()
+            print("Telefone atualizado com sucesso!")
+            return True
+        except Exception as e:
+            print("Erro ao atualizar o telefone:", e)
+            mydb.rollback()
+            return False
+        finally:
+            # Fecha o cursor e a conexão com o banco
+            mycursor.close()
+            mydb.close()
 
 
     def logout(self, id_cliente):

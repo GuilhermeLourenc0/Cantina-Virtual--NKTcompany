@@ -1,20 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Trocar Senha</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/trocar-senha.css') }}">
 </head>
 
 <body>
-    <form method="POST">
-        <label>Nova Senha:</label>
-        <input type="password" name="nova_senha" required>
-        <button type="submit">Trocar Senha</button>
-    </form>
+    <main>
+        <div class="btn-voltar">
+            <button onclick="window.history.back()">
+                <img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt="Voltar">
+            </button>
+        </div>
 
+        <div class="titulo">
+            <h2>Defina sua nova senha</h2>
+        </div>
+
+        <section class="container-principal">
+            <div class="formulario">
+                <form method="POST" action="/nova_senha">
+                    <input name="nova_senha" placeholder="*Nova Senha" type="password" required>
+                    <input name="nova_senha_confirma" placeholder="*Confirme a senha" type="password" required>
+                    <button type="submit">Trocar Senha</button>
+                </form>
+            </div>
+        </section>
+    </main>
 </body>
 
 </html>

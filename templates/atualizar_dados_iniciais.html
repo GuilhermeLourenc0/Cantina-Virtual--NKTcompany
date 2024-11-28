@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atualizar Dados Iniciais</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="../static/styles/atualizarDadosIniciais.css">
 </head>
+
 <body>
-    <div class="container">
-        <h1>Atualizar Dados Iniciais</h1>
-        <form action="{{ url_for('atualizar_dados_iniciais') }}" method="POST">
-            <div class="form-group">
-                <label for="telefone">Número de Telefone:</label>
-                <input type="tel" id="telefone" name="telefone" required placeholder="(XX) XXXXX-XXXX">
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required placeholder="seuemail@example.com">
-            </div>
-            <div class="form-group">
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" name="senha" required placeholder="Digite sua senha">
-            </div>
-            <button type="submit">Atualizar Dados</button>
-        </form>
+    <div class="btn-voltar">
+        <button onclick="window.history.back()"><img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg"
+                alt=""></button>
     </div>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <main>
+
+        <div class="titulo">
+            <h2>Atualizar Dados Iniciais</h2>
+        </div>
+
+        <div class="container-principal">
+            <div class="formulario">
+                <form action="{{ url_for('atualizar_dados_iniciais') }}" method="POST">
+                        <input type="tel" id="telefone" name="telefone" required placeholder="*Telefone">
+                        <input type="email" id="email" name="email" required placeholder="*E-mail">
+                        <input type="password" id="senha" name="senha" required placeholder="*Senha">
+                        <button type="submit">Atualizar Dados</button>
+                </form>
+            </div>
+        </div>
+
+    </main>
 </body>
+
 </html>

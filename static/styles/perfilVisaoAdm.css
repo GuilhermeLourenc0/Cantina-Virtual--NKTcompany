@@ -1,0 +1,165 @@
+    /* Definições globais */
+/* Definições globais */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos da área de cabeçalho (imagem de fundo) */
+.header {
+    position: relative;
+    width: 100%;
+    height: 150px; /* Ajuste a altura conforme necessário */
+    background-image: url('https://br.web.img2.acsta.net/r_654_368/img/12/ce/12ceb64b011a2a629879b4d3b0a256af.png');  /* Coloque o caminho da sua imagem de fundo */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Imagem de perfil */
+.img-perfil {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;  /* Tamanho da imagem de perfil */
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid white;  /* Borda branca */
+    z-index: 1;  /* Garante que a imagem de perfil fique sobreposta à imagem de fundo */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);  /* Sombra leve para destacar a imagem */
+}
+
+/* Conteúdo abaixo da imagem de perfil */
+.perfil-info {
+    text-align: center;
+    margin-top: 80px;  /* Ajuste o valor para colocar o conteúdo corretamente abaixo da imagem de perfil */
+}
+
+/* Nome e curso do cliente */
+.perfil-info .nome {
+    font-size: 24px;
+    font-weight: bold;
+
+}
+
+.perfil-info .curso {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Subtítulo "Informações Pessoais" */
+.informacoes-pessoais {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+/* Estilo dos dados (telefone e email) */
+.dados-pessoais {
+    font-size: 16px;
+    color: #444;
+}
+
+.relatorio-vendas {
+    margin-top: 30px;
+    width: auto;
+    max-width: 340px; /* Largura do recibo */
+    margin-right: auto;
+    margin-left: auto;
+    padding: 10px;
+    background: url('../img/fundoNotafiscal.jpg'); /* Fundo branco com transparência */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+}
+
+.resumo-relatorio{
+    display: flex;
+    justify-content: center;
+    font-weight: bolder;
+    flex-direction: column;
+}
+
+
+h2, h3, h4 {
+    text-align: center;
+    margin: 5px 0;
+    font-family: 'receipt', 'Anonymous Pro', 'Courier New', Courier, monospace;
+}
+
+.filtro-relatorio {
+    margin-bottom: 20px;
+    padding: 5px;
+}
+
+.label-data-inicial,
+.label-data-final {
+    display: block;
+    margin: 5px 0;
+}
+
+.data-inicial,
+.data-final {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.botao-gerar-relatorio {
+    padding: 15px;
+    background-color: rgb(161, 23, 23);
+    width: 23.7rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+
+th {
+    font-weight: normal;
+    border-bottom: 1px dashed black;
+    border-top: 1px dashed black;
+
+}
+tr{
+    margin-bottom: 10px;
+    border-bottom: 1px dashed black;
+}
+h4 {
+    margin: 10px 0;
+    text-align: center;
+}
+
+h2{
+    text-decoration: underline;
+}
+
+h3{
+    font-weight: bolder;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+.spanpontilhado{
+    border-bottom: 1px dashed black;
+    border-top: 1px dashed black;
+}
+
+ul {
+    list-style-type: none; /* Remove as bolinhas dos itens da lista */
+    margin-top: 15px;   
+  }

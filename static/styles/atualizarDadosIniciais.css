@@ -2,7 +2,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;    
 }
 
 
@@ -10,16 +9,15 @@
     margin-top: 2.5rem;
     display: flex;
     margin-left: 26px;
-    margin-right: 80px;
+    margin-right: 20px;
     margin-bottom: 20px;
-    flex-direction: column;
 }
 
 h2{
     font-weight: bolder !important;
     text-align: left;
-    font-size: 30px !important;
-
+    font-size: 2.5rem !important;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .container-principal{
@@ -61,9 +59,9 @@ input::placeholder {
     width: 23.7rem;
     border-radius: 6px;
     border: none;
-    font-size: 15px;
-    margin-top: 50px;
+    margin-top: 20px;
     color: white;
+    font-size: 18px;
 }
 
 form input:focus{
@@ -160,6 +158,19 @@ form a:hover{
 
 .semConta{
     margin-top: 15px;
+}
+
+
+.popup-container {
+    position: fixed;        /* Fixa o elemento na tela */
+    top: 30px !important;             /* Distância do topo da tela */
+    left: 50%;             /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Ajusta a posição para o centro */
+    z-index: 1000;         /* Garante que fique sobre os outros elementos */
+    display: flex;
+    justify-content: center;
+    opacity: 0;            /* Inicialmente invisível */
+    animation: slideIn 0.5s forwards; /* Adiciona animação ao aparecer */
 }
 
 .espacamento{

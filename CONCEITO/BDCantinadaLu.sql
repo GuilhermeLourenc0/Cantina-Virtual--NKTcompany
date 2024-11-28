@@ -35,7 +35,7 @@ CREATE TABLE tb_produto (
     descricao TEXT,
     id_categoria INT,
     habilitado TINYINT(1) DEFAULT 1,
-    imagem_binaria LONGBLOB,
+    imagem_blob LONGBLOB,
     PRIMARY KEY (cod_produto)
 );
 
