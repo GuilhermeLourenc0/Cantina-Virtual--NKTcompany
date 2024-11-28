@@ -105,14 +105,24 @@ h2 {
     font-weight: 600 !important;
 }
 
+.sub h3{
+    width: 100%;
+    margin-top: 10px;
+    font-weight: 660;
+    text-align: center;
+}
+
 .container-produtos {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 0 20px;
-    /* Espaço lateral para mobile */
+    margin-top: 20px;
 }
 
+.container-produtos h3{
+    font-weight: 660;
+}
 .card-produtos {
     display: flex;
     justify-content: space-between;
@@ -129,6 +139,11 @@ h2 {
     flex-direction: column;
     /* Exibição em coluna */
     width: 100%;
+}
+
+.produtos h3{
+    margin: 30px 0px;
+    font-weight: 660;
 }
 
 .produtos button {
@@ -299,20 +314,29 @@ h2 {
     justify-content: flex-start;
     gap: 2rem; /* Espaçamento entre o ícone e o texto */
     border-radius: 10px; /* Arredonda os cantos dos links */
-    transition: background-color 0.3s, color 0.3s; /* Transição suave para hover */
-    
+    transition: background-color 0.3s, color 0.3s, text-shadow 0.3s ease; /* Transição suave */
 }
 
 .sidenav a i {
     font-size: 22px; /* Ajusta o tamanho dos ícones */
     color: #FFD43B;
+    transition: text-shadow 0.3s ease, transform 0.3s ease; /* Suaviza a transição */
 }
 
 .sidenav a:hover {
     background-color: #dd3939; /* Cor de fundo no hover */
     color: #FFD43B; /* Muda a cor do texto no hover */
     text-decoration: none;
+
+    /* Efeitos no texto e no ícone */
+    text-shadow:  0 0 2.5px #FFD43B, 0 0 5px #FFD43B, 0 0 10px #FFD43B; 
 }
+
+.sidenav a:hover i {
+    text-shadow: 0 0 2.5px #FFD43B, 0 0 5px #FFD43B, 0 0 10px #FFD43B; /* Brilho no ícone */
+   
+}
+
 
 .sidenav hr {
     border: 0.5px solid #ffffff66; /* Linhas divisórias mais suaves */
