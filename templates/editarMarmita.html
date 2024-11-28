@@ -83,37 +83,38 @@
 <div class="espacamento1"></div>
 
 <script>
-function atualizarMarmita(event, idMarmita) {
-    event.preventDefault();
+    function atualizarMarmita(event, idMarmita) {
+        event.preventDefault();
 
-    let form = document.getElementById('form-marmita-' + idMarmita);
-    let formData = new FormData(form);
+        let form = document.getElementById('form-marmita-' + idMarmita);
+        let formData = new FormData(form);
 
-    fetch("/atualizar_marmita", {
-        method: "POST",
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            alert(data.message);
-            if (data.url_imagem) {
-                document.getElementById('imagem-atual-' + idMarmita).src = data.url_imagem;
-            }
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao tentar atualizar a marmita.');
-    });
-}
+        fetch("/atualizar_marmita", {
+            method: "POST",
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    if (data.url_imagem) {
+                        document.getElementById('imagem-atual-' + idMarmita).src = data.url_imagem; // Atualiza a imagem atualizada em tempo real
+                    }
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao tentar atualizar a marmita.');
+            });
+    }
 
 function previewImagem(event, codProduto) {
             var preview = document.getElementById('previewImagem' + codProduto);
             preview.src = URL.createObjectURL(event.target.files[0]);
         }
+
 </script>
 
 {% endblock %}

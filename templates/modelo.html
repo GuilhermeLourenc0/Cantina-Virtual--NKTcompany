@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cantina Digital</title>
+    <link rel="icon" href="../static/img/logo.png" type="image/png">
+    <link rel="icon" href="../static/img/logo.ico" type="image/x-icon"> 
     <link rel="stylesheet" href="../static/styles/inicial.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -26,6 +28,7 @@
 <body>
     <header class="container-header">
         <nav class="cbc-cima">
+
             <div class="perfil-icon">
                 <a href="/perfil">
                     {% if session.get('usuario_logado') %}
@@ -34,6 +37,8 @@
                         alt="Imagem do Perfil" width="150" height="150"
                         onerror="this.onerror=null;this.src='../static/img/default-avatar.png';">
                     {% else %}
+                    <!-- Se o usuário não estiver logado, exibe uma imagem padrão -->
+
                     <img class="perfil" src="../static/img/default-avatar.png" alt="Imagem do Perfil" width="150"
                         height="150">
                     {% endif %}
@@ -102,6 +107,7 @@
         });
 
     </script>
+
 </body>
 
 </html>

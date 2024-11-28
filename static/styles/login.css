@@ -160,6 +160,11 @@ form a:hover{
 }
 /* GUILO FEIO */
 
+.erro-card {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
 
 .popup-container {
     position: fixed;        /* Fixa o elemento na tela */
