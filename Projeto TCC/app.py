@@ -10,6 +10,9 @@ import os
 from datetime import datetime
 import pytz
 from relatorio import Relatorio
+from dotenv import load_dotenv
+
+
 
 
 app = Flask(__name__)
@@ -24,10 +27,13 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 
 
-account_sid = 'AC475dc4dd74f017977d282babb6ed02fe'
-auth_token = '54f807df630fa436c0b2820b5482939f'
 
-# Crie um client
+# Carregar variáveis do arquivo .env
+load_dotenv("sms.env")
+
+account_sid = os.getenv("TWILIO_ACCOUNT_SID")
+auth_token = os.getenv("TWILIO_AUTH_TOKEN")
+
 client = Client(account_sid, auth_token)
 
 
@@ -378,7 +384,7 @@ def atualizar_dados_iniciais():
     # Envia o código de verificação
     message = client.messages.create(
         to=telefone,
-        from_="+13195190041",
+        from_="+17753707822",
         body=f'Seu código é: {session["verification_code"]}'
     )
     session['verificacao_incompleta'] = True
