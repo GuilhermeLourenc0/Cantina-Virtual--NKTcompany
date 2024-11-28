@@ -308,25 +308,48 @@ class Sistema:
         mycursor = mydb.cursor()   # Cria um cursor para executar queries
 
         # Consulta SQL para selecionar todos os produtos
-        sql = "SELECT * FROM tb_marmita"
+        sql = "SELECT id_marmita, nome_marmita, preco, tamanho, descricao, url_img, imagem_binaria, habilitado FROM tb_marmita"
         mycursor.execute(sql)      # Executa a consulta
         resultado = mycursor.fetchall()  # Obtém todos os resultados
 
         lista_marmitas = []
 
-        # Itera sobre os resultados e adiciona cada produto à lista
+        # Itera sobre os resultados e adiciona cada marmita à lista
         for produto in resultado:
-                lista_marmitas.append({
-                    'nome_marmita': produto[1],
-                    'preco': produto[2],
-                    'imagem_marmita': produto[5],
-                    'tamanho': produto[3],
-                    'descricao': produto[4],
-                    'id_marmita': produto[0],
-                    'habilitado': produto[6]  # Certifique-se de que este índice corresponde ao campo 'habilitado'
-                })
+            id_marmita = produto[0]
+            nome_marmita = produto[1]
+            preco = produto[2]
+            tamanho = produto[3]
+            descricao = produto[4]
+            url_img = produto[5]  # URL da imagem
+            blob_imagem = produto[6]  # Imagem em formato binário
+            habilitado = produto[7]  # Estado habilitado ou não
+
+            # Lógica para determinar a imagem da marmita
+            if url_img:  # Se a URL estiver disponível
+                imagem_marmita = url_img
+            elif blob_imagem:  # Se o blob estiver disponível
+                # Converte a imagem binária para Base64
+                imagem_base64 = base64.b64encode(blob_imagem).decode('utf-8')
+                imagem_marmita = f"data:image/jpeg;base64,{imagem_base64}"
+            else:  # Se nenhuma imagem estiver disponível
+                imagem_marmita = None
+
+            # Adiciona os dados da marmita à lista
+            lista_marmitas.append({
+                'id_marmita': id_marmita,
+                'nome_marmita': nome_marmita,
+                'preco': preco,
+                'tamanho': tamanho,
+                'descricao': descricao,
+                'imagem_marmita': imagem_marmita,
+                'habilitado': habilitado
+            })
+
         mydb.close()  # Fecha a conexão com o banco de dados
+
         return lista_marmitas if lista_marmitas else []  # Retorna a lista de produtos ou uma lista vazia se nenhum produto for encontrado
+
 
 
    

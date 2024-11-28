@@ -421,32 +421,30 @@ class Adm:
     
 
     # ============================ Editar Prduto ==============================
-    def atualizar_produto(self, id_produto, nome, preco, descricao, file=None):
+    def atualizar_produto(self, id_produto, nome, preco, descricao, url_img=None):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Monta a consulta SQL para atualizar o produto
+        # Base da consulta SQL
         sql = """
             UPDATE tb_produto
             SET nome_produto = %s, preco = %s, descricao = %s
         """
-        valores = (nome, preco, descricao)
+        valores = [nome, preco, descricao]
 
-        # Se um arquivo foi enviado
-        if file:
-            # Lê os dados da imagem como binário
-            dados_imagem = file.read()
-            sql += ", imagem_binaria = %s, url_img = %s"  # Atualiza a coluna da imagem
-            valores += (dados_imagem, f"/imagem_produto/{id_produto}")  # Adiciona a URL da imagem aos valores
+        # Adicionar a imagem caso fornecida
+        if url_img:
+            sql += ", url_img = %s"
+            valores.append(url_img)
 
-        sql += " WHERE cod_produto = %s"  # Condição para o ID do produto
-        valores += (id_produto,)  # Adiciona o ID do produto aos valores
+        sql += " WHERE cod_produto = %s"
+        valores.append(id_produto)
 
         # Executa a consulta
         mycursor.execute(sql, valores)
-
         mydb.commit()
         mydb.close()
+
 
 
     def obter_imagem_produto(self, cod_produto):

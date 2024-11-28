@@ -1014,11 +1014,19 @@ def atualizar_produto():
     descricao = request.form.get('descricao')
     imagem = request.files.get('imagem')  # Para o upload de imagem
 
-    # lógica para atualizar o produto no banco de dados
-    adm.atualizar_produto(id_produto, nome, preco, descricao, imagem)
+    # Lógica para salvar o arquivo localmente (opcional, caso esteja enviando a URL no banco)
+    imagem_url = None
+    if imagem:
+        caminho_imagem = os.path.join('Projeto TCC/static/uploads', imagem.filename)
+        imagem.save(caminho_imagem)
+        imagem_url = f"/static/uploads/{imagem.filename}"
+
+    # Atualizar o produto no banco de dados
+    adm.atualizar_produto(id_produto, nome, preco, descricao, imagem_url)
 
     flash('Produto atualizado com sucesso!', 'success')
-    return redirect('/editar_produto')  # Ou para uma página de detalhes do produto
+    return redirect('/editar_produto')
+
 
 
 @app.route('/imagem_produto/<int:cod_produto>')
