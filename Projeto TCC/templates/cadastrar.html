@@ -1,23 +1,30 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
+
+<link rel="stylesheet" href="../static/styles/cadastro.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="../static/styles/cadastro.css">
 
 <body>
     <main>
+        <!-- Botão Voltar -->
         <div class="btn-voltar">
             <button onclick="window.history.back()" aria-label="Voltar">
                 <img src="https://www.svgrepo.com/show/324205/back-arrow-navigation.svg" alt="Voltar">
             </button>
         </div>
 
+        <!-- Título -->
         <div class="titulo">
             <h2>Olá! Cadastre-Se agora para Começar</h2>
         </div>
 
+        <!-- Formulário -->
         <section class="container-principal">
             <div class="formulario">
                 <form id="form-cadastro" action="" method="post">
                     <input id="nome" name="nome" placeholder="Nome Completo" type="text" required>
+
                     <div class="form-group">
                         <div class="input-group">
                             <span class="prefix">+55</span>
@@ -30,17 +37,16 @@
                     <input id="senha" name="senha" placeholder="Senha" type="password" required>
 
                     <div class="select">
-                        <select id="curso" name="curso" required>
-                            <option value="" disabled selected>Selecione o seu curso</option>
+                        <select id="curso" name="curso" class="select2" required>
+                            <option value="">Selecione o seu curso</option>
                             {% for registro in cursos %}
                             <option value="{{ registro.id_curso }}">{{ registro.curso }}</option>
                             {% endfor %}
                         </select>
-
-                        <button type="submit">Registrar</button>
-
-                        <p>Já está registrado? <a href="/logar" class="login-btn">Faça o login</a></p>
                     </div>
+
+                    <button type="submit">Registrar</button>
+                    <p>Já está registrado? <a href="/logar" class="login-btn">Faça o login</a></p>
                 </form>
             </div>
         </section>
@@ -70,6 +76,7 @@
     </main>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
 
     <script>
         document.getElementById('form-cadastro').addEventListener('submit', function (e) {
@@ -98,13 +105,18 @@
             telInput.value = value;
         }
 
-
         $(document).ready(function () {
-            // Se o popup for exibido, defina um temporizador para escondê-lo após 3 segundos
-            if ($('.popup-container').is(':visible')) {
+            $('.select2').select2({
+                placeholder: 'Selecione o seu curso',
+                allowClear: true,
+                width: 'resolve'
+            });
+
+            var popup = $('.popup-container');
+            if (popup.length && popup.is(':visible')) {
                 setTimeout(function () {
-                    $('.popup-container').fadeOut();
-                }, 3000); // Esconde após 3000ms (3 segundos)
+                    popup.fadeOut();
+                }, 3000);
             }
         });
     </script>
