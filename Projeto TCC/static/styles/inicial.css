@@ -182,7 +182,9 @@ h2 {
 .card-produtos {
     display: flex;
     align-items: center; /* Alinha imagem e texto verticalmente */
+    justify-content: space-between;
     width: 100%;
+
 }
 
 .left-lado {
@@ -191,6 +193,7 @@ h2 {
     align-items: baseline;
     font-size: 60px;
     flex: 1; /* Permite que o texto ocupe espaço disponível */
+    margin-right: 2rem;
 }
 
 .card-produtos img {
@@ -860,8 +863,6 @@ input:checked+.slider:before {
 .card-produtos span{
     margin-left: 10px;
 }
-
-
 
 
 
