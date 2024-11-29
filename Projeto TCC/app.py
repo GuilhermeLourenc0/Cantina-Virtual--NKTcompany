@@ -707,7 +707,7 @@ def atualizar_status_pedido():
                         mensagem = f"Olá {nome_cliente}, seu pedido está pronto! Pode retirar ou aguardar a entrega."
                         message = client.messages.create(
                             body=mensagem,
-                            from_="+13195190041",
+                            from_="+17753707822",
                             to=telefone_cliente
                         )
                         print(f"Mensagem enviada com sucesso: {message.sid}")
