@@ -58,7 +58,7 @@
                             if (pedido.produtos && pedido.produtos.length > 0) {
                                 pedido.produtos.forEach(produto => {
                                     if (produto.nome_produto) {
-                                        cardPedidos += `<li>- Produto: ${produto.nome_produto} - Quantidade: ${produto.quantidade} - Preço: R$ ${produto.preco.toFixed(2)}</li>`;
+                                        cardPedidos += `<li> Produto: ${produto.nome_produto} <br> - Quantidade: ${produto.quantidade} <br> - Preço: R$ ${produto.preco.toFixed(2)}</li>`;
                                     }
                                 });
                             }
@@ -67,7 +67,7 @@
                             if (pedido.marmitas && pedido.marmitas.length > 0) {
                                 pedido.marmitas.forEach(marmita => {
                                     if (marmita.nome_marmita) {
-                                        cardPedidos += `<li>- Marmita: ${marmita.nome_marmita} - Tamanho: ${marmita.tamanho} - Quantidade: ${marmita.quantidade} - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
+                                        cardPedidos += `<li> Marmita: ${marmita.nome_marmita} <br> - Tamanho: ${marmita.tamanho} <br> - Quantidade: ${marmita.quantidade} <br> - Preço: R$ ${marmita.preco.toFixed(2)}</li>`;
 
                                         // Guarnições associadas à marmita
                                         if (pedido.guarnicoes && pedido.guarnicoes.length > 0) {

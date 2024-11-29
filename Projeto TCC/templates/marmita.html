@@ -5,6 +5,20 @@
 
 <body>
     <main>
+        <div id="horario-popup" class="popup-container" style="display: none;">
+            <div class="popup alert-popup">
+                <div class="popup-icon alert-icon">
+                    <svg class="alert-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="alert-message">Os pedidos de marmitas só podem ser feitos entre 7h e 15h30!</div>
+            </div>
+        </div>
+
+
         <section class="posicao-marmita">
 
             <div class="produto">
@@ -83,13 +97,13 @@
                             <!-- Botões no final -->
 
                         </form>
-                        
+
                     </div>
-                    
+
                 </section>
                 <div class="sair">
                     <a href="/" class="btn-voltar">Voltar</a>
-                    <button  type="button" id="adicionarCarrinhoBtn">Adicionar ào
+                    <button type="button" id="adicionarCarrinhoBtn">Adicionar ào
                         Carrinho</button>
                 </div>
             </div>
@@ -164,14 +178,21 @@
                 .then(response => response.json())
                 .then(data => {
                     if (!data.success) {
-                        if (!data.is_logged_in) {
-                            // Redireciona para a página de login se o usuário não estiver logado
+                        if (data.error && data.error.includes("Os pedidos de marmitas só podem ser feitos")) {
+                            // Mostra o popup de erro de horário
+                            const popup = document.getElementById('horario-popup');
+                            popup.style.display = 'block';
+
+                            // Esconde o popup após 5 segundos
+                            setTimeout(() => {
+                                popup.style.display = 'none';
+                            }, 5000);
+                        } else if (!data.is_logged_in) {
                             window.location.href = "/logar";
                         } else if (data.error) {
-                            alert(data.error); // Exibe um alerta se houver outro tipo de erro
+                            alert(data.error);
                         }
                     } else {
-                        // Se a adição ao carrinho foi bem-sucedida, redireciona para o carrinho
                         window.location.href = data.redirect_url;
                     }
                 })
