@@ -213,6 +213,14 @@
   $(document).ready(function () {
     atualizarProdutos();
     atualizarMarmitas();
+
+
+
+    // Atualiza os produtos e marmitas a cada 30 segundos (30000 ms)
+    setInterval(function () {
+      atualizarProdutos();
+      atualizarMarmitas();
+    }, 2000);  // Ajuste o tempo conforme necessário
   });
 </script>
 {% endblock %}
