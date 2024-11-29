@@ -156,38 +156,40 @@ body {
 }
 
 .preparando {
-    color: #c1c40c; /* Amarelo */
+    color: #525305; /* Amarelo */
     background-color: #f6ffa6;
 }
 
 .pronto {
-    color: #3498db; /* Azul */
+    color: #20587e; /* Azul */
     background-color: #d9edf7;
 }
 
 .entregue {
-    color: #248b51; /* Verde bem escuro */
+    color: #103b23; /* Verde bem escuro */
     background-color: #c1d6ae; /* Verde muito suave quase branco */
 }
 
 .cancelado {
+
     color: #e74c3c; /* Vermelho */
     background-color: #f5c6cb;
 }
 
 
 .preparando:hover {
-    color: #f6ffa6; /* Amarelo */
+    color: #ffffff; /* Amarelo */
     background-color: #c1c40c;
+    
 }
 
 .pronto:hover {
-    color: #d9edf7; /* Azul */
+    color: #ffffff; /* Azul */
     background-color: #3498db;
 }
 
 .entregue:hover {
-    color: #c1d6ae; /* Verde bem escuro */
+    color: #ffffff; /* Verde bem escuro */
     background-color: #248b51; /* Verde muito suave quase branco */
 }
 
@@ -268,4 +270,101 @@ body {
     .order-status {
         font-size: 20px; /* Tamanho menor para status */
     }
+}
+
+.modal {
+    display: none; /* Inicialmente escondida */
+    position: fixed; /* Fixa na tela */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Acima de outros elementos */
+    width: 100%; /* Largura total */
+    height: 100%; /* Altura total */
+    overflow: auto; /* Adiciona rolagem se necessário */
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo mais escuro e semi-transparente */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+}
+
+.modal-content {
+    background-color: #fefefe; /* Fundo mais claro */
+    padding: 20px; /* Espaçamento interno */
+    border: 1px solid #ccc; /* Borda mais suave */
+    border-radius: 15px; /* Bordas arredondadas */
+    width: 90%; /* Ajustável conforme necessário */
+    max-width: 400px; /* Largura máxima para telas grandes */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada */
+    animation: fadeIn 0.3s ease; /* Animação suave ao abrir */
+}
+
+/* Animação de suavidade para o modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Estilo do botão de fechar */
+.close {
+    color: #888; /* Cor da cruz */
+    float: right; /* Alinha à direita */
+    font-size: 28px; /* Tamanho da fonte */
+    font-weight: bold; /* Negrito */
+    cursor: pointer; /* Cursor de ponteiro */
+}
+
+.close:hover,
+.close:focus {
+    color: #333; /* Cor ao passar o mouse */
+}
+
+/* Estilo do título */
+h2 {
+    margin: 0 0 15px; /* Margem abaixo do título */
+    font-family: 'Arial', sans-serif; /* Fonte do título */
+    color: #333; /* Cor do título */
+}
+
+/* Estilo do select */
+select {
+    width: 100%; /* Largura total */
+    padding: 10px; /* Espaçamento interno */
+    margin-bottom: 15px; /* Margem abaixo do select */
+    border: 1px solid #ccc; /* Borda suave */
+    border-radius: 5px; /* Bordas arredondadas */
+    background-color: #f9f9f9; /* Fundo do select */
+    font-size: 16px; /* Tamanho da fonte */
+    color: #333; /* Cor do texto */
+}
+
+/* Estilo do botão de confirmação */
+#confirmCancelBtn {
+    margin-top: 0.6rem;
+    background-color: rgb(161, 23, 23); /* Cor verde */
+    color: white; /* Cor do texto */
+    padding: 10px; /* Espaçamento interno */
+    border: none; /* Sem borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de ponteiro */
+    font-size: 16px; /* Tamanho da fonte */
+    transition: background-color 0.3s; /* Transição suave */
+    width: 100%; /* Largura total */
+}
+
+#confirmCancelBtn:hover {
+    background-color: rgb(146, 22, 22); /* Cor ao passar o mouse */
+}
+
+input{
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid rgb(238, 238, 238);
+    background-color: rgb(245, 245, 245);
+    margin-bottom: 10px;
 }

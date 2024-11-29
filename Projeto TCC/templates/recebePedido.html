@@ -14,14 +14,17 @@
     <div id="cancelModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Selecionar motivo de cancelamento</h2>
+            <h2>Razão do Cancelamento</h2>
             <select id="cancelReason">
-                <option value="">Selecione um motivo</option>
+                <option value="" disabled selected>Selecione um motivo</option>
                 <option value="Pedido em atraso">Pedido em atraso</option>
                 <option value="Cliente desistiu">Cliente desistiu</option>
                 <option value="Erro no pedido">Erro no pedido</option>
-                <option value="Outro">Outro</option>
             </select>
+
+            <!-- Motivo de cancelamento (texto adicional) -->
+            <textarea id="cancelDescription" placeholder="Descreva o motivo do cancelamento (opcional)"></textarea>
+
             <button id="confirmCancelBtn">Confirmar Cancelamento</button>
         </div>
     </div>
@@ -170,7 +173,7 @@
                 const idPedido = e.target.getAttribute('data-pedido');
 
                 // Abre o modal de cancelamento
-                document.getElementById('cancelModal').style.display = 'block';
+                document.getElementById('cancelModal').style.display = 'flex';
                 document.getElementById('confirmCancelBtn').setAttribute('data-pedido', idPedido);
             }
         });
@@ -180,29 +183,52 @@
             document.getElementById('cancelModal').style.display = 'none';
         };
 
-        // Confirmar cancelamento
+        // Bloqueio de campos entre o select e a textarea
+        document.getElementById('cancelReason').addEventListener('change', function () {
+            const descricao = document.getElementById('cancelDescription');
+            if (this.value) {
+                descricao.disabled = true; // Bloqueia o textarea
+                descricao.value = ''; // Reseta o valor do textarea
+            } else {
+                descricao.disabled = false; // Libera o textarea
+            }
+        });
+
+        document.getElementById('cancelDescription').addEventListener('input', function () {
+            const motivo = document.getElementById('cancelReason');
+            if (this.value) {
+                motivo.disabled = true; // Bloqueia o select
+                motivo.value = ''; // Reseta o valor do select
+            } else {
+                motivo.disabled = false; // Libera o select
+            }
+        });
+
+        // Função para confirmar o cancelamento
         document.getElementById('confirmCancelBtn').onclick = function () {
             const idPedido = this.getAttribute('data-pedido');
             const motivoCancelamento = document.getElementById('cancelReason').value;
+            const descricaoCancelamento = document.getElementById('cancelDescription').value;
 
-            if (!motivoCancelamento) {
-                alert('Por favor, selecione um motivo para o cancelamento.');
+            // Verifica se pelo menos uma das opções foi preenchida
+            if (!motivoCancelamento && !descricaoCancelamento) {
+                alert('Por favor, escolha uma das opções: selecione um motivo ou preencha a descrição.');
                 return;
             }
 
-            // Envia uma solicitação POST via AJAX para cancelar o pedido com o motivo
+            // Envia uma solicitação POST via AJAX para cancelar o pedido
             fetch('/cancelar_pedido', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: `id_pedido=${idPedido}&motivo_cancelamento=${motivoCancelamento}` // Corrigido para usar a chave correta
+                body: `id_pedido=${idPedido}&motivo_cancelamento=${encodeURIComponent(motivoCancelamento)}&descricao_cancelamento=${encodeURIComponent(descricaoCancelamento)}`
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'sucesso') {
                         alert('Pedido cancelado com sucesso!');
-                        carregarPedidos();  // Atualiza a lista de pedidos na página
+                        carregarPedidos(); // Atualiza a lista de pedidos na página
                     } else {
                         alert('Erro ao cancelar o pedido: ' + data.mensagem);
                     }
@@ -210,5 +236,17 @@
                 })
                 .catch(error => console.error('Erro ao enviar a solicitação:', error));
         };
+
+        // Função para resetar os campos ao fechar o modal
+        document.querySelector('.close').onclick = function () {
+            const motivo = document.getElementById('cancelReason');
+            const descricao = document.getElementById('cancelDescription');
+            motivo.value = '';
+            motivo.disabled = false; // Libera o select
+            descricao.value = '';
+            descricao.disabled = false; // Libera o textarea
+            document.getElementById('cancelModal').style.display = 'none';
+        };
+
     </script>
     {% endblock %}
