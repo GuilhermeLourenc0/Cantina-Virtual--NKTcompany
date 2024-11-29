@@ -57,9 +57,10 @@ input::placeholder {
     width: 23.7rem;
     border-radius: 6px;
     border: none;
-    
     margin-top: 10px;
     color: white;
+    display: flex;
+    justify-content: center;
 }
 
 form input:focus{

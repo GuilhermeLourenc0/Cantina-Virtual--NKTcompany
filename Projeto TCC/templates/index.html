@@ -66,20 +66,20 @@
   <div class="grid-produto">
     <div class="produtos" id="marmitas-list">
       {% for marmita in lista_marmitas %}
-      <form action="/marmita_unica" method="post">
-        <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
-          <div class="card-produtos">
-            <div class="left-lado">
-              <span class="produto-nome">{{ marmita.nome_marmita }}</span>
-              <span class="produto-desc">{{ marmita.descricao }}</span>
-              <span class="produto-preco">R$ {{ marmita.preco }}</span>
+        <form action="/marmita_unica" method="post">
+          <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
+            <div class="card-produtos">
+              <div class="left-lado">
+                <span class="produto-nome">{{ marmita.nome_marmita }}</span>
+                <span class="produto-desc">{{ marmita.descricao }}</span>
+                <span class="produto-preco">R$ {{ marmita.preco }}</span>
+              </div>
+              <div class="right-lado">
+                <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
+              </div>
             </div>
-            <div class="right-lado">
-              <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
-            </div>
-          </div>
-        </button>
-      </form>
+          </button>
+        </form>
       {% endfor %}
     </div>
   </div>

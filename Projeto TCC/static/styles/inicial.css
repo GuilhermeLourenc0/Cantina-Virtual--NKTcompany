@@ -1,10 +1,15 @@
+
+@font-face {
+    font-family: "Speedee";
+    src: url("path-para-font/speedee.woff") format("woff");
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: "Speedee", arial, helvetica, sans-serif;
 }
-
-
 
 figure {
 
@@ -112,6 +117,7 @@ h2 {
     text-align: center;
 }
 
+
 .container-produtos {
     display: flex;
     flex-direction: column;
@@ -123,6 +129,7 @@ h2 {
 .container-produtos h3{
     font-weight: 660;
 }
+
 .card-produtos {
     display: flex;
     justify-content: space-between;
