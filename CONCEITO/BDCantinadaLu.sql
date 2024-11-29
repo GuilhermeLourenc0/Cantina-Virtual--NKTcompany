@@ -453,7 +453,7 @@ INSERT INTO tb_curso (curso) VALUES ('CLP SIEMENS - TIA Portal - CLPTIA-2A24'),
 
 
 INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
-VALUES ('Administrador', '123456789', 'adm@adm.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'adm');
+VALUES ('Administrador', '+5516991880069', 'adm@adm.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'adm');
 
 INSERT INTO tb_cliente (nome_comp, telefone, email, id_curso, senha, tipo)
-VALUES ('Cliente', '123456789', 'cliente@cliente.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'cliente');
+VALUES ('Cliente', '+5516991880069', 'cliente@cliente.com', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'cliente');
