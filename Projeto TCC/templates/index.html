@@ -58,32 +58,6 @@
       </div>
     </section>
 
-    <!-- Seção de Marmitas -->
-    <section class="container-produtos">
-      <h3 style="margin-top: 1rem !important;
-  margin-bottom: 1rem !important;
-  font-size: 2.6rem;">Marmitex</h3>
-
-      <div class="grid-produto">
-        <div class="produtos" id="marmitas-list">
-          {% for marmita in lista_marmitas %}
-          <form action="/marmita_unica" method="post">
-            <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
-              <div class="card-produtos">
-                <div class="left-lado">
-                  <span class="produto-nome">{{ marmita.nome_marmita }}</span>
-                  <span class="produto-desc">{{ marmita.descricao }}</span>
-                  <span class="produto-preco">R$ {{ marmita.preco }}</span>
-                </div>
-                <div class="right-lado">
-                  <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
-                </div>
-              </div>
-            </button>
-          </form>
-          {% endfor %}
-        </div>
-    </section>
 
     <!-- Seção de Marmitas -->
     <section class="container-produtos">
@@ -202,7 +176,6 @@
           Object.keys(data).forEach(function (tamanho) {
             const marmitas = data[tamanho].marmitas;
             if (Array.isArray(marmitas)) {
-              marmitasContainer.append(`<h3>${tamanho}</h3>`);
               marmitas.forEach(function (marmita) {
                 marmitasContainer.append(`
                   <form action="/marmita_unica" method="post">
