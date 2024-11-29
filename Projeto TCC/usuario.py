@@ -228,8 +228,8 @@ class Usuario:
 
     def logout(self, id_cliente):
         """
-        Realiza o logout do usuário removendo os itens do carrinho de compras associado ao cliente.
-        Ao fazer logout, o carrinho é esvaziado.
+        Realiza o logout do usuário, removendo os itens do carrinho de compras associado ao cliente.
+        Ao fazer logout, o carrinho e seus itens relacionados (acompanhamentos e guarnições) são esvaziados.
         
         Parâmetros:
         - id_cliente: o ID do cliente que está realizando o logout.
@@ -237,14 +237,41 @@ class Usuario:
         Retorno:
         - None.
         """
-        mydb = Conexao.conectar()  # Conecta ao banco de dados
-        mycursor = mydb.cursor()
+        try:
+            mydb = Conexao.conectar()  # Conecta ao banco de dados
+            mycursor = mydb.cursor()
 
-        # Query SQL para remover os itens do carrinho do cliente
-        sql_remover_carrinho = f"DELETE FROM tb_carrinho WHERE id_cliente={id_cliente}"
-        mycursor.execute(sql_remover_carrinho)
-        mydb.commit()  # Confirma as alterações
-        mydb.close()  # Fecha a conexão
+            # Remover os acompanhamentos relacionados ao carrinho do cliente
+            sql_remover_acompanhamentos = """
+            DELETE FROM tb_carrinho_acompanhamento 
+            WHERE id_carrinho IN (
+                SELECT id_carrinho FROM tb_carrinho WHERE id_cliente = %s
+            )
+            """
+            mycursor.execute(sql_remover_acompanhamentos, (id_cliente,))
+
+            # Remover as guarnições relacionadas ao carrinho do cliente
+            sql_remover_guarnicoes = """
+            DELETE FROM tb_carrinho_guarnicao 
+            WHERE id_carrinho IN (
+                SELECT id_carrinho FROM tb_carrinho WHERE id_cliente = %s
+            )
+            """
+            mycursor.execute(sql_remover_guarnicoes, (id_cliente,))
+
+            # Remover os itens do carrinho do cliente
+            sql_remover_carrinho = "DELETE FROM tb_carrinho WHERE id_cliente = %s"
+            mycursor.execute(sql_remover_carrinho, (id_cliente,))
+
+            # Confirmar as alterações no banco de dados
+            mydb.commit()
+
+        except Exception as e:
+            print(f"Erro ao fazer logout: {e}")
+            mydb.rollback()  # Reverter alterações em caso de erro
+        finally:
+            mydb.close()  # Garantir que a conexão seja fechada
+
 
 
     def verificar_usuario(self, email, telefone):
