@@ -37,212 +37,235 @@ body {
     border-color: #888;
 }
 
+.card-pedidos {
+
+    margin: 20px 0; /* Adiciona margem superior e inferior */
+    padding: 16px;
+    
+}
+
+
 .order-card {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 450px;
-    min-width: 300px;
-    margin: 35px 0px 5px 0px;
-    transition: transform 0.3s ease;
+    border: 1px solid #e0e0e0; /* Borda para o card do pedido */
+    border-radius: 8px; /* Bordas arredondadas para o card do pedido */
+    padding: 20px; /* Espaçamento interno do card */
+    margin-bottom: 15px; /* Margem inferior para separar os pedidos */
+    background-color: #f1f1f1; /* Fundo claro para o card do pedido */
 }
 
 .order-card:hover {
+    transition: transform 0.3s;
     transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.order-card h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.order-card a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 .order-header {
     display: flex;
     justify-content: space-between;
-    font-size: 1.2em;
-    margin-bottom: 10px;
-}
-
-.order-number {
-    color: #4CAF50;
-    font-weight: bold;
-}
-
-.order-date {
-    color: #888;
-    font-style: italic;
+    margin-top: 10px;
+    font-size: 18px;
+    color: #555;
 }
 
 .order-details {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    /* padding: 10px; */
+    background-color: #f1f1f1; /* Fundo claro para os detalhes do pedido */
+    border-radius: 8px;
 }
 
-.order-details span {
-    font-size: 1.1em;
-    color: #666;
-}
-
-.order-status {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
-}
-
-.status-value {
-    font-weight: bold;
-}
-
-.status-value.finalizado {
-    color: #4CAF50;
-}
-
-.status-value.pendente {
-    color: orange;
-}
-
-.status-value.cancelado {
-    color: red;
-}
-
-.order-price {
-    color: #333;
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-.container-cards {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.order-details h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: #444;
 }
 
 .order-details ul {
-    list-style-type: none;
     margin: 0;
+    padding-left: 20px;
+    list-style-type: none;
+    color: #797979;
     padding: 0;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .order-details li {
-    margin: 0;
-    padding: 0;
+    padding-bottom: 10px;
+}
+
+.order-status {
+    margin: 12px 0 0 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
 }
 
 .btn-cancelar {
+    margin-top: 15px;
     display: flex;
     gap: 10px;
-    justify-content: center;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    
 }
 
-.btn-cancelar button {
-    margin-top: 20px;
-    background-color: red;
-    color: white;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 10px;
+.status-btn, .cancel-btn {
+    padding: 12px 23px;
+    border-radius: 6px;
     border: none;
+    font-weight: bold;
+    font-size: 18px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.btn-cancelar button:hover {
-    background-color: rgb(235, 0, 0);
+.status-btn {
+    background-color: #3498db;
+    color: #fff;
 }
 
-.btn-cancelar button:active {
-    background-color: rgb(225, 0, 0);
+.status-btn:hover {
+    background-color: #2980b9;
 }
 
-#button1 {
-    background-color: rgb(255, 196, 0);
+.cancel-btn {
+    background-color: #e74c3c;
+    color: #fff;
 }
 
-#button2 {
-    background-color: rgb(78, 230, 32);
+.cancel-btn:hover {
+    background-color: #c0392b;
 }
 
-#button3 {
-    background-color: rgb(0, 73, 230);
+.status-btn:active, .cancel-btn:active {
+    transform: scale(0.95);
 }
 
-/* Estilo da modal */
-.modal {
-    display: none; /* Inicialmente escondida */
-    position: fixed; /* Fixa na tela */
-    z-index: 1000; /* Acima de outros elementos */
-    width: 100%; /* Largura total */
-    height: 100%; /* Altura total */
-    overflow: auto; /* Adiciona rolagem se necessário */
-    background-color: rgba(0, 0, 0, 0.7); /* Fundo mais escuro e semi-transparente */
-    justify-content: center; /* Centraliza horizontalmente */
-    align-items: center; /* Centraliza verticalmente */
+.preparando {
+    color: #c1c40c; /* Amarelo */
+    background-color: #f6ffa6;
 }
 
-/* Estilo do conteúdo da modal */
-.modal-content {
-    background-color: #fefefe; /* Fundo mais claro */
-    padding: 20px; /* Espaçamento interno */
-    border: 1px solid #ccc; /* Borda mais suave */
-    border-radius: 15px; /* Bordas arredondadas */
-    width: 300px; /* Largura fixa da modal */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada */
+.pronto {
+    color: #3498db; /* Azul */
+    background-color: #d9edf7;
 }
 
-/* Estilo do botão de fechar */
-.close {
-    color: #888; /* Cor da cruz */
-    float: right; /* Alinha à direita */
-    font-size: 28px; /* Tamanho da fonte */
-    font-weight: bold; /* Negrito */
-    cursor: pointer; /* Cursor de ponteiro */
+.entregue {
+    color: #248b51; /* Verde bem escuro */
+    background-color: #c1d6ae; /* Verde muito suave quase branco */
 }
 
-.close:hover,
-.close:focus {
-    color: #333; /* Cor ao passar o mouse */
+.cancelado {
+    color: #e74c3c; /* Vermelho */
+    background-color: #f5c6cb;
 }
 
-/* Estilo do título */
-h2 {
-    margin: 0 0 15px; /* Margem abaixo do título */
-    font-family: 'Arial', sans-serif; /* Fonte do título */
-    color: #333; /* Cor do título */
+
+.preparando:hover {
+    color: #f6ffa6; /* Amarelo */
+    background-color: #c1c40c;
 }
 
-/* Estilo do select */
-select {
-    width: 100%; /* Largura total */
-    padding: 10px; /* Espaçamento interno */
-    margin-bottom: 15px; /* Margem abaixo do select */
-    border: 1px solid #ccc; /* Borda suave */
-    border-radius: 5px; /* Bordas arredondadas */
-    background-color: #f9f9f9; /* Fundo do select */
-    font-size: 16px; /* Tamanho da fonte */
-    color: #333; /* Cor do texto */
+.pronto:hover {
+    color: #d9edf7; /* Azul */
+    background-color: #3498db;
 }
 
-/* Estilo do botão de confirmação */
-#confirmCancelBtn {
-    background-color: rgb(161, 23, 23); /* Cor verde */
-    color: white; /* Cor do texto */
-    padding: 10px; /* Espaçamento interno */
-    border: none; /* Sem borda */
-    border-radius: 5px; /* Bordas arredondadas */
-    cursor: pointer; /* Cursor de ponteiro */
-    font-size: 16px; /* Tamanho da fonte */
-    transition: background-color 0.3s; /* Transição suave */
-    width: 100%; /* Largura total */
+.entregue:hover {
+    color: #c1d6ae; /* Verde bem escuro */
+    background-color: #248b51; /* Verde muito suave quase branco */
 }
 
-#confirmCancelBtn:hover {
-    background-color: rgb(146, 22, 22); /* Cor ao passar o mouse */
+.cancelado:hover {
+    color: #e74c3c; /* Vermelho */
+    background-color: #f5c6cb;
 }
 
-input{
-    padding: 10px;
-    border-radius: 5px;
-    border: 2px solid rgb(238, 238, 238);
-    background-color: rgb(245, 245, 245);
-    margin-bottom: 10px;
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .order-filter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .order-filter label {
+        margin-bottom: 10px; /* Espaçamento inferior nos rótulos */
+    }
+
+    .order-filter select {
+        width: 100%; /* Largura total em telas pequenas */
+        margin-bottom: 10px; /* Espaço inferior para o seletor */
+    }
+
+    .card-pedidos {
+        padding: 12px; /* Menos padding nos cards */
+    }
+
+    .order-card h2 {
+        font-size: 20px; /* Reduzir tamanho do título */
+    }
+
+    .order-header {
+        flex-direction: column; /* Colocar os elementos em coluna */
+        align-items: flex-start; /* Alinhar à esquerda */
+        margin-top: 8px; /* Menos margem superior */
+    }
+
+    .order-details h3 {
+        font-size: 16px; /* Tamanho menor para detalhes */
+    }
+
+    .order-status {
+        font-size: 14px; /* Tamanho menor para status */
+    }
+
+    .status-btn, .cancel-btn {
+        padding: 12px 24px;
+        font-size: 12px; /* Tamanho menor para os botões */
+    }
+}
+
+@media (max-width: 480px) {
+    .order-filter label {
+        font-size: 1em; /* Menor tamanho em telas muito pequenas */
+    }
+
+    .order-filter select {
+        font-size: 1em; /* Menor tamanho para o seletor */
+    }
+
+    .order-card h2 {
+        font-size: 23px; /* Tamanho menor do título */
+    }
+
+    .order-header {
+        display: flex;
+        flex-direction: row;
+        font-size: 18px; /* Reduzir ainda mais o tamanho */
+        font-weight: bold;
+    }
+
+    .order-details h3 {
+        font-size: 23px; /* Tamanho menor para detalhes */
+        font-weight: bold;
+    }
+
+    .order-status {
+        font-size: 20px; /* Tamanho menor para status */
+    }
 }
