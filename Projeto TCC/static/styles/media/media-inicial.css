@@ -1,0 +1,43 @@
+@media (min-width: 768px) {
+    .left-lado {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 60px;
+        flex: 1;
+        flex-wrap: wrap;}
+    
+    .card-produtos img {
+        height: 120px; /* Tamanho da imagem */
+        width: 120px; /* Tamanho da imagem */
+        border-radius: 12px; /* Bordas arredondadas */
+        object-fit: cover;
+    }
+    
+    .produto-nome {
+        font-size: 1.6rem; /* Ajustado para mobile */
+        font-weight: 600;
+        color: #333;
+        text-align: left;
+    }
+    
+    .produto-desc {
+        text-align: left;
+        font-size: 1.2rem;
+    }
+    
+    .produto-preco {
+        text-align: left;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #727272 ;
+    }
+
+    .produtos button:hover {
+        transform: scale(1.01);
+    }
+
+    h3{
+        font-size: 1.8rem;
+    }
+}

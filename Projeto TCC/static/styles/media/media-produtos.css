@@ -1,0 +1,42 @@
+/* Estilos gerais para tablets e desktops */
+@media (min-width: 768px) {
+    .produto {
+        width: 600px;
+        max-width: 800px;
+        /* Largura máxima para o container */
+    }
+
+    .foto-produto {
+        width: 95%;
+        height: auto;
+        margin-bottom: 20px;
+        /* Espaço abaixo da imagem */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nome-produto {
+        font-size: 2.4rem;
+        /* Tamanho maior para nome do produto */
+    }
+
+    .descricao-produto {
+        font-size: 1.6rem;
+        /* Tamanho maior para descrição */
+    }
+
+    .preco-produto {
+        font-size: 1.8rem;
+        /* Tamanho maior para o preço */
+    }
+
+    .observacao input {
+        width: 100%;
+        /* Aumenta a largura do campo de input */
+    }
+
+    .descricao {
+        width: 100%;
+        align-items: center;
+    }
+}

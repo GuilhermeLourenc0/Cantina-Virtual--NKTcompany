@@ -1,8 +1,9 @@
 {% extends "modelo-adm.html" %}
 {% block conteudo %}
-    <style>
-        
 
+<head>
+    <style>
+        /* Estilo padrão (mobile-first) */
         .container {
             margin-top: 35px;
             display: flex;
@@ -11,7 +12,6 @@
             justify-content: center;
             gap: 15px; /* Espaço entre os cards */
             width: 100%; /* Largura total */
-            max-width: 350px; /* Largura máxima dos cards */
             margin-bottom: 20px;
         }
 
@@ -21,7 +21,8 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden; /* Evita que a imagem transborde */
             text-align: center;
-            width: 350px; /* Largura fixa dos cards */
+            width: 100%; /* Ajusta para largura total do container */
+            max-width: 350px; /* Largura máxima */
             text-decoration: none; /* Remove sublinhado do link */
             color: inherit; /* Usa a cor do texto pai */
             display: flex; /* Usar flexbox para o alinhamento interno */
@@ -48,8 +49,11 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Aumenta a sombra ao passar o mouse */
             text-decoration: none;
         }
+
     </style>
+    <link rel="stylesheet" href="/Projeto TCC/static/styles/media/media-inicialAdm.css">
 </head>
+
 <body>
     <div class="container">
         <a class="card" href="/exibir_pedidos">
@@ -66,10 +70,11 @@
         </a>
         <a class="card" href="/relatorio">
             <img src="../static/img/cantinaComanda.jpg" alt="Editar">
-            <p>Relatorio</p>
+            <p>Relatório</p>
         </a>
     </div>
 
     {% endblock %}
 </body>
+
 </html>

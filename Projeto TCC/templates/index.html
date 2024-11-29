@@ -47,53 +47,83 @@
 
   <!-- Seção de Produtos -->
   <section class="container-produtos">
+    <!-- Seção de Produtos -->
+    <h2>Nossos Produtos</h2>
+    <section class="container-produtos">
 
-    <div class="grid-produto">
-      <div class="produtos" id="produtos-list">
-        <!-- Produtos renderizados dinamicamente aqui -->
+      <div class="grid-produto">
+        <div class="produtos" id="produtos-list">
+          <!-- Produtos renderizados dinamicamente aqui -->
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Seção de Marmitas -->
-  <section class="container-produtos">
-    <h3 style="margin-top: 1rem !important; margin-bottom: 1rem !important; font-size: 1.75rem;">Marmitex</h3>
+    <!-- Seção de Marmitas -->
+    <section class="container-produtos">
+      <h3 style="margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  font-size: 2.6rem;">Marmitex</h3>
 
-    <div class="grid-produto">
-      <div class="produtos" id="marmitas-list">
-        {% for marmita in lista_marmitas %}
-        <form action="/marmita_unica" method="post">
-          <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
-            <div class="card-produtos">
-              <div class="left-lado">
-                <span class="produto-nome">{{ marmita.nome_marmita }}</span>
-                <span class="produto-desc">{{ marmita.descricao }}</span>
-                <span class="produto-preco">R$ {{ marmita.preco }}</span>
+      <div class="grid-produto">
+        <div class="produtos" id="marmitas-list">
+          {% for marmita in lista_marmitas %}
+          <form action="/marmita_unica" method="post">
+            <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
+              <div class="card-produtos">
+                <div class="left-lado">
+                  <span class="produto-nome">{{ marmita.nome_marmita }}</span>
+                  <span class="produto-desc">{{ marmita.descricao }}</span>
+                  <span class="produto-preco">R$ {{ marmita.preco }}</span>
+                </div>
+                <div class="right-lado">
+                  <img src="{{ marmita.imagem_marmita }}" alt="{{ marmita.nome_marmita }}">
+                </div>
               </div>
-              <div class="right-lado">
-                {% if marmita.img_marmita is string %}
-                <!-- Se for base64, insere diretamente -->
-                <img src="data:image/jpeg;base64,{{ marmita.img_marmita }}" alt="{{ marmita.nome_marmita }}">
-                {% else %}
-                <!-- Se for URL, insere a URL da imagem -->
-                <img src="{{ marmita.img_marmita }}" alt="{{ marmita.nome_marmita }}">
-                {% endif %}
+            </button>
+          </form>
+          {% endfor %}
+        </div>
+    </section>
+
+    <!-- Seção de Marmitas -->
+    <section class="container-produtos">
+      <h3 style="margin-top: 1rem !important; margin-bottom: 1rem !important; font-size: 1.75rem;">Marmitex</h3>
+
+      <div class="grid-produto">
+        <div class="produtos" id="marmitas-list">
+          {% for marmita in lista_marmitas %}
+          <form action="/marmita_unica" method="post">
+            <button value="{{ marmita.id_marmita }}" name="btn-produto" type="submit">
+              <div class="card-produtos">
+                <div class="left-lado">
+                  <span class="produto-nome">{{ marmita.nome_marmita }}</span>
+                  <span class="produto-desc">{{ marmita.descricao }}</span>
+                  <span class="produto-preco">R$ {{ marmita.preco }}</span>
+                </div>
+                <div class="right-lado">
+                  {% if marmita.img_marmita is string %}
+                  <!-- Se for base64, insere diretamente -->
+                  <img src="data:image/jpeg;base64,{{ marmita.img_marmita }}" alt="{{ marmita.nome_marmita }}">
+                  {% else %}
+                  <!-- Se for URL, insere a URL da imagem -->
+                  <img src="{{ marmita.img_marmita }}" alt="{{ marmita.nome_marmita }}">
+                  {% endif %}
+                </div>
               </div>
-            </div>
-          </button>
-        </form>
-        {% endfor %}
+            </button>
+          </form>
+          {% endfor %}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
 </main>
 
-<footer>
+<!-- <footer>
   <a href="/exibir_carrinho" class="car-icon">
     <img src="https://cdn-icons-png.flaticon.com/512/4/4295.png" alt="">
   </a>
-</footer>
+</footer> -->
 
 
 <!-- Scripts do jQuery -->
