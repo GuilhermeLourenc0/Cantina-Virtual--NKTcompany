@@ -1,5 +1,6 @@
 from conexao import Conexao
 from hashlib import sha256
+import base64
 
 class Carrinho:
     def __init__(self):
@@ -117,6 +118,8 @@ class Carrinho:
 
 
 
+
+
     def exibir_carrinho(self, id_cliente):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
@@ -133,7 +136,7 @@ class Carrinho:
 
         # Consulta SQL para obter marmitas no carrinho
         sql_marmitas = """
-            SELECT m.id_marmita, m.nome_marmita, m.preco, m.url_img, c.id_carrinho, c.quantidade
+            SELECT m.id_marmita, m.nome_marmita, m.preco, m.url_img, c.id_carrinho, c.quantidade, m.imagem_binaria
             FROM tb_carrinho AS c
             JOIN tb_marmita AS m ON c.id_marmita = m.id_marmita
             WHERE c.id_cliente = %s;
@@ -167,6 +170,12 @@ class Carrinho:
             preco_marmita = resultado[2]
             quantidade_marmita = resultado[5]
 
+            # Verifica se imagem_binaria existe e converte para Base64, senão utiliza url_img
+            if resultado[6]:  # Se imagem_binaria existir
+                imagem_marmita = f"data:image/jpeg;base64,{base64.b64encode(resultado[6]).decode('utf-8')}"
+            else:  # Caso contrário, usa a URL da imagem
+                imagem_marmita = resultado[3]
+
             # Consulta para obter guarnições da marmita no carrinho
             sql_guarnicoes = """
                 SELECT g.nome_guarnicao 
@@ -191,7 +200,7 @@ class Carrinho:
             lista_carrinho['marmitas'].append({
                 'nome_marmita': resultado[1],
                 'preco': preco_marmita,
-                'imagem_produto': resultado[3],
+                'imagem_produto': imagem_marmita,
                 'id_carrinho': resultado[4],
                 'quantidade': quantidade_marmita,
                 'guarnicoes': guarnicoes,
@@ -207,6 +216,7 @@ class Carrinho:
             'marmitas': lista_carrinho['marmitas'],
             'total_preco': total_preco_formatado
         }
+
 
 
 
