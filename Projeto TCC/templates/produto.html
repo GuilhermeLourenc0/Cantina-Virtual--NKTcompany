@@ -1,40 +1,35 @@
 {% extends "modelo.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/produto.css">
+<link rel="stylesheet" href="../static/styles/media/media-produtos.css">
 
 <body>
     <main>
         {% for registro in lista_prounico %}
-        <img class="ft-item" src="{{ registro.imagem_produto }}" alt="Imagem do produto">
+        <section class="posicao-produto">
+            <div class="produto">
+                <div class="foto-produto">
+                    <img class="ft-item" src="{{ registro.imagem_produto }}" alt="Imagem do produto">
+                </div>
+                <section class="descricao">
+                    <span class="nome-produto">{{ registro.nome_produto }}</span>
+                    <span class="descricao-produto">{{ registro.descricao }}</span>
+                    <span class="preco-produto">R$ {{ registro.preco }}</span>
 
-        <section class="descricao">
-            <span class="nome-produto">{{ registro.nome_produto }}</span>
-            <span class="descricao-produto">{{ registro.descricao }}</span>
-            <span class="preco-produto">R$ {{ registro.preco }}</span>
 
-            <!-- <div class="observacao">
-                <div class="cima">
-                    <div class="esq">
-                        <img src="../static/img/obs.png" alt="Observação">
-                        <span>Alguma observação?</span>
+                    <div class="sair">
+                        <a href="/" class="btn-voltar">Voltar</a>
+
+                        <form id="carrinhoForm" action="/inserir_carrinho" method="post">
+                            <input type="hidden" name="cod_produto" value="{{ registro.cod_produto }}">
+                            <button type="submit" class="btn-adicionar">Adicionar ao Carrinho</button>
+                        </form>
                     </div>
-                    <div class="dir">
-                        <p><span id="contador">0</span>/140</p>
-                    </div> n     
-                </div>
-                <div class="baixo">
-                    <input type="text" id="meuInput" placeholder="Ex: Tirar o feijão" maxlength="140">
-                </div>
-            </div> -->
-
-            <div class="sair">
-                <a href="/">Voltar</a>
-                <form id="carrinhoForm" action="/inserir_carrinho" method="post">
-                    <input type="hidden" name="cod_produto" value="{{ registro.cod_produto }}">
-                    <button type="submit">Adicionar ào Carrinho</button>
-                </form>
+                </section>
             </div>
         </section>
+
+
 
         <div class="espacamento"></div>
 
@@ -58,19 +53,13 @@
                         // Redireciona para a página do carrinho se o pedido for bem-sucedido
                         window.location.href = result.redirect_url;
                     } else {
-                        if (response.status === 401) {
-                            // Redireciona para a página de login se não estiver logado
-                            window.location.href = "/logar";
-                        } else {
-                            alert(result.error || 'Erro ao adicionar ao carrinho.');
-                        }
+                        alert(result.error || 'Erro ao adicionar ao carrinho.');
                     }
                 } catch (error) {
                     console.error('Erro ao enviar o formulário:', error);
                     alert('Ocorreu um erro ao tentar adicionar ao carrinho.');
                 }
             });
-
 
             const input = document.getElementById('meuInput');
             const contador = document.getElementById('contador');

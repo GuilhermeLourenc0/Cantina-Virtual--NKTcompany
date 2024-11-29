@@ -1,0 +1,15 @@
+
+        /* Estilo para dispositivos maiores */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row; /* Exibe os cards na horizontal */
+                flex-wrap: wrap; /* Permite quebra para a próxima linha, se necessário */
+                justify-content: center; /* Centraliza os cards horizontalmente */
+                gap: 20px; /* Espaçamento maior entre os cards */
+            }
+
+            .card {
+                width: calc(25% - 20px); /* Cada card ocupa 25% da largura menos o gap */
+                max-width: 250px; /* Define uma largura máxima */
+            }
+        }
