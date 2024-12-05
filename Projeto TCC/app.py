@@ -921,37 +921,32 @@ def exibir_carrinho():
 @app.route("/inserir_carrinho", methods=['POST'])
 def carrinho():
     if 'usuario_logado' not in session or session['usuario_logado'] is None or session['usuario_logado'].get('id_cliente') is None:
-        return jsonify({"success": False, "error": "Usuário não logado."}), 401  # Código 401 para não autorizado
+        return jsonify({"redirect_url": "/logar"}), 401  # Retorna 401 para redirecionamento
 
+    # Lógica de inserção no carrinho
     id_cliente = session.get('usuario_logado')['id_cliente']
-    cod_produto = request.form.get('cod_produto')  # Para produtos
-    id_marmita = request.form.get('id_marmita')  # Para marmitas
+    cod_produto = request.form.get('cod_produto')
+    id_marmita = request.form.get('id_marmita')
 
-    # Se for uma marmita, aplica a restrição de horário
     if id_marmita:
-        # Obtém o horário atual de São Paulo
         timezone_sp = pytz.timezone('America/Sao_Paulo')
         now = datetime.now(timezone_sp)
         hora_atual = now.hour
         minutos_atuais = now.minute
-        print(f"Hora atual: {hora_atual}, Minutos atuais: {minutos_atuais}")
 
-        # Verifica se o pedido é entre 7h e 15h30
         if (hora_atual < 7) or (hora_atual == 15 and minutos_atuais > 30) or (hora_atual > 15):
             return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 15h30."}), 403
 
-    # Captura guarnições e acompanhamentos selecionados
     guarnicoes_selecionadas = request.form.getlist('guarnicao')
     acompanhamentos_selecionados = request.form.getlist('acompanhamento')
 
-    # Valida e insere no carrinho
     carrinho = Carrinho()
     if cod_produto or id_marmita:
         carrinho.inserir_item_carrinho(cod_produto, id_marmita, id_cliente, 
                                        guarnicoes_selecionadas, acompanhamentos_selecionados)
 
-    # Envia uma resposta JSON com a URL de redirecionamento
     return jsonify({"success": True, "redirect_url": "/exibir_carrinho"})
+
 
 
 

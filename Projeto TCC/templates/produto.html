@@ -37,29 +37,32 @@
             document.getElementById('carrinhoForm').addEventListener('submit', async function (event) {
                 event.preventDefault(); // Impede o envio padrão do formulário
 
-                // Cria um objeto FormData com os dados do formulário
                 const formData = new FormData(this);
 
-                // Envia os dados para o servidor via fetch
                 try {
                     const response = await fetch(this.action, {
                         method: 'POST',
                         body: formData
                     });
 
+                    if (response.status === 401) {
+                        // Redireciona para a página de login em caso de status 401
+                        const result = await response.json();
+                        window.location.href = result.redirect_url;
+                        return;
+                    }
+
                     const result = await response.json();
 
                     if (result.success) {
-                        // Redireciona para a página do carrinho se o pedido for bem-sucedido
+                        // Redireciona para a página do carrinho
                         window.location.href = result.redirect_url;
-                    } else {
-                        alert(result.error || 'Erro ao adicionar ao carrinho.');
                     }
                 } catch (error) {
                     console.error('Erro ao enviar o formulário:', error);
-                    alert('Ocorreu um erro ao tentar adicionar ao carrinho.');
                 }
             });
+
 
             const input = document.getElementById('meuInput');
             const contador = document.getElementById('contador');
