@@ -1,6 +1,6 @@
-Flask==3.0.0
-mysql-connector-python==8.0.33
-azure-storage-blob==12.14.1
-twilio==8.4.0
+Flask
+mysql-connector-python
+azure-storage-blob
+twilio
 python-dateutil
 python-dotenv
