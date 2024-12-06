@@ -129,17 +129,17 @@ body {
 }
 
 .status-preparando .order-status-text {
-    color: #e8ec00; /* Amarelo */
+    color: #525305; /* Amarelo */
     background-color: #f6ffa6;
 }
 
 .status-feito .order-status-text {
-    color: #3498db; /* Azul */
+    color: #20587e; /* Azul */
     background-color: #d9edf7;
 }
 
 .status-entregue .order-status-text {
-    color: #248b51; /* Verde bem escuro */
+    color: #103b23; /* Verde bem escuro */
     background-color: #c1d6ae; /* Verde muito suave quase branco */
 }
 
