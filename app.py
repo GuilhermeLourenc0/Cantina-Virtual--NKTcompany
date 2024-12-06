@@ -9,7 +9,7 @@ from twilio.rest import Client
 import os
 from datetime import datetime
 import pytz
-from relatorio import Relatorio
+from relatorio import Relatorio 
 
 
 app = Flask(__name__)
