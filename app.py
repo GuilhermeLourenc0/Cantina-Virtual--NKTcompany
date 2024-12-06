@@ -1012,7 +1012,7 @@ def atualizar_produto():
     # Lógica para salvar o arquivo localmente (opcional, caso esteja enviando a URL no banco)
     imagem_url = None
     if imagem:
-        caminho_imagem = os.path.join('Projeto TCC/static/uploads', imagem.filename)
+        caminho_imagem = os.path.join('static/uploads', imagem.filename)
         imagem.save(caminho_imagem)
         imagem_url = f"/static/uploads/{imagem.filename}"
 
