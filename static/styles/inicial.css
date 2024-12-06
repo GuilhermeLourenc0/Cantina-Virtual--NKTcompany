@@ -837,7 +837,7 @@ input:checked+.slider:before {
 }
 
 .horario h2 {
-    font-size: 0.6rem;
+    font-size: 0.6rem !important;
     display: flex;
     justify-content: center;
     text-align: center;
