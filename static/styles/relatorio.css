@@ -13,7 +13,16 @@
 h2, h3, h4 {
     text-align: center;
     margin: 5px 0;
-    font-family: 'receipt', 'Anonymous Pro', 'Courier New', Courier, monospace;
+}
+
+h2, h3 {
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-weight: bolder;
+}
+
+h4 {
+    margin: 10px 0;
+    text-align: center;
 }
 
 .filtro-relatorio {
@@ -65,21 +74,10 @@ th {
 tr{
     margin-bottom: 10px;
 }
-h4 {
-    margin: 10px 0;
-    text-align: center;
-}
 
-h2{
-    text-decoration: underline;
-}
-
-h3{
-    font-weight: bolder;
-    font-family: 'Helvetica Neue', Helvetica, sans-serif;
-}
 
 .spanpontilhado{
     border-bottom: 1px dashed black;
     border-top: 1px dashed black;
 }
+
