@@ -1,7 +1,7 @@
 Flask
 mysql-connector-python
 azure-storage-blob
-twilio
+twilio==8.4.0
 python-dateutil
 python-dotenv
 pytz
