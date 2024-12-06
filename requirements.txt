@@ -4,3 +4,5 @@ azure-storage-blob
 twilio
 python-dateutil
 python-dotenv
+pytz
+gunicorn
