@@ -476,7 +476,7 @@ class Adm:
 
         # Se um arquivo de imagem foi enviado
         if file and file.filename != '':
-            diretorio = os.path.join('Projeto TCC', 'static', 'uploads')
+            diretorio = os.path.join('static', 'uploads')
             filename = f"marmita_{id_marmita}.jpg"
             caminho_imagem = os.path.join(diretorio, filename)
             file.save(caminho_imagem)
