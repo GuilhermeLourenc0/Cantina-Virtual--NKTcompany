@@ -2,6 +2,7 @@ from conexao import Conexao
 from hashlib import sha256
 import os
 from datetime import datetime
+import base64
 
 class Adm:
     def __init__(self):
@@ -421,9 +422,14 @@ class Adm:
     
 
     # ============================ Editar Prduto ==============================
-    def atualizar_produto(self, id_produto, nome, preco, descricao, url_img=None):
+    def atualizar_produto(self, id_produto, nome, preco, descricao, imagem=None):
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
+
+        # Lê a imagem como binário, se fornecida
+        imagem_blob = None
+        if imagem:
+            imagem_blob = imagem.read()
 
         # Base da consulta SQL
         sql = """
@@ -432,10 +438,10 @@ class Adm:
         """
         valores = [nome, preco, descricao]
 
-        # Adicionar a imagem caso fornecida
-        if url_img:
-            sql += ", url_img = %s"
-            valores.append(url_img)
+        # Adicionar o blob da imagem caso fornecido
+        if imagem_blob:
+            sql += ", imagem_blob = %s"
+            valores.append(imagem_blob)
 
         sql += " WHERE cod_produto = %s"
         valores.append(id_produto)

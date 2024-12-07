@@ -1009,18 +1009,12 @@ def atualizar_produto():
     descricao = request.form.get('descricao')
     imagem = request.files.get('imagem')  # Para o upload de imagem
 
-    # Lógica para salvar o arquivo localmente (opcional, caso esteja enviando a URL no banco)
-    imagem_url = None
-    if imagem:
-        caminho_imagem = os.path.join('static/uploads', imagem.filename)
-        imagem.save(caminho_imagem)
-        imagem_url = f"/static/uploads/{imagem.filename}"
-
     # Atualizar o produto no banco de dados
-    adm.atualizar_produto(id_produto, nome, preco, descricao, imagem_url)
+    adm.atualizar_produto(id_produto, nome, preco, descricao, imagem)
 
     flash('Produto atualizado com sucesso!', 'success')
     return redirect('/editar_produto')
+
 
 
 
