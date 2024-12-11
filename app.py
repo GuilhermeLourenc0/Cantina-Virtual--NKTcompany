@@ -934,8 +934,8 @@ def carrinho():
         hora_atual = now.hour
         minutos_atuais = now.minute
 
-        if (hora_atual < 7) or (hora_atual == 15 and minutos_atuais > 30) or (hora_atual > 15):
-            return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 15h30."}), 403
+        if (hora_atual < 7) or (hora_atual == 9 and minutos_atuais > 10) or (hora_atual > 9):
+            return jsonify({"error": "Os pedidos de marmitas só podem ser feitos entre 7h e 9h."}), 403
 
     guarnicoes_selecionadas = request.form.getlist('guarnicao')
     acompanhamentos_selecionados = request.form.getlist('acompanhamento')
