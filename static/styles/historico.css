@@ -124,26 +124,38 @@ body {
 }
 
 .status-pendente .order-status-text {
-    color: #e67e22; /* Laranja */
+    color: #e67e22;
+    /* Laranja */
     background-color: #f9e1c1;
 }
 
 .status-preparando .order-status-text {
-    color: #525305; /* Amarelo */
+    color: #525305;
+    /* Amarelo */
     background-color: #f6ffa6;
 }
 
 .status-feito .order-status-text {
-    color: #20587e; /* Azul */
+    color: #20587e;
+    /* Azul */
     background-color: #d9edf7;
 }
 
 .status-entregue .order-status-text {
-    color: #103b23; /* Verde bem escuro */
-    background-color: #c1d6ae; /* Verde muito suave quase branco */
+    color: #103b23;
+    /* Verde bem escuro */
+    background-color: #c1d6ae;
+    /* Verde muito suave quase branco */
 }
 
 .status-cancelado .order-status-text {
-    color: #e74c3c; /* Vermelho */
+    color: #e74c3c;
+    /* Vermelho */
     background-color: #f5c6cb;
+}
+
+.motivo-cancelamento {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 10px;
 }

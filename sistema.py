@@ -408,8 +408,10 @@ class Sistema:
                     'marmitas': [],
                     'guarnicoes': [],
                     'acompanhamentos': [],
-                    'total_preco': 0
+                    'total_preco': 0,
+                    'motivo_cancelamento': motivo_cancelamento  # Adicione aqui
                 }
+
 
             if nome_produto:
                 total_produto = preco_produto * quantidade_produto

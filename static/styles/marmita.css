@@ -8,7 +8,7 @@ body {
 }
 
 main {
-    max-width: 100vw; 
+    max-width: 100vw;
     background-color: #ffffff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     min-height: 89vh;
@@ -22,69 +22,82 @@ main {
     flex-wrap: wrap;
     align-content: center;
     padding-top: 100px;
-    
+
 }
 
 .produto {
     display: flex;
-    flex-direction: column; /* Coloca os filhos em coluna */
-    align-items: center; /* Centraliza horizontalmente */
-    justify-content: space-between; /* Garante espaçamento adequado */
+    flex-direction: column;
+    /* Coloca os filhos em coluna */
+    align-items: center;
+    /* Centraliza horizontalmente */
+    justify-content: space-between;
+    /* Garante espaçamento adequado */
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     max-width: 600px;
-    width: 80%; /* Garante que o conteúdo ocupe a largura disponível */
-    overflow: hidden; /* Evita que elementos escapem */
-    position: relative; /* Permite controle melhor dos filhos */
+    width: 80%;
+    /* Garante que o conteúdo ocupe a largura disponível */
+    overflow: hidden;
+    /* Evita que elementos escapem */
+    position: relative;
+    /* Permite controle melhor dos filhos */
     box-sizing: border-box;
 }
 
 .foto-produto {
     width: 100%;
     height: auto;
-    margin-bottom: 20px; /* Espaço abaixo da imagem */
+    margin-bottom: 20px;
+    /* Espaço abaixo da imagem */
     display: flex;
     flex-direction: column;
-    
+
 }
 
 .ft-item {
-    max-width: 100%; /* A imagem ocupa 100% da largura do container */
-    height: auto; /* Mantém a proporção da imagem */
-    border-radius: 12px; /* Bordas arredondadas para a imagem */
+    max-width: 100%;
+    /* A imagem ocupa 100% da largura do container */
+    height: auto;
+    /* Mantém a proporção da imagem */
+    border-radius: 12px;
+    /* Bordas arredondadas para a imagem */
 }
 
 .descricao {
     height: 60%;
     display: flex;
     flex-direction: column;
-    text-align: center; /* Centraliza o texto da descrição */
+    text-align: center;
+    /* Centraliza o texto da descrição */
     align-items: center;
     width: 85%;
 
 }
 
 .nome-produto {
-    font-size: 2rem; /* Tamanho grande para o nome do produto */
+    font-size: 2rem;
+    /* Tamanho grande para o nome do produto */
     font-weight: bold;
     color: #333;
-    
+
 }
 
 .descricao-produto {
     font-size: 1rem;
     color: #666;
-    
+
 }
 
 .preco-produto {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #28a745; /* Verde para o preço */
+    color: #28a745;
+    /* Verde para o preço */
     margin-bottom: 40px;
-    
+
 }
 
 
@@ -95,13 +108,19 @@ a {
 
 .btn-adicionar {
     display: flex;
-    background-color: red; /* Fundo vermelho */
-    color: white; /* Texto branco */
-    border: none; /* Sem borda */
-    border-radius: 5px; /* Bordas arredondadas */
-    padding: 10px 20px; /* Espaçamento interno */
+    background-color: red;
+    /* Fundo vermelho */
+    color: white;
+    /* Texto branco */
+    border: none;
+    /* Sem borda */
+    border-radius: 5px;
+    /* Bordas arredondadas */
+    padding: 10px 20px;
+    /* Espaçamento interno */
     cursor: pointer;
-    transition: background-color 0.3s; /* Transição suave */
+    transition: background-color 0.3s;
+    /* Transição suave */
     align-content: center;
     justify-content: center;
     flex-wrap: wrap;
@@ -109,10 +128,11 @@ a {
 }
 
 .btn-adicionar:hover {
-    background-color: #c82333; /* Cor mais escura ao passar o mouse */
+    background-color: #c82333;
+    /* Cor mais escura ao passar o mouse */
 }
 
-.opc{
+.opc {
     width: 100%;
 }
 
@@ -171,7 +191,7 @@ form button:active {
     padding-top: 10px;
     background-color: white;
     border: 1px solid rgb(255, 255, 255);
-    
+
 }
 
 
@@ -184,15 +204,21 @@ a {
     display: flex;
     align-content: center;
     justify-content: center;
-    color: red; /* Cor do texto */
-    background-color: transparent; /* Fundo transparente */
-    border: 2px solid red; /* Borda vermelha */
-    border-radius: 5px; /* Bordas arredondadas */
-    padding: 10px 20px; /* Espaçamento interno */
+    color: red;
+    /* Cor do texto */
+    background-color: transparent;
+    /* Fundo transparente */
+    border: 2px solid red;
+    /* Borda vermelha */
+    border-radius: 5px;
+    /* Bordas arredondadas */
+    padding: 10px 20px;
+    /* Espaçamento interno */
     cursor: pointer;
     flex-wrap: wrap;
     height: 60px;
-    transition: background-color 0.3s, color 0.3s; /* Transição suave */
+    transition: background-color 0.3s, color 0.3s;
+    /* Transição suave */
     font-weight: bolder;
     font-size: 18px;
 }
@@ -202,7 +228,7 @@ a {
 }
 
 
-#adicionarCarrinhoBtn{
+#adicionarCarrinhoBtn {
     display: flex;
     background-color: red;
     color: white;
@@ -220,7 +246,8 @@ a {
 }
 
 #adicionarCarrinhoBtn:hover {
-    background-color: #c82333; /* Cor mais escura ao passar o mouse */
+    background-color: #c82333;
+    /* Cor mais escura ao passar o mouse */
 }
 
 .espacamento1 {
@@ -273,7 +300,7 @@ a {
     color: #666;
 }
 
-.titulosubtitulo{
+.titulosubtitulo {
     margin-left: 11px;
 }
 
@@ -381,6 +408,7 @@ a {
     /* Fundo da bolinha */
     transition: background-color 0.3s, border-color 0.3s;
 }
+
 /* Para ajustar o alinhamento da bolinha ao texto */
 .acompanhamento span {
     flex-grow: 1;
@@ -397,13 +425,14 @@ a {
     margin-right: 5px;
     /* Espaço entre o texto e a bolinha */
 }
-input[type="checkbox"]{
+
+input[type="checkbox"] {
     display: none;
 }
 
 
 input[type="checkbox"]+span {
-    
+
     transform: translateY(-50%);
     border: 2px solid #ff0000;
     /* Cor da bolinha */
@@ -429,7 +458,8 @@ input[type="checkbox"]:checked+span {
 
 .acompanhamento2 label {
     position: relative;
-    padding-left: 30px; /* Espaçamento para a bolinha */
+    padding-left: 30px;
+    /* Espaçamento para a bolinha */
     cursor: pointer;
 }
 
@@ -438,26 +468,35 @@ input[type="checkbox"]:checked+span {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 20px; /* Tamanho da bolinha */
-    height: 20px; /* Tamanho da bolinha */
-    border-radius: 50%; /* Torna a bolinha redonda */
-    background-color: white; /* Cor de fundo da bolinha */
-    border: 2px solid #ff0000; /* Borda vermelha */
+    width: 20px;
+    /* Tamanho da bolinha */
+    height: 20px;
+    /* Tamanho da bolinha */
+    border-radius: 50%;
+    /* Torna a bolinha redonda */
+    background-color: white;
+    /* Cor de fundo da bolinha */
+    border: 2px solid #ff0000;
+    /* Borda vermelha */
     transition: background-color 0.3s, border-color 0.3s;
 }
 
 input[type="radio"] {
-    display: none; /* Oculta o input padrão */
+    display: none;
+    /* Oculta o input padrão */
 }
 
-input[type="radio"]:checked + span {
-    background-color: #ff0000; /* Cor quando selecionado */
-    border-color: #ff0000; /* Cor da borda quando selecionado */
+input[type="radio"]:checked+span {
+    background-color: #ff0000;
+    /* Cor quando selecionado */
+    border-color: #ff0000;
+    /* Cor da borda quando selecionado */
 }
 
 
 .opcoes-acompanhamentos {
-    display: flex; /* Mantenha como flex */
+    display: flex;
+    /* Mantenha como flex */
 }
 
 
@@ -465,21 +504,29 @@ input[type="radio"]:checked + span {
 
 
 
-.opcoes-acompanhamentos, .opcoes-guarnicoes {
-    max-height: 500px; /* Define uma altura máxima para a animação */
-    overflow: hidden; /* Esconde o conteúdo que transborda */
-    transition: max-height 0.5s ease-out; /* Transição suave */
+.opcoes-acompanhamentos,
+.opcoes-guarnicoes {
+    max-height: 500px;
+    /* Define uma altura máxima para a animação */
+    overflow: hidden;
+    /* Esconde o conteúdo que transborda */
+    transition: max-height 0.5s ease-out;
+    /* Transição suave */
 }
 
-.opcoes-acompanhamentos.hidden, .opcoes-guarnicoes.hidden {
-    max-height: 0; /* Altura 0 para esconder */
+.opcoes-acompanhamentos.hidden,
+.opcoes-guarnicoes.hidden {
+    max-height: 0;
+    /* Altura 0 para esconder */
 }
 
 .seta {
     display: inline-block;
-    transition: transform 0.3s ease; /* Transição suave para a transformação */
+    transition: transform 0.3s ease;
+    /* Transição suave para a transformação */
 }
 
 .seta.rotated {
-    transform: rotate(90deg); /* Rotaciona a seta 90 graus para a direita */
+    transform: rotate(90deg);
+    /* Rotaciona a seta 90 graus para a direita */
 }
