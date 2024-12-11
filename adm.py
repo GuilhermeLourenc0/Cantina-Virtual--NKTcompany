@@ -426,10 +426,12 @@ class Adm:
         mydb = Conexao.conectar()
         mycursor = mydb.cursor()
 
-        # Lê a imagem como binário, se fornecida
+        # Determina o valor de imagem_blob
         imagem_blob = None
-        if imagem:
-            imagem_blob = imagem.read()
+        if imagem and hasattr(imagem, "read"):  # Verifica se é um arquivo
+            imagem_blob = base64.b64encode(imagem.read()).decode('utf-8')  # Converte para base64
+        elif isinstance(imagem, str):  # Se já for uma URL ou base64
+            imagem_blob = imagem
 
         # Base da consulta SQL
         sql = """
@@ -438,7 +440,7 @@ class Adm:
         """
         valores = [nome, preco, descricao]
 
-        # Adicionar o blob da imagem caso fornecido
+        # Adicionar a imagem caso fornecida
         if imagem_blob:
             sql += ", imagem_blob = %s"
             valores.append(imagem_blob)
@@ -450,6 +452,7 @@ class Adm:
         mycursor.execute(sql, valores)
         mydb.commit()
         mydb.close()
+
 
 
 

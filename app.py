@@ -1009,8 +1009,17 @@ def atualizar_produto():
     descricao = request.form.get('descricao')
     imagem = request.files.get('imagem')  # Para o upload de imagem
 
+    imagem_blob = None
+    if imagem:
+        imagem_blob = imagem  # Passa o arquivo para a função
+    else:
+        # Se a imagem não for enviada, mantém o valor existente no banco
+        produto_atual = adm.obter_imagem_produto(id_produto)
+        if produto_atual:
+            imagem_blob = produto_atual
+
     # Atualizar o produto no banco de dados
-    adm.atualizar_produto(id_produto, nome, preco, descricao, imagem)
+    adm.atualizar_produto(id_produto, nome, preco, descricao, imagem_blob)
 
     flash('Produto atualizado com sucesso!', 'success')
     return redirect('/editar_produto')
