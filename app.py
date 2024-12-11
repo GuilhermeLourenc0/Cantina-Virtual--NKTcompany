@@ -82,7 +82,8 @@ def principal():
                 success=success,
             )
 
-        return render_template("index.html", site_aberto=site_aberto, success=success)
+        pedido_enviado = session.pop('pedido_enviado', None)
+        return render_template("index.html", site_aberto=site_aberto, success=success, pedido_enviado=pedido_enviado)
 
     except Exception as e:
         print(f"Erro ao verificar o horário de funcionamento: {e}")
@@ -778,7 +779,8 @@ def enviar_carrinho():
                 if carrinho.enviar_carrinho(id_cliente, itens, hora_atual):  # Passa a hora atual
                     # Chama a função para remover todo o carrinho
                     carrinho.remover_todo_carrinho(id_cliente)
-                    return jsonify(success=True, message="Pedido enviado com sucesso!", redirect="/exibir_pedidos")
+                    session['pedido_enviado'] = True  # Marca o pedido como enviado
+                    return jsonify(success=True, redirect="/")
                 else:
                     return jsonify(success=False, message="Erro ao enviar o carrinho."), 500
             except Exception as e:
