@@ -364,7 +364,7 @@ class Sistema:
             SELECT p.id_pedido, cl.id_cliente, cl.nome_comp, cl.telefone, 
                 pr.nome_produto, pr.preco AS preco_produto, pp.quantidade, 
                 m.nome_marmita, m.preco AS preco_marmita, 
-                p.data_pedido, p.status, p.hora_pedido
+                p.data_pedido, p.status, p.hora_pedido, p.motivo_cancelamento
             FROM tb_pedidos p
             JOIN tb_cliente cl ON p.id_cliente = cl.id_cliente
             JOIN tb_produtos_pedidos pp ON p.id_pedido = pp.id_pedido
@@ -390,6 +390,7 @@ class Sistema:
             data_pedido = resultado[9].strftime('%d/%m/%Y') if resultado[11] else None
             status_pedido = resultado[10]
             hora_pedido = str(resultado[11]) if resultado[11] else None  # Converte hora_pedido para string
+            motivo_cancelamento = resultado[12]
 
             if id_cliente not in pedidos:
                 pedidos[id_cliente] = {

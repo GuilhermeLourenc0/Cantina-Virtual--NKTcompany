@@ -96,8 +96,15 @@
                 <span class="order-price">R$ ${totalPreco.toFixed(2)}</span>
                 <span class="order-status-text">${dados_pedido.status}</span>
             `;
-                orderCard.appendChild(orderStatus);
 
+                if (dados_pedido.status.toLowerCase() === 'cancelado' && dados_pedido.motivo_cancelamento) {
+                    const motivoCancelamento = document.createElement('div');
+                    motivoCancelamento.classList.add('motivo-cancelamento');
+                    motivoCancelamento.textContent = `Motivo do cancelamento: ${dados_pedido.motivo_cancelamento}`;
+                    orderCard.appendChild(motivoCancelamento);
+                }
+
+                orderCard.appendChild(orderStatus);
                 clientDiv.appendChild(orderCard);
             }
 
@@ -106,10 +113,11 @@
     }
 
 
+
     // Chama a função para carregar os pedidos quando a página carrega
     document.addEventListener('DOMContentLoaded', fetchOrders);
 
-        // Atualiza a página a cada 2 segundos (2000 milissegundos)
-        setInterval(fetchOrders, 2000);
+    // Atualiza a página a cada 2 segundos (2000 milissegundos)
+    setInterval(fetchOrders, 2000);
 </script>
 {% endblock %}
