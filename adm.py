@@ -150,7 +150,7 @@ class Adm:
                 SET status = %s, habilitado = %s 
                 WHERE id_pedido = %s
                 """, 
-                ('entregue', False, id_pedido)
+                ('Entregue', False, id_pedido)
             )
             mydb.commit()  # Confirma as alterações no banco de dados
         except Exception as e:

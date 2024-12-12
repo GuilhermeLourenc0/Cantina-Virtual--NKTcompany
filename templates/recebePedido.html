@@ -101,9 +101,9 @@
                                 <span class="order-price">Total: R$ ${pedido.total_preco.toFixed(2)}</span>
                             </div>
                             <div class="btn-cancelar">
-                                <button class="status-btn preparando" data-pedido="${id_pedido}" value="preparando">Preparando</button>
-                                <button class="status-btn pronto" data-pedido="${id_pedido}" value="feito">Pronto</button>
-                                <button class="status-btn entregue" data-pedido="${id_pedido}" value="entregue">Entregue</button>
+                                <button class="status-btn preparando" data-pedido="${id_pedido}" value="Preparando">Preparando</button>
+                                <button class="status-btn pronto" data-pedido="${id_pedido}" value="Pronto">Pronto</button>
+                                <button class="status-btn entregue" data-pedido="${id_pedido}" value="Entregue">Entregue</button>
                                 <button class="cancel-btn cancelar" data-pedido="${id_pedido}">Cancelar</button>
                             </div>
                         </div>`;
@@ -129,7 +129,7 @@
                 const novoStatus = e.target.value;
 
                 // Se o status for "entregue", chama a rota específica para marcar como entregue
-                if (novoStatus === 'entregue') {
+                if (novoStatus === 'Entregue') {
                     fetch(`/marcar_entregue/${idPedido}`, {
                         method: 'POST',
                         headers: {
