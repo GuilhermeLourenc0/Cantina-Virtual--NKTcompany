@@ -103,7 +103,7 @@
         </div>
     </main>
 
-    
+
     <div id="modal-confirmacao" class="modal" style="display: none;">
         <div class="modal-conteudo">
             <p>Tem certeza desse pedido? Não será possível o cancelamento.</p>
@@ -113,7 +113,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -237,6 +237,7 @@
                     itensCarrinho.push({ id_carrinho: idCarrinho, quantidade: quantidade });
                 });
 
+                // Fazendo a requisição para enviar o carrinho
                 fetch('/enviar_carrinho', {
                     method: 'POST',
                     headers: {
@@ -244,30 +245,23 @@
                     },
                     body: JSON.stringify({ itens: itensCarrinho })
                 })
-                    .then(response => {
-                        if (response.status === 403) {
-                            alert("Site offline. Não é possível enviar pedidos neste horário.");
-                            return;
-                        }
-                        if (!response.ok) {
-                            throw new Error('Erro na requisição: ' + response.status);
-                        }
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert(data.message);
-                            window.location.href = "/"; // Redireciona para a página inicial
+                            window.location.href = data.redirect; // Redireciona para a página inicial
+                        } else {
+                            alert(data.message || 'Erro ao enviar o carrinho'); // Exibe mensagem de erro
                         }
                     })
                     .catch(error => {
-                        console.error('Erro:', error);
+                        console.error('Erro ao enviar o carrinho:', error);
+                        alert('Erro interno. Tente novamente mais tarde.');
                     });
             };
 
             // Botão para cancelar o envio
             document.getElementById('cancelar-envio').onclick = function () {
-                modal.style.display = 'none'; // Oculta o modal
+                modal.style.display = 'none'; // Oculta o modal se o envio for cancelado
             };
         }
     </script>
