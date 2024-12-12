@@ -40,9 +40,25 @@
     h3{
         font-size: 1.8rem;
     }
+
+    form{
+        width: 100%;
+    }
+
+    .card-produtos{
+        width: 100%;
+    }
+
+    .produtos{
+        width: 100%;
+    }
+
+    .container-produtos{
+        width: 100%;
+    }
 }
 
-@media (min-width: 920px) { /* Ajuste o tamanho conforme necessário */
+@media (min-width: 450px) { /* Ajuste o tamanho conforme necessário */
     .carrossel {
       display: none;
     }

@@ -4,9 +4,9 @@ class Conexao:
 
     def conectar():
         mydb = mysql.connector.connect(
-            user="cantina",
-            password="988430466Tel",
-            host="cantina-virtual.mysql.database.azure.com",
+            user="root",
+            password="root",
+            host="localhost",
             database="bd_cantinadalu"
         )
         

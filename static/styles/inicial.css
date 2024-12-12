@@ -180,6 +180,7 @@ h2 {
 }
 
 .card-produtos {
+    cursor: pointer;
     display: flex;
     align-items: center; /* Alinha imagem e texto verticalmente */
     width: 100%;
