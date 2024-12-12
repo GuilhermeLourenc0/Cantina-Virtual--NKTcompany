@@ -40,7 +40,7 @@ h2{
   border: 2px solid rgb(238, 238, 238);
   background-color: rgb(245, 245, 245);
   margin-top: 15px;
-  width: 351px;
+  width: 100%;  
 
 }
 
@@ -125,7 +125,7 @@ pointer-events: none;
 
 select{
   height: 60px;
-  width: 351px;
+  width: 100%;
   border: 2px solid rgb(238, 238, 238);
   background-color: rgb(245, 245, 245);
   margin-top: 15px;
@@ -133,7 +133,9 @@ select{
   padding-left: 23px;
   color: #6e6e6e;
 }
-
+.input-container{
+  width: 100%;
+}
 .btn-voltar img{
   height: 20px;
   
@@ -192,6 +194,7 @@ select{
   align-items: center;
   padding: 10px;
   border-top: 1px solid rgb(233, 231, 231);
+  justify-content: space-between;
 }
 
 .acompanhamento img {
@@ -240,7 +243,6 @@ select{
 #acompanhamentos input[type="checkbox"],
 #guarnicoes_acompanhamentos input[type="checkbox"] {
     margin-top: 5px;
-    position: absolute;
     left: 325px;
     appearance: none;
     -webkit-appearance: none;
@@ -264,8 +266,9 @@ select{
 /* Define um container para cada campo de input e botão */
 .input-container {
   position: relative;
-  width: fit-content; /* Ajusta a largura do container ao conteúdo */
+  width: 100%;
   margin-top: 10px; /* Espaço entre os containers */
+
 }
 
 /* Estilo do input com espaço para o botão */

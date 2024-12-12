@@ -46,7 +46,7 @@ h4 {
 .botao-gerar-relatorio {
     padding: 15px;
     background-color: rgb(161, 23, 23);
-    width: 23.7rem;
+    width: 100%;
     border-radius: 6px;
     border: none;
     cursor: pointer;

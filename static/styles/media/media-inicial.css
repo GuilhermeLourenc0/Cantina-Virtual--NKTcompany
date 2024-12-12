@@ -41,3 +41,9 @@
         font-size: 1.8rem;
     }
 }
+
+@media (min-width: 920px) { /* Ajuste o tamanho conforme necessário */
+    .carrossel {
+      display: none;
+    }
+  }

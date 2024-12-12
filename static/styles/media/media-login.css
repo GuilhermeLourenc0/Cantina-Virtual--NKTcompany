@@ -1,0 +1,26 @@
+@media (min-width: 920px) { /* Ajuste o tamanho conforme necessário */
+  .titulo{
+    margin-top: 0.5rem;
+    display: flex;
+    margin-left: 60vh;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.btn-voltar button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  background-color: transparent;
+  border: 1px solid rgb(236, 236, 236);
+  width: 40px;
+  border-radius: 6px;
+  margin-top: 60px;
+  margin-left: 60vh;
+}
+
+.espacamento{
+  display: none;
+}
+  }
