@@ -772,6 +772,7 @@ def enviar_carrinho():
             
             # Verifica se os itens estão vazios
             if not itens:
+                session['pedido_enviado'] = False  # Marca o pedido como enviado
                 return jsonify(success=False, message="Carrinho está vazio."), 400
 
             try:

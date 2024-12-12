@@ -506,7 +506,7 @@ input:checked+.slider:before {
 
 /* From Uiverse.io by revanth-004 */
 /* COMMON STYLES*/
-.popup-container {
+.popup-container, .popup-container-pedido{
     position: fixed;        /* Fixa o elemento na tela */
     top: 80px;             /* Distância do topo da tela */
     left: 50%;             /* Centraliza horizontalmente */

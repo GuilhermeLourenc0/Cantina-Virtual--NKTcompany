@@ -258,8 +258,6 @@
                         if (data.success) {
                             alert(data.message);
                             window.location.href = "/"; // Redireciona para a página inicial
-                        } else {
-                            alert(data.message || 'Erro ao enviar o carrinho');
                         }
                     })
                     .catch(error => {
