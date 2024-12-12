@@ -356,4 +356,57 @@ class Usuario:
 
         return cliente_dict  # Retorna o dicionário com os dados do cliente e o nome do curso
 
+    def obter_pedidos(self, id_cliente):
+        """
+        Obtém todos os pedidos feitos por um cliente, incluindo os itens, seus preços individuais, a hora e o valor total de cada pedido.
 
+        Parâmetros:
+        - id_cliente: ID do cliente.
+
+        Retorno:
+        - Lista de pedidos, onde cada pedido contém a data, hora, valor total e itens com preços individuais.
+        """
+        mydb = Conexao.conectar()
+        mycursor = mydb.cursor(dictionary=True)
+
+        # Consulta para obter os pedidos do cliente
+        sql_pedidos = """
+            SELECT p.id_pedido, p.data_pedido AS data, p.hora_pedido AS hora
+            FROM tb_pedidos p
+            WHERE p.id_cliente = %s
+            ORDER BY p.data_pedido DESC, p.hora_pedido DESC
+        """
+        mycursor.execute(sql_pedidos, (id_cliente,))
+        pedidos = mycursor.fetchall()
+
+        # Para cada pedido, buscar os itens relacionados e calcular o valor total
+        for pedido in pedidos:
+            id_pedido = pedido['id_pedido']
+
+            # Consulta para obter os itens do pedido, incluindo os preços
+            sql_itens = """
+                SELECT 
+                    CASE
+                        WHEN pp.cod_produto IS NOT NULL THEN pr.nome_produto
+                        WHEN pp.id_marmita IS NOT NULL THEN m.nome_marmita
+                    END AS item,
+                    CASE
+                        WHEN pp.cod_produto IS NOT NULL THEN pr.preco
+                        WHEN pp.id_marmita IS NOT NULL THEN m.preco
+                    END AS preco
+                FROM tb_produtos_pedidos pp
+                LEFT JOIN tb_produto pr ON pp.cod_produto = pr.cod_produto
+                LEFT JOIN tb_marmita m ON pp.id_marmita = m.id_marmita
+                WHERE pp.id_pedido = %s
+            """
+            mycursor.execute(sql_itens, (id_pedido,))
+            itens = mycursor.fetchall()
+
+            # Adicionar os itens ao pedido com preços individuais
+            pedido['itens'] = [{'nome': item['item'], 'preco': item['preco']} for item in itens]
+
+            # Calcular o valor total do pedido
+            pedido['valor_total'] = sum(item['preco'] for item in itens if item['preco'] is not None)
+
+        mydb.close()
+        return pedidos

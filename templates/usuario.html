@@ -1,6 +1,7 @@
 {% extends "modelo-adm.html" %}
 {% block conteudo %}
 <link rel="stylesheet" href="../static/styles/perfilVisaoAdm.css">
+
 <!-- Imagem de fundo e imagem de perfil -->
 <div class="header">
     <img src="{{ imagem_perfil_url }}" alt="Foto de {{ cliente.nome_comp }}" class="img-perfil">
@@ -24,29 +25,31 @@
             <thead>
                 <tr>
                     <th>Data</th>
-                    <th>Valor</th>
-                    <th>Item</th>
+                    <th>Hora</th>
+                    <th>Itens</th>
+                    <th>Preço(R$)</th>
                 </tr>
             </thead>
             <tbody>
                 {% for pedido in pedidos %}
                 <tr>
                     <td>{{ pedido.data }}</td>
-                    <td>{{ pedido.valor }}</td>
+                    <td>{{ pedido.hora }}</td>
                     <td>
                         <ul>
                             {% for item in pedido.itens %}
-                            <li>{{ item }}</li>
+                            <li>{{ item.nome }}</li>
                             {% endfor %}
                         </ul>
                     </td>
+                    <td>{{ "%.2f"|format(pedido.valor_total) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <div class="spanpontilhado">
-            <span>Valor Total: R$: {{ total_valor }}</span> <br>
-            <span>Pedidos Entregues: {{ pedidos_entregues }}</span>
+            <span>Valor Total: R$ {{ "%.2f"|format(total_valor) }}</span><br>
+            <span>Pedidos Realizados: {{ pedidos_entregues }}</span>
         </div>
         {% else %}
         <p>Este cliente ainda não fez pedidos.</p>

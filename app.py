@@ -1351,16 +1351,27 @@ def relatorio():
 @app.route('/usuario/<int:id_cliente>', methods=['GET'])
 def usuario(id_cliente):
     if 'usuario_logado' not in session:
-        return redirect('/logar')  # Redireciona se o usuário não estiver logado
+        return redirect('/logar')
     
-    usuario = Usuario()  # Supondo que 'Usuario' seja uma classe que manipula os dados do cliente
-    dados_cliente = usuario.tela_usuario(id_cliente)  # Método que retorna os dados do cliente
+    usuario = Usuario()
+    dados_cliente = usuario.tela_usuario(id_cliente)
+    pedidos_cliente = usuario.obter_pedidos(id_cliente)
 
-    
-    # Adiciona a URL da imagem de perfil no contexto
+    total_valor = sum(p['valor_total'] for p in pedidos_cliente)
+    pedidos_entregues = len(pedidos_cliente)
+
     imagem_perfil_url = url_for('imagem_perfil', id_cliente=id_cliente)
     
-    return render_template('usuario.html', cliente=dados_cliente, imagem_perfil_url=imagem_perfil_url)
+    return render_template(
+        'usuario.html', 
+        cliente=dados_cliente, 
+        pedidos=pedidos_cliente, 
+        total_valor=total_valor, 
+        pedidos_entregues=pedidos_entregues, 
+        imagem_perfil_url=imagem_perfil_url
+    )
+
+
 
 
 
