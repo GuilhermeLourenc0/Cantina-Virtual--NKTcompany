@@ -746,7 +746,7 @@ def cancelar_pedido():
 
 
 
-@app.route("/enviar_carrinho", methods=['POST'])
+@app.route("/enviar_carrinho", methods=['POST']) 
 def enviar_carrinho():
     try:
         timezone_sp = pytz.timezone('America/Sao_Paulo')
